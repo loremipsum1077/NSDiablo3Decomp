@@ -1,0 +1,55 @@
+diff --git a/viking/src/checks.rs b/viking/src/checks.rs
+--- a/viking/src/checks.rs
++++ b/viking/src/checks.rs
+@@ -270,6 +270,8 @@
+     killed: HashSet<u8>,
+     zeroed: HashSet<u8>,
+     generated: Option<(cs::RegId, (u64, u64))>,
++    // `mov xD, xS`, identical on both sides: xD receives whatever pair xS holds.
++    copied: Option<(cs::RegId, u8)>,
+     unknown_successors: bool,
+ }
+ 
+@@ -343,6 +345,19 @@
+                 ),
+             ));
+         }
++        // A full-width register move (orr xD, xzr, xS) carries the page along.
++        // The compiler parks a page in a second callee-saved register this way
++        // when it reuses the first one. Every other write still kills.
++        let (dest, source) = ((word & 0x1f) as u8, ((word >> 16) & 0x1f) as u8);
++        if word == ours && word & 0xffe0_ffe0 == 0xaa00_03e0 && dest != 31 && source != 31 {
++            let d1 = cs.insn_detail(i1).or_else(translate_cs_error)?;
++            let a1 = d1.arch_detail();
++            let op1 = a1.arm64().unwrap().operands_ref();
++            let reg = Arm64Operand::from(&op1[0]).op_type.reg();
++            if gpr_number(cs, reg) == Some(dest) {
++                node.copied = Some((reg, source));
++            }
++        }
+         if let Some(target) = direct_branch_target(word, addr) {
+             if original.get_addr_range().contains(&target) && (target - original.addr) % 4 == 0 {
+                 node.successors
+@@ -374,12 +389,22 @@
+             });
+         }
+         let mut output = entries[index].as_ref().unwrap().clone();
++        // Read the source before the destination is killed.
++        let copied = node.copied.and_then(|(reg, source)| {
++            output
++                .iter()
++                .find(|(held, _)| gpr_number(cs, **held) == Some(source))
++                .map(|(_, &pages)| (reg, pages))
++        });
+         output.retain(|reg, _| {
+             gpr_number(cs, *reg).map_or(false, |number| !node.killed.contains(&number))
+         });
+         if let Some((reg, pages)) = node.generated {
+             output.insert(reg, pages);
+         }
++        if let Some((reg, pages)) = copied {
++            output.insert(reg, pages);
++        }
+         for &target in &node.successors {
+             let changed = if let Some(old) = &mut entries[target] {
+                 let before = old.len();

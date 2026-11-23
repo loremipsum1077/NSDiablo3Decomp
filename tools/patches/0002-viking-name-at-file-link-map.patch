@@ -1,0 +1,318 @@
+diff --git a/viking/src/elf.rs b/viking/src/elf.rs
+index cc79b1d..3c4cfea 100644
+--- a/viking/src/elf.rs
++++ b/viking/src/elf.rs
+@@ -186,6 +186,18 @@ pub fn is_undefined_sym(sym: &Sym) -> bool {
+ }
+ 
+ pub fn find_function_symbol_by_name(elf: &OwnedElf, name: &str) -> Result<Sym> {
++    if let (bare, Some(qual)) = split_qualified(name) {
++        // name@file: the copy of `bare` that the object for `file` contributed
++        let map = load_link_map(None)?;
++        let hit = resolve_qualified_in_map(&map, bare, qual)?;
++        return elf
++            .syms
++            .iter()
++            .filter(filter_out_useless_syms)
++            .find(|s| s.st_value == hit.addr)
++            .with_context(|| format!("{name}: no function symbol at {:#x}", hit.addr));
++    }
++
+     let strtab = SymbolStringTable::from_elf(elf)?;
+ 
+     for symbol in elf.syms.iter().filter(filter_out_useless_syms) {
+@@ -196,6 +208,210 @@ pub fn find_function_symbol_by_name(elf: &OwnedElf, name: &str) -> Result<Sym> {
+     bail!("unknown function")
+ }
+ 
++/// `name@file`: a function whose mangled name several translation units
++/// define (a file-static, an anonymous-namespace function) is keyed in
++/// functions.csv by name *and* the TU that owns the copy -- `file` is a
++/// path suffix of that TU (`UIConsoleEnchantView.cpp`, or `Console/Foo.cpp`
++/// when two duplicates share a basename). The built ELF carries neither
++/// STT_FILE symbols nor DWARF, so the qualifier is resolved through the link
++/// map ld.lld writes next to the ELF (`-Map`, see CMakeLists.txt).
++/// tools/symname.py owns the same convention on the Python side.
++pub const QUALIFIER_SEP: char = '@';
++
++pub fn split_qualified(name: &str) -> (&str, Option<&str>) {
++    match name.split_once(QUALIFIER_SEP) {
++        Some((bare, qual)) => (bare, Some(qual.trim_matches('/'))),
++        None => (name, None),
++    }
++}
++
++/// Does a link-map object path (`.../src/X/.../Foo.cpp.obj`) end with the
++/// qualifier on a path-component boundary?
++pub fn object_matches_qualifier(object: &str, qual: &str) -> bool {
++    let mut p = object.replace('\\', "/");
++    for ext in [".obj", ".o"] {
++        if let Some(stripped) = p.strip_suffix(ext) {
++            p = stripped.to_string();
++            break;
++        }
++    }
++    let q = qual.trim_matches('/');
++    !q.is_empty() && (p == q || p.ends_with(&format!("/{q}")))
++}
++
++pub struct LinkMapSymbol {
++    pub name: String,
++    pub object: String,
++    pub addr: u64,
++}
++
++pub fn link_map_path(version: Option<&str>) -> Result<PathBuf> {
++    Ok(repo::get_build_path(version)?.join(format!("{}.map", repo::get_config().build_target)))
++}
++
++pub fn load_link_map(version: Option<&str>) -> Result<Vec<LinkMapSymbol>> {
++    let path = link_map_path(version)?;
++    let text = std::fs::read_to_string(&path).with_context(|| {
++        format!(
++            "a name@file needs the link map {} -- relink (the CMake link passes -Map)",
++            path.display()
++        )
++    })?;
++    parse_link_map(&text)
++}
++
++/// Parse an ld.lld `-Map` file into (symbol, defining object, address).
++/// Both layouts are accepted -- LLD <= 9 `Address Size Align Out In Symbol`
++/// and LLD >= 10 `VMA LMA Size Align Out In Symbol` -- by skipping the
++/// header's numeric columns and classifying each row by the column its
++/// text starts in (Out / In / Symbol), which lld pads to fixed widths.
++pub fn parse_link_map(text: &str) -> Result<Vec<LinkMapSymbol>> {
++    fn tokens(line: &str) -> Vec<(usize, &str)> {
++        let mut out = Vec::new();
++        let mut start = None;
++        for (i, c) in line.char_indices() {
++            match (c.is_ascii_whitespace(), start) {
++                (false, None) => start = Some(i),
++                (true, Some(s)) => {
++                    out.push((s, &line[s..i]));
++                    start = None;
++                }
++                _ => {}
++            }
++        }
++        if let Some(s) = start {
++            out.push((s, &line[s..]));
++        }
++        out
++    }
++
++    let mut lines = text.lines();
++    let header = lines
++        .find(|l| l.contains("Symbol") && l.contains(" In ") && l.contains("Out"))
++        .context("not an ld.lld map file (no `Out In Symbol` header)")?;
++    let htoks = tokens(header);
++    let numeric_cols = htoks.iter().position(|(_, t)| *t == "Out").context("map header has no Out column")?;
++    let col_in = htoks.iter().find(|(_, t)| *t == "In").map(|(o, _)| *o).unwrap();
++    let col_sym = htoks.iter().find(|(_, t)| *t == "Symbol").map(|(o, _)| *o).unwrap();
++
++    let mut out = Vec::new();
++    let mut object = String::new();
++    for line in lines {
++        let toks = tokens(line);
++        if toks.len() <= numeric_cols {
++            continue;
++        }
++        let Ok(addr) = u64::from_str_radix(toks[0].1.trim_start_matches("0x"), 16) else {
++            continue;
++        };
++        let (start, _) = toks[numeric_cols];
++        let rest = line[start..].trim_end();
++        if start >= col_sym {
++            if !object.is_empty() {
++                out.push(LinkMapSymbol {
++                    name: rest.to_string(),
++                    object: object.clone(),
++                    addr,
++                });
++            }
++        } else if start >= col_in {
++            // `<object>:(<input section>)`; an archive member is `lib.a(x.o)`
++            object = rest.rsplit_once(":(").map_or("", |(o, _)| o).to_string();
++        } else {
++            object.clear(); // an output section header
++        }
++    }
++    Ok(out)
++}
++
++pub fn resolve_qualified_in_map<'m>(
++    map: &'m [LinkMapSymbol],
++    bare: &str,
++    qual: &str,
++) -> Result<&'m LinkMapSymbol> {
++    let hits: Vec<&LinkMapSymbol> = map
++        .iter()
++        .filter(|m| m.name == bare && object_matches_qualifier(&m.object, qual))
++        .collect();
++    match hits.as_slice() {
++        [one] => Ok(one),
++        [] => bail!("{bare}@{qual}: no object matching {qual:?} defines {bare} (per the link map)"),
++        many => bail!(
++            "{bare}@{qual}: {} objects match {qual:?}: {} -- lengthen the qualifier",
++            many.len(),
++            many.iter().map(|m| m.object.as_str()).collect::<Vec<_>>().join(", ")
++        ),
++    }
++}
++
++/// Give every `name@file` functions.csv name its own entry in `symtab`,
++/// resolved through the link map. A name the map cannot pin is skipped --
++/// an undecompiled row is allowed to be unresolvable -- and an ambiguous
++/// one is reported on stderr. Without a map file nothing is added; a
++/// one-line note says so when qualified names were seen.
++pub fn add_qualified_names<'a, I, S>(
++    symtab: &mut SymbolTableByName<'a>,
++    elf: &OwnedElf,
++    version: Option<&str>,
++    names: I,
++) -> Result<()>
++where
++    I: IntoIterator<Item = S>,
++    S: AsRef<str>,
++{
++    let qualified: Vec<String> = names
++        .into_iter()
++        .map(|s| s.as_ref().to_string())
++        .filter(|n| n.contains(QUALIFIER_SEP))
++        .collect();
++    if qualified.is_empty() {
++        return Ok(());
++    }
++    let path = link_map_path(version)?;
++    let text = match std::fs::read_to_string(&path) {
++        Ok(t) => t,
++        Err(_) => {
++            eprintln!(
++                "note: {} name@file function(s) but no link map at {}; relink to check them",
++                qualified.len(),
++                path.display()
++            );
++            return Ok(());
++        }
++    };
++    let map = parse_link_map(&text)?;
++    let by_addr = make_symbol_map_by_addr(elf);
++    for name in qualified {
++        if symtab.contains_key(name.as_str()) {
++            continue;
++        }
++        let (bare, Some(qual)) = split_qualified(&name) else {
++            continue;
++        };
++        let hit = match resolve_qualified_in_map(&map, bare, qual) {
++            Ok(h) => h,
++            Err(e) if e.to_string().contains("no object matching") => continue, // not linked (yet)
++            Err(e) => {
++                eprintln!("warning: {e}");
++                continue;
++            }
++        };
++        match by_addr.get(&hit.addr) {
++            Some(sym) if sym.st_type() == sym::STT_FUNC => {
++                // the map's keys borrow from the ELF; a handful of qualified
++                // spellings per run are worth leaking for the same lifetime
++                let key: &'static str = Box::leak(name.clone().into_boxed_str());
++                symtab.insert(key, *sym);
++            }
++            _ => eprintln!(
++                "warning: {name}: link map puts it at {:#x} but the ELF has no function symbol there",
++                hit.addr
++            ),
++        }
++    }
++    Ok(())
++}
++
+ pub fn make_symbol_map_by_name(elf: &OwnedElf) -> Result<SymbolTableByName<'_>> {
+     let mut map = SymbolTableByName::with_capacity_and_hasher(
+         elf.syms.iter().filter(filter_out_useless_syms).count(),
+diff --git a/viking/src/functions.rs b/viking/src/functions.rs
+index 215d858..141b977 100644
+--- a/viking/src/functions.rs
++++ b/viking/src/functions.rs
+@@ -245,13 +245,19 @@ pub fn make_known_function_name_map(functions: &[Info]) -> FxHashMap<&str, &Info
+ 
+ /// Demangle a C++ symbol.
+ pub fn demangle_str(name: &str) -> Result<String> {
+-    if !name.starts_with("_Z") {
++    // `name@file` (elf::QUALIFIER_SEP): the qualifier is not part of the symbol
++    let (bare, qual) = elf::split_qualified(name);
++    if !bare.starts_with("_Z") {
+         bail!("not an external mangled name");
+     }
+ 
+-    let symbol = cpp_demangle::Symbol::new(name)?;
++    let symbol = cpp_demangle::Symbol::new(bare)?;
+     let options = cpp_demangle::DemangleOptions::new();
+-    Ok(symbol.demangle(&options)?)
++    let demangled = symbol.demangle(&options)?;
++    Ok(match qual {
++        Some(q) => format!("{demangled} @{q}"),
++        None => demangled,
++    })
+ }
+ 
+ pub fn fuzzy_search<'a>(functions: &[&'a Info], name: &str) -> Vec<&'a Info> {
+diff --git a/viking/src/tools/check.rs b/viking/src/tools/check.rs
+index e06ae65..f091160 100644
+--- a/viking/src/tools/check.rs
++++ b/viking/src/tools/check.rs
+@@ -75,7 +75,7 @@ fn main() -> Result<()> {
+         s.spawn(|_| plt_functions = Some(elf::get_plt_functions(&orig_elf)));
+     });
+ 
+-    let decomp_symtab = decomp_symtab
++    let mut decomp_symtab = decomp_symtab
+         .unwrap()
+         .context("failed to make symbol map")?;
+     let decomp_glob_data_table = decomp_glob_data_table
+@@ -83,6 +83,14 @@ fn main() -> Result<()> {
+         .context("failed to make global data table")?;
+ 
+     let functions = functions.unwrap().context("failed to load function CSV")?;
++    // name@file rows (a mangled name several TUs define) resolve via the link map
++    elf::add_qualified_names(
++        &mut decomp_symtab,
++        &decomp_elf,
++        version,
++        functions.iter().map(|f| f.name.as_str()),
++    )
++    .context("failed to resolve name@file functions")?;
+     let plt_functions = plt_functions
+         .unwrap()
+         .context("failed to load plt functions")?;
+@@ -656,7 +664,8 @@ fn rediff_function_after_differ(
+     let decomp_elf = elf::load_decomp_elf(version).context("failed to reload decomp ELF")?;
+ 
+     // Also reload the symbol table from the new ELF.
+-    let decomp_symtab = elf::make_symbol_map_by_name(&decomp_elf)?;
++    let mut decomp_symtab = elf::make_symbol_map_by_name(&decomp_elf)?;
++    elf::add_qualified_names(&mut decomp_symtab, &decomp_elf, version, [name])?;
+     let decomp_glob_data_table = elf::build_glob_data_table(&decomp_elf)?;
+ 
+     // And grab the possibly updated function code.
+diff --git a/viking/src/tools/decompme.rs b/viking/src/tools/decompme.rs
+index 17f2206..e5b1b86 100644
+--- a/viking/src/tools/decompme.rs
++++ b/viking/src/tools/decompme.rs
+@@ -465,7 +465,13 @@ fn main() -> Result<()> {
+     let version = args.version.as_deref();
+     let decomp_elf = elf::load_decomp_elf(version)?;
+     let functions = functions::get_functions(version)?;
+-    let decomp_symtab = elf::make_symbol_map_by_name(&decomp_elf)?;
++    let mut decomp_symtab = elf::make_symbol_map_by_name(&decomp_elf)?;
++    elf::add_qualified_names(
++        &mut decomp_symtab,
++        &decomp_elf,
++        version,
++        functions.iter().map(|f| f.name.as_str()),
++    )?;
+ 
+     let filtered_functions = functions::filter_candidates_by_symtab(&functions, &decomp_symtab);
+     let function_info =

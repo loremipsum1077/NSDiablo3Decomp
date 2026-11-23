@@ -1,0 +1,53 @@
+// Adopted from tools/gen_headers.py output; hand-maintained from here on.
+// Original file: X/Common/TagMaps/AppearanceTags.h
+
+#pragma once
+
+#include "../../../BlizzardCore/Include/Blizzard/Types.h"
+
+enum {
+    TAG_APPEARANCE_EDGEALPHA_FALLOFF_POWER = 196864,
+    TAG_APPEARANCE_EDGECOLOR_FALLOFF_POWER = 196865,
+    TAG_APPEARANCE_NORMAL_MAP_SCALE = 196866,
+    TAG_APPEARANCE_NO_RECEIVE_FX = 196867,
+    TAG_APPEARANCE_FORCE_NONWALKABLE = 196868,
+    TAG_APPEARANCE_FX_SHADER = 196869,
+    TAG_APPEARANCE_NO_RECEIVE_AO = 196870,
+    TAG_APPEARANCE_NO_CAST_AO = 196871,
+    TAG_APPEARANCE_CLUTTER_PARTICLE_LAYER0 = 197120,
+    TAG_APPEARANCE_CLUTTER_PARTICLE_LAYER1 = 197121,
+    TAG_APPEARANCE_CLUTTER_PARTICLE_LAYER2 = 197122,
+    TAG_APPEARANCE_CLUTTER_PARTICLE_LAYER3 = 197123,
+    TAG_APPEARANCE_CLUTTER_PARTICLE_LAYER4 = 197124,
+    TAG_APPEARANCE_FX_FUNC = 197376,
+    TAG_APPEARANCE_FX_VAL0 = 197377,
+    TAG_APPEARANCE_FX_VAL1 = 197378,
+    TAG_APPEARANCE_FX_PERIOD = 197379,
+    TAG_APPEARANCE_SURFACE_LAYER0 = 197632,
+    TAG_APPEARANCE_SURFACE_LAYER1 = 197633,
+    TAG_APPEARANCE_SURFACE_LAYER2 = 197634,
+    TAG_APPEARANCE_SURFACE_LAYER3 = 197635,
+    TAG_APPEARANCE_SURFACE_LAYER4 = 197636,
+    TAG_APPEARANCE_HIT_FLASH_POWER = 197637,
+};
+
+enum AppearanceFXFunction {
+    APPEARANCE_FX_FUNC_NOP = 0,
+    APPEARANCE_FX_FUNC_SINE = 1,
+    APPEARANCE_FX_FUNC_LERP = 2,
+    APPEARANCE_FX_FUNC_LOG = 3,
+    APPEARANCE_FX_FUNC_EXP = 4,
+    APPEARANCE_FX_FUNC_LINEAR_FADE = 5,
+    APPEARANCE_FX_FUNC_RAND = 6,
+    APPEARANCE_FX_FUNC_SET = 7,
+};
+
+
+// External definitions in AppearanceTags.cpp; original DWARF variable inventory.
+struct AxeTagInfo;
+extern const AxeTagInfo tAppearanceTagInfo[];
+extern const int32 gnAppearanceTagCount;
+
+// External definitions in AppearanceTags.cpp; original DWARF variable inventory.
+extern const AxeTagInfo tAppearanceStateTagInfo[];
+extern const int32 gnAppearanceStateTagCount;

@@ -1,0 +1,41 @@
+name: Contributor checks (no game inputs)
+
+'on':
+  pull_request:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-tooling:
+    name: Asset-free tooling fixtures
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout without persistent credentials or submodules
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          submodules: false
+          fetch-depth: 2
+      - name: Check tracked paths and file signatures
+        run: python3 tools/check_public_tree.py
+      - name: Run offline synthetic tests
+        env:
+          PYTHONPATH: tools
+          PYTHONDONTWRITEBYTECODE: '1'
+          GIT_CONFIG_NOSYSTEM: '1'
+        run: >-
+          python3 -m unittest -v
+          test_public_tree test_game_generation test_onboarding test_llvm_archive test_verify_original_inputs test_bootstrap test_contributor_check test_contributor_adapter test_setup test_reproduce test_guard
+          test_data_provenance test_validate_data
+          test_receipts
+          test_project_plan test_core_api test_status_report test_attribution_audit
+          test_indirect_flow_evidence
+      - name: Check whitespace introduced after the initial import
+        run: |
+          if git rev-parse --verify HEAD^ >/dev/null 2>&1; then
+            git diff --check HEAD^ HEAD
+          fi

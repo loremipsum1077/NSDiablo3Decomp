@@ -1,0 +1,28 @@
+version = 1
+
+# Project-authored tooling. Keep the submodule, vendor patches, source inventories,
+# compiler signatures, generated game data and recovered source outside these paths.
+[[annotations]]
+path = [
+    "setup.py",
+    "docker-compose.yml",
+    "toolchain/Dockerfile",
+    "toolchain/lua/Dockerfile",
+    "toolchain/RecordLinkProvenance.cmake",
+    "toolchain/link_anchor.cpp",
+    "toolchain/latepipe/LatePipe.cpp",
+    "tests/domino/run_manifolds.sh",
+    "tools/*.py",
+    "tools/hooks/*.py",
+    "tools/validation/*.py",
+    "tools/ghidra/ExportDecomp.java",
+    "toolchain/*.py",
+    "toolchain/latepipe/*.py",
+    "toolchain/lua/*.py",
+    "tests/d3_descriptors/*.py",
+    "tests/lua_wrapper/*.py",
+    "tests/type_extensions/*.py",
+]
+precedence = "closest"
+SPDX-FileCopyrightText = "2026 NSD3Decomp contributors"
+SPDX-License-Identifier = "MIT"

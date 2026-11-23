@@ -1,0 +1,5 @@
+{
+  "archive_key": "source",
+  "patch_sha256": "0fce03cf7831a5724a29485af4b790559694d2e7aa289dfc1f46660903d14bd0",
+  "flags": ["-O0", "-mcpu=cortex-a57", "-relocation-model=pic", "-verify-machineinstrs", "-fast-isel=true", "-aarch64-experiment-null-fast-isel=true", "-experiment-disable-o0-load-chain=true", "-experiment-disable-o0-indexed-loads=true", "-experiment-defer-o0-trunc-load-store=true", "-experiment-fold-o0-subreg-roundtrip=true", "-experiment-sign-extend-o0-byte-store=true"]
+}

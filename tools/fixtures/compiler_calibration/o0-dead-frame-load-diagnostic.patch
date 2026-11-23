@@ -1,0 +1,27 @@
+--- a/lib/CodeGen/SelectionDAG/DAGCombiner.cpp
++++ b/lib/CodeGen/SelectionDAG/DAGCombiner.cpp
+@@ -54,6 +54,10 @@
+ STATISTIC(SlicedLoads, "Number of load sliced");
+ 
+ namespace {
++  static cl::opt<bool> ExperimentPreserveO0DeadFrameLoads(
++      "experiment-preserve-o0-dead-frame-loads", cl::Hidden, cl::init(false),
++      cl::desc("Diagnostic: preserve dereferenceable dead frame loads at O0"));
++
+   static cl::opt<bool> ExperimentDeferO0TruncLoadStore(
+       "experiment-defer-o0-trunc-load-store", cl::Hidden, cl::init(false),
+       cl::desc("Let existing truncate/load narrowing precede O0 store folding"));
+@@ -11325,6 +11329,13 @@
+   SDValue Chain = LD->getChain();
+   SDValue Ptr   = LD->getBasePtr();
+ 
++  // Diagnostic only: retain this exact class of dead stack loads for O0
++  // code-generation comparison. Later passes may still remove the load.
++  if (ExperimentPreserveO0DeadFrameLoads && OptLevel == CodeGenOpt::None &&
++      LD->isUnindexed() && !LD->isVolatile() && LD->isDereferenceable() &&
++      Ptr.getOpcode() == ISD::FrameIndex && !N->hasAnyUseOfValue(0))
++    return SDValue();
++
+   // If load is not volatile and there are no uses of the loaded value (and
+   // the updated indexed value in case of indexed loads), change uses of the
+   // chain value into uses of the chain input (i.e. delete the dead load).

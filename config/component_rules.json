@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "rules": [
+    {
+      "id": "P03-C01",
+      "component": "FMOD audio middleware",
+      "name_patterns": [
+        "^_ZNK?4FMOD",
+        "^_?FMOD_",
+        "^fmod_",
+        "^_Z[0-9]+FMOD_",
+        "^_GLOBAL__sub_I_fmod_globals\\.cpp$",
+        "^_ZL[0-9]+NNAudio_.*FMOD_",
+        "^_ZL?[0-9]+MultibandEQ_.*FMOD_"
+      ],
+      "confidence": "symbol-family",
+      "evidence": "NSS defined function symbols identify FMOD namespace/API and FMOD-specific parameter types. Generated DWARF headers identify Contrib/Contrib/fmodstudiosrc11005/lowlevel_api and platforms/nx headers. See research.md; this is family evidence, not source-file ownership or exact SDK/compiler version proof.",
+      "follow_up": "P03-F01"
+    },
+    {
+      "id": "P03-C02",
+      "component": "FLAC codec family",
+      "name_patterns": [
+        "^FLAC__"
+      ],
+      "confidence": "symbol-family",
+      "evidence": "NSS defines FLAC__stream_decoder_* and FLAC__bitreader_* alongside the audio region. Distinctive API family identifies codec only; integration, upstream revision and original translation units remain unverified. See research.md.",
+      "follow_up": "P03-F02"
+    },
+    {
+      "id": "P03-C03",
+      "component": "LibTomCrypt-compatible crypto family",
+      "name_patterns": [
+        "^(des3|rijndael|md5|sha1|sha256|tiger|hmac|cbc|ctr|ecc|rsa|yarrow|ltc|der|pkcs_1)_",
+        "^(hash_memory|error_to_string|find_cipher_id|find_hash|hash_is_valid|register_cipher|register_hash|cipher_is_valid|find_prng|prng_is_valid|register_prng|rand_prime|zeromem)$"
+      ],
+      "confidence": "symbol-family",
+      "evidence": "Committed DemonWare libtomcrypt headers and bdHash/bdHMac callers establish the API family; NSS defines the crypto functions and ltc_mp/ltm_desc data. Generic internal names are deliberately unmatched. No upstream release or exact original source path is asserted. See research.md.",
+      "follow_up": "P03-F03"
+    },
+    {
+      "id": "P03-C04",
+      "component": "LibTomMath-compatible multiprecision family",
+      "name_patterns": [
+        "^(mp_|s_mp_|fast_mp_|fast_s_mp_)",
+        "^bn_reverse$"
+      ],
+      "confidence": "symbol-family",
+      "evidence": "NSS contains the mp_* API cluster and ltm_desc/ltc_mp data, corroborating a TomMath-compatible backend used with the crypto family. Generic arithmetic and descriptor adapters remain unmatched. Exact upstream version, build configuration and original ownership require recovery. See research.md.",
+      "follow_up": "P03-F04"
+    },
+    {
+      "id": "P03-C05",
+      "component": "Blizzard debug error stack",
+      "name_patterns": [
+        "^_ZN8Blizzard5Debug15AddErrorToStackEPNS0_16ErrorStackRecordEiPKci$",
+        "^_ZN8Blizzard5Debug14FreeErrorStackEPNS0_16ErrorStackRecordE$"
+      ],
+      "confidence": "symbol-family",
+      "evidence": "Direct NSS DWARF DIEs 0x81427 and 0x81a03 establish ErrorStack.cpp declaration paths and exact address extents. Their enclosing System_Debug.cpp CU omits both extents from its ranges; existing generator uses CU ranges. Preserve unresolved canonical ownership pending a reviewed fallback/policy. See research.md.",
+      "follow_up": "P03-F05"
+    }
+  ]
+}

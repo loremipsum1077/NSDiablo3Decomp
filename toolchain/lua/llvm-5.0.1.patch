@@ -1,0 +1,217 @@
+--- a/lib/Target/AArch64/AArch64ISelLowering.cpp
++++ b/lib/Target/AArch64/AArch64ISelLowering.cpp
+@@ -94,6 +94,11 @@
+ STATISTIC(NumShiftInserts, "Number of vector shift inserts");
+ STATISTIC(NumOptimizedImms, "Number of times immediates were optimized");
+ 
++static cl::opt<bool> ExperimentNullFastISel(
++    "aarch64-experiment-null-fast-isel", cl::Hidden,
++    cl::desc("Experiment: suppress selector while retaining FastISel policy"),
++    cl::init(false));
++
+ static cl::opt<bool>
+ EnableAArch64SlrGeneration("aarch64-shift-insert-generation", cl::Hidden,
+                            cl::desc("Allow AArch64 SLI/SRI formation"),
+@@ -1039,6 +1044,8 @@
+ FastISel *
+ AArch64TargetLowering::createFastISel(FunctionLoweringInfo &funcInfo,
+                                       const TargetLibraryInfo *libInfo) const {
++  if (ExperimentNullFastISel)
++    return nullptr;
+   return AArch64::createFastISel(funcInfo, libInfo);
+ }
+ 
+--- a/lib/CodeGen/SelectionDAG/DAGCombiner.cpp
++++ b/lib/CodeGen/SelectionDAG/DAGCombiner.cpp
+@@ -54,6 +54,18 @@
+ STATISTIC(SlicedLoads, "Number of load sliced");
+ 
+ namespace {
++  static cl::opt<bool> ExperimentDeferO0TruncLoadStore(
++      "experiment-defer-o0-trunc-load-store", cl::Hidden, cl::init(false),
++      cl::desc("Let existing truncate/load narrowing precede O0 store folding"));
++
++  static cl::opt<bool> ExperimentDisableO0IndexedLoads(
++      "experiment-disable-o0-indexed-loads", cl::Hidden, cl::init(false),
++      cl::desc("Disable only O0 indexed-load formation"));
++
++  static cl::opt<bool> ExperimentDisableO0LoadChain(
++      "experiment-disable-o0-load-chain", cl::Hidden, cl::init(false),
++      cl::desc("Disable only the O0 load better-chain rewrite"));
++
+   static cl::opt<bool>
+     CombinerGlobalAA("combiner-global-alias-analysis", cl::Hidden,
+                cl::desc("Enable DAG combiner's use of IR alias analysis"));
+@@ -11404,7 +11416,8 @@
+     }
+   }
+ 
+-  if (LD->isUnindexed()) {
++  if (LD->isUnindexed() &&
++      !(ExperimentDisableO0LoadChain && OptLevel == CodeGenOpt::None)) {
+     // Walk up chain skipping non-aliasing memory nodes.
+     SDValue BetterChain = FindBetterChain(N, Chain);
+ 
+@@ -11433,7 +11446,8 @@
+   }
+ 
+   // Try transforming N to an indexed load.
+-  if (CombineToPreIndexedLoadStore(N) || CombineToPostIndexedLoadStore(N))
++  if (!(ExperimentDisableO0IndexedLoads && OptLevel == CodeGenOpt::None) &&
++      (CombineToPreIndexedLoadStore(N) || CombineToPostIndexedLoadStore(N)))
+     return SDValue(N, 0);
+ 
+   // Try to slice up N to more direct loads if the slices are mapped to
+@@ -13352,6 +13366,22 @@
+       && Value.getNode()->hasOneUse() && ST->isUnindexed() &&
+       TLI.isTruncStoreLegal(Value.getOperand(0).getValueType(),
+                             ST->getMemoryVT())) {
++    // Experiment: preserve a pre-legalization truncate(load) long enough for
++    // visitTRUNCATE's existing ReduceLoadWidth legality checks and rewrite.
++    // Do not construct a narrower load here. If that fold is not legal or
++    // profitable, ordinary truncating-store folding remains available later.
++    if (ExperimentDeferO0TruncLoadStore && OptLevel == CodeGenOpt::None &&
++        !LegalTypes && Value.getOpcode() == ISD::TRUNCATE &&
++        Value.getValueType().isScalarInteger()) {
++      if (LoadSDNode *LD = dyn_cast<LoadSDNode>(Value.getOperand(0))) {
++        if (LD->isUnindexed() && !LD->isVolatile() &&
++            LD->getExtensionType() == ISD::NON_EXTLOAD &&
++            Value.getOperand(0).hasOneUse()) {
++          AddToWorklist(Value.getNode());
++          return SDValue();
++        }
++      }
++    }
+     return DAG.getTruncStore(Chain, SDLoc(N), Value.getOperand(0),
+                              Ptr, ST->getMemoryVT(), ST->getMemOperand());
+   }
+--- a/lib/CodeGen/SelectionDAG/SelectionDAGISel.cpp
++++ b/lib/CodeGen/SelectionDAG/SelectionDAGISel.cpp
+@@ -375,6 +375,65 @@
+   }
+ }
+ 
++static cl::opt<bool> ExperimentFoldO0SubregRoundtrip(
++    "experiment-fold-o0-subreg-roundtrip", cl::Hidden, cl::init(false),
++    cl::desc("Fold narrow extract of undef-based insert before O0 fast RA"));
++
++// Only forward an exact 32-bit value through a sole-use 64-bit wrapper.
++// hasOneUse includes debug uses: never discard a separately observed wrapper.
++static void foldO0SubregRoundtrips(MachineFunction &MF,
++                                  MachineRegisterInfo &MRI,
++                                  const TargetRegisterInfo &TRI) {
++  if (!ExperimentFoldO0SubregRoundtrip || !MRI.isSSA() ||
++      (MF.getTarget().getOptLevel() != CodeGenOpt::None &&
++       !MF.getFunction()->hasFnAttribute(Attribute::OptimizeNone)))
++    return;
++  for (MachineBasicBlock &MBB : MF) {
++    for (auto I = MBB.begin(), E = MBB.end(); I != E;) {
++      MachineInstr &Copy = *I++;
++      if (!Copy.isCopy() || Copy.getNumOperands() != 2)
++        continue;
++      MachineOperand &Dst = Copy.getOperand(0), &Ext = Copy.getOperand(1);
++      if (!Dst.isReg() || !Ext.isReg() || Dst.getSubReg() ||
++          !Ext.getSubReg() || Ext.isUndef() ||
++          !TargetRegisterInfo::isVirtualRegister(Dst.getReg()) ||
++          !TargetRegisterInfo::isVirtualRegister(Ext.getReg()) ||
++          !MRI.hasOneDef(Ext.getReg()) || !MRI.hasOneUse(Ext.getReg()))
++        continue;
++      MachineInstr *Insert = MRI.getVRegDef(Ext.getReg());
++      if (Insert->getOpcode() != TargetOpcode::INSERT_SUBREG ||
++          Insert->getNumOperands() != 4 || Insert->getParent() != &MBB ||
++          Insert->getOperand(0).getSubReg() ||
++          Insert->getOperand(3).getImm() != Ext.getSubReg())
++        continue;
++      const MachineOperand &Base = Insert->getOperand(1);
++      const MachineOperand &Val = Insert->getOperand(2);
++      if (!Base.isReg() || !Val.isReg() || Base.getSubReg() ||
++          Val.getSubReg() || Val.isUndef() ||
++          !TargetRegisterInfo::isVirtualRegister(Base.getReg()) ||
++          !TargetRegisterInfo::isVirtualRegister(Val.getReg()) ||
++          !MRI.hasOneDef(Base.getReg()) || !MRI.hasOneUse(Base.getReg()) ||
++          !MRI.hasOneDef(Val.getReg()))
++        continue;
++      MachineInstr *Undef = MRI.getVRegDef(Base.getReg());
++      if (!Undef->isImplicitDef() || Undef->getParent() != &MBB ||
++          TRI.getRegSizeInBits(*MRI.getRegClass(Ext.getReg())) != 64 ||
++          TRI.getRegSizeInBits(*MRI.getRegClass(Val.getReg())) != 32 ||
++          TRI.getRegSizeInBits(*MRI.getRegClass(Dst.getReg())) != 32 ||
++          !MRI.constrainRegClass(Val.getReg(), MRI.getRegClass(Dst.getReg())))
++        continue;
++      unsigned SrcReg = Val.getReg();
++      // Register-class intersection preserves every source and destination use.
++      // SSA guarantees the forwarded definition dominates the original copy.
++      MRI.replaceRegWith(Dst.getReg(), SrcReg);
++      MRI.clearKillFlags(SrcReg);
++      Copy.eraseFromParent();
++      Insert->eraseFromParent();
++      Undef->eraseFromParent();
++    }
++  }
++}
++
+ bool SelectionDAGISel::runOnMachineFunction(MachineFunction &mf) {
+   // If we already selected that function, we do not need to run SDISel.
+   if (mf.getProperties().hasProperty(
+@@ -615,6 +674,8 @@
+   }
+ 
+   TLI->finalizeLowering(*MF);
++
++  foldO0SubregRoundtrips(*MF, MRI, TRI);
+ 
+   // Release function-specific state. SDB and CurDAG are already cleared
+   // at this point.
+--- a/lib/Target/AArch64/AArch64ISelDAGToDAG.cpp
++++ b/lib/Target/AArch64/AArch64ISelDAGToDAG.cpp
+@@ -33,6 +33,10 @@
+ /// instructions for SelectionDAG operations.
+ ///
+ namespace {
++
++static cl::opt<bool> ExperimentSignExtendO0ByteStore(
++    "experiment-sign-extend-o0-byte-store", cl::Hidden, cl::init(false),
++    cl::desc("Prefer a signed single-MOV constant for sole-use O0 byte stores"));
+ 
+ class AArch64DAGToDAGISel : public SelectionDAGISel {
+ 
+@@ -2663,6 +2667,39 @@
+     DEBUG(errs() << "== "; Node->dump(CurDAG); errs() << "\n");
+     Node->setNodeId(-1);
+     return;
++  }
++
++  // A byte store observes only the low eight bits. Preserve all other uses
++  // by requiring a sole-use, non-debug-observed constant and selecting a new
++  // materialization solely for this store. Both representations must have the
++  // same one-MOV instruction cost; this is an O0 tie-breaking policy only.
++  if (ExperimentSignExtendO0ByteStore &&
++      (OptLevel == CodeGenOpt::None ||
++       MF->getFunction()->hasFnAttribute(Attribute::OptimizeNone))) {
++    if (auto *ST = dyn_cast<StoreSDNode>(Node)) {
++      SDValue V = ST->getValue();
++      auto *C = dyn_cast<ConstantSDNode>(V);
++      if (C && ST->isTruncatingStore() && ST->isUnindexed() &&
++          !ST->isVolatile() && ST->getMemoryVT() == MVT::i8 &&
++          V.getValueType() == MVT::i32 && V.hasOneUse() &&
++          !C->getHasDebugValue()) {
++        APInt Signed = C->getAPIntValue().trunc(8).sext(32);
++        uint64_t Old = C->getZExtValue(), New = Signed.getZExtValue();
++        if (Old != New && AArch64_AM::isAnyMOVWMovAlias(Old, 32) &&
++            AArch64_AM::isAnyMOVWMovAlias(New, 32)) {
++          SDLoc DL(Node);
++          SDNode *Mov = CurDAG->getMachineNode(
++              AArch64::MOVi32imm, DL, MVT::i32,
++              CurDAG->getTargetConstant(Signed, DL, MVT::i32));
++          SmallVector<SDValue, 4> Ops(Node->op_begin(), Node->op_end());
++          Ops[1] = SDValue(Mov, 0);
++          SDNode *Updated = CurDAG->UpdateNodeOperands(Node, Ops);
++          if (Updated != Node)
++            ReplaceNode(Node, Updated);
++          Node = Updated;
++        }
++      }
++    }
+   }
+ 
+   // Few custom selection stuff.

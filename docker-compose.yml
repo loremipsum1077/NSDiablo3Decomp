@@ -1,0 +1,19 @@
+services:
+  build:
+    build:
+      context: ./toolchain
+      args:
+        CLANG_VERSION: ${CLANG_VERSION:-5.0.1}
+        # Host architecture of the image (toolchain/Dockerfile).  linux/arm64
+        # is the Mac default; an x86_64 gate box exports
+        # D3_DOCKER_PLATFORM=linux/amd64.  Either way the compiler cross-
+        # compiles to aarch64 and the ELF is identical.
+        D3_DOCKER_PLATFORM: ${D3_DOCKER_PLATFORM:-linux/arm64}
+        LLVM_ARCH: ${LLVM_ARCH:-}
+    image: d3-build:${CLANG_VERSION:-5.0.1}
+    platform: ${D3_DOCKER_PLATFORM:-linux/arm64}
+    # Compilation needs no network. Avoid allocating a network per clean checkout.
+    network_mode: none
+    volumes:
+      - .:/work
+    working_dir: /work

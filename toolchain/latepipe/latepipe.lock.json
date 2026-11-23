@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "source_sha256": "0efc05489e7748d44f8efcf31d04a9160db2f7f6523db993d00cd4bce4fca8a4",
+  "image": "d3-lua-build:5.0.1",
+  "gxx_version": "g++ (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0",
+  "flags": ["-shared", "-fPIC", "-O2", "-std=c++11", "-fno-rtti", "-fvisibility-inlines-hidden",
+            "-D_GNU_SOURCE", "-D__STDC_CONSTANT_MACROS", "-D__STDC_FORMAT_MACROS", "-D__STDC_LIMIT_MACROS",
+            "-I/opt/llvm/include", "-Wl,-z,nodelete"],
+  "plugin_sha256": {
+    "linux/arm64": "f135310a8c8f216282e7459ab0d85d15eef25909f4bfa2cb649e3d488ccd43d3"
+  }
+}

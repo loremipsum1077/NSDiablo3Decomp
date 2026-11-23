@@ -1,0 +1,140 @@
+diff --git a/viking/src/checks.rs b/viking/src/checks.rs
+index 6278a32..6da3aa8 100644
+--- a/viking/src/checks.rs
++++ b/viking/src/checks.rs
+@@ -195,11 +195,23 @@ pub struct FunctionChecker<'a, 'functions, 'orig_elf, 'decomp_elf> {
+ // Keep track of registers that are used with ADRP so that we can check global data
+ // references even when data is not placed at the same addresses
+ // as in the original executable.
++//
++// The pairing is flow-sensitive for forward branches: every in-function forward
++// branch records the live pairs at its target, and a branch target takes the
++// pairs every incoming edge agrees on.  Without this, an early-return block in
++// the middle of a body (whose epilogue or scratch code rewrites the ADRP base)
++// made every later access off that base be compared as a raw lo12 literal.
++type PairSnapshot = HashMap<cs::RegId, (u64, u64)>;
++
+ #[derive(Default)]
+ struct State {
+     gprs1: HashMap<cs::RegId, u64>,
+     gprs2: HashMap<cs::RegId, u64>,
+     adrp_pair_registers: HashSet<cs::RegId>,
++    // orig address of a forward branch target -> pairs live at each branch to it
++    pending_edges: HashMap<u64, Vec<PairSnapshot>>,
++    // the previous instruction never falls through (b, br, ret)
++    prev_unconditional: bool,
+ }
+ 
+ impl State {
+@@ -208,6 +220,65 @@ impl State {
+             self.adrp_pair_registers.remove(reg);
+         }
+     }
++
++    fn snapshot(&self) -> PairSnapshot {
++        self.adrp_pair_registers
++            .iter()
++            .map(|r| (*r, (self.gprs1[r], self.gprs2[r])))
++            .collect()
++    }
++
++    fn record_edge(&mut self, target: u64) {
++        let snap = self.snapshot();
++        self.pending_edges.entry(target).or_default().push(snap);
++    }
++
++    /// Merge the pairs of every forward edge into `addr` before checking it.
++    fn enter(&mut self, addr: u64) {
++        let Some(edges) = self.pending_edges.remove(&addr) else {
++            return;
++        };
++        let mut incoming: Vec<PairSnapshot> = edges;
++        if !self.prev_unconditional {
++            incoming.push(self.snapshot());
++        }
++        let (first, rest) = incoming.split_first().unwrap();
++        let merged: PairSnapshot = first
++            .iter()
++            .filter(|(r, v)| rest.iter().all(|s| s.get(r) == Some(v)))
++            .map(|(r, v)| (*r, *v))
++            .collect();
++        self.adrp_pair_registers.clear();
++        for (r, (v1, v2)) in merged {
++            self.gprs1.insert(r, v1);
++            self.gprs2.insert(r, v2);
++            self.adrp_pair_registers.insert(r);
++        }
++    }
++}
++
++/// Target of a direct branch (b, b.cc, cbz/cbnz, tbz/tbnz), decoded from the raw word.
++fn direct_branch_target(word: u32, addr: u64) -> Option<u64> {
++    let sext = |v: u32, bits: u32| -> i64 { ((v << (32 - bits)) as i32 >> (32 - bits)) as i64 };
++    let off = if word & 0xfc00_0000 == 0x1400_0000 {
++        sext(word & 0x03ff_ffff, 26) // b
++    } else if word & 0xff00_0010 == 0x5400_0000 {
++        sext((word >> 5) & 0x7_ffff, 19) // b.cc
++    } else if word & 0x7e00_0000 == 0x3400_0000 {
++        sext((word >> 5) & 0x7_ffff, 19) // cbz / cbnz
++    } else if word & 0x7e00_0000 == 0x3600_0000 {
++        sext((word >> 5) & 0x3fff, 14) // tbz / tbnz
++    } else {
++        return None;
++    };
++    Some((addr as i64 + off * 4) as u64)
++}
++
++/// b, br and ret never fall through.
++fn is_unconditional(word: u32) -> bool {
++    word & 0xfc00_0000 == 0x1400_0000
++        || word & 0xffff_fc1f == 0xd61f_0000
++        || word & 0xffff_fc1f == 0xd65f_0000
+ }
+ 
+ impl<'a, 'functions, 'orig_elf, 'decomp_elf>
+@@ -320,6 +391,15 @@ impl<'a, 'functions, 'orig_elf, 'decomp_elf>
+ 
+             let id = ids.0;
+ 
++            state.enter(i1.address());
++            let word = u32::from_le_bytes(i1.bytes()[..4].try_into().unwrap());
++            if let Some(target) = direct_branch_target(word, i1.address()) {
++                if target > i1.address() && orig_fn.get_addr_range().contains(&target) {
++                    state.record_edge(target);
++                }
++            }
++            state.prev_unconditional = is_unconditional(word);
++
+             match id.into() {
+                 // Branches or function calls.
+                 Arm64Insn::ARM64_INS_B | Arm64Insn::ARM64_INS_BL => {
+@@ -612,3 +692,29 @@ impl<'a, 'functions, 'orig_elf, 'decomp_elf>
+             .or_else(|| elf::plt_addr_to_name(self.decomp_elf, decomp_addr))
+     }
+ }
++
++#[cfg(test)]
++mod adrp_flow_tests {
++    use super::{direct_branch_target, is_unconditional};
++
++    #[test]
++    fn decodes_direct_branches() {
++        let at = 0x22df18u64;
++        assert_eq!(direct_branch_target(0x1400_0004, at), Some(at + 0x10)); // b +0x10
++        assert_eq!(direct_branch_target(0x17ff_fffe, at), Some(at - 8)); // b -8
++        assert_eq!(direct_branch_target(0x5400_0341, at), Some(at + 0x68)); // b.ne
++        assert_eq!(direct_branch_target(0xb400_0088, at), Some(at + 0x10)); // cbz x8
++        assert_eq!(direct_branch_target(0x37f8_0329, at), Some(at + 0x64)); // tbnz w9, #31
++        assert_eq!(direct_branch_target(0x9400_0004, at), None); // bl is a call
++        assert_eq!(direct_branch_target(0xd65f_03c0, at), None); // ret
++    }
++
++    #[test]
++    fn classifies_terminators() {
++        assert!(is_unconditional(0x1400_0004)); // b
++        assert!(is_unconditional(0xd65f_03c0)); // ret
++        assert!(is_unconditional(0xd61f_0200)); // br x16
++        assert!(!is_unconditional(0x5400_0341)); // b.ne
++        assert!(!is_unconditional(0x9400_0004)); // bl
++    }
++}

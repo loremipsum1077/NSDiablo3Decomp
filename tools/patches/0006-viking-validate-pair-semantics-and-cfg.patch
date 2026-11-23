@@ -1,0 +1,468 @@
+diff --git a/viking/src/checks.rs b/viking/src/checks.rs
+--- a/viking/src/checks.rs
++++ b/viking/src/checks.rs
+@@ -3,9 +3,8 @@
+ use cs::arch::arm64::{Arm64Insn, Arm64Operand, Arm64OperandType};
+ use lazy_init::Lazy;
+ use rustc_hash::FxHashMap;
+-use std::collections::{HashMap, HashSet};
++use std::collections::{HashMap, HashSet, VecDeque};
+ use std::convert::TryInto;
+-use std::iter::zip;
+ use std::path::{Path, PathBuf};
+ 
+ use crate::{capstone_utils::*, elf, functions, repo, ui};
+@@ -138,6 +137,8 @@
+     FunctionCall(ReferenceDiff),
+     DataReference(ReferenceDiff),
+     Immediate,
++    PairEncoding,
++    PairEvidence(&'static str),
+     Unknown,
+     InternalError(String),
+ }
+@@ -152,6 +153,11 @@
+             Self::FunctionCall(diff) => write!(f, "wrong function call\n{diff}"),
+             Self::DataReference(diff) => write!(f, "wrong data reference\n{diff}"),
+             Self::Immediate => write!(f, "wrong immediate"),
++            Self::PairEncoding => write!(
++                f,
++                "instruction differs outside a supported relocation immediate"
++            ),
++            Self::PairEvidence(reason) => write!(f, "unproven ADRP pair: {reason}"),
+             Self::Unknown => write!(f, "unknown reason"),
+             Self::InternalError(msg) => write!(f, "internal error: {}", msg),
+         }
+@@ -192,15 +198,9 @@
+     orig_got_section: Option<&'orig_elf goblin::elf::SectionHeader>,
+ }
+ 
+-// Keep track of registers that are used with ADRP so that we can check global data
+-// references even when data is not placed at the same addresses
+-// as in the original executable.
+-//
+-// The pairing is flow-sensitive for forward branches: every in-function forward
+-// branch records the live pairs at its target, and a branch target takes the
+-// pairs every incoming edge agrees on.  Without this, an early-return block in
+-// the middle of a body (whose epilogue or scratch code rewrites the ADRP base)
+-// made every later access off that base be compared as a raw lo12 literal.
++// A must-analysis over the complete direct CFG: a pair is available only when
++// every reachable predecessor agrees on both page values. Compute to convergence
++// before comparing any instruction, so a later backedge can invalidate a pair.
+ type PairSnapshot = HashMap<cs::RegId, (u64, u64)>;
+ 
+ #[derive(Default)]
+@@ -208,53 +208,188 @@
+     gprs1: HashMap<cs::RegId, u64>,
+     gprs2: HashMap<cs::RegId, u64>,
+     adrp_pair_registers: HashSet<cs::RegId>,
+-    // orig address of a forward branch target -> pairs live at each branch to it
+-    pending_edges: HashMap<u64, Vec<PairSnapshot>>,
+-    // the previous instruction never falls through (b, br, ret)
+-    prev_unconditional: bool,
++    entries: HashMap<u64, PairSnapshot>,
++    unsupported_flow: bool,
+ }
+ 
+ impl State {
+-    fn forget_modified_registers(&mut self, detail: &cs::InsnDetail) {
+-        for reg in detail.regs_write() {
+-            self.adrp_pair_registers.remove(reg);
+-        }
+-    }
+-
+-    fn snapshot(&self) -> PairSnapshot {
+-        self.adrp_pair_registers
+-            .iter()
+-            .map(|r| (*r, (self.gprs1[r], self.gprs2[r])))
+-            .collect()
+-    }
+-
+-    fn record_edge(&mut self, target: u64) {
+-        let snap = self.snapshot();
+-        self.pending_edges.entry(target).or_default().push(snap);
+-    }
+-
+-    /// Merge the pairs of every forward edge into `addr` before checking it.
++    fn missing_pair(&self, addr: u64) -> MismatchCause {
++        MismatchCause::PairEvidence(if self.unsupported_flow {
++            "reachable indirect jump or interior call requires unresolved control-flow edges"
++        } else if !self.entries.contains_key(&addr) {
++            "instruction is unreachable in the supported entry CFG"
++        } else {
++            "no common live page pair on every predecessor (clobber or conflicting flow)"
++        })
++    }
++
+     fn enter(&mut self, addr: u64) {
+-        let Some(edges) = self.pending_edges.remove(&addr) else {
+-            return;
++        self.gprs1.clear();
++        self.gprs2.clear();
++        self.adrp_pair_registers.clear();
++        if let Some(pairs) = self.entries.get(&addr) {
++            for (&reg, &(original, rebuilt)) in pairs {
++                self.gprs1.insert(reg, original);
++                self.gprs2.insert(reg, rebuilt);
++                self.adrp_pair_registers.insert(reg);
++            }
++        }
++    }
++}
++
++// Capstone uses distinct IDs for W/X registers, and special IDs for FP/LR.
++fn gpr_number(cs: &cs::Capstone, reg: cs::RegId) -> Option<u8> {
++    let name = cs.reg_name(reg)?;
++    match name.as_str() {
++        "fp" => Some(29),
++        "lr" => Some(30),
++        _ => name
++            .strip_prefix('x')
++            .or_else(|| name.strip_prefix('w'))?
++            .parse()
++            .ok(),
++    }
++}
++
++#[derive(Default)]
++struct FlowNode {
++    successors: Vec<usize>,
++    killed: HashSet<u8>,
++    generated: Option<(cs::RegId, (u64, u64))>,
++    unknown_successors: bool,
++}
++
++fn pair_flow(
++    cs: &cs::Capstone,
++    original: &elf::Function,
++    rebuilt: &elf::Function,
++) -> Result<State> {
++    let count = original.code.len() / 4;
++    let mut nodes: Vec<FlowNode> = (0..count).map(|_| FlowNode::default()).collect();
++    for (index, node) in nodes.iter_mut().enumerate() {
++        let offset = index * 4;
++        let addr = original.addr + offset as u64;
++        let word = u32::from_le_bytes(original.code[offset..offset + 4].try_into().unwrap());
++        let ours = u32::from_le_bytes(rebuilt.code[offset..offset + 4].try_into().unwrap());
++        // Embedded traps and undecodable words must not carry evidence forward.
++        if word == 0xe7ff_defe || is_brk(word) {
++            continue;
++        }
++        let decoded1 = cs
++            .disasm_all(&original.code[offset..offset + 4], addr)
++            .or_else(translate_cs_error)?;
++        let decoded2 = cs
++            .disasm_all(
++                &rebuilt.code[offset..offset + 4],
++                rebuilt.addr + offset as u64,
++            )
++            .or_else(translate_cs_error)?;
++        let (Some(i1), Some(i2)) = (decoded1.iter().next(), decoded2.iter().next()) else {
++            continue;
+         };
+-        let mut incoming: Vec<PairSnapshot> = edges;
+-        if !self.prev_unconditional {
+-            incoming.push(self.snapshot());
+-        }
+-        let (first, rest) = incoming.split_first().unwrap();
+-        let merged: PairSnapshot = first
+-            .iter()
+-            .filter(|(r, v)| rest.iter().all(|s| s.get(r) == Some(v)))
+-            .map(|(r, v)| (*r, *v))
+-            .collect();
+-        self.adrp_pair_registers.clear();
+-        for (r, (v1, v2)) in merged {
+-            self.gprs1.insert(r, v1);
+-            self.gprs2.insert(r, v2);
+-            self.adrp_pair_registers.insert(r);
+-        }
+-    }
++        for insn in [i1, i2] {
++            let detail = cs.insn_detail(insn).or_else(translate_cs_error)?;
++            for &reg in detail.regs_write() {
++                if let Some(number) = gpr_number(cs, reg) {
++                    node.killed.insert(number);
++                }
++            }
++        }
++        // An indirect jump might enter any local block. A call into the middle
++        // of this function has unresolved return edges. Exact-entry recursion
++        // instead follows the same ABI as other calls: entry already has no
++        // incoming pair evidence, and the continuation loses caller-saved state.
++        let call_target = (addr as i64 + (((word << 6) as i32 >> 6) as i64) * 4) as u64;
++        node.unknown_successors = word & 0xffff_fc1f == 0xd61f_0000
++            || (word & 0xfc00_0000 == 0x9400_0000
++                && original.get_addr_range().contains(&call_target)
++                && call_target != original.addr);
++        // AAPCS64 call-clobbered registers, including platform register x18 and LR.
++        if word & 0xfc00_0000 == 0x9400_0000 || word & 0xffff_fc1f == 0xd63f_0000 {
++            node.killed.extend(0..=18);
++            node.killed.insert(30);
++        }
++        if word & 0x9f00_0000 == 0x9000_0000 && word & 0x9f00_001f == ours & 0x9f00_001f {
++            let d1 = cs.insn_detail(i1).or_else(translate_cs_error)?;
++            let d2 = cs.insn_detail(i2).or_else(translate_cs_error)?;
++            let a1 = d1.arch_detail();
++            let a2 = d2.arch_detail();
++            let op1 = a1.arm64().unwrap().operands_ref();
++            let op2 = a2.arm64().unwrap().operands_ref();
++            let reg = Arm64Operand::from(&op1[0]).op_type.reg();
++            node.generated = Some((
++                reg,
++                (
++                    Arm64Operand::from(&op1[1]).op_type.imm() as u64,
++                    Arm64Operand::from(&op2[1]).op_type.imm() as u64,
++                ),
++            ));
++        }
++        if let Some(target) = direct_branch_target(word, addr) {
++            if original.get_addr_range().contains(&target) && (target - original.addr) % 4 == 0 {
++                node.successors
++                    .push(((target - original.addr) / 4) as usize);
++            }
++        }
++        if !is_unconditional(word) && index + 1 < count {
++            node.successors.push(index + 1);
++        }
++    }
++    let mut entries: Vec<Option<PairSnapshot>> = vec![None; count];
++    let mut work = VecDeque::new();
++    if count > 0 {
++        entries[0] = Some(PairSnapshot::new());
++        work.push_back(0);
++    }
++    while let Some(index) = work.pop_front() {
++        let node = &nodes[index];
++        if node.unknown_successors {
++            return Ok(State {
++                unsupported_flow: true,
++                ..State::default()
++            });
++        }
++        let mut output = entries[index].as_ref().unwrap().clone();
++        output.retain(|reg, _| {
++            gpr_number(cs, *reg).map_or(false, |number| !node.killed.contains(&number))
++        });
++        if let Some((reg, pages)) = node.generated {
++            output.insert(reg, pages);
++        }
++        for &target in &node.successors {
++            let changed = if let Some(old) = &mut entries[target] {
++                let before = old.len();
++                old.retain(|reg, pages| output.get(reg) == Some(pages));
++                before != old.len()
++            } else {
++                entries[target] = Some(output.clone());
++                true
++            };
++            if changed {
++                work.push_back(target);
++            }
++        }
++    }
++    Ok(State {
++        entries: entries
++            .into_iter()
++            .enumerate()
++            .filter_map(|(index, pairs)| {
++                pairs.map(|pairs| (original.addr + index as u64 * 4, pairs))
++            })
++            .collect(),
++        ..State::default()
++    })
++}
++
++// Only these forms have a static relocatable immediate. Preserve every other
++// encoding bit, including ADD shift/width and memory size/opcode/registers.
++fn same_add_encoding(original: u32, rebuilt: u32) -> bool {
++    original & 0xffc0_0000 == 0x9100_0000 && original & !0x003f_fc00 == rebuilt & !0x003f_fc00
++}
++
++fn same_memory_encoding(original: u32, rebuilt: u32) -> bool {
++    original & 0x3b00_0000 == 0x3900_0000 && original & !0x003f_fc00 == rebuilt & !0x003f_fc00
+ }
+ 
+ /// Target of a direct branch (b, b.cc, cbz/cbnz, tbz/tbnz), decoded from the raw word.
+@@ -336,15 +471,15 @@
+         orig_fn: &elf::Function,
+         decomp_fn: &elf::Function,
+     ) -> Result<Option<Mismatch>> {
+-        let mut state = State::default();
+-
+-        if orig_fn.code.len() != decomp_fn.code.len() {
++        if orig_fn.code.len() != decomp_fn.code.len() || orig_fn.code.len() % 4 != 0 {
+             return Ok(Some(Mismatch {
+                 addr_orig: orig_fn.addr,
+                 addr_decomp: decomp_fn.addr,
+                 cause: MismatchCause::FunctionSize,
+             }));
+         }
++
++        let mut state = pair_flow(cs, orig_fn, decomp_fn)?;
+ 
+         // The NX clang fork is built with `-mllvm -trap-unreachable`: every
+         // noreturn call is followed by `udf #0xdefe` (0xe7ffdefe), which
+@@ -397,11 +532,13 @@
+         // Require a full pair at every offset, including after embedded traps;
+         // exhausting either iterator early must never count as a match.
+         for off in (start..end).step_by(4) {
+-            let mismatch = || Some(Mismatch {
+-                addr_orig: orig_fn.addr + off as u64,
+-                addr_decomp: decomp_fn.addr + off as u64,
+-                cause: MismatchCause::Unknown,
+-            });
++            let mismatch = || {
++                Some(Mismatch {
++                    addr_orig: orig_fn.addr + off as u64,
++                    addr_decomp: decomp_fn.addr + off as u64,
++                    cause: MismatchCause::Unknown,
++                })
++            };
+             let (Some(i1), Some(i2)) = (instructions.0.next(), instructions.1.next()) else {
+                 return Ok(mismatch());
+             };
+@@ -426,12 +563,7 @@
+ 
+             state.enter(i1.address());
+             let word = u32::from_le_bytes(i1.bytes()[..4].try_into().unwrap());
+-            if let Some(target) = direct_branch_target(word, i1.address()) {
+-                if target > i1.address() && orig_fn.get_addr_range().contains(&target) {
+-                    state.record_edge(target);
+-                }
+-            }
+-            state.prev_unconditional = is_unconditional(word);
++            let ours = u32::from_le_bytes(i2.bytes().try_into().unwrap());
+ 
+             match id.into() {
+                 // Branches or function calls.
+@@ -477,8 +609,11 @@
+                 // Catch ADRP + ADD instruction pairs.
+                 Arm64Insn::ARM64_INS_ADD => {
+                     let mut diff_ok = false;
+-
+-                    if ops.0.len() == 3 && ops.1.len() == 3 {
++                    if i1.bytes() != i2.bytes() && !same_add_encoding(word, ours) {
++                        return Self::make_mismatch(&i1, &i2, MismatchCause::PairEncoding);
++                    }
++
++                    if same_add_encoding(word, ours) && ops.0.len() == 3 && ops.1.len() == 3 {
+                         let dest_reg =
+                             map_pair(&ops, |ops| Arm64Operand::from(&ops[0]).op_type.reg());
+                         let reg = map_pair(&ops, |ops| Arm64Operand::from(&ops[1]).op_type.reg());
+@@ -509,10 +644,8 @@
+                     }
+ 
+                     if !diff_ok && i1.bytes() != i2.bytes() {
+-                        return Self::make_mismatch(&i1, &i2, MismatchCause::Unknown);
++                        return Self::make_mismatch(&i1, &i2, state.missing_pair(i1.address()));
+                     }
+-
+-                    state.forget_modified_registers(&detail.0);
+                 }
+ 
+                 // Loads and stores (single or paired).
+@@ -521,35 +654,23 @@
+                 {
+                     let mut diff_ok = false;
+ 
+-                    // Check all operands for mismatches, except the Arm64OpMem which will be checked later.
+-                    let mut mem = (None, None);
+-                    for (op1, op2) in zip(ops.0, ops.1) {
+-                        let op1 = Arm64Operand::from(op1);
+-                        let op2 = Arm64Operand::from(op2);
+-                        if let Some(mem1) = op1.op_type.try_mem() {
+-                            if let Some(mem2) = op2.op_type.try_mem() {
+-                                ensure!(
+-                                    mem.0.is_none() && mem.1.is_none(),
+-                                    "found more than one OpMem"
+-                                );
+-                                mem.0 = Some(mem1);
+-                                mem.1 = Some(mem2);
+-                                continue;
+-                            }
++                    // Indexed, writeback, pair and literal forms are compared raw.
++                    // They cannot be interpreted as page + a static lo12 offset.
++                    if !same_memory_encoding(word, ours) {
++                        if i1.bytes() != i2.bytes() {
++                            return Self::make_mismatch(&i1, &i2, MismatchCause::PairEncoding);
+                         }
+-
+-                        if op1 != op2 {
+-                            return Self::make_mismatch(&i1, &i2, MismatchCause::Unknown);
+-                        }
++                        continue;
+                     }
+-
+-                    ensure!(mem.0.is_some() && mem.1.is_some(), "didn't find an OpMem");
+-
+-                    let mem = (mem.0.unwrap(), mem.1.unwrap());
+-
+-                    if mem.0.base() != mem.1.base() {
+-                        return Self::make_mismatch(&i1, &i2, MismatchCause::Register);
+-                    }
++                    let mem = map_pair(&ops, |operands| {
++                        operands
++                            .iter()
++                            .find_map(|op| Arm64Operand::from(op).op_type.try_mem())
++                    });
++                    let (Some(mem1), Some(mem2)) = mem else {
++                        return Self::make_mismatch(&i1, &i2, MismatchCause::PairEncoding);
++                    };
++                    let mem = (mem1, mem2);
+ 
+                     let reg = mem.0.base();
+ 
+@@ -570,10 +691,8 @@
+                     }
+ 
+                     if !diff_ok && i1.bytes() != i2.bytes() {
+-                        return Self::make_mismatch(&i1, &i2, MismatchCause::Unknown);
++                        return Self::make_mismatch(&i1, &i2, state.missing_pair(i1.address()));
+                     }
+-
+-                    state.forget_modified_registers(&detail.0);
+                 }
+ 
+                 // Anything else.
+@@ -581,8 +700,6 @@
+                     if i1.bytes() != i2.bytes() {
+                         return Self::make_mismatch(&i1, &i2, MismatchCause::Unknown);
+                     }
+-
+-                    state.forget_modified_registers(&detail.0);
+                 }
+             }
+         }
+@@ -783,3 +900,32 @@
+         assert!(!same_branch_encoding(0x1400_0004, 0x9400_0004));
+     }
+ }
++
++#[cfg(test)]
++mod pair_encoding_tests {
++    use super::{same_add_encoding, same_memory_encoding};
++
++    #[test]
++    fn only_lo12_immediates_may_change() {
++        for bit in 0..32 {
++            let relocatable = 0x003f_fc00 & (1u32 << bit) != 0;
++            assert_eq!(
++                same_add_encoding(0x9100_0260, 0x9100_0260 ^ (1 << bit)),
++                relocatable
++            );
++            for word in [0xf940_0260, 0xf900_0260, 0x3940_0260, 0xbd40_0260] {
++                assert_eq!(same_memory_encoding(word, word ^ (1 << bit)), relocatable);
++            }
++        }
++    }
++
++    #[test]
++    fn excludes_non_static_addressing_forms() {
++        for word in [0x9140_0260, 0x1100_0260, 0x8b00_0260] {
++            assert!(!same_add_encoding(word, word));
++        }
++        for word in [0xf860_6a60, 0xf840_8e60, 0xf840_8660, 0xa940_0660] {
++            assert!(!same_memory_encoding(word, word));
++        }
++    }
++}

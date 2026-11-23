@@ -1,0 +1,85 @@
+// Types adopted from the Hyperlink CU DWARF; original X/Common/OnlineService/Store.h.
+#pragma once
+#include "../../../BlizzardCore/Include/Blizzard/Types.h"
+namespace OnlineService {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+typedef int32 StoreCurrency;
+
+
+
+
+
+
+
+
+
+
+
+
+
+enum StoreCategories {
+    STORE_CATEGORY_INVALID = -1,
+    STORE_CATEGORY_FEATURED = 0,
+    STORE_CATEGORY_CURRENCY_PURCHASE = 1,
+    STORE_CATEGORY_ADVENTURE = 2,
+    STORE_CATEGORY_EXPANSION = 3,
+    STORE_CATEGORY_NECROMANCER = 4,
+    STORE_CATEGORY_PERSONALIZATION = 5,
+    STORE_CATEGORY_ENHANCEMENTS = 6,
+    STORE_CATEGORY_PREMIUM_PASS = 7,
+    STORE_CATEGORY_CRUSADER = 8,
+    STORE_CATEGORY_ADVENTURE_PASS = 9,
+    STORE_CATEGORY_WINGS = 10,
+    STORE_CATEGORY_PETS = 11,
+    STORE_CATEGORY_PORTRAIT_FRAMES = 12,
+    STORE_CATEGORY_PENNANTS = 13,
+    STORE_CATEGORY_BOOSTS = 14,
+    STORE_CATEGORY_CHARACTER_SLOTS = 15,
+    STORE_CATEGORY_STASH_SPACE = 16,
+    STORE_CATEGORY_BATTLECHEST = 17,
+    STORE_CATEGORY_COUNT = 18,
+    STORE_CATEGORY_FIRST = 0,
+    STORE_CATEGORY_MAIN_FIRST = 0,
+    STORE_CATEGORY_MAIN_LAST = 6,
+    STORE_CATEGORY_SUB_FIRST = 7,
+    STORE_CATEGORY_SUB_LAST = 16,
+    STORE_CATEGORY_HIDDEN_FIRST = 17,
+    STORE_CATEGORY_HIDDEN_LAST = 17,
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+} // namespace OnlineService

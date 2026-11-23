@@ -1,0 +1,683 @@
+rank,class,src_id,owner,compiler,functions,u_functions,u_bytes,o_functions,m_functions,largest_u,tier,missing_headers,unrecovered_helper_headers,qualified_names,anon_rodata_refs,anon_data_refs,private_named_data,indirect_branches,sibling_recovered,upstream,p_match,expected_bytes
+1,landable-v1,SRC-8c0754466afa,X/Client/UserInterface/Interface/UITransmuteCommon.cpp,5.0.1,25,25,10160,0,0,2876,ready,0,4,0,0,0,0,0,0.173,,0.208,2113
+2,landable-v1,SRC-ca77112db03c,Contrib/Contrib/Domino/Dynamics/Contacts/dmContactSolver.cpp,5.0.1,6,5,7696,1,0,4476,ready,0,1,0,0,0,0,0,0.32,,0.264,2032
+3,landable-v1,SRC-4fe75f1f7fc9,X/Client/Camera/Camera.cpp,5.0.1,8,8,3172,0,0,1208,headers,1,1,0,0,0,0,0,0.487,,0.339,1075
+4,landable-v1,SRC-a108b31cc405,X/Common/CosmeticItems.cpp,5.0.1,16,16,3484,0,0,904,ready,0,1,0,0,0,0,0,0.162,,0.293,1020
+5,landable-v1,SRC-44e180fbbd55,Contrib/Contrib/Domino/Dynamics/Joints/dmSphericalJoint.cpp,5.0.1,4,4,3776,0,0,1656,ready,0,1,0,0,0,0,0,0.0,,0.22,831
+6,landable-v1,SRC-0b7c1ad7c7da,X/Server/STimedEvents.cpp,5.0.1,10,10,4932,0,0,1284,ready,0,4,0,0,0,0,0,0.053,,0.154,759
+7,landable-v1,SRC-cb8b58af0146,X/Common/ActorAttributes.cpp,5.0.1,16,16,2736,0,0,784,ready,0,2,0,0,0,0,0,0.162,,0.263,719
+8,landable-v1,SRC-3645b07f39fa,Contrib/Contrib/DemonWare/bdLobby/bdAntiCheat/bdAntiCheatChallenge.cpp,5.0.1,5,5,1212,0,0,784,ready,0,2,0,0,0,0,0,0.76,,0.532,645
+9,landable-v1,SRC-5073427fc65c,X/Server/SCosmeticItems.cpp,5.0.1,5,5,2524,0,0,988,ready,0,1,0,0,0,0,0,0.053,,0.244,615
+10,landable-v1,SRC-ebf0edc4ff96,Contrib/Contrib/Domino/Dynamics/Joints/dmDistanceJoint.cpp,5.0.1,4,4,2776,0,0,1552,ready,0,1,0,0,0,0,0,0.0,,0.22,611
+11,landable-v1,SRC-d5a1c62416fb,Contrib/Contrib/DemonWare/bdLobby/bdMatchMaking/bdSessionInvite.cpp,5.0.1,7,7,1008,0,0,196,ready,0,1,0,0,0,0,0,0.854,,0.604,609
+12,landable-v1,SRC-cec5602d1a78,Contrib/Contrib/DemonWare/bdCore/bdCrypto/bdTomcryptBackport.cpp,5.0.1,1,1,1100,0,0,1100,ready,0,0,0,0,0,0,0,0.516,,0.482,530
+13,landable-v1,SRC-d553fdaf55ac,Externals/curl/lib/conncache.c,5.0.1,8,8,948,0,0,352,ready,0,0,0,0,0,0,0,0.161,curl 7.x upstream C,0.522,495
+14,landable-v1,SRC-ec1c6b0b7a3f,X/Client/UserInterface/Interface/UICraftingCommon.cpp,5.0.1,2,2,2348,0,0,1848,ready,0,4,0,0,0,0,0,0.173,,0.208,488
+15,landable-v1,SRC-f99f3e2b3a28,X/Client/UserInterface/Controls/UICutsceneControl.cpp,5.0.1,9,9,1188,0,0,484,ready,0,1,0,0,0,0,0,0.421,,0.409,486
+16,landable-v1,SRC-cc9631abe26f,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSInitAck.cpp,5.0.1,18,18,2912,0,0,660,headers,1,3,0,0,0,0,0,0.216,,0.157,458
+17,landable-v1,SRC-ac3d2d7ab638,X/Server/SActTransitions.cpp,5.0.1,7,7,1872,0,0,572,ready,0,1,0,0,0,0,0,0.053,,0.244,456
+18,landable-v1,SRC-dc52fcddba51,X/Common/Hero.cpp,5.0.1,5,5,1924,0,0,1048,ready,0,3,0,0,0,0,0,0.162,,0.233,448
+19,landable-v1,SRC-2da9943cc8d0,Externals/curl/lib/select.c,5.0.1,1,1,832,0,0,832,ready,0,0,0,0,0,0,0,0.161,curl 7.x upstream C,0.522,435
+20,landable-v1,SRC-0f353022d0bb,X/Client/UserInterface/Controls/UIListItemControl.cpp,5.0.1,15,15,1400,0,0,216,headers,1,2,0,0,0,0,0,0.421,,0.279,391
+21,landable-v1,SRC-1617c5971836,X/Common/Marker/SmartEncounterMarker.cpp,5.0.1,5,5,1772,0,0,1260,headers,1,5,0,0,0,0,0,0.488,,0.22,389
+22,landable-v1,SRC-35a7d568e0c8,X/Client/UserInterface/Controls/UIRadioButtonControl.cpp,5.0.1,16,16,1928,0,0,376,headers,1,1,0,0,0,0,1,0.421,,0.309,358
+23,landable-v1,SRC-766194b98101,X/Client/Physics/PartialRagdoll.cpp,5.0.1,4,4,1740,0,0,1692,ready,0,6,0,0,0,0,0,0.3,,0.205,357
+24,landable-v1,SRC-77832db45494,X/Common/Marker/SmartAudioVolumeMarker.cpp,5.0.1,8,8,1176,0,0,440,headers,1,3,0,0,0,0,0,0.488,,0.28,329
+25,landable-v1,SRC-9703425b0606,X/Common/ActorCommon.cpp,5.0.1,12,12,2340,0,0,324,headers,1,3,0,0,0,0,0,0.162,,0.133,311
+26,landable-v1,SRC-c5de8cca6e18,X/Common/Marker/SmartAmbientSoundMarker.cpp,5.0.1,8,8,1380,0,0,656,headers,1,5,0,0,0,0,0,0.488,,0.22,303
+27,landable-v1,SRC-29edf8d88abd,Contrib/Contrib/DemonWare/bdLobby/bdAchievementsEngine/bdAchievementsUpdatedPushMessage.cpp,5.0.1,9,9,1496,0,0,468,ready,0,2,0,0,0,0,0,0.0,,0.19,284
+28,landable-v1,SRC-cd9cf3c695f0,Contrib/Contrib/DemonWare/bdPlatform/bdPlatformSocket/bdPlatformStreamSocket-switch.cpp,5.0.1,7,7,856,0,0,172,ready,0,0,0,0,0,0,0,0.182,,0.332,284
+29,landable-v1,SRC-39a4032aa10e,Contrib/Contrib/DemonWare/bdLobby/bdReward/bdRewardEventJSONV2.cpp,5.0.1,12,12,1024,0,0,184,ready,0,0,0,0,0,0,0,0.029,,0.263,269
+30,landable-v1,SRC-fc77ac7bf9a4,Contrib/Contrib/DemonWare/bdCore/bdCrypto/bdCypherAESGCM.cpp,5.0.1,9,9,564,0,0,120,ready,0,1,0,0,0,0,0,0.516,,0.452,255
+31,landable-v1,SRC-92820cccd950,X/Common/ExperienceCommon.cpp,5.0.1,5,5,1220,0,0,344,ready,0,4,0,0,0,0,0,0.162,,0.203,247
+32,landable-v1,SRC-7df339981c43,Contrib/Contrib/DemonWare/bdLobby/bdReward/bdRewardEventJSON.cpp,5.0.1,12,12,924,0,0,188,ready,0,0,0,0,0,0,0,0.029,,0.263,243
+33,landable-v1,SRC-cbda99ca4e89,X/Client/RActors/RActorACDEffects.cpp,5.0.1,4,4,1200,0,0,656,ready,0,2,0,0,0,0,0,0.0,,0.19,228
+34,landable-v1,SRC-0a1b391834f9,X/Client/CMarker.cpp,5.0.1,3,3,1040,0,0,468,ready,0,4,0,0,0,0,0,0.179,,0.21,219
+35,landable-v1,SRC-53c4382e0166,X/Server/SConductor.cpp,5.0.1,20,20,10944,0,0,2516,headers,1,6,0,0,0,0,0,0.053,,0.02,219
+36,landable-v1,SRC-82d607ae3970,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSHeader.cpp,5.0.1,10,10,708,0,0,284,ready,0,2,0,0,0,0,0,0.216,,0.287,203
+37,landable-v1,SRC-a42c3b2c44ca,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSCookieEcho.cpp,5.0.1,10,10,1136,0,0,400,headers,1,3,0,0,0,0,0,0.216,,0.157,179
+38,landable-v1,SRC-5fce7d311a20,X/Client/UserInterface/Controls/UIThumbButtonControl.cpp,5.0.1,6,6,384,0,0,160,ready,0,0,0,0,0,0,0,0.421,,0.439,169
+39,landable-v1,SRC-c13a7b958433,X/Client/Console/TouchGestureTracker.cpp,5.0.1,4,4,712,0,0,488,ready,0,1,0,0,0,0,0,0.039,,0.238,169
+40,landable-v1,SRC-5d52488dd053,X/Server/OnlineService/DataHealUtils.cpp,5.0.1,1,1,996,0,0,996,ready,0,3,0,0,0,0,0,0.0,,0.16,159
+41,landable-v1,SRC-78594401fdad,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSInit.cpp,5.0.1,9,9,1008,0,0,328,headers,1,3,0,0,0,0,0,0.216,,0.157,159
+42,landable-v1,SRC-77ee15ee95f3,Externals/curl/lib/hostasyn.c,5.0.1,3,3,276,0,0,196,ready,0,0,0,0,0,0,0,0.161,curl 7.x upstream C,0.522,144
+43,landable-v1,SRC-2a775ac14b2b,X/Client/UserInterface/Interface/UIEmote.cpp,5.0.1,19,19,524,0,0,380,ready,0,2,0,0,0,0,0,0.173,,0.268,140
+44,landable-v1,SRC-b6dd3edd5aae,Programs/Chris/Sources/Libraries/rocrt/rocrt.cpp,5.0.1,6,6,396,0,0,316,ready,0,0,0,0,0,0,0,0.0,,0.25,99
+45,landable-v1,SRC-edd984bd7683,X/Server/Achievements/AchievementsEngine/achievements_progress_data.cpp,5.0.1,19,19,4076,0,0,556,ready,0,7,0,0,0,0,2,0.0,,0.04,98
+46,landable-v1,SRC-923356d7aba8,Externals/curl/lib/share.c,5.0.1,2,2,176,0,0,88,ready,0,0,0,0,0,0,0,0.161,curl 7.x upstream C,0.522,92
+47,landable-v1,SRC-8b000852843f,Contrib/Contrib/Domino/Collision/Shapes/dmMesh.cpp,5.0.1,6,6,372,0,0,332,ready,0,2,0,0,0,0,0,0.061,,0.217,81
+48,landable-v1,SRC-fd8510825882,Externals/curl/lib/hostip4.c,5.0.1,2,2,148,0,0,132,ready,0,0,0,0,0,0,0,0.161,curl 7.x upstream C,0.522,77
+49,landable-v1,SRC-9ba1c5147428,Externals/curl/lib/strequal.c,5.0.1,1,1,132,0,0,132,ready,0,0,0,0,0,0,0,0.161,curl 7.x upstream C,0.522,69
+50,landable-v1,SRC-efcfb838b730,Contrib/Contrib/DemonWare/bdCore/bdCore.cpp,5.0.1,2,2,304,0,0,168,ready,0,2,0,0,0,0,0,0.0,,0.19,58
+51,landable-v1,SRC-1511a0f43727,Contrib/Contrib/DemonWare/bdLobby/bdObjectStore/bdObjectStore.cpp,5.0.1,1,1,152,0,0,152,headers,3,0,0,0,0,0,0,0.0,,0.15,23
+52,landable-v1,SRC-16d1115d432d,Contrib/Contrib/DemonWare/bdLobby/bdAchievementsEngine/bdAchievementStatus.cpp,5.0.1,1,1,92,0,0,92,ready,0,0,0,0,0,0,0,0.0,,0.25,23
+53,landable-v1,SRC-607b4840c5a6,X/Server/Achievements/AchievementsEngine/achievements_listener.cpp,5.0.1,6,6,80,0,0,48,ready,0,1,0,0,0,0,0,0.0,,0.22,18
+54,landable-v1,SRC-006e7078dfb3,Contrib/Contrib/DemonWare/bdNet/bdLANDiscovery/bdLANDiscoveryListener.cpp,5.0.1,6,6,40,0,0,20,ready,0,0,0,0,0,0,0,0.447,,0.451,18
+55,landable-v1,SRC-3bac4aa60043,BlizzardCore/Source/System/OS/System_OS_API.cpp,5.0.1,1,1,52,0,0,52,ready,0,0,0,0,0,0,0,0.0,,0.25,13
+56,landable-v1,SRC-60ecce96e98d,Contrib/Contrib/DemonWare/bdPlatform/bdPlatformSocket/bdPlatformSocket.cpp,5.0.1,2,2,36,0,0,20,ready,0,0,0,0,0,0,0,0.182,,0.332,12
+57,landable-v1,SRC-f53bab30e1d1,Programs/Chris/Sources/Libraries/rocrt/rocrt_LinkerSymbolGetter.cpp,5.0.1,2,2,24,0,0,12,ready,0,0,0,0,0,0,0,0.0,,0.25,6
+58,landable-v1,SRC-90fa92d1ba5e,BlizzardCore/Source/System/Memory/System_Memory.cpp,5.0.1,2,2,8,0,0,4,ready,0,0,0,0,0,0,0,0.0,,0.25,2
+59,landable-v1,SRC-f72349383172,Contrib/Contrib/DemonWare/bdLobby/bdFeatureBan/bdFeatureBan.cpp,5.0.1,1,1,4,0,0,4,headers,1,0,0,0,0,0,0,0.875,,0.544,2
+60,landable-v1,SRC-eaba1bf2ec83,Contrib/Contrib/DemonWare/bdLobby/bdMarketplace/bdMarketplace.cpp,5.0.1,1,1,4,0,0,4,headers,3,0,0,0,0,0,0,0.988,,0.594,2
+61,landable-v1,SRC-1d8528ad30a1,Contrib/Contrib/DemonWare/bdLobby/bdAntiCheat/bdAntiCheat.cpp,5.0.1,1,1,4,0,0,4,headers,1,0,0,0,0,0,0,0.76,,0.492,2
+62,landable-v1,SRC-9f50336042e3,Contrib/Contrib/Domino/Collision/dmCollisionTest.cpp,5.0.1,1,1,4,0,0,4,ready,0,0,0,0,0,0,0,0.5,,0.475,2
+63,landable-v1,SRC-df843110b96c,Contrib/Contrib/Domino/Common/dmMathTest.cpp,5.0.1,1,1,4,0,0,4,ready,0,0,0,0,0,0,0,0.438,,0.447,2
+64,landable-v1,SRC-21d93a8157aa,Programs/Chris/Sources/Libraries/MainRuntime/MainRuntimeObject.cpp,5.0.1,1,1,4,0,0,4,ready,0,0,0,0,0,0,0,0.0,,0.25,1
+65,landable-v1,SRC-59ab55602f92,Contrib/Contrib/DemonWare/bdLobby/bdTwitter/bdTwitter.cpp,5.0.1,1,1,4,0,0,4,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+66,landable-v1,SRC-e75f7a1c7d11,Contrib/Contrib/DemonWare/bdLobby/bdFriends/bdFriends.cpp,5.0.1,1,1,8,0,0,8,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+67,landable-v1,SRC-d282eed9f5e5,Contrib/Contrib/DemonWare/bdLobby/bdVoteRank/bdVoteRank.cpp,5.0.1,1,1,8,0,0,8,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+68,landable-v1,SRC-8a107e7f3a4e,Contrib/Contrib/DemonWare/bdLobby/bdContentUnlock/bdContentUnlock.cpp,5.0.1,1,1,8,0,0,8,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+69,landable-v1,SRC-4f0656eed9bc,Contrib/Contrib/DemonWare/bdLobby/bdRedeemableCode/bdRedeemableCodeService.cpp,5.0.1,1,1,8,0,0,8,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+70,landable-v1,SRC-e7a9bb4e3884,Contrib/Contrib/DemonWare/bdLobby/bdProfiles/bdProfiles.cpp,5.0.1,1,1,8,0,0,8,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+71,landable-v1,SRC-d426a029b727,Contrib/Contrib/DemonWare/bdLobby/bdLeague/bdLeague.cpp,5.0.1,1,1,4,0,0,4,headers,2,0,0,0,0,0,0,0.0,,0.15,1
+72,landable-v1,SRC-05030cef47c8,Contrib/Contrib/DemonWare/bdLobby/bdDDL/bdDDL.cpp,5.0.1,1,1,4,0,0,4,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+73,landable-v1,SRC-82b73f9f6614,Contrib/Contrib/DemonWare/bdLobby/bdPlayerVote/bdPlayerVote.cpp,5.0.1,1,1,4,0,0,4,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+74,landable-v1,SRC-c7eaf312845f,Contrib/Contrib/DemonWare/bdLobby/bdKeyArchive/bdKeyArchive.cpp,5.0.1,1,1,8,0,0,8,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+75,landable-v1,SRC-9c54124aace0,Contrib/Contrib/DemonWare/bdLobby/bdPresence/bdPresenceService.cpp,5.0.1,1,1,4,0,0,4,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+76,landable-v1,SRC-fd67ca286a7f,Contrib/Contrib/DemonWare/bdLobby/bdUserBlockList/bdUserBlockList.cpp,5.0.1,1,1,8,0,0,8,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+77,landable-v1,SRC-2f7e357fbb7e,Contrib/Contrib/DemonWare/bdLobby/bdRelayService/bdRelayService.cpp,5.0.1,1,1,4,0,0,4,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+78,landable-v1,SRC-fe97b6e1d69b,Contrib/Contrib/DemonWare/bdLobby/bdCommerce/bdCommerce.cpp,5.0.1,1,1,4,0,0,4,headers,2,0,0,0,0,0,0,0.0,,0.15,1
+79,landable-v1,SRC-ba1304c1e78c,Contrib/Contrib/DemonWare/bdLobby/bdGroup/bdGroup.cpp,5.0.1,1,1,4,0,0,4,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+80,landable-v1,SRC-51a133d49d60,Contrib/Contrib/DemonWare/bdLobby/bdUserGroups/bdUserGroups.cpp,5.0.1,1,1,4,0,0,4,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+81,landable-v1,SRC-36ba0ffe8e7f,Contrib/Contrib/DemonWare/bdLobby/bdFacebook/bdFacebook.cpp,5.0.1,1,1,4,0,0,4,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+82,landable-v1,SRC-147b060f6988,Contrib/Contrib/DemonWare/bdLobby/bdESportsProvider/bdMLG.cpp,5.0.1,1,1,4,0,0,4,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+83,landable-v1,SRC-ba85a30415fc,Contrib/Contrib/DemonWare/bdLobby/bdLinkCode/bdLinkCode.cpp,5.0.1,1,1,8,0,0,8,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+84,landable-v1,SRC-9be4bf3c5032,Contrib/Contrib/DemonWare/bdLobby/bdReward/bdReward.cpp,5.0.1,1,1,8,0,0,8,headers,1,0,0,0,0,0,0,0.029,,0.163,1
+85,landable-v1,SRC-d802c160ac01,Contrib/Contrib/DemonWare/bdLobby/bdMatchScheduler/bdMatchScheduler.cpp,5.0.1,1,1,4,0,0,4,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+86,landable-v1,SRC-ce69d8f17454,Contrib/Contrib/DemonWare/bdLobby/bdObjectStore/bdObjectStoreDownloadInterceptor.cpp,5.0.1,1,1,4,0,0,4,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+87,landable-v1,SRC-1df1615333ab,Contrib/Contrib/DemonWare/bdLobby/bdTwitch/bdTwitch.cpp,5.0.1,1,1,4,0,0,4,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+88,landable-v1,SRC-0ca713f5388c,Contrib/Contrib/DemonWare/bdLobby/bdVoting/bdVoting.cpp,5.0.1,1,1,8,0,0,8,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+89,landable-v1,SRC-1c07b023c9b3,Contrib/Contrib/DemonWare/bdLobby/bdSubscription/bdSubscription.cpp,5.0.1,1,1,4,0,0,4,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+90,landable-v1,SRC-d0c319fe4d4d,Contrib/Contrib/DemonWare/bdLobby/bdMarketingComms/bdMarketingComms.cpp,5.0.1,1,1,4,0,0,4,headers,1,0,0,0,0,0,0,0.0,,0.15,1
+91,landable-v1,SRC-120b2c98ece7,Contrib/Contrib/DemonWare/bdLobby/bdObjectStore/bdObjectStoreMetadata.cpp,5.0.1,1,1,8,0,0,8,headers,2,0,0,0,0,0,0,0.0,,0.15,1
+92,landable-v1,SRC-282062affc33,Contrib/Contrib/DemonWare/bdLobby/bdContentStreaming/bdDownloadInterceptor.cpp,5.0.1,1,1,4,0,0,4,ready,0,0,0,0,0,0,0,0.0,,0.25,1
+93,needs-subset,SRC-3bbdb077fbd3,X/Server/LuaScript/ScriptUtil.cpp,5.0.1,614,614,121080,0,0,1968,ready,0,30,1,38,3,0,1,0.63,,0.284,618
+94,data-gate,SRC-7de89de2a96c,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/text_format.cc,5.0.0git-8b24c0dbc2e,64,63,37728,1,0,7436,ready,0,11,0,69,0,0,7,0.61,protobuf 2.6.0 upstream C++,0.375,1696
+95,needs-subset,SRC-093fdd8edf9e,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/extension_set.cc,5.0.0git-8b24c0dbc2e,89,89,32952,0,0,6252,ready,0,9,0,23,0,1,18,0.61,protobuf 2.6.0 upstream C++,0.375,222
+96,needs-subset,SRC-7f60b7252748,X/Server/LuaScript/LuaScript.cpp,5.0.1,112,112,39232,0,0,2120,ready,0,13,0,30,2,1,0,0.63,,0.284,200
+97,data-gate,SRC-81ecd9c2415c,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/wire_format.cc,5.0.0git-8b24c0dbc2e,19,19,14248,0,0,3896,ready,0,3,0,13,0,0,10,0.61,protobuf 2.6.0 upstream C++,0.635,1085
+98,data-gate,SRC-e4abb88ee07a,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/io/tokenizer.cc,5.0.0git-8b24c0dbc2e,13,13,13512,0,0,2820,ready,0,0,0,27,0,0,3,0.424,protobuf 2.6.0 upstream C++,0.641,1039
+99,data-gate,SRC-e8a4f72f430f,Contrib/Contrib/jpeg-compressor_v104_r1/jpge.cpp,5.0.1,24,24,18208,0,0,3384,ready,0,0,0,2,0,10,1,0.0,jpge public-domain upstream,0.45,983
+100,needs-subset,SRC-c1210d4f8f35,X/Common/Powers/PowersCommon.cpp,5.0.1,213,127,41756,86,0,4072,ready,0,8,0,55,0,2,5,0.407,,0.193,145
+101,needs-subset,SRC-e58e58ad8808,X/Client/UserInterface/Interface/UIToolTips.cpp,5.0.1,126,126,37120,0,0,1464,ready,0,4,0,94,0,0,2,0.173,,0.208,139
+102,needs-subset,SRC-3ce013ece2f6,X/Server/Powers/SpellEffect.cpp,5.0.1,433,433,168852,0,0,2084,ready,0,21,1,81,1,5,5,0.095,,0.043,130
+103,data-gate,SRC-1334ada65566,Externals/curl/lib/http.c,5.0.1,22,22,17188,0,0,6820,ready,0,0,0,118,1,0,0,0.161,curl 7.x upstream C,0.422,871
+104,data-gate,SRC-fa018201063f,X/Common/Nav/NavZoneIntersect.cpp,5.0.1,14,14,15344,0,0,2556,ready,0,3,0,6,0,1,0,0.628,,0.443,815
+105,lua-recipe,SRC-c8609bfc2b41,Contrib/Contrib/lua/src/lparser.c,5.0.0git-8b24c0dbc2e,69,69,17964,0,0,860,ready,0,0,1,28,0,1,1,0.584,Lua 5.1.1 upstream C,0.356,115
+106,data-gate,SRC-9008cce7b104,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor_database.cc,5.0.0git-8b24c0dbc2e,27,27,11964,0,0,1744,ready,0,8,0,11,0,0,0,0.61,protobuf 2.6.0 upstream C++,0.485,696
+107,needs-subset,SRC-ba426717f8ff,X/Client/SNOPreload.cpp,5.0.1,150,150,66388,0,0,3796,ready,0,10,0,45,2,47,0,0.179,,0.08,96
+108,data-gate,SRC-7038e3c97eff,Contrib/Contrib/Domino/Collision/ConvexHull/dmSimpleHull.cpp,5.0.1,12,12,11060,0,0,2380,ready,0,2,0,23,0,0,0,0.586,,0.454,602
+109,needs-subset,SRC-1cc58516246e,X/Client/UserInterface/Console/UIConsoleMail.cpp,5.0.1,152,152,46012,0,0,2268,ready,0,22,0,81,4,2,11,0.236,,0.106,88
+110,lua-recipe,SRC-2a7d60fb2e4d,Contrib/Contrib/lua/src/lvm.c,5.0.0git-8b24c0dbc2e,17,17,15780,0,0,8796,ready,0,0,0,13,0,0,3,0.584,Lua 5.1.1 upstream C,0.306,87
+111,data-gate,SRC-6f469ab1d6f6,X/Common/Definitions/GlobalDefinition.cpp,5.0.1,36,7,17184,27,2,12520,headers,1,3,0,20,2,14,2,0.683,,0.267,552
+112,data-gate,SRC-03072d49c9f7,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/extension_set_heavy.cc,5.0.0git-8b24c0dbc2e,14,14,10276,0,0,6980,ready,0,7,0,9,0,0,8,0.61,protobuf 2.6.0 upstream C++,0.415,511
+113,data-gate,SRC-05476326e97c,X/Client/UserInterface/Console/UIConsoleInventoryViewUtilities.cpp,5.0.1,53,53,28736,0,0,2832,ready,0,7,0,115,0,6,1,0.236,,0.146,503
+114,data-gate,SRC-35a3506fa6c9,Externals/curl/lib/multi.c,5.0.1,30,30,9760,0,0,4356,ready,0,0,0,11,0,0,3,0.161,curl 7.x upstream C,0.422,495
+115,data-gate,SRC-9e3218bd49e6,X/Client/Font/Font.cpp,5.0.1,31,29,16968,2,0,3568,headers,1,6,0,13,2,1,3,0.603,,0.241,491
+116,data-gate,SRC-2fdb18c31263,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/stubs/strutil.cc,5.0.0git-8b24c0dbc2e,20,20,6388,0,0,828,ready,0,3,0,10,0,2,3,0.621,protobuf 2.6.0 upstream C++,0.639,490
+117,needs-subset,SRC-22ded918a0aa,X/Client/UserInterface/Console/UIConsoleLeaderboards.cpp,5.0.1,87,87,38344,0,0,3976,ready,0,19,0,109,5,0,16,0.236,,0.106,73
+118,needs-subset,SRC-27cb4409efc2,X/Common/Items.cpp,5.0.1,302,302,133180,0,0,20296,headers,4,24,0,382,3,5,4,0.162,,0.03,72
+119,data-gate,SRC-bdf4a87a0777,Contrib/Contrib/DemonWare/bdConnection/bdConnectionStore.cpp,5.0.1,16,16,9432,0,0,2288,ready,0,7,0,1,0,0,1,0.816,,0.407,461
+120,data-gate,SRC-9e6903b614bd,X/Client/UserInterface/Controls/UIEditControl.cpp,5.0.1,38,38,15360,0,0,1904,headers,2,3,0,6,0,0,7,0.421,,0.249,459
+121,needs-subset,SRC-e56cb8e68be7,X/Common/Attributes/FastAttribute.cpp,5.0.1,77,53,21644,22,2,1572,headers,1,7,0,1622,2,2,5,0.523,,0.175,68
+122,data-gate,SRC-3fd2372148b9,X/Server/System/BossEncounter.cpp,5.0.1,38,37,14416,1,0,2540,ready,0,4,0,6,0,0,4,0.286,,0.259,447
+123,needs-subset,SRC-7b9d9eab5189,X/Client/UserInterface/Console/UIConsoleHUD.cpp,5.0.1,65,65,34744,0,0,3108,ready,0,15,0,96,4,2,3,0.236,,0.106,66
+124,needs-subset,SRC-24455c7455cd,X/Client/UserInterface/Console/UIConsoleMainMenu.cpp,5.0.1,118,118,34500,0,0,3372,ready,0,21,1,107,5,4,4,0.236,,0.106,66
+125,data-gate,SRC-88a929d4bdff,Externals/curl/lib/transfer.c,5.0.1,11,11,6960,0,0,3300,ready,0,0,0,44,0,0,1,0.161,curl 7.x upstream C,0.522,436
+126,lua-recipe,SRC-1a44a23a8945,Contrib/Contrib/lua/src/lgc.c,5.0.0git-8b24c0dbc2e,30,30,10012,0,0,988,ready,0,0,0,4,0,0,4,0.584,Lua 5.1.1 upstream C,0.356,64
+127,data-gate,SRC-b10267b26232,Externals/curl/lib/cookie.c,5.0.1,11,11,6740,0,0,3236,ready,0,0,0,33,0,0,1,0.161,curl 7.x upstream C,0.522,422
+128,needs-subset,SRC-5cf5ae934434,X/Client/UserInterface/Console/UIInventoryConsole.cpp,5.0.1,87,87,33104,0,0,2268,ready,0,18,1,56,4,1,13,0.236,,0.106,63
+129,data-gate,SRC-d7de11b7642b,Contrib/Contrib/Domino/Collision/Functions/dmTPManifold.cpp,5.0.1,7,7,9280,0,0,3176,ready,0,2,0,12,0,0,0,0.417,,0.378,420
+130,lua-recipe,SRC-0af646871b79,Contrib/Contrib/lua/src/ldebug.c,5.0.0git-8b24c0dbc2e,32,32,9676,0,0,2636,ready,0,0,0,25,0,0,4,0.584,Lua 5.1.1 upstream C,0.356,62
+131,data-gate,SRC-24419aada731,X/Common/OnlineService/Achievements.cpp,5.0.1,56,25,11276,31,0,1304,ready,0,11,0,16,3,0,2,0.673,,0.303,410
+132,lua-recipe,SRC-4fa20898c2b2,Contrib/Contrib/lua/src/llex.c,5.0.0git-8b24c0dbc2e,20,20,9420,0,0,2932,ready,0,0,1,16,0,1,0,0.584,Lua 5.1.1 upstream C,0.356,60
+133,data-gate,SRC-bc2235a0ca0c,X/Client/Definitions/AppearanceDefinition.cpp,5.0.1,38,34,25148,4,0,11752,headers,1,4,0,31,2,28,2,0.451,,0.133,402
+134,needs-subset,SRC-5240e0dbdb50,X/Client/UserInterface/Console/UIConsoleGameSettings.cpp,5.0.1,93,86,31396,6,1,3304,ready,0,19,0,74,3,1,2,0.236,,0.106,60
+135,data-gate,SRC-ad094a165d17,Contrib/Contrib/Domino/Dynamics/Contacts/dmMeshContact.cpp,5.0.1,9,8,13396,1,0,3436,ready,0,5,0,21,0,0,0,0.32,,0.244,392
+136,data-gate,SRC-dff4e98992fb,X/Client/Definitions/TextureDefinition.cpp,5.0.1,34,34,9736,0,0,1924,ready,0,4,0,8,2,2,7,0.451,,0.333,389
+137,data-gate,SRC-3a15bbc22a3b,X/Server/LuaScript/LuaScriptHydraLib.cpp,5.0.1,31,31,7184,0,0,504,ready,0,3,0,35,1,2,1,0.63,,0.444,382
+138,needs-subset,SRC-468e08e51cd7,X/Server/System/SNephalemRift.cpp,5.0.1,66,66,24604,0,0,2652,ready,0,10,0,8,0,0,4,0.286,,0.129,57
+139,data-gate,SRC-7491b4389291,X/Common/Nav/NavCellPath.cpp,5.0.1,16,16,8268,0,0,1424,ready,0,5,0,4,0,0,0,0.628,,0.383,380
+140,data-gate,SRC-4250550f387d,X/Common/Definitions/ConditionDefinition.cpp,5.0.1,12,12,9552,0,0,4820,headers,3,1,0,12,3,11,2,0.683,,0.327,375
+141,lua-recipe,SRC-4cfc722a4fc2,Contrib/Contrib/lua/src/lbaselib.c,5.0.0git-8b24c0dbc2e,43,43,8704,0,0,460,ready,0,0,1,46,0,4,1,0.584,Lua 5.1.1 upstream C,0.356,56
+142,needs-subset,SRC-5f6291235026,X/Client/UserInterface/Console/UIConsoleMystic.cpp,5.0.1,101,99,29116,1,1,2288,ready,0,14,2,96,1,5,19,0.236,,0.106,56
+143,data-gate,SRC-522067e4c73f,X/Common/Networking/ByteswapMessage.cpp,5.0.1,3,3,14744,0,0,14080,ready,0,1,0,585,0,0,1,0.194,,0.207,367
+144,data-gate,SRC-dfa78fab287e,Contrib/Contrib/Domino/Collision/Functions/dmPPManifold.cpp,5.0.1,6,6,7968,0,0,3068,ready,0,2,0,8,0,0,0,0.417,,0.378,361
+145,data-gate,SRC-1ce25aa2482e,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/dynamic_message.cc,5.0.0git-8b24c0dbc2e,15,15,4452,0,0,1668,ready,0,2,0,7,0,0,4,0.61,protobuf 2.6.0 upstream C++,0.665,355
+146,data-gate,SRC-dc3c78b9c522,X/Common/Definitions/HeroDefinition.cpp,5.0.1,25,25,14016,0,0,6236,headers,3,5,0,30,2,26,2,0.683,,0.207,349
+147,data-gate,SRC-c9f72c7d8e53,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/reflection_ops.cc,5.0.0git-8b24c0dbc2e,7,7,4148,0,0,1664,ready,0,1,0,13,0,0,2,0.61,protobuf 2.6.0 upstream C++,0.695,346
+148,needs-subset,SRC-b72245fe9bf2,X/Client/UserInterface/Console/UIConsoleBlacksmith.cpp,5.0.1,78,78,26276,0,0,4036,ready,0,12,2,81,0,1,15,0.236,,0.106,50
+149,data-gate,SRC-27fb57c3318b,Externals/curl/lib/connect.c,5.0.1,9,9,5296,0,0,2028,ready,0,0,0,23,0,0,1,0.161,curl 7.x upstream C,0.522,332
+150,data-gate,SRC-94a44cb9748b,X/Client/UserInterface/Interface/UICallouts.cpp,5.0.1,29,29,11480,0,0,1692,ready,0,3,0,22,0,0,8,0.173,,0.238,328
+151,data-gate,SRC-66c14a34c36d,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/message_lite.cc,5.0.0git-8b24c0dbc2e,13,12,3872,1,0,1188,ready,0,1,0,10,0,0,0,0.61,protobuf 2.6.0 upstream C++,0.695,323
+152,needs-subset,SRC-450ac2c4aafe,X/Server/SPlayer.cpp,5.0.1,282,281,134388,1,0,5716,headers,3,39,0,48,3,5,4,0.053,,0.02,48
+153,data-gate,SRC-649e17a7a2c4,X/Client/UserInterface/Console/UIConsoleJoinRift.cpp,5.0.1,18,18,9000,0,0,2212,ready,0,2,0,29,0,0,0,0.236,,0.296,320
+154,data-gate,SRC-999c3a01f436,Contrib/Contrib/Domino/Collision/Functions/dmTCManifold.cpp,5.0.1,4,4,7044,0,0,3652,ready,0,2,0,4,0,0,0,0.417,,0.378,319
+155,data-gate,SRC-d9ecd88ac32f,X/Common/Nav/NavMeshStitch.cpp,5.0.1,15,15,6444,0,0,1492,ready,0,4,0,6,0,0,1,0.628,,0.413,319
+156,data-gate,SRC-248f5b4f1222,X/Common/TagMaps/PowerTags.cpp,5.0.1,6,5,4784,1,0,4304,ready,0,0,0,40,2,109,0,0.888,,0.549,315
+157,data-gate,SRC-9f54429f9f90,X/Server/LuaScript/LuaScriptUtil.cpp,5.0.1,20,20,5536,0,0,812,ready,0,2,0,11,1,3,1,0.63,,0.474,315
+158,data-gate,SRC-ac0b68eeea96,X/Common/ActorCommonCollision.cpp,5.0.1,17,16,12512,1,0,2556,ready,0,4,0,5,0,0,0,0.162,,0.203,304
+159,data-gate,SRC-e0b3f6aa5b74,X/Client/UserInterface/Console/UIConsoleDesignerMenu.cpp,5.0.1,47,47,17360,0,0,2092,ready,0,7,0,98,4,0,8,0.236,,0.146,304
+160,lua-recipe,SRC-d9d042a5529d,Contrib/Contrib/lua/src/liolib.c,5.0.0git-8b24c0dbc2e,39,39,7064,0,0,760,ready,0,0,0,26,0,7,0,0.584,Lua 5.1.1 upstream C,0.356,45
+161,needs-subset,SRC-5fcfe59f0c64,X/Client/UserInterface/Console/OnlineActions.cpp,5.0.1,74,74,21192,0,0,2692,ready,0,8,0,100,4,0,7,0.236,,0.116,44
+162,data-gate,SRC-f7f8981c7138,X/Common/Definitions/QuestDefinition.cpp,5.0.1,31,17,9068,14,0,5980,headers,2,3,0,25,2,11,3,0.683,,0.267,291
+163,data-gate,SRC-82e616795d0e,Externals/curl/lib/mprintf.c,5.0.1,8,8,5628,0,0,4528,ready,0,0,0,8,0,3,5,0.161,curl 7.x upstream C,0.422,285
+164,data-gate,SRC-b6bd6b9d991e,X/Client/Physics/BreakableRagdoll.cpp,5.0.1,11,11,9952,0,0,2408,ready,0,5,0,4,0,0,0,0.3,,0.235,281
+165,data-gate,SRC-2550b62adf5a,X/Client/UserInterface/Console/UIConsoleInventoryFilters.cpp,5.0.1,53,21,13076,30,2,2932,ready,0,6,0,3,3,1,1,0.236,,0.176,276
+166,needs-subset,SRC-4ccc5cb0ae5f,X/Common/Definitions/GameBalanceDefinition.cpp,5.0.1,73,71,76036,2,0,63644,headers,6,3,0,87,2,73,6,0.683,,0.03,41
+167,data-gate,SRC-5ae8851155aa,X/Client/UserInterface/Console/UIConsoleRiftEntry.cpp,5.0.1,26,25,8564,1,0,2636,ready,0,3,0,54,0,0,4,0.236,,0.266,273
+168,data-gate,SRC-d73ccf52e59b,Externals/curl/lib/rawstr.c,5.0.1,4,4,4348,0,0,1924,ready,0,0,0,10,0,0,10,0.161,curl 7.x upstream C,0.522,273
+169,needs-subset,SRC-84a0222b6c7a,X/Client/UserInterface/Console/UIConsoleHeroSelect.cpp,5.0.1,70,70,21300,0,0,4056,ready,0,16,0,50,4,0,1,0.236,,0.106,41
+170,data-gate,SRC-e056e91dddb4,X/Common/Definitions/AccountDefinition.cpp,5.0.1,24,24,5520,0,0,1636,ready,0,5,0,4,2,4,2,0.683,,0.407,270
+171,data-gate,SRC-82702d9aa098,X/Client/Network/Client.cpp,5.0.1,24,24,7460,0,0,936,ready,0,1,0,9,2,2,1,0.178,,0.3,269
+172,data-gate,SRC-58f67b3b8368,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/message.cc,5.0.0git-8b24c0dbc2e,27,26,3860,1,0,600,ready,0,5,0,12,0,1,3,0.61,protobuf 2.6.0 upstream C++,0.575,266
+173,data-gate,SRC-2e2559636fbb,X/Client/UserInterface/Console/UIConsoleAchievements.cpp,5.0.1,39,37,20888,2,0,3256,ready,0,14,0,86,4,0,6,0.236,,0.106,266
+174,data-gate,SRC-365cea5511dc,X/Common/BBE.cpp,5.0.1,6,6,11348,0,0,4440,ready,0,1,0,26,0,1,8,0.162,,0.193,262
+175,needs-subset,SRC-0db330f95447,X/Client/UserInterface/Console/UIConsoleFollower.cpp,5.0.1,77,74,20600,3,0,1792,ready,0,11,1,46,1,1,15,0.236,,0.106,39
+176,data-gate,SRC-b9db56c55a54,X/Client/UserInterface/Interface/UIQuestComplete.cpp,5.0.1,27,27,11960,0,0,2348,ready,0,5,0,32,4,1,10,0.173,,0.178,255
+177,needs-subset,SRC-5c4afdb5cf99,X/Client/UserInterface/Console/UIConsoleJeweler.cpp,5.0.1,67,67,20060,0,0,2268,ready,0,11,1,45,0,0,14,0.236,,0.106,38
+178,data-gate,SRC-a630dedfe52a,X/Client/Gfx/GfxIB.cpp,5.0.1,22,22,7248,0,0,828,ready,0,1,0,2,0,0,0,0.161,,0.293,254
+179,needs-subset,SRC-7c612267b083,X/Server/DRLGDungeon.cpp,5.0.1,86,85,106112,1,0,8748,headers,2,21,0,52,0,9,5,0.053,,0.02,38
+180,data-gate,SRC-7236d030f3e9,X/Client/UserInterface/Controls/UIButtonControl.cpp,5.0.1,35,34,8512,1,0,940,headers,1,3,0,5,0,0,6,0.421,,0.249,255
+181,data-gate,SRC-05abfcae1243,X/Client/UserInterface/Console/ConsoleFanfareManager.cpp,5.0.1,16,16,7956,0,0,2532,ready,0,3,0,26,0,0,2,0.236,,0.266,254
+182,data-gate,SRC-47fcc03e3393,X/Client/UserInterface/Console/UIConsoleTransmute.cpp,5.0.1,38,38,19764,0,0,3160,ready,0,13,0,40,0,0,4,0.236,,0.106,251
+183,data-gate,SRC-cee0d3e71ba0,X/Client/UserInterface/UIGlobals.cpp,5.0.1,4,4,69404,0,0,35996,ready,0,0,0,1871,0,0,0,0.238,,0.03,250
+184,needs-subset,SRC-c50a33d490a5,X/Client/UserInterface/Console/UIShopConsole.cpp,5.0.1,65,65,19512,0,0,2268,ready,0,10,2,44,0,1,15,0.236,,0.106,37
+185,data-gate,SRC-58a4fa4f687a,X/Client/UserInterface/Console/UIConsoleParagon.cpp,5.0.1,36,36,11612,0,0,1716,ready,0,6,0,57,0,0,3,0.236,,0.176,245
+186,needs-subset,SRC-4b956d1c476e,X/Client/Gfx/NX64/NX64NVNCore.cpp,5.0.1,106,106,42508,0,0,13972,ready,0,15,0,508,2,3,9,0.328,,0.048,37
+187,lua-recipe,SRC-d34e749914df,Contrib/Contrib/lua/src/loadlib.c,5.0.0git-8b24c0dbc2e,24,24,5692,0,0,784,ready,0,0,0,46,0,4,0,0.584,Lua 5.1.1 upstream C,0.356,37
+188,data-gate,SRC-12c79537f986,X/Server/STrade.cpp,5.0.1,13,13,8244,0,0,2424,ready,0,1,0,6,1,2,2,0.053,,0.244,241
+189,data-gate,SRC-408d608b8920,X/Client/UserInterface/Interface/UIHireling.cpp,5.0.1,17,17,9652,0,0,3196,ready,0,4,0,35,3,2,0,0.173,,0.208,241
+190,data-gate,SRC-f42b35f2e5c1,X/Common/GlobalSNO.cpp,5.0.1,7,7,65232,0,0,64664,ready,0,2,0,1877,0,2,0,0.162,,0.03,235
+191,needs-subset,SRC-681e027c894f,X/Client/RActors/RActors.cpp,5.0.1,140,140,97628,0,0,9056,headers,2,40,0,45,4,1,8,0.0,,0.02,35
+192,data-gate,SRC-5c7d3ef56f02,X/Client/UserInterface/Console/UIConsolePause.cpp,5.0.1,44,44,13192,0,0,1508,ready,0,7,0,46,4,0,1,0.236,,0.146,231
+193,data-gate,SRC-fa369204ab41,X/Client/UserInterface/Console/UIConsoleEventQueue.cpp,5.0.1,29,29,10908,0,0,1984,ready,0,6,0,59,1,0,0,0.236,,0.176,230
+194,data-gate,SRC-e0034d062de0,X/Client/RActors/RActorAnimation.cpp,5.0.1,41,41,63912,0,0,43996,headers,2,12,0,32,0,0,1,0.0,,0.03,230
+195,data-gate,SRC-43a7cd6f3252,X/Common/Definitions/ConversationDefinition.cpp,5.0.1,30,30,5652,0,0,2276,headers,3,4,0,12,2,4,4,0.683,,0.337,229
+196,data-gate,SRC-8333a30806c1,X/Client/UserInterface/Interface/UICredits.cpp,5.0.1,25,25,7104,0,0,2196,ready,0,2,0,24,4,5,0,0.173,,0.268,228
+197,data-gate,SRC-e72a9ffce30f,X/Client/Gfx/NX64/NX64NVNEngine.cpp,5.0.1,27,27,7640,0,0,2704,ready,0,5,0,7,0,6,6,0.328,,0.248,227
+198,data-gate,SRC-d93f936a58f2,Contrib/Contrib/Domino/Collision/Shapes/dmShapes.cpp,5.0.1,34,32,8728,2,0,1632,ready,0,2,0,14,0,0,0,0.061,,0.217,228
+199,data-gate,SRC-f36518e5ca1f,Contrib/Contrib/Domino/Collision/Shapes/dmPolytope.cpp,5.0.1,25,21,10064,3,1,1540,ready,0,3,0,16,0,0,0,0.061,,0.187,226
+200,data-gate,SRC-33ff373f65b2,X/Client/Prefetch.cpp,5.0.1,31,30,12368,1,0,1480,ready,0,6,0,5,2,1,0,0.179,,0.15,223
+201,needs-subset,SRC-3980e5c550a3,X/Common/ActorInventory.cpp,5.0.1,212,211,92548,1,0,4180,ready,0,30,1,41,2,3,31,0.162,,0.02,33
+202,data-gate,SRC-c21b80934c99,X/Client/Sprite.cpp,5.0.1,42,42,22424,0,0,2620,ready,0,14,0,4,0,0,0,0.179,,0.08,216
+203,data-gate,SRC-24059f6062ab,Contrib/Contrib/DemonWare/bdSocket/bdSocketRouter.cpp,5.0.1,35,35,17084,0,0,2632,headers,2,8,0,3,0,0,3,0.431,,0.104,213
+204,data-gate,SRC-1973fc417729,X/Client/UserInterface/Console/UIConsoleLeaderboardInspect.cpp,5.0.1,57,57,16756,0,0,2280,ready,0,11,0,21,5,0,3,0.236,,0.106,213
+205,data-gate,SRC-27de5d1ef3bc,X/Client/UserInterface/Console/UIConsoleWaypointMap.cpp,5.0.1,31,31,10048,0,0,3884,ready,0,6,0,31,2,0,3,0.236,,0.176,212
+206,data-gate,SRC-317081a0563c,X/Server/SGameStats.cpp,5.0.1,38,37,15376,1,0,1496,headers,1,2,0,15,0,0,0,0.053,,0.114,210
+207,data-gate,SRC-2a30f7860d05,X/Client/UserInterface/Console/UIConsoleSeasonJourney.cpp,5.0.1,38,38,16528,0,0,3748,ready,0,13,0,73,4,0,5,0.236,,0.106,210
+208,data-gate,SRC-8a586f862e40,X/Client/UserInterface/Interface/UIWaypointMapCommon.cpp,5.0.1,20,20,11792,0,0,2836,ready,0,6,0,53,0,0,1,0.173,,0.148,209
+209,data-gate,SRC-08ececa955c4,X/Client/UserInterface/Interface/UIEquipmentManagerCommon.cpp,5.0.1,16,16,7284,0,0,2168,ready,0,3,0,10,3,0,0,0.173,,0.238,208
+210,data-gate,SRC-7384b081339e,X/Client/UserInterface/Console/UIConsolePartyDisplay.cpp,5.0.1,63,41,16348,21,1,2984,ready,0,11,0,34,4,0,3,0.236,,0.106,208
+211,needs-subset,SRC-4583bbacd4c0,Externals/curl/lib/md5.c,5.0.1,3,3,3296,0,0,2624,ready,0,0,1,0,0,0,0,0.161,curl 7.x upstream C,0.522,258
+212,data-gate,SRC-c29951f41ed5,X/Client/UserInterface/Controls/UIToolTipControl.cpp,5.0.1,41,41,14184,0,0,5996,headers,3,4,0,126,0,1,7,0.421,,0.119,203
+213,data-gate,SRC-c9eaf49a559d,X/Client/UserInterface/Console/UIConsoleOptionsDataSource.cpp,5.0.1,36,36,15836,0,0,7732,ready,0,5,0,116,4,0,8,0.236,,0.106,201
+214,data-gate,SRC-cfd6ab3c171e,Externals/curl/lib/sendf.c,5.0.1,11,11,3204,0,0,712,ready,0,0,0,12,0,0,1,0.161,curl 7.x upstream C,0.522,201
+215,needs-subset,SRC-dbb3ef7f8838,X/Client/UserInterface/Console/UIConsoleJewelUpgrade.cpp,5.0.1,27,27,9428,0,0,2688,ready,0,6,1,19,0,0,1,0.236,,0.176,30
+216,data-gate,SRC-871f72a57daa,X/Common/NodePath.cpp,5.0.1,17,17,5644,0,0,756,ready,0,1,0,5,0,0,0,0.162,,0.293,198
+217,data-gate,SRC-95e3279e44ce,Externals/curl/lib/socks.c,5.0.1,3,3,3160,0,0,1812,ready,0,0,0,42,0,0,1,0.161,curl 7.x upstream C,0.522,198
+218,data-gate,SRC-0367ea77e2d4,X/Client/SNOManager.cpp,5.0.1,36,36,10956,0,0,1296,ready,0,6,0,1,2,1,0,0.179,,0.15,198
+219,needs-subset,SRC-ffdd815ac32c,X/Client/UserInterface/Console/UIConsoleBloodShardVendor.cpp,5.0.1,53,53,14140,0,0,2268,ready,0,8,1,32,0,0,11,0.236,,0.116,30
+220,data-gate,SRC-1b1fa2f03d09,X/Client/CPlayerUtil.cpp,5.0.1,16,16,13632,0,0,3416,ready,0,7,0,7,0,0,1,0.179,,0.12,197
+221,data-gate,SRC-e96b4c534f97,Externals/curl/lib/http_proxy.c,5.0.1,2,2,3092,0,0,2940,ready,0,0,0,39,0,0,0,0.161,curl 7.x upstream C,0.522,194
+222,needs-subset,SRC-be7bb3e485af,X/Client/UserInterface/Console/UIConsoleStash.cpp,5.0.1,46,46,15204,0,0,2268,ready,0,10,2,33,1,1,9,0.236,,0.106,29
+223,data-gate,SRC-c4ecee75095b,X/Client/CItems.cpp,5.0.1,13,13,5872,0,0,1480,ready,0,2,0,22,0,1,0,0.179,,0.27,191
+224,data-gate,SRC-00150f19aec7,X/Client/Definitions/ControllerSchemeDefinition.cpp,5.0.1,22,21,3476,1,0,648,ready,0,0,0,37,2,4,3,0.451,,0.453,189
+225,data-gate,SRC-b2f4501efb11,X/Client/UserInterface/Console/UIConsoleControllerLayout.cpp,5.0.1,10,10,6112,0,0,4984,ready,0,0,0,64,0,1,2,0.236,,0.256,188
+226,needs-subset,SRC-2ac787ef99b1,X/Common/ActorCommonData.cpp,5.0.1,344,344,78216,0,0,3396,headers,5,30,0,34,5,5,6,0.162,,0.02,28
+227,data-gate,SRC-3e547b5117bc,Contrib/Contrib/DemonWare/bdSocket/bdSocketRouterAdHoc-switch.cpp,5.0.1,20,20,6964,0,0,1168,headers,1,4,0,0,3,0,0,0.431,,0.224,187
+228,data-gate,SRC-9d7337ae938b,X/Common/Trade.cpp,5.0.1,13,13,5304,0,0,860,ready,0,1,0,1,0,0,0,0.162,,0.293,186
+229,data-gate,SRC-d98b61157c8e,Externals/curl/lib/formdata.c,5.0.1,7,7,2976,0,0,1784,ready,0,0,0,18,0,0,0,0.161,curl 7.x upstream C,0.522,187
+230,data-gate,SRC-efe76d856d19,X/Common/VisualInventory.cpp,5.0.1,33,33,10812,0,0,1024,ready,0,6,0,10,1,4,1,0.162,,0.143,185
+231,data-gate,SRC-1c7244ab2b0f,Externals/curl/lib/progress.c,5.0.1,10,10,2960,0,0,2020,ready,0,0,0,20,0,0,1,0.161,curl 7.x upstream C,0.522,186
+232,data-gate,SRC-f2e3368b0ca8,X/Client/UserInterface/Controls/UICheckBoxControl.cpp,5.0.1,26,26,8120,0,0,1144,headers,1,5,0,5,0,0,6,0.421,,0.189,184
+233,data-gate,SRC-6e52293e6f67,X/Client/UserInterface/UIUtils.cpp,5.0.1,25,25,5164,0,0,1484,ready,0,2,0,27,0,2,0,0.238,,0.297,184
+234,needs-subset,SRC-33244279d950,X/Client/Console/LobbyService.cpp,5.0.1,310,297,76396,13,0,3584,headers,2,38,0,51,4,1,21,0.039,,0.02,28
+235,needs-subset,SRC-54d6ac68a048,X/Client/Console/ConsoleParty.cpp,5.0.1,123,123,74496,0,0,7960,blocked,2,22,0,6,4,1,7,0.039,,0.02,27
+236,data-gate,SRC-bce914ac7ad4,X/Client/ClothUpdate.cpp,5.0.1,4,4,6148,0,0,2972,ready,0,3,0,10,0,0,0,0.179,,0.24,177
+237,data-gate,SRC-f87e660bda64,X/Client/UserInterface/Console/UIConsoleMultiplayerDeathMenu.cpp,5.0.1,20,20,7124,0,0,1996,ready,0,5,0,19,0,1,0,0.236,,0.206,176
+238,data-gate,SRC-64579884df7f,X/Server/Network/ClientValidation.cpp,5.0.1,38,38,10024,0,0,928,ready,0,4,0,11,1,0,1,0.034,,0.146,175
+239,data-gate,SRC-38216ce10f95,Contrib/Contrib/Domino/Dynamics/Joints/dmJoint.cpp,5.0.1,24,24,9112,0,0,984,ready,0,3,0,23,0,0,7,0.0,,0.16,175
+240,data-gate,SRC-ee7456a3ed01,Externals/curl/lib/curl_sasl.c,5.0.1,4,4,2768,0,0,1224,ready,0,0,0,22,0,0,0,0.161,curl 7.x upstream C,0.522,173
+241,data-gate,SRC-9b42bc90ff64,X/Common/Achievements/AchievementsEngine/achievements_static_data.cpp,5.0.1,29,25,13204,4,0,1896,ready,0,11,0,13,0,0,0,0.242,,0.109,173
+242,data-gate,SRC-5bb048be9cf5,X/Server/Experience.cpp,5.0.1,15,15,9116,0,0,2492,ready,0,4,0,7,0,2,0,0.053,,0.154,168
+243,data-gate,SRC-4d5cfe1dac4d,X/Common/UserInterface/UIToolTips.cpp,5.0.1,3,3,2172,0,0,1616,ready,0,0,0,3,0,0,0,0.875,,0.644,168
+244,data-gate,SRC-2c7f211fa7e5,Contrib/Contrib/Domino/Dynamics/Joints/dmWeldJoint.cpp,5.0.1,4,4,6352,0,0,3336,ready,0,1,0,5,0,0,0,0.0,,0.22,168
+245,data-gate,SRC-ac7ab6c9ee7f,X/Client/UserInterface/Console/UIConsoleRiftEndScreen.cpp,5.0.1,37,37,13136,0,0,1700,ready,0,13,0,22,4,1,8,0.236,,0.106,167
+246,data-gate,SRC-f49a37de3766,X/Server/System/LevelArea.cpp,5.0.1,21,21,7348,0,0,3160,headers,2,3,0,3,0,0,0,0.286,,0.189,166
+247,needs-subset,SRC-63b3ffd39bd8,X/Server/Actors/Actors.cpp,5.0.1,121,121,69116,0,0,7552,headers,4,19,0,45,4,0,3,0.141,,0.02,25
+248,data-gate,SRC-2a940791dd0a,Externals/curl/lib/hostip.c,5.0.1,16,16,2648,0,0,740,ready,0,0,0,9,0,2,0,0.161,curl 7.x upstream C,0.522,166
+249,data-gate,SRC-f0ff3f8573e8,X/Common/Marker/Marker.cpp,5.0.1,25,25,11496,0,0,2768,headers,1,13,0,6,2,3,2,0.488,,0.12,165
+250,data-gate,SRC-6fcfce919c8e,X/Client/UserInterface/Console/UIConsoleStartScreen.cpp,5.0.1,28,28,5812,0,0,1668,ready,0,4,0,6,5,8,1,0.236,,0.236,165
+251,data-gate,SRC-a50f883daeac,X/Common/Console/IO/SFileWrapper.cpp,5.0.1,21,21,2148,0,0,376,ready,0,0,0,0,0,1,0,0.862,,0.638,164
+252,data-gate,SRC-0494d4a5784a,X/Server/AI/PlayerBrain.cpp,5.0.1,15,15,6732,0,0,3488,ready,0,3,0,3,0,0,0,0.094,,0.202,164
+253,data-gate,SRC-519d3865ada5,X/Common/Networking/Network.cpp,5.0.1,16,16,4020,0,0,1428,ready,0,0,0,4,0,0,0,0.194,,0.338,163
+254,data-gate,SRC-398f10faafb4,Externals/curl/lib/vtls/siglo/nnssl.c,5.0.1,12,12,3016,0,0,1940,ready,0,0,0,1,0,0,0,0.0,curl 7.x upstream C,0.45,163
+255,data-gate,SRC-007697b1593a,X/Common/Actors/ActorCollision.cpp,5.0.1,15,15,6388,0,0,856,ready,0,3,0,5,0,0,0,0.111,,0.21,161
+256,data-gate,SRC-18472b1ba280,Contrib/Contrib/Domino/Dynamics/Joints/dmShoulderJoint.cpp,5.0.1,4,4,11112,0,0,6016,ready,0,1,0,19,0,0,0,0.0,,0.12,160
+257,data-gate,SRC-64c92a8395c1,X/Client/UserInterface/Console/UIConsoleWhatsNewSeason.cpp,5.0.1,27,27,12548,0,0,2024,ready,0,10,0,36,1,1,2,0.236,,0.106,160
+258,needs-subset,SRC-75d0311ed5eb,X/Client/Particle.cpp,5.0.1,97,96,65920,1,0,11128,headers,2,31,1,35,0,1,7,0.179,,0.02,24
+259,data-gate,SRC-712f5547ef7d,X/Client/Network/ClientMessageReceive.cpp,5.0.1,10,10,43232,0,0,38832,ready,0,16,0,102,4,1,9,0.178,,0.03,156
+260,data-gate,SRC-7ad601ea69a1,X/Client/UserInterface/Console/UIConsoleUtils.cpp,5.0.1,47,47,12224,0,0,1488,ready,0,12,0,65,4,0,4,0.236,,0.106,155
+261,needs-subset,SRC-51c6521716ce,X/Server/Powers/Powers.cpp,5.0.1,133,133,63984,0,0,8592,headers,2,20,0,22,1,2,2,0.095,,0.02,23
+262,needs-subset,SRC-3a0ef2cb2c1a,X/Client/UserInterface/Console/UIConsolePlayerOptions.cpp,5.0.1,72,72,8752,0,0,1140,ready,0,7,0,19,4,0,9,0.236,,0.146,23
+263,data-gate,SRC-9146871fc976,X/Client/UserInterface/Interface/UIFunctions.cpp,5.0.1,27,27,42120,0,0,27608,ready,0,3,0,573,4,2,0,0.173,,0.03,152
+264,data-gate,SRC-3ff2518350ba,X/Client/Physics/Physics.cpp,5.0.1,11,11,5592,0,0,3328,headers,1,2,0,11,0,0,0,0.3,,0.225,151
+265,data-gate,SRC-1edcb6bcdbe2,Contrib/Contrib/Domino/Collision/Functions/dmPCManifold.cpp,5.0.1,4,4,3916,0,0,1760,ready,0,4,0,9,0,0,0,0.417,,0.318,149
+266,data-gate,SRC-af4d4b624180,X/Common/Labels.cpp,5.0.1,6,6,7184,0,0,2468,ready,0,5,0,9,2,4,0,0.162,,0.173,149
+267,data-gate,SRC-7e50c914c533,X/Server/Powers/PowerTrigger.cpp,5.0.1,22,22,14748,0,0,2848,ready,0,7,0,12,0,0,4,0.095,,0.083,147
+268,data-gate,SRC-a0b53c9e8368,X/Client/UserInterface/Controls/UIColorPickerControl.cpp,5.0.1,13,13,4360,0,0,1460,headers,1,2,0,5,0,0,1,0.421,,0.279,146
+269,data-gate,SRC-1aee96c0ab64,X/Common/Networking/GameMessage.cpp,5.0.1,8,8,40496,0,0,39676,headers,6,0,0,163,2,158,1,0.194,,0.03,146
+270,data-gate,SRC-5f7bd0015eae,X/Client/Console/CutsceneConsole.cpp,5.0.1,9,9,5100,0,0,2624,ready,0,1,0,2,2,0,0,0.039,,0.238,145
+271,data-gate,SRC-19555af11738,X/Client/UserInterface/Console/UIConsoleCinematics.cpp,5.0.1,16,15,4092,1,0,964,ready,0,2,0,12,0,0,2,0.236,,0.296,145
+272,data-gate,SRC-0d0a82504b5c,X/Client/Definitions/ParticleDefinition.cpp,5.0.1,13,13,6260,0,0,5204,headers,1,2,0,6,3,4,3,0.451,,0.193,145
+273,data-gate,SRC-b3bda2834627,X/Client/UserInterface/Console/UIConsoleFastEquip.cpp,5.0.1,27,27,11380,0,0,2008,ready,0,10,0,23,4,1,0,0.236,,0.106,145
+274,data-gate,SRC-f08c56bc25c2,X/Common/Definitions/PhysMeshDefinition.cpp,5.0.1,16,16,2616,0,0,2132,headers,1,0,0,7,2,6,2,0.683,,0.457,144
+275,data-gate,SRC-47bc2e115a9d,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/io/zero_copy_stream_impl_lite.cc,5.0.0git-8b24c0dbc2e,20,20,1956,0,0,428,ready,0,1,0,8,0,0,0,0.424,protobuf 2.6.0 upstream C++,0.611,143
+276,data-gate,SRC-57596155d5d2,Externals/curl/lib/parsedate.c,5.0.1,2,2,2284,0,0,2200,ready,0,0,0,15,0,3,0,0.161,curl 7.x upstream C,0.522,143
+277,data-gate,SRC-ae96bb74593f,X/Client/UserInterface/Console/UIConsoleInventorySocketView.cpp,5.0.1,16,16,3600,0,0,996,ready,0,1,0,16,0,0,0,0.236,,0.326,141
+278,data-gate,SRC-a35c975cd3bf,Contrib/Contrib/DemonWare/bdNet/bdUPnP/bdUPnPDevice.cpp,5.0.1,17,17,5028,0,0,1952,ready,0,2,0,11,0,9,1,0.094,,0.232,140
+279,data-gate,SRC-6a7e9bb4cfa8,X/Server/Loot/Loot.cpp,5.0.1,64,64,58248,0,0,4500,headers,5,20,0,47,4,4,4,0.0,,0.02,140
+280,data-gate,SRC-f958e1fd50dd,Contrib/Contrib/Domino/Dynamics/Joints/dmRevoluteJoint.cpp,5.0.1,4,4,9692,0,0,5512,ready,0,1,0,15,0,0,0,0.0,,0.12,140
+281,needs-subset,SRC-36fa271d146b,X/Client/CPlayerInput.cpp,5.0.1,74,74,57984,0,0,9352,headers,1,17,0,19,4,0,5,0.179,,0.02,21
+282,needs-subset,SRC-4297a3d13578,X/Client/Gfx/Gfx.cpp,5.0.1,108,108,15860,0,0,1908,headers,1,5,0,19,0,2,0,0.161,,0.073,21
+283,data-gate,SRC-e1b85f213a95,X/Common/Definitions/QuestRangeDefinition.cpp,5.0.1,15,15,3148,0,0,1224,headers,1,3,0,3,2,3,2,0.683,,0.367,139
+284,data-gate,SRC-d439d01f1fcf,X/Client/UserInterface/Controls/UIConsoleSkillsTimerControl.cpp,5.0.1,16,16,3608,0,0,1096,ready,0,4,0,5,2,4,0,0.421,,0.319,138
+285,data-gate,SRC-c418e0c4d378,Contrib/Contrib/DemonWare/bdJSON/bdJSONDeserializer.cpp,5.0.1,14,12,2180,2,0,468,ready,0,1,0,5,0,1,1,0.678,,0.525,137
+286,data-gate,SRC-3c9b8f7c48fa,Contrib/Contrib/DemonWare/bdCore/bdMemory/bdMallocMemory-std.cpp,5.0.1,9,9,2124,0,0,480,ready,0,1,0,3,0,0,0,0.7,,0.535,136
+287,data-gate,SRC-730e0ec063ca,X/Sigma/Files/XFilesCore.cpp,5.0.1,26,26,3688,0,0,632,ready,0,1,0,3,0,0,1,0.188,,0.304,135
+288,needs-subset,SRC-9d153d21434d,X/Server/AI/AIStates.cpp,5.0.1,127,127,55844,0,0,15908,ready,0,13,0,17,0,0,1,0.094,,0.02,20
+289,data-gate,SRC-bd24bd380144,X/Client/UserInterface/Controls/UIHotbarButtonControl.cpp,5.0.1,17,17,5092,0,0,1292,headers,1,4,0,9,0,0,1,0.421,,0.219,134
+290,needs-subset,SRC-e91aa0b318ac,X/Client/UserInterface/UI.cpp,5.0.1,173,173,55124,0,0,9828,headers,1,23,0,171,5,3,6,0.238,,0.02,20
+291,data-gate,SRC-05023d671e80,X/Client/Definitions/WeatherDefinition.cpp,5.0.1,11,11,3408,0,0,2548,headers,1,1,0,4,2,4,2,0.451,,0.323,132
+292,data-gate,SRC-3f182bdb6fe5,X/Client/UserInterface/Console/UIConsoleBannerCustomization.cpp,5.0.1,36,36,10328,0,0,1584,ready,0,9,0,30,4,0,9,0.236,,0.106,131
+293,data-gate,SRC-ce3edf46feff,X/Client/ImageCollection.cpp,5.0.1,14,14,5200,0,0,764,ready,0,4,0,3,1,3,0,0.179,,0.21,131
+294,data-gate,SRC-28bdfafddf17,X/Server/Network/ServerMessageReceive.cpp,5.0.1,6,6,36092,0,0,35180,ready,0,16,0,16,0,0,4,0.034,,0.03,130
+295,data-gate,SRC-e0d2fc68cdce,X/Client/Battlenet/Subsystems/ToastManager.cpp,5.0.1,17,16,6240,1,0,1180,ready,0,3,0,1,0,0,1,0.028,,0.173,129
+296,data-gate,SRC-9399e32dd93b,X/Server/OnlineService/OnlineServiceServer.cpp,5.0.1,28,28,6668,0,0,2576,ready,0,3,0,9,0,0,0,0.0,,0.16,128
+297,data-gate,SRC-d62bf08ddceb,X/Client/UserInterface/Interface/UITransmuteRecipesCommon.cpp,5.0.1,2,2,4448,0,0,3848,ready,0,3,0,26,0,0,1,0.173,,0.238,127
+298,data-gate,SRC-3e95dadb0aa2,X/Client/Camera/Cinematography.cpp,5.0.1,24,24,3640,0,0,1164,ready,0,6,0,9,0,0,3,0.487,,0.289,126
+299,needs-subset,SRC-3bbb224eb552,X/Common/Player.cpp,5.0.1,173,173,52336,0,0,4972,headers,8,27,0,43,6,20,1,0.162,,0.02,19
+300,needs-subset,SRC-e59209722b9e,X/Common/Sno/SNOFiles.cpp,5.0.1,106,106,52332,0,0,3936,ready,0,11,0,121,4,7,1,0.0,,0.02,19
+301,data-gate,SRC-c7b9dda98cf2,X/Common/WorldCommonCollision.cpp,5.0.1,9,8,5052,1,0,1728,ready,0,4,0,9,0,0,0,0.162,,0.203,123
+302,needs-subset,SRC-14eb31e57feb,X/Client/UserInterface/Console/UIConsoleTransmogView.cpp,5.0.1,32,32,4536,0,0,856,headers,1,1,1,13,0,0,1,0.236,,0.226,18
+303,data-gate,SRC-842dc67d26a0,X/Client/Gfx/GfxPrimitives.cpp,5.0.1,33,33,23384,0,0,5296,ready,0,6,0,12,0,0,0,0.161,,0.043,119
+304,data-gate,SRC-7fd02bb3589b,Contrib/Contrib/Domino/Dynamics/Joints/dmPrismaticJoint.cpp,5.0.1,4,4,8376,0,0,4940,ready,0,1,0,5,0,0,0,0.0,,0.12,121
+305,data-gate,SRC-37f18f59202b,X/Client/Definitions/ShaderMapDefinition.cpp,5.0.1,19,19,2544,0,0,592,ready,0,2,0,2,2,1,2,0.451,,0.393,120
+306,data-gate,SRC-5cbf34a6cf36,BlizzardCore/Source/System/String/System_String.cpp,5.0.1,43,43,7668,0,0,848,ready,0,4,0,7,0,3,4,0.0,,0.13,120
+307,data-gate,SRC-93dd672ab97a,X/Client/UserInterface/Controls/UITimerControl.cpp,5.0.1,23,23,3828,0,0,1108,ready,0,6,0,7,2,3,0,0.421,,0.259,119
+308,data-gate,SRC-1fc3c6eff2fe,Contrib/Contrib/Domino/Collision/Shapes/dmHeightField.cpp,5.0.1,17,17,6308,0,0,1500,ready,0,4,0,9,0,0,0,0.061,,0.157,119
+309,data-gate,SRC-35b203fd5f54,X/Client/UserInterface/Controls/UIConsoleSelectorControl.cpp,5.0.1,24,23,3948,1,0,844,headers,1,3,0,5,0,2,5,0.421,,0.249,118
+310,needs-subset,SRC-9cdeae0c466c,X/Client/Console/Online.cpp,5.0.1,222,216,49072,6,0,3988,headers,3,35,1,10,4,5,14,0.039,,0.02,18
+311,data-gate,SRC-2918e130915b,X/Client/Emitter.cpp,5.0.1,4,4,5412,0,0,2516,ready,0,5,0,10,0,0,1,0.179,,0.18,117
+312,data-gate,SRC-8c798e4185a5,X/Client/UserInterface/Interface/UISetDungeon.cpp,5.0.1,26,26,6564,0,0,2736,ready,0,6,0,33,3,2,2,0.173,,0.148,117
+313,data-gate,SRC-7e8a84b3a4e5,X/Client/Trails.cpp,5.0.1,22,22,12124,0,0,2112,headers,1,5,0,12,0,0,0,0.179,,0.08,117
+314,needs-subset,SRC-856a8d88420d,X/Client/UserInterface/Interface/UIGame.cpp,5.0.1,72,72,48472,0,0,14820,ready,0,17,0,108,4,1,6,0.173,,0.02,17
+315,needs-subset,SRC-7d122b7a5110,X/Server/SGame.cpp,5.0.1,113,113,48468,0,0,4784,headers,3,17,0,80,3,1,3,0.053,,0.02,17
+316,data-gate,SRC-a0001e64f1ef,X/Server/AI/Lure.cpp,5.0.1,4,4,4760,0,0,1692,ready,0,3,0,2,0,0,0,0.094,,0.202,116
+317,data-gate,SRC-847cc30c2318,X/Common/Leaderboard.cpp,5.0.1,21,14,3652,7,0,1372,ready,0,2,0,2,2,2,0,0.162,,0.263,115
+318,data-gate,SRC-0164e6aca3d9,X/Client/Physics/Ragdoll.cpp,5.0.1,13,10,12772,3,0,6816,ready,0,7,0,9,0,0,0,0.3,,0.075,115
+319,data-gate,SRC-bafe352b5a0e,X/Client/UserInterface/Interface/UIStash.cpp,5.0.1,11,11,4016,0,0,1596,ready,0,3,0,12,0,1,0,0.173,,0.238,115
+320,data-gate,SRC-32188972771f,Externals/curl/lib/url.c,5.0.1,28,28,31788,0,0,17116,ready,0,0,0,86,0,1,9,0.161,curl 7.x upstream C,0.03,114
+321,data-gate,SRC-2f053c357bd9,X/Client/UserInterface/Interface/UIChatBalloons.cpp,5.0.1,5,5,3200,0,0,1420,ready,0,1,0,9,0,0,0,0.173,,0.298,114
+322,data-gate,SRC-37747d0fa60d,X/Client/Input/Input.cpp,5.0.1,29,29,7936,0,0,4020,headers,1,1,0,2,2,2,1,0.0,,0.12,114
+323,data-gate,SRC-2e2e6a29d322,X/Client/UserInterface/Console/UIConsoleDeathMenu.cpp,5.0.1,13,13,4588,0,0,1468,ready,0,5,0,13,3,0,0,0.236,,0.206,113
+324,needs-subset,SRC-f642a1db65d6,Contrib/Contrib/DemonWare/bdLobby/bdLobbyService.cpp,5.0.1,76,76,47180,0,0,9708,headers,1,56,0,5,3,0,4,0.043,,0.02,17
+325,data-gate,SRC-646dcfb299b8,X/Client/UserInterface/Console/UIConsoleGamesList.cpp,5.0.1,19,19,3448,0,0,1180,ready,0,3,0,15,4,0,0,0.236,,0.266,110
+326,data-gate,SRC-31423bb0cb1b,X/Sigma/DataStructures/Octree.cpp,5.0.1,4,1,1324,2,0,1324,ready,0,0,0,6,0,5,0,0.98,,0.691,110
+327,data-gate,SRC-96d96c83d248,X/Client/UserInterface/Controls/UIRechargeTimerControl.cpp,5.0.1,14,14,2620,0,0,1108,ready,0,3,0,2,2,0,0,0.421,,0.349,110
+328,data-gate,SRC-8d88e6c95ea0,X/Common/Movement/ActorSteer.cpp,5.0.1,7,7,5712,0,0,2288,ready,0,3,0,7,0,0,0,0.0,,0.16,110
+329,data-gate,SRC-7409d3ecf98b,X/Server/SNPC.cpp,5.0.1,20,20,9720,0,0,2488,ready,0,6,0,1,0,0,0,0.053,,0.094,109
+330,data-gate,SRC-3fa0c3973dbd,X/Client/Camera/FixedViewController.cpp,5.0.1,18,14,4164,4,0,3576,headers,1,5,0,5,0,0,0,0.487,,0.219,109
+331,data-gate,SRC-546c0441a8f1,X/Server/Powers/PowerHelper.cpp,5.0.1,51,51,21032,0,0,2192,ready,0,10,0,14,0,0,1,0.095,,0.043,108
+332,data-gate,SRC-0f4b95c01cae,X/Common/CombatLog.cpp,5.0.1,20,20,6792,0,0,1440,headers,1,3,0,34,2,1,1,0.162,,0.133,108
+333,data-gate,SRC-f888d222f1bc,X/Common/SNO/SNOTOC.cpp,5.0.1,8,8,1488,0,0,672,ready,0,0,0,6,2,1,0,0.784,,0.603,108
+334,data-gate,SRC-b5a646560483,X/Server/SHireling.cpp,5.0.1,19,19,9544,0,0,2492,ready,0,6,0,4,0,0,0,0.053,,0.094,107
+335,data-gate,SRC-667367dca3fb,X/Client/RActors/CComplexEffect.cpp,5.0.1,11,11,5580,0,0,1328,ready,0,3,0,2,0,0,0,0.0,,0.16,107
+336,data-gate,SRC-d9fd34a2a08d,X/Client/UserInterface/Interface/UIConversations.cpp,5.0.1,28,28,11388,0,0,2880,ready,0,10,0,13,2,1,0,0.173,,0.078,107
+337,data-gate,SRC-894bf1dcab7b,X/Client/ImageUtils/ImageUtils.cpp,5.0.1,2,2,1680,0,0,1504,ready,0,2,0,2,0,0,2,0.75,,0.528,106
+338,data-gate,SRC-ec79d9ee4a70,Contrib/Contrib/DemonWare/bdCore/bdUtilities/bdBase64.cpp,5.0.1,3,3,1372,0,0,1060,ready,0,0,0,1,0,0,0,0.88,,0.646,106
+339,data-gate,SRC-94a5d8b949bd,X/Common/Marker/SmartActorMarker.cpp,5.0.1,12,12,3980,0,0,1780,headers,1,5,0,4,0,0,1,0.488,,0.22,105
+340,data-gate,SRC-77605723bf1e,Externals/curl/lib/asyn-thread.c,5.0.1,15,15,1672,0,0,536,ready,0,0,0,3,0,0,0,0.161,curl 7.x upstream C,0.522,105
+341,data-gate,SRC-881db74eb775,X/Client/UserInterface/Console/ControllerActions.cpp,5.0.1,13,13,2444,0,0,588,ready,0,0,0,4,0,0,0,0.236,,0.356,104
+342,data-gate,SRC-a70927741e07,X/Client/UserInterface/Console/UIConsoleProfileSummary.cpp,5.0.1,7,7,3668,0,0,3248,ready,0,4,0,9,4,0,0,0.236,,0.236,104
+343,needs-subset,SRC-391b95952e95,X/Client/Sound/SoundPlatformFModEx.cpp,5.0.1,82,82,43188,0,0,3980,ready,0,16,0,36,2,4,3,0.0,,0.02,16
+344,data-gate,SRC-9abc2781c749,X/Server/Ai/TargetEvaluate.cpp,5.0.1,4,4,4296,0,0,2064,ready,0,2,0,4,0,0,1,0.024,,0.201,103
+345,lua-recipe,SRC-91ba64d0a4ce,Contrib/Contrib/lua/src/lstate.c,5.0.0git-8b24c0dbc2e,10,10,2416,0,0,620,ready,0,0,0,1,0,0,0,0.584,Lua 5.1.1 upstream C,0.356,16
+346,data-gate,SRC-9b4b173da6c9,X/Sigma/ErrorManager/ErrorManager.cpp,5.0.1,18,17,2844,1,0,1504,ready,0,3,0,57,0,0,2,0.308,,0.298,102
+347,data-gate,SRC-06a025c01eb6,X/Client/UserInterface/Console/UIConsoleOptions.cpp,5.0.1,12,12,2852,0,0,740,ready,0,2,0,2,4,0,0,0.236,,0.296,101
+348,data-gate,SRC-f55f3b7559ef,X/Client/UserInterface/Controls/UIRadioButtonGroupControl.cpp,5.0.1,18,18,3016,0,0,364,headers,1,2,0,1,0,2,1,0.421,,0.279,101
+349,data-gate,SRC-04f3cfe6b0de,X/Common/Definitions/EncounterDefinition.cpp,5.0.1,13,13,2108,0,0,736,headers,1,2,0,3,3,2,2,0.683,,0.397,101
+350,needs-subset,SRC-fd8a5be23e85,X/Client/UserInterface/Console/UIConsoleEnchantView.cpp,5.0.1,47,47,7876,0,0,720,headers,1,5,1,31,0,0,5,0.236,,0.106,15
+351,data-gate,SRC-8b702f9daa00,X/Common/Shell/MainNX64.cpp,5.0.1,43,40,2828,3,0,1444,ready,0,2,0,10,1,6,0,0.234,,0.295,100
+352,data-gate,SRC-8715e4d38ed9,Contrib/Contrib/Domino/Collision/Shapes/dmPolytopeBuilder.cpp,5.0.1,7,7,5308,0,0,2068,ready,0,4,0,21,0,0,0,0.061,,0.157,100
+353,data-gate,SRC-65baf1ef3a9c,X/Client/UserInterface/Controls/UIPieChartControl.cpp,5.0.1,15,15,3624,0,0,736,ready,0,7,0,3,3,0,0,0.421,,0.229,100
+354,data-gate,SRC-8ecf7b80c50e,X/Server/Powers/Power_Gizmo.cpp,5.0.1,11,11,4752,0,0,1680,ready,0,4,0,2,0,0,1,0.095,,0.173,99
+355,data-gate,SRC-1ea5877aadeb,X/Common/DetPaths.cpp,5.0.1,10,10,11260,0,0,6316,ready,0,5,0,28,0,0,2,0.162,,0.073,98
+356,data-gate,SRC-419f5dbf70af,Contrib/Contrib/Domino/Collision/Shapes/dmTreeMesh.cpp,5.0.1,10,10,4368,0,0,1912,ready,0,3,0,7,0,0,0,0.061,,0.187,98
+357,data-gate,SRC-279747332d12,X/Client/UserInterface/Console/UIConsoleWhatsNew.cpp,5.0.1,14,14,3060,0,0,1128,ready,0,3,0,5,3,0,0,0.236,,0.266,98
+358,data-gate,SRC-97d3643831a8,Externals/curl/siglo/curl_nintendo_threads.c,5.0.1,11,11,1800,0,0,312,ready,0,0,0,9,0,0,0,0.0,curl 7.x upstream C,0.45,97
+359,needs-subset,SRC-666307332278,X/Server/SWorld.cpp,5.0.1,92,91,40448,1,0,2780,headers,1,17,0,12,2,1,1,0.053,,0.02,15
+360,data-gate,SRC-f228b31e93b9,X/Client/Console/UpdateManager.cpp,5.0.1,12,12,3888,0,0,1436,ready,0,2,0,0,4,0,0,0.039,,0.208,97
+361,data-gate,SRC-b0d52c342af4,X/Client/UserInterface/Interface/UIInventoryCommon.cpp,5.0.1,16,16,3848,0,0,848,ready,0,4,0,5,1,1,0,0.173,,0.208,96
+362,data-gate,SRC-aca74c18565a,X/Client/ParentObjects.cpp,5.0.1,7,7,3324,0,0,1628,ready,0,3,0,2,2,2,2,0.179,,0.24,96
+363,data-gate,SRC-c8c56540c657,X/Client/UserInterface/Interface/UIInventory.cpp,5.0.1,56,56,39780,0,0,4344,ready,0,11,0,104,0,1,4,0.173,,0.02,95
+364,data-gate,SRC-67906e15bd03,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/io/strtod.cc,5.0.0git-8b24c0dbc2e,2,2,1436,0,0,1020,ready,0,3,0,5,0,0,0,0.424,protobuf 2.6.0 upstream C++,0.551,95
+365,data-gate,SRC-8a1b30f8d905,X/Common/Hyperlink.cpp,5.0.1,20,20,10784,0,0,3024,ready,0,13,0,33,0,0,2,0.162,,0.073,94
+366,needs-subset,SRC-51922b7c4102,X/Client/Definitions/UIDialogDefinition.cpp,5.0.1,70,69,39320,1,0,8460,headers,1,10,0,15,3,15,2,0.451,,0.02,14
+367,data-gate,SRC-d8b1af5b119f,X/Server/Actors/SComplexEffect.cpp,5.0.1,13,13,4996,0,0,1348,headers,2,2,0,1,0,0,0,0.141,,0.154,92
+368,data-gate,SRC-3958b2e1aaa2,X/Common/Shell/CmdLine.cpp,5.0.1,9,9,4612,0,0,2508,headers,1,3,0,16,2,2,1,0.234,,0.165,92
+369,needs-subset,SRC-2fc779caa8d4,X/Server/AI/ActorAI.cpp,5.0.1,89,89,38048,0,0,3240,headers,1,18,0,21,1,0,3,0.094,,0.02,14
+370,data-gate,SRC-ff629fe7c1a4,X/Client/UserInterface/Controls/UIConsoleScrollBoxControl.cpp,5.0.1,17,17,3460,0,0,820,headers,1,4,0,4,0,0,0,0.421,,0.219,91
+371,data-gate,SRC-1cc91e3e1c4e,X/Client/Camera/ConsoleViewController.cpp,5.0.1,11,11,4000,0,0,1888,headers,1,6,0,4,0,0,2,0.487,,0.189,91
+372,needs-subset,SRC-5fe7db195958,X/Client/UserInterface/Console/ConsoleScreenManager.cpp,5.0.1,158,156,37704,2,0,2904,headers,1,16,0,21,5,1,7,0.236,,0.02,14
+373,data-gate,SRC-529604d7fa2f,X/Client/Definitions/ReverbDefinition.cpp,5.0.1,11,11,1652,0,0,1080,ready,0,0,0,3,2,2,2,0.451,,0.453,90
+374,data-gate,SRC-547557c00f20,X/Client/TexAnimation.cpp,5.0.1,18,18,6796,0,0,1364,headers,1,4,0,11,0,1,2,0.179,,0.11,90
+375,data-gate,SRC-9606bb517d3e,X/Server/TownPortal.cpp,5.0.1,9,9,4848,0,0,884,ready,0,4,0,2,0,0,0,0.053,,0.154,89
+376,data-gate,SRC-f15f68f79123,X/Client/UserInterface/Console/UIConsoleStartupFlow.cpp,5.0.1,7,7,2504,0,0,1148,ready,0,2,0,2,3,0,2,0.236,,0.296,89
+377,data-gate,SRC-371f833e9fad,X/Client/Console/ConsolePartyMessages.cpp,5.0.1,40,40,8412,0,0,640,ready,0,6,0,0,4,0,0,0.039,,0.088,88
+378,data-gate,SRC-2da04819cdfb,X/Common/OnlineService/OnlineServiceLogStream.cpp,5.0.1,7,7,1880,0,0,732,headers,1,2,0,6,0,0,0,0.673,,0.393,89
+379,data-gate,SRC-009b65439149,Externals/curl/lib/getinfo.c,5.0.1,2,2,1396,0,0,1228,ready,0,0,0,6,0,0,5,0.161,curl 7.x upstream C,0.522,87
+380,data-gate,SRC-c599033dedc0,X/Server/Flippies.cpp,5.0.1,12,12,13468,0,0,4116,ready,0,4,0,16,0,0,0,0.053,,0.054,87
+381,data-gate,SRC-21aca1292993,Contrib/Contrib/Domino/Dynamics/dmFixture.cpp,5.0.1,18,6,3144,12,0,780,ready,0,2,0,6,0,0,2,0.091,,0.231,87
+382,data-gate,SRC-07cdcc6419ce,X/Client/UserInterface/Console/UIConsoleHallOfFallenHeroes.cpp,5.0.1,24,24,4948,0,0,692,ready,0,7,0,8,2,0,0,0.236,,0.146,87
+383,data-gate,SRC-741bc33d6544,X/Client/Definitions/MusicDefinition.cpp,5.0.1,16,16,2236,0,0,1500,headers,1,1,0,4,2,3,2,0.451,,0.323,87
+384,data-gate,SRC-5c74aa284685,X/Common/TeamCommon.cpp,5.0.1,16,16,2732,0,0,672,ready,0,2,0,5,0,0,0,0.162,,0.263,86
+385,needs-subset,SRC-068a326369bd,X/Server/AI/SandTornadoBrain.cpp,5.0.1,10,10,5004,0,0,1620,ready,0,5,1,9,0,0,0,0.094,,0.142,13
+386,data-gate,SRC-7f2fc2e3eee8,X/Common/Sno/SymbolicValue.cpp,5.0.1,1,1,4728,0,0,4728,ready,0,0,0,125,2,0,0,0.0,,0.15,85
+387,data-gate,SRC-11f7c67e8db4,X/Common/GameCommonData.cpp,5.0.1,23,23,3668,0,0,1524,headers,2,1,0,3,2,3,0,0.162,,0.193,85
+388,data-gate,SRC-e6d4bfad6c80,X/Client/Physics/DominoClient.cpp,5.0.1,51,51,20212,0,0,1764,headers,1,14,0,17,0,0,2,0.3,,0.035,85
+389,data-gate,SRC-3fe62dcdad03,X/Client/CActorInventory.cpp,5.0.1,21,21,3912,0,0,620,ready,0,5,0,3,4,4,0,0.179,,0.18,85
+390,data-gate,SRC-164a60eeb3b5,X/Client/LookAt.cpp,5.0.1,5,5,3352,0,0,2316,ready,0,4,0,5,0,0,0,0.179,,0.21,85
+391,data-gate,SRC-f84f429c9443,Externals/curl/lib/vtls/vtls.c,5.0.1,20,20,1560,0,0,276,ready,0,0,0,2,0,2,0,0.0,curl 7.x upstream C,0.45,84
+392,data-gate,SRC-abf76dbc41dc,X/Common/Hireling.cpp,5.0.1,26,26,6800,0,0,1064,headers,1,4,0,3,2,3,0,0.162,,0.103,84
+393,data-gate,SRC-d08400826aa0,X/Common/AnimPlayer.cpp,5.0.1,44,44,16212,0,0,1500,headers,1,6,0,10,2,3,1,0.162,,0.043,83
+394,data-gate,SRC-2b9b3ba07a27,X/Client/UserInterface/Controls/UITutorialControl.cpp,5.0.1,12,12,3164,0,0,1428,headers,1,4,0,12,0,0,3,0.421,,0.219,83
+395,data-gate,SRC-f7b6a3b5daaf,Contrib/Contrib/Domino/Dynamics/dmIsland.cpp,5.0.1,8,8,6784,0,0,3028,headers,2,3,0,1,0,0,0,0.091,,0.101,82
+396,data-gate,SRC-9e92b32da96b,X/Client/Battlenet/Subsystems/LightBoxManager.cpp,5.0.1,7,7,2940,0,0,756,ready,0,1,0,2,0,0,2,0.028,,0.233,82
+397,data-gate,SRC-dd7772704e0f,X/Common/Movement/ActorMovement.cpp,5.0.1,48,48,34188,0,0,6452,headers,2,13,0,39,2,16,7,0.0,,0.02,82
+398,data-gate,SRC-1c7180ea9ae4,X/Client/Battlenet/UI/Util/UIUtil.cpp,5.0.1,14,14,5696,0,0,2760,headers,3,1,0,40,0,1,3,0.0,,0.12,82
+399,needs-subset,SRC-d64de4c246d8,X/Client/CPlayer.cpp,5.0.1,106,105,33960,1,0,3424,headers,2,26,0,84,5,0,3,0.179,,0.02,12
+400,data-gate,SRC-e61c8e4d5381,X/Client/Scene.cpp,5.0.1,53,52,33804,1,0,4696,headers,1,17,0,19,0,0,0,0.179,,0.02,81
+401,data-gate,SRC-09531880d919,X/Sigma/ErrorManager/ErrorManagerLogging.cpp,5.0.1,13,13,2500,0,0,592,ready,0,4,0,17,2,4,1,0.308,,0.268,81
+402,data-gate,SRC-887b165fd69a,X/Common/BBEUtil.cpp,5.0.1,8,8,6480,0,0,2984,headers,2,4,0,5,0,1,2,0.162,,0.103,80
+403,data-gate,SRC-88fbdae3a6ee,X/Client/Camera/Components/OrbitFollowComponent.cpp,5.0.1,8,7,2744,1,0,1828,headers,1,4,0,5,0,0,0,0.474,,0.243,80
+404,data-gate,SRC-bcaf22945080,X/Server/Timers.cpp,5.0.1,12,12,3112,0,0,560,ready,0,2,0,2,0,0,0,0.053,,0.214,80
+405,data-gate,SRC-c97a41921a38,X/Client/UserInterface/Interface/UISkillsCommon.cpp,5.0.1,7,7,2792,0,0,1120,ready,0,3,0,59,0,0,2,0.173,,0.238,80
+406,data-gate,SRC-33b58b37f3ba,X/Client/UserInterface/Console/ConsoleModalNotificationManager.cpp,5.0.1,12,12,2812,0,0,1400,ready,0,4,0,13,0,0,1,0.236,,0.236,80
+407,data-gate,SRC-c3a3601d0f5b,X/Server/ActorIsAffected.cpp,5.0.1,11,11,2708,0,0,660,ready,0,1,0,4,0,0,1,0.053,,0.244,79
+408,data-gate,SRC-56316dbc4942,X/Client/Chroma/ChromaEffects.cpp,5.0.1,12,11,2572,1,0,548,ready,0,3,0,8,1,1,0,0.214,,0.256,79
+409,data-gate,SRC-82f9e5a69fc6,Contrib/Contrib/Domino/Dynamics/Contacts/dmContact.cpp,5.0.1,6,4,1964,2,0,668,ready,0,2,0,4,0,0,0,0.32,,0.334,79
+410,data-gate,SRC-1b6ccb378d98,X/Server/Powers/Power_Paladin.cpp,5.0.1,14,14,2488,0,0,572,ready,0,1,0,1,0,0,0,0.095,,0.263,78
+411,data-gate,SRC-f3c400c23e88,X/Client/UserInterface/Console/UIConsoleSalvage.cpp,5.0.1,11,11,1992,0,0,716,ready,0,1,0,14,0,0,0,0.236,,0.326,78
+412,data-gate,SRC-d7b8afcac67d,X/Client/Console/LocalPlayerClamping.cpp,5.0.1,16,15,7328,1,0,2040,ready,0,6,0,13,1,1,0,0.039,,0.088,77
+413,data-gate,SRC-cfa441a69737,Externals/curl/lib/pipeline.c,5.0.1,9,9,1224,0,0,300,ready,0,0,0,5,0,0,0,0.161,curl 7.x upstream C,0.522,77
+414,data-gate,SRC-d44abc6133f1,X/Client/ImageUtils/JPGExport.cpp,5.0.1,2,2,1140,0,0,940,ready,0,1,0,7,0,0,0,0.75,,0.557,76
+415,data-gate,SRC-562a8188871a,X/Client/UserInterface/Interface/UIMinimap.cpp,5.0.1,58,58,31440,0,0,1932,headers,1,15,0,40,1,3,2,0.173,,0.02,75
+416,data-gate,SRC-f51bf6c487a4,X/Client/UserInterface/Interface/UIMap.cpp,5.0.1,8,8,2084,0,0,796,ready,0,1,0,7,0,0,1,0.173,,0.298,75
+417,data-gate,SRC-e83cf49511a6,X/Common/TagMaps/AnimTags.cpp,5.0.1,5,5,952,0,0,560,ready,0,0,0,1,0,0,0,0.888,,0.649,74
+418,data-gate,SRC-64177734ab94,X/Client/UserInterface/Interface/UIBuffs.cpp,5.0.1,38,23,5708,14,1,2612,headers,1,4,0,16,1,1,0,0.173,,0.108,74
+419,data-gate,SRC-69446ebf43a3,X/Client/UserInterface/Interface/UIFollowerSwap.cpp,5.0.1,8,8,2064,0,0,1396,ready,0,1,0,10,1,0,3,0.173,,0.298,74
+420,data-gate,SRC-40b1434900ec,X/Server/Replay.cpp,5.0.1,26,26,6528,0,0,1196,ready,0,6,0,10,1,0,1,0.053,,0.094,73
+421,data-gate,SRC-f607f435e93d,X/Server/Powers/Power_Scoundrel.cpp,5.0.1,13,13,2620,0,0,504,ready,0,2,0,2,0,0,0,0.095,,0.233,73
+422,data-gate,SRC-86f0984c6412,X/Common/PortalCommon.cpp,5.0.1,8,8,2312,0,0,440,ready,0,2,0,2,2,1,0,0.162,,0.263,73
+423,data-gate,SRC-b9501bea1043,X/Common/NPC.cpp,5.0.1,14,14,2044,0,0,720,ready,0,1,0,7,2,2,0,0.162,,0.293,72
+424,data-gate,SRC-068b87a187d4,X/Client/CSceneCollision.cpp,5.0.1,7,7,7472,0,0,3836,ready,0,9,0,5,0,0,0,0.179,,0.08,72
+425,data-gate,SRC-25134bedfa38,X/Server/Ai/TriuneBrains.cpp,5.0.1,14,14,5348,0,0,1440,ready,0,5,0,9,0,0,0,0.024,,0.111,71
+426,data-gate,SRC-daf8f5f396f9,Contrib/Contrib/Domino/Common/dmPoolAllocator.cpp,5.0.1,4,4,1312,0,0,660,ready,0,0,0,6,0,0,0,0.438,,0.447,70
+427,data-gate,SRC-28268ae26bae,X/Client/UserInterface/Console/UIConsoleSafeZoneSettings.cpp,5.0.1,29,28,2844,1,0,512,ready,0,5,0,13,1,2,5,0.236,,0.206,70
+428,data-gate,SRC-7afd13fda8b3,X/Server/Network/KnownList.cpp,5.0.1,42,42,29228,0,0,4360,ready,0,5,0,13,0,1,10,0.034,,0.02,70
+429,data-gate,SRC-5bd28ae271e2,X/Client/Console/SaveMigration.cpp,5.0.1,50,48,29132,1,1,3508,ready,0,16,0,14,4,0,1,0.039,,0.02,70
+430,data-gate,SRC-e0c31f69aeda,X/Client/UserInterface/Interface/UIVictory.cpp,5.0.1,8,8,1772,0,0,808,ready,0,0,0,10,4,3,0,0.173,,0.328,70
+431,data-gate,SRC-d3c8b5b437cc,X/Client/Network/CTrickle.cpp,5.0.1,9,9,3404,0,0,1352,headers,1,2,0,0,1,1,0,0.178,,0.17,69
+432,needs-subset,SRC-c1b8fbffb396,X/Client/Console/PresenceManager.cpp,5.0.1,86,86,28924,0,0,2164,ready,0,20,0,1,4,2,9,0.039,,0.02,10
+433,data-gate,SRC-a304133800ba,Contrib/Contrib/DemonWare/bdHTTP/bdHTTPPlatform/bdHTTPCurl.cpp,5.0.1,38,38,6424,0,0,908,headers,1,2,0,19,0,0,3,0.0,,0.09,69
+434,data-gate,SRC-37403b54eea3,X/Client/UserInterface/Controls/UIAutoScrollingTextControl.cpp,5.0.1,12,12,2072,0,0,540,headers,1,2,0,6,0,0,1,0.421,,0.279,69
+435,data-gate,SRC-beceb3e25a25,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/stubs/structurally_valid.cc,5.0.0git-8b24c0dbc2e,2,2,792,0,0,544,ready,0,0,0,0,0,1,0,0.621,protobuf 2.6.0 upstream C++,0.729,69
+436,data-gate,SRC-e2524f04969c,X/Client/UserInterface/Console/UIConsoleEULA.cpp,5.0.1,12,12,1616,0,0,468,ready,0,0,0,6,4,1,0,0.236,,0.356,69
+437,data-gate,SRC-2585d28b8f6c,X/Client/Definitions/TrailDefinition.cpp,5.0.1,12,12,1264,0,0,744,ready,0,0,0,2,2,1,2,0.451,,0.453,69
+438,data-gate,SRC-29877c7a841b,X/Server/Actors/ActorEffect.cpp,5.0.1,11,11,2556,0,0,380,ready,0,3,0,1,0,1,0,0.141,,0.224,69
+439,data-gate,SRC-43a192909489,Externals/curl/lib/netrc.c,5.0.1,1,1,1096,0,0,1096,ready,0,0,0,9,0,0,0,0.161,curl 7.x upstream C,0.522,69
+440,data-gate,SRC-6e35e6a8189a,X/Console/BuildLocker.cpp,5.0.1,4,4,2288,0,0,980,ready,0,0,0,7,0,2,0,0.0,,0.25,69
+441,data-gate,SRC-390cb01cde0f,X/Client/Battlenet/Subsystems/FrontendBackgroundCameraManager.cpp,5.0.1,3,1,2816,2,0,2816,ready,0,2,0,6,0,0,0,0.028,,0.203,68
+442,data-gate,SRC-afbe9ebf01e8,X/Common/Tutorials.cpp,5.0.1,10,7,2812,2,1,960,ready,0,4,0,1,0,0,0,0.162,,0.203,68
+443,data-gate,SRC-c97da460fa1f,Contrib/Contrib/DemonWare/bdNet/bdLANDiscovery/bdLANDiscoveryClient.cpp,5.0.1,9,9,1896,0,0,732,ready,0,5,0,0,3,0,0,0.447,,0.301,69
+444,data-gate,SRC-493a7070e02f,X/Client/Sound/CheapAmpModelFModDSP.cpp,5.0.1,7,7,2584,0,0,996,ready,0,1,0,6,0,0,0,0.0,,0.22,68
+445,blocked-template,SRC-2ddacddfa7c4,Contrib/Contrib/Domino/Dynamics/dmWorld.cpp,5.0.1,61,61,28184,0,0,2936,blocked,2,13,0,37,0,1,3,0.091,,0.02,10
+446,data-gate,SRC-a1b24053342e,X/Client/CGameMode.cpp,5.0.1,8,8,2076,0,0,572,ready,0,2,0,1,0,0,0,0.179,,0.27,67
+447,data-gate,SRC-0800863df62f,X/Server/Crafting/SItemCrafting.cpp,5.0.1,37,37,27672,0,0,11360,ready,0,18,0,7,1,1,2,0.0,,0.02,66
+448,data-gate,SRC-5e6a131eba77,Externals/curl/lib/http_chunks.c,5.0.1,3,3,1060,0,0,1008,ready,0,0,0,2,1,0,1,0.161,curl 7.x upstream C,0.522,66
+449,needs-subset,SRC-497abcd56b4e,X/Client/Console/GamerProfileNX64.cpp,5.0.1,100,100,27640,0,0,2976,ready,0,12,1,8,4,0,6,0.039,,0.02,10
+450,data-gate,SRC-1a783880053d,X/Common/GameTesting.cpp,5.0.1,44,44,27480,0,0,7908,ready,0,14,0,143,4,1,5,0.162,,0.02,66
+451,data-gate,SRC-541e0ab58ec9,X/Client/UserInterface/Console/UIConsoleStackSplit.cpp,5.0.1,12,12,1856,0,0,492,ready,0,2,0,4,2,0,1,0.236,,0.296,66
+452,data-gate,SRC-b478e80a0f68,Externals/curl/lib/splay.c,5.0.1,4,4,1044,0,0,292,ready,0,0,0,0,0,1,0,0.161,curl 7.x upstream C,0.522,65
+453,needs-subset,SRC-2266d8b772b7,X/Client/Console/GamerProfileInternal.cpp,5.0.1,32,32,9388,0,0,1656,ready,0,7,1,2,4,0,0,0.039,,0.058,10
+454,data-gate,SRC-34fed46c00ba,X/Client/UserInterface/Controls/UIRActorControl.cpp,5.0.1,22,22,6088,0,0,944,headers,2,9,0,10,0,0,1,0.421,,0.089,65
+455,data-gate,SRC-7b69f9487747,X/Client/Definitions/PhysicsDefinition.cpp,5.0.1,11,11,1196,0,0,712,ready,0,0,0,2,2,1,2,0.451,,0.453,65
+456,data-gate,SRC-382999e95f75,X/Client/Definitions/AmbientSoundDefinition.cpp,5.0.1,12,12,1524,0,0,1048,headers,1,0,0,3,2,2,2,0.451,,0.353,65
+457,data-gate,SRC-3039c5672525,X/Common/Gizmo.cpp,5.0.1,30,2,2640,28,0,1504,ready,0,4,0,14,0,0,6,0.162,,0.203,64
+458,data-gate,SRC-8c361c51645b,X/Client/TrailUpdate.cpp,5.0.1,2,2,1980,0,0,1896,ready,0,2,0,6,0,0,0,0.179,,0.27,64
+459,data-gate,SRC-042261c036c8,Externals/curl/siglo/curl_nintendo_shim.c,5.0.1,14,14,1188,0,0,228,ready,0,0,0,15,0,0,0,0.0,curl 7.x upstream C,0.45,64
+460,data-gate,SRC-032063285204,X/Client/UserInterface/Console/UIConsoleInventoryDyeView.cpp,5.0.1,10,10,1620,0,0,768,ready,0,1,0,11,0,0,0,0.236,,0.326,63
+461,data-gate,SRC-d59aa6edf49a,X/Client/UserInterface/Console/UIConsoleGammaAdjust.cpp,5.0.1,14,14,1784,0,0,380,ready,0,2,0,4,0,1,3,0.236,,0.296,63
+462,data-gate,SRC-46bde2c38a40,X/Client/Console/DLCManager.cpp,5.0.1,18,18,4412,0,0,820,ready,0,5,0,20,6,1,0,0.039,,0.118,62
+463,needs-subset,SRC-b2a301d157b7,X/Server/Movement/SActorMovement.cpp,5.0.1,82,82,25816,0,0,3680,headers,1,9,0,42,1,6,6,0.0,,0.02,9
+464,data-gate,SRC-7597f4c0884b,X/Server/Ai/SiegebreakerDemonBrain.cpp,5.0.1,6,6,2564,0,0,1848,ready,0,2,0,6,0,0,1,0.024,,0.201,62
+465,data-gate,SRC-dab04048f5fa,X/Client/UserInterface/Console/UIConsoleNetworkOptionsNX64.cpp,5.0.1,12,12,1920,0,0,568,ready,0,3,0,8,4,0,0,0.236,,0.266,61
+466,data-gate,SRC-a5ac2ece8aac,Contrib/Contrib/Domino/Common/dmStackAllocator.cpp,5.0.1,4,4,1224,0,0,628,ready,0,1,0,11,0,1,0,0.438,,0.417,61
+467,data-gate,SRC-57a4ef2147dc,X/Server/Powers/Power_Barbarian.cpp,5.0.1,5,5,2188,0,0,1160,ready,0,2,0,4,0,0,0,0.095,,0.233,61
+468,data-gate,SRC-206b81066df0,X/Client/ConversationUtils.cpp,5.0.1,3,3,2408,0,0,1544,ready,0,4,0,7,0,0,0,0.179,,0.21,61
+469,data-gate,SRC-46ce615809ca,X/Server/SGizmo.cpp,5.0.1,43,43,25184,0,0,8252,ready,0,17,0,12,3,1,4,0.053,,0.02,60
+470,data-gate,SRC-6bc481d467ca,X/Server/Ai/WildlifeBrains.cpp,5.0.1,6,6,2180,0,0,984,ready,0,1,0,3,0,0,0,0.024,,0.231,60
+471,data-gate,SRC-001f9ef9ce37,X/Server/ConversationMgr.cpp,5.0.1,31,31,25108,0,0,5248,ready,0,12,0,4,0,0,0,0.053,,0.02,60
+472,data-gate,SRC-f5294f9b288c,X/Client/UserInterface/Console/ConsoleToastManager.cpp,5.0.1,8,8,1408,0,0,588,ready,0,0,0,5,0,0,0,0.236,,0.356,60
+473,data-gate,SRC-8ab0cf49db7b,X/Client/UserInterface/Interface/UIQuestLore.cpp,5.0.1,6,6,1656,0,0,1356,ready,0,1,0,2,1,1,0,0.173,,0.298,59
+474,data-gate,SRC-fc74e7bb1712,X/Client/UserInterface/Controls/UIScrollableTextControl.cpp,5.0.1,14,14,2252,0,0,768,headers,1,4,0,2,0,0,1,0.421,,0.219,59
+475,data-gate,SRC-4de95810de7f,X/Server/SHero.cpp,5.0.1,15,15,24612,0,0,7304,ready,0,14,0,3,3,0,0,0.053,,0.02,59
+476,data-gate,SRC-6927c1ca1381,X/Client/UserInterface/Console/UIConsoleInventoryAddSocketsView.cpp,5.0.1,11,11,1504,0,0,768,ready,0,1,0,11,0,0,0,0.236,,0.326,59
+477,data-gate,SRC-36b4db13ae80,X/Client/UserInterface/Interface/UICountDown.cpp,5.0.1,9,9,1492,0,0,480,ready,0,0,0,2,2,0,2,0.173,,0.328,59
+478,data-gate,SRC-80abd3740b63,X/Client/Animation.cpp,5.0.1,54,54,24416,0,0,4232,headers,1,8,0,18,2,1,4,0.179,,0.02,59
+479,needs-subset,SRC-1b72fce0b148,X/Client/Input/InputNX64.cpp,5.0.1,40,40,24272,0,0,8700,ready,0,5,1,109,4,5,1,0.0,,0.02,9
+480,data-gate,SRC-56a0544e77a2,X/Client/Camera/Components/SpringFollowComponent.cpp,5.0.1,6,4,1412,2,0,1348,ready,0,4,0,6,0,1,0,0.474,,0.343,58
+481,data-gate,SRC-9a7d0678d99f,X/Client/Definitions/ClothDefinition.cpp,5.0.1,12,11,1372,1,0,852,headers,1,0,0,2,2,1,2,0.451,,0.353,58
+482,data-gate,SRC-7f893cb9fdd6,X/Client/UserInterface/Console/UIConsoleGamePrivacyOptions.cpp,5.0.1,15,15,1636,0,0,332,ready,0,2,0,4,4,0,0,0.236,,0.296,58
+483,needs-subset,SRC-3c7a882f5ad2,X/Common/Quests/Quests.cpp,5.0.1,66,66,24152,0,0,3444,headers,2,10,0,19,3,6,5,0.0,,0.02,9
+484,data-gate,SRC-49786a34c452,X/Common/InactiveMarker.cpp,5.0.1,40,40,24148,0,0,2748,headers,1,11,0,5,0,1,1,0.162,,0.02,58
+485,data-gate,SRC-a788d33061c2,X/Client/UserInterface/Console/UIConsoleCharacterDetails.cpp,5.0.1,34,34,23536,0,0,15728,ready,0,8,0,143,3,3,2,0.236,,0.02,56
+486,data-gate,SRC-5f382205232a,X/Common/ConversationCommon.cpp,5.0.1,2,2,2092,0,0,2036,headers,3,0,0,7,2,6,0,0.162,,0.223,56
+487,data-gate,SRC-b703586eaea5,X/Client/SubObject.cpp,5.0.1,13,13,1700,0,0,280,ready,0,2,0,1,0,0,0,0.179,,0.27,55
+488,data-gate,SRC-d021ce463729,X/Client/Definitions/VibrationDefinition.cpp,5.0.1,11,11,1008,0,0,528,ready,0,0,0,2,2,1,2,0.451,,0.453,55
+489,data-gate,SRC-bcd16077d7c2,X/Common/Act.cpp,5.0.1,12,12,2796,0,0,752,headers,1,2,0,1,0,0,0,0.162,,0.163,55
+490,data-gate,SRC-7f7cbb8c9299,X/Client/Definitions/EffectGroupDefinition.cpp,5.0.1,12,12,1288,0,0,852,headers,1,0,0,3,2,2,2,0.451,,0.353,55
+491,data-gate,SRC-cc9d4c49ebbe,X/Client/UserInterface/Controls/UITreeControl.cpp,5.0.1,21,21,1820,0,0,372,headers,1,3,0,3,0,0,1,0.421,,0.249,54
+492,data-gate,SRC-c22a59d49d7e,X/Common/Actors/ActorEffectCommon.cpp,5.0.1,1,1,2264,0,0,2264,headers,2,0,0,9,2,8,0,0.111,,0.2,54
+493,data-gate,SRC-ca7c1a6a9a2a,X/Client/Physics/DominoPolytope.cpp,5.0.1,1,1,1172,0,0,1172,ready,0,0,0,4,2,3,0,0.3,,0.385,54
+494,data-gate,SRC-a5265dde422a,X/Client/UserInterface/Console/UIConsoleRiftComplete.cpp,5.0.1,11,11,1696,0,0,628,ready,0,3,0,4,0,0,0,0.236,,0.266,54
+495,data-gate,SRC-c0cb53848253,X/Client/Camera/Components/LeftTriggerZoomComponent.cpp,5.0.1,7,6,1780,1,0,648,ready,0,7,0,5,0,1,0,0.474,,0.253,54
+496,data-gate,SRC-01b6663968ce,X/Common/DRLGWorld.cpp,5.0.1,8,8,5412,0,0,2100,ready,0,8,0,3,0,0,0,0.162,,0.083,54
+497,data-gate,SRC-4bc1450d8a94,X/Server/SScene.cpp,5.0.1,30,30,22392,0,0,4188,headers,2,11,0,5,0,0,0,0.053,,0.02,54
+498,data-gate,SRC-b88cbf31c611,X/Client/Definitions/ExplosionDefinition.cpp,5.0.1,11,9,984,2,0,612,ready,0,0,0,2,2,1,2,0.451,,0.453,53
+499,data-gate,SRC-0f16a5cd259f,X/Client/CGizmo.cpp,5.0.1,8,8,2116,0,0,968,ready,0,4,0,11,4,1,1,0.179,,0.21,53
+500,data-gate,SRC-2ec8485ee018,X/Client/UserInterface/Console/UIConsoleTraining.cpp,5.0.1,16,14,4164,2,0,1288,headers,1,5,0,8,1,0,0,0.236,,0.106,53
+501,data-gate,SRC-aab99bb9d9dd,X/Client/Battlenet/Subsystems/FrontendBackgroundHeroManager.cpp,5.0.1,16,16,3304,0,0,1108,headers,1,1,0,17,0,0,2,0.028,,0.133,53
+502,data-gate,SRC-2650165c7090,X/Client/UserInterface/Console/ConsoleControllerDisconnectedHandler.cpp,5.0.1,5,5,1228,0,0,520,ready,0,0,0,4,4,0,0,0.236,,0.356,52
+503,data-gate,SRC-2c04749ee81f,X/Client/Gfx/GfxShader.cpp,5.0.1,33,33,21700,0,0,5524,ready,0,8,0,8,0,6,2,0.161,,0.02,52
+504,data-gate,SRC-f601e85740b8,X/Client/UserInterface/Interface/UIChallenge.cpp,5.0.1,4,4,1616,0,0,744,ready,0,2,0,4,3,2,0,0.173,,0.268,52
+505,data-gate,SRC-507c08e431b4,Externals/curl/lib/easy.c,5.0.1,6,6,820,0,0,260,ready,0,0,0,0,0,1,0,0.161,curl 7.x upstream C,0.522,51
+506,data-gate,SRC-fccff03bb24b,X/Server/AI/BrainStance.cpp,5.0.1,42,42,21352,0,0,5456,ready,0,8,0,28,0,0,1,0.094,,0.02,51
+507,data-gate,SRC-92728e0825d5,Contrib/Contrib/DemonWare/bdPlatform/bdPlatformSocket/bdPlatformSocket-switch.cpp,5.0.1,9,9,1284,0,0,268,ready,0,0,0,2,1,0,1,0.182,,0.332,51
+508,data-gate,SRC-46166e289c7d,X/Client/UserInterface/Interface/UIStartup.cpp,5.0.1,12,12,1580,0,0,448,ready,0,2,0,1,4,1,0,0.173,,0.268,51
+509,data-gate,SRC-b550132f8112,X/Server/OnlineService/BaseResolver.cpp,5.0.1,10,10,3204,0,0,1256,ready,0,4,0,11,1,0,1,0.0,,0.13,50
+510,data-gate,SRC-5108762c82e9,X/Common/SceneCommon.cpp,5.0.1,56,56,20780,0,0,1992,headers,1,8,0,38,0,0,1,0.162,,0.02,50
+511,data-gate,SRC-9e34805a4521,X/Server/Definitions/DungeonFinderDefinition.cpp,5.0.1,19,19,5316,0,0,1536,headers,1,3,0,6,1,4,2,0.039,,0.078,50
+512,data-gate,SRC-837b07f0d5a2,X/Common/Crafting/ItemCrafting.cpp,5.0.1,63,63,20692,0,0,2248,headers,2,12,0,21,2,11,3,0.045,,0.02,50
+513,data-gate,SRC-c3eb8892a2ea,X/Client/Debug/ControllerDebugView.cpp,5.0.1,5,5,1760,0,0,592,ready,0,3,0,2,2,1,0,0.167,,0.235,50
+514,data-gate,SRC-6c7c8422653d,X/Client/UserInterface/UIMasterIdList.cpp,5.0.1,6,6,1264,0,0,584,ready,0,1,0,0,0,1,0,0.238,,0.327,50
+515,data-gate,SRC-25ef6b6a4da6,X/Client/Sound/SoundUtils.cpp,5.0.1,10,10,2172,0,0,1228,ready,0,2,0,4,2,0,0,0.0,,0.19,50
+516,data-gate,SRC-877ab6e77cd1,X/Client/ParticleUpdate.cpp,5.0.1,6,6,8236,0,0,5932,ready,0,6,0,17,0,0,0,0.179,,0.05,50
+517,data-gate,SRC-3ce25dfa7836,X/Client/SubObjectGfx.cpp,5.0.1,56,56,20536,0,0,4272,headers,2,18,0,29,3,3,3,0.179,,0.02,49
+518,data-gate,SRC-f7984229d267,X/Client/Definitions/Animation2DDefinition.cpp,5.0.1,11,9,1156,2,0,780,headers,1,0,0,3,2,2,2,0.451,,0.353,49
+519,data-gate,SRC-21ff1e15c8b0,X/Client/Sound/Sound.cpp,5.0.1,57,57,20372,0,0,2652,headers,1,11,0,17,1,1,0,0.0,,0.02,49
+520,data-gate,SRC-3f0a67bdc745,X/Client/UserInterface/Console/UIConsoleBattlenetLink.cpp,5.0.1,9,9,1144,0,0,400,ready,0,0,0,6,2,1,2,0.236,,0.356,49
+521,data-gate,SRC-3300da58d14e,X/Common/Marker/SmartLightMarker.cpp,5.0.1,8,8,1452,0,0,712,headers,1,3,0,2,0,0,0,0.488,,0.28,49
+522,data-gate,SRC-985f3ad85ab8,X/Server/Definitions/AIDefinition.cpp,5.0.1,19,19,2408,0,0,1640,headers,1,0,0,6,1,5,4,0.039,,0.168,48
+523,data-gate,SRC-30fe78b4ef78,X/Common/Callouts.cpp,5.0.1,6,6,1732,0,0,740,ready,0,3,0,1,0,1,1,0.162,,0.233,48
+524,data-gate,SRC-faa729f1b2cd,X/Client/Camera/Components/CameraComponent.cpp,5.0.1,11,3,1476,8,0,1256,headers,1,3,0,2,3,0,0,0.474,,0.273,48
+525,data-gate,SRC-52a8ac7e0ff4,X/Client/Physics/FullRagdoll.cpp,5.0.1,3,3,1952,0,0,1912,ready,0,6,0,2,0,0,0,0.3,,0.205,48
+526,data-gate,SRC-63dd7e6573f7,X/Server/Definitions/ScriptDefinition.cpp,5.0.1,17,16,2884,1,0,1192,headers,1,1,0,4,1,3,2,0.039,,0.138,48
+527,needs-subset,SRC-9a7fe73699c6,X/Client/Rope.cpp,5.0.1,33,33,19892,0,0,4092,headers,2,11,1,19,0,0,3,0.179,,0.02,7
+528,needs-subset,SRC-38e02f879add,X/Client/Console/MailService.cpp,5.0.1,84,84,19840,0,0,1176,ready,0,18,0,0,4,1,7,0.039,,0.02,7
+529,data-gate,SRC-3158af743ede,X/Client/UserInterface/Console/UIConsoleHeroCreate.cpp,5.0.1,51,51,19808,0,0,4912,ready,0,13,0,148,4,4,5,0.236,,0.02,48
+530,data-gate,SRC-73dbde392135,X/Client/PostFX.cpp,5.0.1,40,40,19620,0,0,4124,ready,0,9,0,35,1,3,4,0.179,,0.02,47
+531,data-gate,SRC-d89a2c15daa7,X/Client/CBlizzconTimer.cpp,5.0.1,8,8,1180,0,0,656,ready,0,0,0,5,4,0,0,0.179,,0.33,47
+532,data-gate,SRC-a22f5035035d,X/Client/UserInterface/Console/UISaveIcon.cpp,5.0.1,12,12,1880,0,0,488,ready,0,5,0,8,0,1,0,0.236,,0.206,46
+533,needs-subset,SRC-a613d62ed04f,X/Client/Movement/CActorMovement.cpp,5.0.1,72,72,19300,0,0,1540,headers,2,10,0,32,0,1,6,0.0,,0.02,7
+534,data-gate,SRC-1529eda5aae6,X/Server/Network/STrickle.cpp,5.0.1,11,11,1852,0,0,484,ready,0,2,0,2,0,0,2,0.034,,0.206,46
+535,data-gate,SRC-4f6188825dcd,X/Server/Achievements/AchievementModifierEvaluationLogic.cpp,5.0.1,40,40,12396,0,0,3900,headers,3,4,0,7,3,0,6,0.0,,0.03,45
+536,data-gate,SRC-335cbd8ee2cf,Contrib/Contrib/DemonWare/bdNet/bdLANDiscovery/bdLANDiscoveryServer.cpp,5.0.1,6,6,1120,0,0,496,ready,0,4,0,0,3,0,0,0.447,,0.331,45
+537,needs-subset,SRC-112d31f34c31,BlizzardCore/Source/System/File/System_File.cpp,5.0.1,124,123,18500,1,0,680,ready,0,19,0,15,1,6,0,0.008,,0.02,7
+538,data-gate,SRC-b02ee6b99a49,X/Client/RActors/RActorGfx.cpp,5.0.1,19,19,18396,0,0,6388,ready,0,9,0,13,0,1,0,0.0,,0.02,44
+539,data-gate,SRC-ad9559df36c4,X/Common/Sno/SNOFilesAsync.cpp,5.0.1,38,38,18356,0,0,6496,ready,0,9,0,2,1,1,0,0.0,,0.02,44
+540,data-gate,SRC-af0facef742f,X/Server/Powers/Power_ItemUse.cpp,5.0.1,9,9,18332,0,0,15088,ready,0,17,0,15,0,0,2,0.095,,0.02,44
+541,data-gate,SRC-ff34ffcc9161,X/Server/Network/Server.cpp,5.0.1,43,43,18064,0,0,2332,ready,0,10,0,23,1,0,0,0.034,,0.02,43
+542,data-gate,SRC-272e1cb3562c,X/Client/Weather.cpp,5.0.1,33,33,18032,0,0,9644,ready,0,17,0,34,0,0,1,0.179,,0.02,43
+543,data-gate,SRC-246ed08b8280,X/Common/DRLG.cpp,5.0.1,21,21,17936,0,0,4568,headers,1,14,0,6,0,0,1,0.162,,0.02,43
+544,data-gate,SRC-3940c6759229,X/Client/CHero.cpp,5.0.1,31,25,17676,6,0,6524,ready,0,10,0,3,4,1,1,0.179,,0.02,42
+545,data-gate,SRC-c229d9039d29,X/Server/PVP.cpp,5.0.1,24,24,17612,0,0,5372,ready,0,9,0,17,0,0,0,0.053,,0.02,42
+546,data-gate,SRC-14d248cc6288,Externals/curl/lib/dotdot.c,5.0.1,1,1,672,0,0,672,ready,0,0,0,8,0,0,0,0.161,curl 7.x upstream C,0.522,42
+547,data-gate,SRC-7ab08132e370,X/Common/Clusters.cpp,5.0.1,2,2,1572,0,0,1496,headers,1,0,0,7,2,5,0,0.162,,0.223,42
+548,data-gate,SRC-39e4c56f6d8b,Contrib/Contrib/DemonWare/bdCore/bdCrypto/bdCryptoDynamic.cpp,5.0.1,13,13,1144,0,0,184,ready,0,6,0,2,0,0,1,0.516,,0.302,41
+549,data-gate,SRC-0bae66b07e78,X/Client/Network/XClientSocket.cpp,5.0.1,10,10,2032,0,0,632,headers,1,2,0,0,4,0,5,0.178,,0.17,41
+550,data-gate,SRC-117a7b45ea1e,X/Sigma/ErrorManager/FileOutputStream.cpp,5.0.1,6,6,1188,0,0,556,headers,1,0,0,4,0,0,0,0.308,,0.288,41
+551,data-gate,SRC-7fb8a610057b,X/Client/Behavior/RadiusTrigger.cpp,5.0.1,3,3,1028,0,0,792,ready,0,2,0,1,0,0,0,0.312,,0.331,41
+552,data-gate,SRC-3d2cfc4444e2,Contrib/Contrib/DemonWare/bdNet/bdUPnP/bdUPnP.cpp,5.0.1,12,12,2576,0,0,1036,headers,1,2,0,4,0,2,1,0.094,,0.132,41
+553,data-gate,SRC-01a5772427f2,X/Common/ConversationTreeIterator.cpp,5.0.1,6,6,2536,0,0,952,headers,2,3,0,2,0,0,2,0.162,,0.133,40
+554,data-gate,SRC-3100b62b5a27,X/Server/System/Adventure.cpp,5.0.1,6,6,2416,0,0,1452,ready,0,8,0,6,0,0,0,0.286,,0.139,40
+555,data-gate,SRC-10b18f6b95a2,X/Client/Gfx/GfxMaterial.cpp,5.0.1,10,7,1716,3,0,1308,headers,1,1,0,5,2,4,0,0.161,,0.193,40
+556,data-gate,SRC-481bfead6b9e,X/Client/Cutscene.cpp,5.0.1,52,48,16516,4,0,3276,headers,1,7,0,49,4,3,1,0.179,,0.02,40
+557,data-gate,SRC-f4b3dfc5f3ac,X/Server/Definitions/ConductorDefinition.cpp,5.0.1,21,19,2388,2,0,1020,headers,1,1,0,7,1,3,2,0.039,,0.138,39
+558,data-gate,SRC-bf4363db80ed,X/Server/AI/AIBroadcast.cpp,5.0.1,2,2,1252,0,0,976,ready,0,1,0,0,0,1,0,0.094,,0.262,39
+559,data-gate,SRC-68cc7004019d,X/Server/Ai/PowerBrains.cpp,5.0.1,6,6,4008,0,0,1668,ready,0,6,0,13,0,0,0,0.024,,0.081,39
+560,data-gate,SRC-bd381ce9293c,Externals/curl/lib/http_digest.c,5.0.1,3,3,620,0,0,424,ready,0,0,0,5,0,0,0,0.161,curl 7.x upstream C,0.522,39
+561,data-gate,SRC-53c86281a2ed,Contrib/Contrib/DemonWare/bdCore/bdCrypto/bdRSAKey.cpp,5.0.1,5,5,836,0,0,284,headers,2,0,0,1,0,0,0,0.516,,0.382,38
+562,data-gate,SRC-90fe4fd0846b,X/Client/RActors/RActorAttachments.cpp,5.0.1,28,28,15628,0,0,6024,ready,0,16,0,10,0,1,4,0.0,,0.02,38
+563,data-gate,SRC-9641b7cfca9d,X/Server/Actors/Projectile.cpp,5.0.1,25,25,15616,0,0,2256,headers,1,10,0,13,0,0,1,0.141,,0.02,37
+564,data-gate,SRC-0f101e87c8fa,X/Server/RandomMonster.cpp,5.0.1,7,7,12964,0,0,5960,ready,0,5,0,7,0,0,1,0.053,,0.024,37
+565,data-gate,SRC-e726b592a097,X/Common/AnimCommon.cpp,5.0.1,9,9,1592,0,0,452,headers,1,1,0,3,0,0,0,0.162,,0.193,37
+566,needs-subset,SRC-b75d617ac826,X/Client/UserInterface/Console/UIConsoleInventoryView.cpp,5.0.1,95,22,15308,72,1,3244,headers,1,11,0,12,1,0,3,0.236,,0.02,6
+567,data-gate,SRC-49f9ff884fee,X/Server/OnlineService/AccountMigration.cpp,5.0.1,19,19,15180,0,0,4176,ready,0,11,0,4,1,0,0,0.0,,0.02,36
+568,data-gate,SRC-91edd1a6a44b,X/Common/Marker/SmartMarkerBase.cpp,5.0.1,23,21,1892,2,0,556,headers,1,7,0,5,0,0,0,0.488,,0.16,36
+569,needs-subset,SRC-27fb388cf077,X/Client/Console/NX64NFP.cpp,5.0.1,73,73,15112,0,0,2264,headers,3,8,0,6,4,11,0,0.039,,0.02,5
+570,data-gate,SRC-2507d1e2c1e3,X/Server/Ai/AnimalBrains.cpp,5.0.1,4,4,2140,0,0,1320,ready,0,4,0,1,0,0,0,0.024,,0.141,36
+571,data-gate,SRC-b49ce60ff80e,X/Server/Physics/DominoServer.cpp,5.0.1,5,5,1852,0,0,480,ready,0,3,0,1,0,0,0,0.0,,0.16,36
+572,data-gate,SRC-109c97ff24bc,X/Client/Battlenet/Subsystems/ModalNotificationManager.cpp,5.0.1,31,31,6860,0,0,1728,headers,1,4,0,17,0,1,3,0.028,,0.043,35
+573,data-gate,SRC-a8cb7fb38ad1,X/Server/ActorScript.cpp,5.0.1,3,3,1208,0,0,572,ready,0,1,0,1,0,0,0,0.053,,0.244,35
+574,data-gate,SRC-029eb017b215,X/Client/Battlenet/UI/Util/UIAchievementsUtil.cpp,5.0.1,36,36,14564,0,0,1408,ready,0,8,0,21,2,1,2,0.0,,0.02,35
+575,data-gate,SRC-173b19261191,X/Common/GizmoLocs.cpp,5.0.1,6,6,3984,0,0,1276,headers,1,5,0,8,2,4,0,0.162,,0.073,35
+576,data-gate,SRC-8bff54307fac,X/Server/SGameManager.cpp,5.0.1,37,37,14528,0,0,2344,headers,3,13,0,50,4,19,0,0.053,,0.02,35
+577,data-gate,SRC-4b46fa3e27d1,X/Client/Shake.cpp,5.0.1,16,16,5788,0,0,2552,headers,1,6,0,6,0,0,0,0.179,,0.05,35
+578,data-gate,SRC-e87810ceb3f5,X/Common/Console/ConsoleLicenses.cpp,5.0.1,6,6,5452,0,0,4292,ready,0,4,0,0,0,1,0,0.05,,0.053,34
+579,data-gate,SRC-456caef10450,Contrib/Contrib/DemonWare/bdCore/bdCrypto/bdECCKey.cpp,5.0.1,6,6,756,0,0,284,headers,1,0,0,1,0,0,0,0.516,,0.382,35
+580,data-gate,SRC-e0ed8d12390d,X/Client/Battlenet/Subsystems/FrontendScreenTransitionManager.cpp,5.0.1,15,15,5428,0,0,792,ready,0,7,0,5,0,0,0,0.028,,0.053,34
+581,data-gate,SRC-e719b9e6d098,BlizzardCore/Source/System/Time/System_Time.cpp,5.0.1,16,16,2200,0,0,756,ready,0,4,0,12,0,1,0,0.0,,0.13,34
+582,data-gate,SRC-c5060e0e58bc,X/Client/Targeting/ConsoleTargeting.cpp,5.0.1,11,11,14288,0,0,5476,ready,0,8,0,9,0,0,0,0.0,,0.02,34
+583,blocked-template,SRC-aa7e9ff1399f,Contrib/Contrib/Domino/Dynamics/dmBody.cpp,5.0.1,45,45,14288,0,0,1132,blocked,1,3,0,15,0,0,0,0.091,,0.02,5
+584,data-gate,SRC-22537503db69,X/Client/Lights.cpp,5.0.1,25,25,14180,0,0,1036,headers,1,9,0,12,0,0,2,0.179,,0.02,34
+585,data-gate,SRC-5bc3d389dfe3,X/Client/Cloth.cpp,5.0.1,26,26,14064,0,0,3208,headers,3,11,0,14,0,0,0,0.179,,0.02,34
+586,data-gate,SRC-55cc5a36deee,X/Client/Selection.cpp,5.0.1,9,9,1640,0,0,652,headers,1,2,0,0,2,1,0,0.179,,0.17,34
+587,data-gate,SRC-70d3f0b79e2d,X/Client/Achievements/CAchievementUtils.cpp,5.0.1,3,3,1108,0,0,608,ready,0,0,0,5,0,1,3,0.0,,0.25,33
+588,data-gate,SRC-d279ba72ed25,X/Common/DRLGEncounters.cpp,5.0.1,10,10,13712,0,0,5108,headers,1,15,0,12,0,0,0,0.162,,0.02,33
+589,data-gate,SRC-128e26918235,X/Client/Console/HeroPublishing.cpp,5.0.1,9,9,1152,0,0,512,ready,0,1,0,2,4,0,1,0.039,,0.238,33
+590,data-gate,SRC-8fb8c2bea673,Contrib/Contrib/Domino/Dynamics/Joints/dmMouseJoint.cpp,5.0.1,3,3,1244,0,0,872,ready,0,1,0,1,0,0,0,0.0,,0.22,33
+591,data-gate,SRC-f0cdceeca9de,X/Server/Powers/Power_Potion.cpp,5.0.1,3,3,1348,0,0,820,ready,0,3,0,2,0,0,1,0.095,,0.203,33
+592,data-gate,SRC-17daaa03957c,X/Server/AI/SpawnerBrain.cpp,5.0.1,13,13,13620,0,0,6832,ready,0,7,0,12,0,0,0,0.094,,0.02,33
+593,data-gate,SRC-6f6d0c13cdce,Contrib/Contrib/Domino/Common/dmSettings.cpp,5.0.1,9,9,604,0,0,212,ready,0,0,0,2,1,3,3,0.438,,0.447,32
+594,data-gate,SRC-039ae6d59c79,BlizzardCore/Source/Packages/Util/Package_Util.cpp,5.0.1,17,17,1224,0,0,140,ready,0,1,0,0,0,1,1,0.0,,0.22,32
+595,data-gate,SRC-2dab1da09cc6,BlizzardCore/Source/System/Using/System_Using.cpp,5.0.1,8,8,1400,0,0,496,ready,0,2,0,3,0,0,0,0.0,,0.19,32
+596,data-gate,SRC-56b7cba75eed,X/Client/BonePulse.cpp,5.0.1,4,4,1256,0,0,672,ready,0,4,0,2,0,0,0,0.179,,0.21,32
+597,data-gate,SRC-5954a431a3ad,X/Common/Console/Avenger.cpp,5.0.1,32,32,13060,0,0,1956,headers,2,13,0,27,4,1,4,0.05,,0.02,31
+598,data-gate,SRC-44fe359547c4,Contrib/Contrib/DemonWare/bdLobby/bdLobbyConnection.cpp,5.0.1,33,33,12956,0,0,1800,ready,0,10,0,13,3,1,3,0.043,,0.02,31
+599,data-gate,SRC-4399d7f46d44,X/Client/Quests/CQuests.cpp,5.0.1,9,9,1160,0,0,368,ready,0,1,0,0,0,1,0,0.0,,0.22,31
+600,data-gate,SRC-866673047017,X/Client/HitTestResults.cpp,5.0.1,4,4,1104,0,0,532,headers,2,0,0,0,2,0,0,0.179,,0.23,31
+601,data-gate,SRC-40998f9f7fc5,X/Client/Console/Matchmaking.cpp,5.0.1,61,61,12620,0,0,1512,headers,2,12,0,3,4,1,5,0.039,,0.02,30
+602,data-gate,SRC-ac9d5fd14829,X/Common/Networking/NetLounge.cpp,5.0.1,2,2,1056,0,0,1004,headers,2,0,0,3,2,2,0,0.194,,0.238,30
+603,data-gate,SRC-a33f7598208f,X/Server/SItems.cpp,5.0.1,19,19,10316,0,0,1424,ready,0,10,0,6,0,0,0,0.053,,0.024,29
+604,data-gate,SRC-f595e8be4bac,Contrib/Contrib/DemonWare/bdLobby/bdAuth/bdAuthSwitch.cpp,5.0.1,14,14,2044,0,0,356,headers,1,1,0,6,3,1,0,0.0,,0.12,29
+605,data-gate,SRC-81ede541d3d0,X/Common/NephalemRiftCommon.cpp,5.0.1,12,12,1208,0,0,312,ready,0,4,0,1,0,0,0,0.162,,0.203,29
+606,data-gate,SRC-36fe2bc95bcc,X/Client/Vibration.cpp,5.0.1,15,15,4712,0,0,1004,headers,1,6,0,3,0,1,0,0.179,,0.05,28
+607,data-gate,SRC-a6f33048337c,Externals/curl/lib/base64.c,5.0.1,2,2,448,0,0,436,ready,0,0,0,3,0,1,0,0.161,curl 7.x upstream C,0.522,28
+608,data-gate,SRC-982d3b51e696,X/Client/RActors/RActorCollision.cpp,5.0.1,22,22,11652,0,0,2780,ready,0,8,0,9,0,0,0,0.0,,0.02,28
+609,data-gate,SRC-6ef8d1af2e4a,X/Client/ParticleRenderUpdate.cpp,5.0.1,13,11,11644,2,0,5080,headers,1,5,0,13,0,1,1,0.179,,0.02,28
+610,data-gate,SRC-dbf34d4bef82,X/Client/UserInterface/Interface/UITutorials.cpp,5.0.1,27,27,11144,0,0,2992,headers,1,18,0,1,2,0,2,0.173,,0.02,27
+611,data-gate,SRC-ca4e73478b55,X/Server/Achievements/AchievementsEngine/achievements_evaluator.cpp,5.0.1,30,30,11036,0,0,1236,headers,1,7,0,1,0,0,0,0.0,,0.02,26
+612,data-gate,SRC-8add14bc8b22,X/Server/Marker/SMarker.cpp,5.0.1,12,12,10924,0,0,1816,ready,0,12,0,21,1,1,0,0.0,,0.02,26
+613,data-gate,SRC-287492c77b91,X/Server/Ai/ShrineBrain.cpp,5.0.1,1,1,1052,0,0,1052,ready,0,2,0,2,0,0,0,0.024,,0.201,25
+614,data-gate,SRC-f5b90952f43b,X/Client/Console/ConsoleGameConnection.cpp,5.0.1,37,37,10548,0,0,1068,headers,1,9,0,2,4,0,1,0.039,,0.02,25
+615,data-gate,SRC-a3b3d808b3df,X/Client/EffectGroup.cpp,5.0.1,17,17,10012,0,0,5564,headers,1,5,0,7,2,0,2,0.179,,0.02,24
+616,data-gate,SRC-2a6a52957edb,X/Server/Crafting/SSalvage.cpp,5.0.1,4,4,2796,0,0,1364,ready,0,6,0,1,0,0,0,0.0,,0.07,23
+617,data-gate,SRC-69a40894c204,X/Server/Network/ServerMessageSend.cpp,5.0.1,25,25,9712,0,0,4496,ready,0,8,0,5,0,0,4,0.034,,0.02,23
+618,blocked-template,SRC-e9a58e2f2ea2,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdDTLSAssociation.cpp,5.0.1,27,27,9680,0,0,2512,blocked,3,7,0,4,0,0,3,0.069,,0.02,3
+619,data-gate,SRC-bce99ac44cf9,X/Client/Attachments.cpp,5.0.1,26,25,9604,1,0,2552,headers,1,10,0,12,0,0,8,0.179,,0.02,23
+620,blocked-template,SRC-8e583925d7d9,X/Common/Achievements/Console/ConsoleAchievements.cpp,5.0.1,63,63,9448,0,0,608,blocked,3,15,0,1,0,0,4,0.031,,0.02,3
+621,data-gate,SRC-603e9b03c22c,X/Client/Console/UtilitiesNX64.cpp,5.0.1,15,15,3240,0,0,628,ready,0,7,0,1,4,0,1,0.039,,0.058,22
+622,data-gate,SRC-37ebf00e263e,Contrib/Contrib/DemonWare/bdLobby/bdLobbyCommon/bdHTTPAuthCommon.cpp,5.0.1,3,3,320,0,0,248,headers,2,0,0,3,2,0,0,0.965,,0.584,22
+623,data-gate,SRC-443de318fc29,Contrib/Contrib/DemonWare/bdNet/bdNet.cpp,5.0.1,21,21,9076,0,0,3652,headers,3,10,0,0,3,0,0,0.0,,0.02,22
+624,data-gate,SRC-b2e7f953e8d3,X/Server/Ai/ProximityDetectorBrain.cpp,5.0.1,15,15,8972,0,0,1628,headers,1,5,0,1,0,0,1,0.024,,0.02,22
+625,data-gate,SRC-eed8820a1029,Externals/curl/lib/inet_pton.c,5.0.1,1,1,336,0,0,336,ready,0,0,0,0,0,1,0,0.161,curl 7.x upstream C,0.522,21
+626,data-gate,SRC-195b545eb372,Externals/curl/siglo/curl_nintendo_allocator.c,5.0.1,9,9,372,0,0,96,ready,0,0,0,4,0,0,6,0.0,curl 7.x upstream C,0.45,20
+627,data-gate,SRC-b641601b8f6f,X/Client/CWorld.cpp,5.0.1,24,24,8188,0,0,1796,headers,1,13,0,2,0,1,0,0.179,,0.02,20
+628,data-gate,SRC-f8095f866507,X/Server/Ai/HirelingBrain.cpp,5.0.1,8,8,1544,0,0,480,headers,1,2,0,1,0,1,0,0.024,,0.101,19
+629,data-gate,SRC-802b28975d3c,X/Common/FileIO/FileIO.cpp,5.0.1,20,20,1016,0,0,208,headers,1,0,0,2,0,0,0,0.0,,0.15,18
+630,data-gate,SRC-511bb7212e44,X/Client/Battlenet/Subsystems/ScreenManager.cpp,5.0.1,19,19,7584,0,0,1176,headers,4,6,0,1,0,1,1,0.028,,0.02,18
+631,data-gate,SRC-be526e97b839,X/Server/SLeaderboard.cpp,5.0.1,3,3,7544,0,0,5380,ready,0,8,0,3,3,0,2,0.053,,0.02,18
+632,data-gate,SRC-289fa487f4fc,Contrib/Contrib/DemonWare/bdLobby/bdObjectStore/bdObjectStoreStreaming.cpp,5.0.1,4,4,996,0,0,340,headers,3,0,0,3,0,0,0,0.0,,0.15,18
+633,data-gate,SRC-32fb3a60ae01,X/Client/Sound/AmbientSound.cpp,5.0.1,21,21,7380,0,0,1808,headers,2,9,0,9,0,0,0,0.0,,0.02,18
+634,data-gate,SRC-cd4788d097ef,X/Client/UserInterface/Interface/UITransmogrifyCommon.cpp,5.0.1,11,11,7148,0,0,2344,headers,1,12,0,3,0,0,1,0.173,,0.02,17
+635,data-gate,SRC-2b45092eac28,Contrib/Contrib/DemonWare/bdLobby/bdPublisherVariables/bdPublisherVariables.cpp,5.0.1,2,2,280,0,0,240,headers,1,0,0,2,0,0,0,0.75,,0.488,16
+636,data-gate,SRC-14f826e657b1,Contrib/Contrib/DemonWare/bdUtility/bdJOSE/bdJWS.cpp,5.0.1,1,1,900,0,0,900,headers,1,0,0,1,0,0,1,0.0,,0.15,16
+637,data-gate,SRC-b61df0a2f018,Contrib/Contrib/DemonWare/bdLobby/bdAuth.cpp,5.0.1,18,18,2744,0,0,1084,headers,2,4,0,15,3,0,0,0.043,,0.049,16
+638,data-gate,SRC-8252ab94404a,X/Client/Explosions.cpp,5.0.1,16,16,6568,0,0,2168,headers,1,8,0,9,0,0,1,0.179,,0.02,16
+639,data-gate,SRC-a5b4817de4f8,X/Client/RActors/RActorPhysics.cpp,5.0.1,9,9,3280,0,0,1228,ready,0,7,0,8,0,1,1,0.0,,0.04,16
+640,data-gate,SRC-bfa4e7b6b198,Externals/curl/siglo/curl_nintendo_nsd.cpp,5.0.1,1,1,288,0,0,288,ready,0,0,0,2,0,0,0,0.0,curl 7.x upstream C,0.45,16
+641,data-gate,SRC-242b9a5f9ebc,Externals/curl/lib/strerror.c,5.0.1,2,2,248,0,0,212,ready,0,0,0,2,1,0,0,0.161,curl 7.x upstream C,0.522,16
+642,data-gate,SRC-5e7dc1df3907,BlizzardCore/Source/System/Debug/System_Debug.cpp,5.0.1,3,3,588,0,0,516,ready,0,1,0,2,0,0,0,0.0,,0.22,16
+643,data-gate,SRC-f4a893e7c5af,X/Server/Ai/SanctuaryBrains.cpp,5.0.1,19,19,6332,0,0,892,ready,0,9,0,4,0,0,0,0.024,,0.02,15
+644,data-gate,SRC-c116c8187318,X/Server/Network/XServerSocket.cpp,5.0.1,29,29,6260,0,0,708,headers,1,5,0,8,3,6,2,0.034,,0.02,15
+645,data-gate,SRC-10504360f643,Contrib/Contrib/DemonWare/bdNet/bdNetStartParams.cpp,5.0.1,1,1,1028,0,0,1028,headers,1,1,0,4,0,0,0,0.0,,0.12,15
+646,data-gate,SRC-d093ee3e7d39,X/Server/OnlineService/PlayerResolver.cpp,5.0.1,12,12,5868,0,0,2628,headers,2,12,0,8,1,0,1,0.0,,0.02,14
+647,data-gate,SRC-513c54819ce1,Contrib/Contrib/DemonWare/bdPlatform/bdPlatformLog/bdPlatformLog.cpp,5.0.1,6,6,532,0,0,236,ready,0,1,0,7,0,0,0,0.0,,0.22,14
+648,data-gate,SRC-d0c0c0754a45,Externals/curl/lib/speedcheck.c,5.0.1,2,2,216,0,0,204,ready,0,0,0,1,0,0,0,0.161,curl 7.x upstream C,0.522,14
+649,blocked-template,SRC-2f1ef57f1b24,Contrib/Contrib/DemonWare/bdCore/bdCrypto/bdCypherAES.cpp,5.0.1,6,6,724,0,0,208,blocked,1,1,0,0,0,0,0,0.516,,0.152,17
+650,data-gate,SRC-be293a1df868,X/Common/World.cpp,5.0.1,24,24,5360,0,0,600,headers,1,8,0,5,3,2,0,0.162,,0.02,13
+651,data-gate,SRC-24076765bea2,X/Server/DRLGDungeonTester.cpp,5.0.1,6,5,1916,1,0,528,headers,1,4,0,2,0,0,0,0.053,,0.054,12
+652,needs-subset,SRC-ee8f7c54cb48,X/Common/Achievements/AchievementDefines.cpp,5.0.1,4,4,668,0,0,472,headers,1,0,1,11,2,0,0,0.0,,0.15,2
+653,data-gate,SRC-bcd8d725a5f8,BlizzardCore/Source/System/Thread/System_Thread.cpp,5.0.1,27,27,4820,0,0,1028,ready,0,14,0,4,0,3,0,0.0,,0.02,12
+654,data-gate,SRC-623f74d8c6b8,Externals/curl/siglo/curl_nintendo_proxy.cpp,5.0.1,1,1,212,0,0,212,ready,0,0,0,1,0,0,0,0.0,curl 7.x upstream C,0.45,11
+655,data-gate,SRC-73f38a6ef24b,Contrib/Contrib/DemonWare/bdSocket/bdSocketRouterConfig.cpp,5.0.1,3,3,212,0,0,156,ready,0,0,0,2,0,0,0,0.431,,0.444,11
+656,blocked-template,SRC-8a82054a97f7,Contrib/Contrib/DemonWare/bdCore/bdCrypto/bdCypher3Des.cpp,5.0.1,6,6,580,0,0,164,blocked,1,1,0,0,0,0,0,0.516,,0.152,13
+657,data-gate,SRC-8e256694d95b,Externals/curl/lib/inet_ntop.c,5.0.1,1,1,160,0,0,160,ready,0,0,0,1,0,0,0,0.161,curl 7.x upstream C,0.522,10
+658,data-gate,SRC-4a4f9a088e75,X/Client/Console/VoiceChat.cpp,5.0.1,18,18,3692,0,0,1724,headers,1,7,0,0,4,0,3,0.039,,0.02,9
+659,data-gate,SRC-286055c3e18c,Contrib/Contrib/DemonWare/bdHTTP/bdHTTP.cpp,5.0.1,7,7,280,0,0,132,ready,0,0,0,2,0,0,3,0.0,,0.25,8
+660,needs-subset,SRC-187c64e137ab,Contrib/Contrib/DemonWare/bdLobby/bdLobbyEventHandler.cpp,5.0.1,74,74,412,0,0,104,headers,2,0,0,0,0,0,0,0.043,,0.169,10
+661,data-gate,SRC-82323b55316d,Externals/curl/lib/timeval.c,5.0.1,4,4,124,0,0,64,ready,0,0,0,1,0,0,0,0.161,curl 7.x upstream C,0.522,8
+662,data-gate,SRC-bc3cec9fab35,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/io/zero_copy_stream.cc,5.0.0git-8b24c0dbc2e,3,3,96,0,0,88,ready,0,0,0,2,0,0,0,0.424,protobuf 2.6.0 upstream C++,0.641,7
+663,data-gate,SRC-7d3d11895565,Contrib/Contrib/DemonWare/bdPlatform/bdPlatformTiming/bdPlatformTiming.cpp,5.0.1,5,5,244,0,0,56,ready,0,0,0,1,0,0,0,0.0,,0.25,7
+664,data-gate,SRC-04914c6e2eed,X/Client/RActors/AnimationChain.cpp,5.0.1,4,4,1012,0,0,556,headers,1,3,0,3,0,0,1,0.0,,0.06,7
+665,data-gate,SRC-fb4d62462801,BlizzardCore/Source/System/Process/System_Process.cpp,5.0.1,3,3,272,0,0,188,ready,0,3,0,2,0,0,0,0.0,,0.16,5
+666,data-gate,SRC-7c4df73028da,X/Server/Console/ConsolePlayerResolver.cpp,5.0.1,6,6,2008,0,0,1720,headers,2,8,0,1,3,0,0,0.0,,0.02,5
+667,data-gate,SRC-59154c4b8fdf,Contrib/Contrib/DemonWare/bdLobby/bdABTesting/bdABTesting.cpp,5.0.1,2,2,148,0,0,144,ready,0,0,0,0,3,0,0,0.0,,0.25,4
+668,data-gate,SRC-77390e6c8956,Externals/curl/lib/version.c,5.0.1,1,1,56,0,0,56,ready,0,0,0,0,0,2,0,0.161,curl 7.x upstream C,0.522,4
+669,data-gate,SRC-6a89c3f3e81e,BlizzardCore/Source/System/Hardware/System_Hardware.cpp,5.0.1,6,6,108,0,0,56,ready,0,0,0,0,0,1,0,0.0,,0.25,3
+670,data-gate,SRC-37cf04a93f07,X/Server/OnlineService/Legacy/ReplayPlayerResolver.cpp,5.0.1,6,6,296,0,0,132,headers,1,2,0,1,0,0,0,0.0,,0.09,3
+671,data-gate,SRC-17a711661a3a,Contrib/Contrib/DemonWare/bdNet/bdGetHostByName/bdGetHostByNameConfig.cpp,5.0.1,2,1,40,1,0,40,ready,0,0,0,1,0,0,0,0.923,,0.665,3
+672,data-gate,SRC-7f26e899589c,Contrib/Contrib/DemonWare/bdLobby/bdTags/bdTags.cpp,5.0.1,2,2,152,0,0,144,headers,1,0,0,0,3,0,0,0.0,,0.15,3
+673,data-gate,SRC-ea3dc97faae7,Contrib/Contrib/DemonWare/bdLobby/bdAuth/bdAuthUserLicense.cpp,5.0.1,1,1,144,0,0,144,headers,2,0,0,0,3,0,0,0.0,,0.15,3
+674,data-gate,SRC-571c1e6b159b,Contrib/Contrib/DemonWare/bdLobby/bdPooledStorage/bdPooledStorage.cpp,5.0.1,1,1,144,0,0,144,headers,2,0,0,0,3,0,0,0.0,,0.15,3
+675,data-gate,SRC-45929ef00163,Contrib/Contrib/DemonWare/bdLobby/bdContentStreaming/bdContentStreaming.cpp,5.0.1,1,1,144,0,0,144,headers,3,0,0,0,3,0,0,0.0,,0.15,3
+676,data-gate,SRC-a3232132904e,Contrib/Contrib/DemonWare/bdLobby/bdSingleIdentity/bdUno.cpp,5.0.1,1,1,144,0,0,144,headers,2,0,0,0,3,0,0,0.0,,0.15,3
+677,data-gate,SRC-c0551da49790,Contrib/Contrib/DemonWare/bdLobby/bdContentStreaming/bdContentStreamingBase.cpp,5.0.1,1,1,144,0,0,144,headers,7,0,0,0,3,0,0,0.0,,0.15,3
+678,data-gate,SRC-bb78d1ee8eff,Contrib/Contrib/DemonWare/bdLobby/bdContentStreaming/bdFileMetaData.cpp,5.0.1,1,1,144,0,0,144,headers,1,0,0,0,3,0,0,0.0,,0.15,3
+679,data-gate,SRC-8657b97806df,Contrib/Contrib/DemonWare/bdLobby/bdContentStreaming/bdSummaryMetaHandler.cpp,5.0.1,1,1,144,0,0,144,headers,1,0,0,0,3,0,0,0.0,,0.15,3
+680,needs-subset,SRC-e724bea6b9f5,Shared/Shared/Version/Version.cpp,5.0.1,9,9,596,0,0,216,headers,1,4,1,1,0,0,0,0.0,,0.03,0
+681,blocked-template,SRC-48105d77df46,Contrib/Contrib/DemonWare/bdLobby/bdAchievementsEngine/bdAchievementState.cpp,5.0.1,7,7,688,0,0,224,blocked,2,2,0,0,0,0,0,0.0,,0.02,2
+682,data-gate,SRC-5d69dbd5e03b,Externals/curl/siglo/curl_nintendo_middleware_info.cpp,5.0.1,1,1,12,0,0,12,ready,0,0,0,0,0,1,0,0.0,curl 7.x upstream C,0.45,1

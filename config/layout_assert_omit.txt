@@ -1,0 +1,10 @@
+# Layout checks tools/layout_asserts.py leaves out because they fail against the
+# DWARF: `<header under src/> <type> [field]  # reason`. Each is a real layout
+# difference in src/ to fix on its own; never bend a definition to pass a check.
+
+X/Server/SGameManager.h SGameManager  # partial declaration: 0x8 here, 0x280 in the DWARF
+X/Server/Movement/SActorMovement.h SActorMovement  # data members not adopted: 0x1d8 here, 0x290 in the DWARF
+Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdDTLSAssociation.h bdDTLSAssociation  # trimmed to the vtable: 0x8 here, 0x1040 in the DWARF
+Contrib/Contrib/DemonWare/bdLobby/bdLobbyConnection.h bdLobbyConnection  # partial declaration: 0x10 here, 0x720 in the DWARF
+Contrib/Contrib/Domino/Common/Platform/dmThreading_Linux.h dmMutex  # host pthread_mutex_t: 0x30 here, 0x20 in the DWARF
+Contrib/Contrib/Zlib/zlib.h internal_state  # zlib.h defines it only under a disabled condition

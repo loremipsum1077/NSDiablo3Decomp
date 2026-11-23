@@ -1,0 +1,33 @@
+// Adopted from tools/gen_headers.py output; hand-maintained from here on.
+// Original file: Contrib/Contrib/DemonWare/bdCore/bdContainers/bdBitBufferTypes.h
+
+#pragma once
+
+enum bdBitBufferDataType {
+    BD_BB_NO_TYPE = 0,
+    BD_BB_BOOL_TYPE = 1,
+    BD_BB_SIGNED_CHAR8_TYPE = 2,
+    BD_BB_UNSIGNED_CHAR8_TYPE = 3,
+    BD_BB_WCHAR16_TYPE = 4,
+    BD_BB_SIGNED_INTEGER16_TYPE = 5,
+    BD_BB_UNSIGNED_INTEGER16_TYPE = 6,
+    BD_BB_SIGNED_INTEGER32_TYPE = 7,
+    BD_BB_UNSIGNED_INTEGER32_TYPE = 8,
+    BD_BB_SIGNED_INTEGER64_TYPE = 9,
+    BD_BB_UNSIGNED_INTEGER64_TYPE = 10,
+    BD_BB_RANGED_SIGNED_INTEGER32_TYPE = 11,
+    BD_BB_RANGED_UNSIGNED_INTEGER32_TYPE = 12,
+    BD_BB_FLOAT32_TYPE = 13,
+    BD_BB_FLOAT64_TYPE = 14,
+    BD_BB_RANGED_FLOAT32_TYPE = 15,
+    BD_BB_SIGNED_CHAR8_STRING_TYPE = 16,
+    BD_BB_UNSIGNED_CHAR8_STRING_TYPE = 17,
+    BD_BB_MBSTRING_TYPE = 18,
+    BD_BB_BLOB_TYPE = 19,
+    BD_BB_NAN_TYPE = 20,
+    BD_BB_FULL_TYPE = 21,
+    BD_COMPRESSED_BB_PAYLOAD_TYPE = 22,
+    BD_BB_STRUCTURED_DATA_TYPE = 23,
+    BD_BB_MAX_TYPE = 32,
+};
+

@@ -1,0 +1,368 @@
+diff --git a/viking/src/elf.rs b/viking/src/elf.rs
+--- a/viking/src/elf.rs
++++ b/viking/src/elf.rs
+@@ -1,5 +1,5 @@
+ use std::{
+-    collections::HashMap,
++    collections::{HashMap, HashSet},
+     ffi::{c_char, CStr},
+     fs::File,
+     ops::Range,
+@@ -186,26 +186,11 @@
+ }
+ 
+ pub fn find_function_symbol_by_name(elf: &OwnedElf, name: &str) -> Result<Sym> {
+-    if let (bare, Some(qual)) = split_qualified(name) {
+-        // name@file: the copy of `bare` that the object for `file` contributed
+-        let map = load_link_map(None)?;
+-        let hit = resolve_qualified_in_map(&map, bare, qual)?;
+-        return elf
+-            .syms
+-            .iter()
+-            .filter(filter_out_useless_syms)
+-            .find(|s| s.st_value == hit.addr)
+-            .with_context(|| format!("{name}: no function symbol at {:#x}", hit.addr));
+-    }
+-
+-    let strtab = SymbolStringTable::from_elf(elf)?;
+-
+-    for symbol in elf.syms.iter().filter(filter_out_useless_syms) {
+-        if name == strtab.get_string(symbol.st_name) {
+-            return Ok(symbol);
+-        }
+-    }
+-    bail!("unknown function")
++    let mut symbols = make_symbol_map_by_name(elf)?;
++    add_qualified_names(&mut symbols, elf, None, [name])?;
++    symbols.get(name).copied()
++        .filter(|s| s.st_type() == sym::STT_FUNC)
++        .with_context(|| format!("unknown or ambiguous function: {name}"))
+ }
+ 
+ /// `name@file`: a function whose mangled name several translation units
+@@ -243,6 +228,7 @@
+     pub name: String,
+     pub object: String,
+     pub addr: u64,
++    pub size: u64,
+ }
+ 
+ pub fn link_map_path(version: Option<&str>) -> Result<PathBuf> {
+@@ -291,6 +277,7 @@
+         .context("not an ld.lld map file (no `Out In Symbol` header)")?;
+     let htoks = tokens(header);
+     let numeric_cols = htoks.iter().position(|(_, t)| *t == "Out").context("map header has no Out column")?;
++    let size_col = htoks.iter().position(|(_, t)| *t == "Size").context("map header has no Size column")?;
+     let col_in = htoks.iter().find(|(_, t)| *t == "In").map(|(o, _)| *o).unwrap();
+     let col_sym = htoks.iter().find(|(_, t)| *t == "Symbol").map(|(o, _)| *o).unwrap();
+ 
+@@ -312,6 +299,8 @@
+                     name: rest.to_string(),
+                     object: object.clone(),
+                     addr,
++                    size: u64::from_str_radix(toks[size_col].1.trim_start_matches("0x"), 16)
++                        .context("invalid map symbol size")?,
+                 });
+             }
+         } else if start >= col_in {
+@@ -379,8 +368,13 @@
+             return Ok(());
+         }
+     };
++    if let Err(error) = verify_link_map_provenance(elf, &path, text.as_bytes()) {
++        eprintln!("warning: qualified function identity unavailable: {error:#}");
++        return Ok(());
++    }
+     let map = parse_link_map(&text)?;
+-    let by_addr = make_symbol_map_by_addr(elf);
++    let strtab = SymbolStringTable::from_elf(elf)?;
++    let conflicts = conflicting_function_addresses(elf);
+     for name in qualified {
+         if symtab.contains_key(name.as_str()) {
+             continue;
+@@ -396,19 +390,70 @@
+                 continue;
+             }
+         };
+-        match by_addr.get(&hit.addr) {
+-            Some(sym) if sym.st_type() == sym::STT_FUNC => {
+-                // the map's keys borrow from the ELF; a handful of qualified
+-                // spellings per run are worth leaking for the same lifetime
+-                let key: &'static str = Box::leak(name.clone().into_boxed_str());
+-                symtab.insert(key, *sym);
+-            }
+-            _ => eprintln!(
+-                "warning: {name}: link map puts it at {:#x} but the ELF has no function symbol there",
+-                hit.addr
+-            ),
+-        }
+-    }
++        let mut candidates: Vec<_> = elf.syms.iter().filter(|symbol| {
++            symbol.st_type() == sym::STT_FUNC
++                && symbol.st_shndx != section_header::SHN_UNDEF as usize
++                && symbol.st_value == hit.addr
++                && symbol.st_size == hit.size
++                && strtab.get_string(symbol.st_name) == bare
++        }).collect();
++        candidates.dedup_by(|a, b| same_symbol_identity(a, b));
++        if candidates.len() == 1 && !conflicts.contains(&hit.addr) {
++            // These keys have the same process lifetime as the ELF-backed names.
++            let key: &'static str = Box::leak(name.into_boxed_str());
++            symtab.insert(key, candidates[0]);
++        } else {
++            eprintln!("warning: {name}: map/ELF function identity mismatch or conflicting aliases at {:#x}", hit.addr);
++        }
++    }
++    Ok(())
++}
++
++fn same_symbol_identity(a: &Sym, b: &Sym) -> bool {
++    a.st_value == b.st_value && a.st_size == b.st_size && a.st_shndx == b.st_shndx
++        && a.st_info == b.st_info && a.st_other == b.st_other
++}
++
++/// Distinct function names at one address are aliases only when the complete
++/// extent and defining section agree. This proves code identity, not TU ownership.
++fn conflicting_function_addresses(elf: &OwnedElf) -> HashSet<u64> {
++    let mut first = HashMap::new();
++    let mut conflicts = HashSet::new();
++    for symbol in elf.syms.iter().filter(|s| s.st_type() == sym::STT_FUNC
++        && s.st_shndx != section_header::SHN_UNDEF as usize) {
++        let identity = (symbol.st_size, symbol.st_shndx);
++        if let Some(previous) = first.insert(symbol.st_value, identity) {
++            if previous != identity { conflicts.insert(symbol.st_value); }
++        }
++    }
++    conflicts
++}
++
++/// A missing entry must not revive a rejected ELF identity through PLT fallback.
++pub fn has_defined_symbol(elf: &OwnedElf, name: &str) -> bool {
++    let Ok(strings) = SymbolStringTable::from_elf(elf) else { return true; };
++    elf.syms.iter().any(|symbol| symbol.st_shndx != section_header::SHN_UNDEF as usize
++        && strings.get_string(symbol.st_name) == name)
++}
++
++#[derive(serde::Deserialize)]
++#[serde(deny_unknown_fields)]
++struct LinkMapProvenance {
++    format: u32,
++    elf_sha256: String,
++    map_sha256: String,
++}
++
++fn verify_link_map_provenance(elf: &OwnedElf, path: &Path, map: &[u8]) -> Result<()> {
++    let receipt_path = PathBuf::from(format!("{}.provenance", path.display()));
++    let receipt: LinkMapProvenance = serde_json::from_slice(
++        &std::fs::read(&receipt_path).with_context(|| format!("missing link provenance {}; relink", receipt_path.display()))?
++    ).context("invalid link provenance")?;
++    anyhow::ensure!(receipt.format == 1, "unsupported link provenance format");
++    anyhow::ensure!(receipt.elf_sha256 == crate::sha256::hex(&elf.as_owner().1),
++        "stale link provenance: ELF hash mismatch; relink");
++    anyhow::ensure!(receipt.map_sha256 == crate::sha256::hex(map),
++        "stale link provenance: map hash mismatch; relink");
+     Ok(())
+ }
+ 
+@@ -420,9 +465,30 @@
+ 
+     let strtab = SymbolStringTable::from_elf(elf)?;
+ 
++    let conflicts = conflicting_function_addresses(elf);
++    let mut ambiguous = HashSet::new();
+     for symbol in elf.syms.iter().filter(filter_out_useless_syms) {
+-        map.entry(strtab.get_string(symbol.st_name))
+-            .or_insert(symbol);
++        if symbol.st_shndx == section_header::SHN_UNDEF as usize {
++            continue;
++        }
++        let name = strtab.get_string(symbol.st_name);
++        if name.contains(QUALIFIER_SEP) { continue; }
++        if symbol.st_type() == sym::STT_FUNC && conflicts.contains(&symbol.st_value) {
++            ambiguous.insert(name);
++        }
++        if let Some(previous) = map.get(name) {
++            let function = symbol.st_type() == sym::STT_FUNC;
++            let previous_function = previous.st_type() == sym::STT_FUNC;
++            anyhow::ensure!(function == previous_function,
++                "ELF name has conflicting function/data identities: {name}");
++            if function && !same_symbol_identity(previous, &symbol) { ambiguous.insert(name); }
++        } else {
++            map.insert(name, symbol);
++        }
++    }
++    for name in ambiguous {
++        map.remove(name);
++        eprintln!("warning: ambiguous ELF symbol or conflicting alias: {name}");
+     }
+     Ok(map)
+ }
+@@ -587,6 +653,7 @@
+     let symbol = symbols
+         .get(&name)
+         .ok_or_else(|| anyhow!("unknown function: {}", name))?;
++    anyhow::ensure!(symbol.st_type() == sym::STT_FUNC, "not a function symbol: {name}");
+     get_function(elf, symbol.st_value, symbol.st_size)
+ }
+ 
+diff --git a/viking/src/checks.rs b/viking/src/checks.rs
+--- a/viking/src/checks.rs
++++ b/viking/src/checks.rs
+@@ -445,7 +445,7 @@
+         let mut known_data_symbols = KnownDataSymbolMap::new();
+         known_data_symbols.load(get_data_symbol_csv_path(version)?.as_path(), decomp_symtab)?;
+ 
+-        let known_functions = functions::make_known_function_map(functions);
++        let known_functions = functions::make_known_function_map(functions)?;
+ 
+         let decomp_plt_section = elf::find_section(decomp_elf, ".plt").ok();
+         let orig_got_section = elf::find_section(orig_elf, ".got").ok();
+@@ -742,8 +742,12 @@
+         let Some(expected) = self
+             .decomp_symtab
+             .get(name)
++            .filter(|sym| sym.st_type() == goblin::elf::sym::STT_FUNC)
+             .map(|sym| sym.st_value)
+-            .or_else(|| elf::plt_name_to_addr(self.decomp_elf, name))
++            .or_else(|| {
++                if elf::has_defined_symbol(self.decomp_elf, name) { None }
++                else { elf::plt_name_to_addr(self.decomp_elf, name) }
++            })
+         else {
+             let actual_symbol_name = self.translate_decomp_addr_to_name(decomp_addr);
+             return Some(MismatchCause::FunctionCall(ReferenceDiff {
+diff --git a/viking/src/functions.rs b/viking/src/functions.rs
+--- a/viking/src/functions.rs
++++ b/viking/src/functions.rs
+@@ -218,15 +218,19 @@
+     write_functions_to_path(get_functions_csv_path(version).as_path(), functions)
+ }
+ 
+-pub fn make_known_function_map(functions: &[Info]) -> FxHashMap<u64, &Info> {
++pub fn make_known_function_map(functions: &[Info]) -> Result<FxHashMap<u64, &Info>> {
+     let mut known_functions =
+         FxHashMap::with_capacity_and_hasher(functions.len(), Default::default());
+ 
+     for function in functions {
+-        known_functions.insert(function.addr, function);
+-    }
+-
+-    known_functions
++        if let Some(previous) = known_functions.insert(function.addr, function) {
++            ensure!(previous.name == function.name && previous.size == function.size,
++                "conflicting original function identities at {:#x}: {} and {}",
++                function.addr, previous.name, function.name);
++        }
++    }
++
++    Ok(known_functions)
+ }
+ 
+ pub fn make_known_function_name_map(functions: &[Info]) -> FxHashMap<&str, &Info> {
+diff --git a/viking/src/tools/check.rs b/viking/src/tools/check.rs
+--- a/viking/src/tools/check.rs
++++ b/viking/src/tools/check.rs
+@@ -413,7 +413,13 @@
+     let version = args.get_version();
+     let filtered_functions =
+         functions::filter_candidates_by_symtab(functions, checker.decomp_symtab);
+-    let function = ui::fuzzy_search_function_interactively(&filtered_functions, fn_to_check)?;
++    let function = if let Some(exact) = functions.iter().find(|f| f.name == fn_to_check) {
++        anyhow::ensure!(checker.decomp_symtab.contains_key(fn_to_check),
++            "unknown or ambiguous function identity: {fn_to_check}");
++        exact
++    } else {
++        ui::fuzzy_search_function_interactively(&filtered_functions, fn_to_check)?
++    };
+     let name = function.name.as_str();
+ 
+     eprintln!("{}", ui::format_symbol_name(name).bold());
+@@ -726,7 +732,8 @@
+ 
+     // Also reload the symbol table from the new ELF.
+     let mut decomp_symtab = elf::make_symbol_map_by_name(&decomp_elf)?;
+-    elf::add_qualified_names(&mut decomp_symtab, &decomp_elf, version, [name])?;
++    elf::add_qualified_names(&mut decomp_symtab, &decomp_elf, version,
++        functions.iter().map(|function| function.name.as_str()))?;
+     let decomp_glob_data_table = elf::build_glob_data_table(&decomp_elf)?;
+ 
+     // And grab the possibly updated function code.
+diff --git a/viking/src/lib.rs b/viking/src/lib.rs
+--- a/viking/src/lib.rs
++++ b/viking/src/lib.rs
+@@ -4,3 +4,5 @@
+ pub mod functions;
+ pub mod repo;
+ pub mod ui;
++
++mod sha256;
+diff --git a/viking/src/sha256.rs b/viking/src/sha256.rs
+new file mode 100644
+--- /dev/null
++++ b/viking/src/sha256.rs
+@@ -0,0 +1,65 @@
++//! Dependency-free SHA-256 (FIPS 180-4) for link artifact provenance.
++//! Receipts bind artifacts from one link; they are not signatures or ownership review.
++const K: [u32; 64] = [
++    0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
++    0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
++    0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
++    0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
++    0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
++    0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
++    0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
++    0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2,
++];
++
++fn compress(state: &mut [u32; 8], block: &[u8]) {
++    let mut w = [0u32; 64];
++    for (dst, bytes) in w.iter_mut().zip(block.chunks_exact(4)) {
++        *dst = u32::from_be_bytes(bytes.try_into().unwrap());
++    }
++    for i in 16..64 {
++        let x = w[i-15];
++        let y = w[i-2];
++        let s0 = x.rotate_right(7) ^ x.rotate_right(18) ^ (x >> 3);
++        let s1 = y.rotate_right(17) ^ y.rotate_right(19) ^ (y >> 10);
++        w[i] = w[i-16].wrapping_add(s0).wrapping_add(w[i-7]).wrapping_add(s1);
++    }
++    let [mut a,mut b,mut c,mut d,mut e,mut f,mut g,mut h] = *state;
++    for i in 0..64 {
++        let s1 = e.rotate_right(6) ^ e.rotate_right(11) ^ e.rotate_right(25);
++        let ch = (e & f) ^ (!e & g);
++        let t1 = h.wrapping_add(s1).wrapping_add(ch).wrapping_add(K[i]).wrapping_add(w[i]);
++        let s0 = a.rotate_right(2) ^ a.rotate_right(13) ^ a.rotate_right(22);
++        let maj = (a & b) ^ (a & c) ^ (b & c);
++        let t2 = s0.wrapping_add(maj);
++        h=g; g=f; f=e; e=d.wrapping_add(t1); d=c; c=b; b=a; a=t1.wrapping_add(t2);
++    }
++    for (dst, value) in state.iter_mut().zip([a,b,c,d,e,f,g,h]) {
++        *dst = dst.wrapping_add(value);
++    }
++}
++
++pub fn hex(bytes: &[u8]) -> String {
++    let mut state = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
++    let mut chunks = bytes.chunks_exact(64);
++    for chunk in &mut chunks { compress(&mut state, chunk); }
++    let rest = chunks.remainder();
++    let mut tail = [0u8; 128];
++    tail[..rest.len()].copy_from_slice(rest);
++    tail[rest.len()] = 0x80;
++    let end = if rest.len() < 56 {64} else {128};
++    tail[end-8..end].copy_from_slice(&(bytes.len() as u64).wrapping_mul(8).to_be_bytes());
++    for chunk in tail[..end].chunks_exact(64) { compress(&mut state, chunk); }
++    state.iter().map(|value| format!("{value:08x}")).collect()
++}
++
++#[cfg(test)]
++mod tests {
++    use super::hex;
++    #[test]
++    fn known_answers() {
++        assert_eq!(hex(b""), "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
++        assert_eq!(hex(b"abc"), "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad");
++        assert_eq!(hex(b"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"), "248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1");
++        assert_eq!(hex(&vec![b'a'; 1_000_000]), "cdc76e5c9914fb9281a1c7e284d73e67f1809a48a497200e046d39ccc7112cd0");
++    }
++}

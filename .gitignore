@@ -1,0 +1,57 @@
+build/
+.DS_Store
+
+# Derived from your own dump -- never commit
+/data/*/main.elf
+/data/*/main.uncompressed.nso
+/toolchain/nx-decomp-tools-binaries/
+/tools/check
+/tools/listsym
+/tools/decompme
+/tools/common/.venv/
+__pycache__/
+toolchain/bin/
+
+# Local work queue state (tools/claim.py)
+/claims.csv
+# Only the six reviewed source inventories and the generated proof-debt ledger belong in Git.
+# All other data, including future files, stays private by default.
+/data/*
+!/data/2.6.2/
+/data/2.6.2/*
+!/data/2.6.2/data_symbols.csv
+!/data/2.6.2/duplicate_names.csv
+!/data/2.6.2/function_files.csv
+!/data/2.6.2/functions.csv
+!/data/2.6.2/helper_ledger.csv
+!/data/2.6.2/inline_helpers.csv
+!/data/2.6.2/proof_debt.csv
+
+# Optional local assistant settings
+/opencode.json
+/.claude/settings.json
+/.claude/settings.local.json
+/.codex/hooks.json
+
+# Private resumable terminal onboarding state and diagnostics
+/.onboarding/
+
+# Per-user Ghidra bridge configuration and local game-generated source.
+/.codex/config.toml
+/src/X/Common/Protobuf/*.pb.cc
+/src/X/Common/Protobuf/*.pb.h
+/src/X/Common/generated-game-data/
+
+# Local Switch dumps and console keys, including extracted game directories.
+/game/
+exefs/
+romfs/
+*.nss
+*.nso
+*.nca
+*.nsp
+*.nsz
+*.xci
+*.xcz
+prod.keys
+title.keys

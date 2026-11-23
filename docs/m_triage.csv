@@ -1,0 +1,864 @@
+Address,Name,File,CheckerNormal,CheckerLua,Class,Evidence
+0x0000007100006570,_ZN8Blizzard4Lock11EventCreateERNS0_5EventE,BlizzardCore/Source/System/Lock/System_Lock.cpp,ok,ok,checker-ok,def L75; ok both modes
+0x0000007100006580,_ZN8Blizzard4Lock12EventDestroyERNS0_5EventE,BlizzardCore/Source/System/Lock/System_Lock.cpp,ok,ok,checker-ok,def L83; ok both modes
+0x0000007100006590,_ZN8Blizzard4Lock8EventSetERNS0_5EventE,BlizzardCore/Source/System/Lock/System_Lock.cpp,ok,ok,checker-ok,def L89; ok both modes
+0x00000071000065a0,_ZN8Blizzard4Lock16EventWaitForeverERNS0_5EventE,BlizzardCore/Source/System/Lock/System_Lock.cpp,ok,ok,checker-ok,def L95; ok both modes
+0x00000071000065b0,_ZN8Blizzard4Lock9EventWaitEjRNS0_5EventE,BlizzardCore/Source/System/Lock/System_Lock.cpp,ok,ok,checker-ok,def L101; ok both modes
+0x00000071000065f0,_ZN8Blizzard4Lock10MutexEnterEjRNS0_5MutexE,BlizzardCore/Source/System/Lock/System_Lock.cpp,ok,ok,checker-ok,def L111; ok both modes
+0x0000007100006680,_ZN8Blizzard4Lock11MutexCreateERNS0_5MutexE,BlizzardCore/Source/System/Lock/System_Lock.cpp,ok,ok,checker-ok,def L133; ok both modes
+0x0000007100006690,_ZN8Blizzard4Lock10MutexEnterERNS0_5MutexE,BlizzardCore/Source/System/Lock/System_Lock.cpp,ok,ok,checker-ok,def L111; ok both modes
+0x00000071000066a0,_ZN8Blizzard4Lock10MutexLeaveERNS0_5MutexE,BlizzardCore/Source/System/Lock/System_Lock.cpp,ok,ok,checker-ok,def L159; ok both modes
+0x00000071000066b0,_ZN8Blizzard4Lock12MutexDestroyERNS0_5MutexE,BlizzardCore/Source/System/Lock/System_Lock.cpp,ok,ok,checker-ok,def L165; ok both modes
+0x00000071000066c0,_ZN8Blizzard4Lock15SemaphoreCreateERNS0_9SemaphoreE,BlizzardCore/Source/System/Lock/System_Lock.cpp,ok,ok,checker-ok,def L175; ok both modes
+0x00000071000066d0,_ZN8Blizzard4Lock16SemaphoreDestroyERNS0_9SemaphoreE,BlizzardCore/Source/System/Lock/System_Lock.cpp,ok,ok,checker-ok,def L183; ok both modes
+0x00000071000066e0,_ZN8Blizzard4Lock12SemaphoreSetERNS0_9SemaphoreE,BlizzardCore/Source/System/Lock/System_Lock.cpp,ok,ok,checker-ok,def L189; ok both modes
+0x00000071000066f0,_ZN8Blizzard4Lock20SemaphoreWaitForeverERNS0_9SemaphoreE,BlizzardCore/Source/System/Lock/System_Lock.cpp,ok,ok,checker-ok,def L195; ok both modes
+0x0000007100006700,_ZN8Blizzard4Lock13SemaphoreWaitEjRNS0_9SemaphoreE,BlizzardCore/Source/System/Lock/System_Lock.cpp,ok,ok,checker-ok,def L201; ok both modes
+0x000000710000b8f0,_ZL11core_printfIc13SprintfOutputEvPKT_St9__va_listbRT0_IS1_E,Contrib/Contrib/blz/src/format.cpp,mismatch,mismatch,unknown,def L1013; checker: wrong function size; L1007 unkn:large reconstruction; semantics unproven
+0x000000710000d070,_ZL11core_printfIc14SnprintfOutputEvPKT_St9__va_listbRT0_IS1_E,Contrib/Contrib/blz/src/format.cpp,mismatch,mismatch,unknown,def L1013; checker: wrong function size; L1007 unkn:large reconstruction; semantics unproven
+0x000000710000e650,_ZN3blz9vscprintfEPKcSt9__va_list,Contrib/Contrib/blz/src/format.cpp,mismatch,mismatch,unknown,def L1660; checker: wrong function size; L1658 unkn:inherits core_printf reconstruction
+0x00000071000103a0,_ZL11core_printfIc12PrintfOutputEvPKT_St9__va_listbRT0_IS1_E,Contrib/Contrib/blz/src/format.cpp,mismatch,mismatch,unknown,def L1013; checker: wrong function size; L1007 unkn:large reconstruction; semantics unproven
+0x0000007100011970,_ZL13__OutputValueIc13SprintfOutputEvP10PrintfSpecIT_E9PrintfArgRT0_IS2_E,Contrib/Contrib/blz/src/format.cpp,mismatch,mismatch,unknown,def L345; checker: wrong function size; L338 unkn:control-flow difference not shown equivalent
+0x0000007100012990,_ZN3blz9to_stringEPcmRKNS_7int_fmtEi,Contrib/Contrib/blz/src/format.cpp,mismatch,mismatch,equivalent-encoding,def L1801; checker: instruction differs outside a ; L1798 equi:instruction scheduling; L1812 equi:instruction scheduling; L1826 equi:instruction scheduling; L1840 equi:instruction scheduling; L1854 equi:instruction scheduling
+0x0000007100012a40,_ZN3blz9to_stringEPcmRKNS_7int_fmtEj,Contrib/Contrib/blz/src/format.cpp,mismatch,mismatch,equivalent-encoding,def L1801; checker: instruction differs outside a ; L1798 equi:instruction scheduling; L1812 equi:instruction scheduling; L1826 equi:instruction scheduling; L1840 equi:instruction scheduling; L1854 equi:instruction scheduling
+0x0000007100012af0,_ZN3blz9to_stringEPcmRKNS_7int_fmtEl,Contrib/Contrib/blz/src/format.cpp,mismatch,mismatch,equivalent-encoding,def L1801; checker: wrong mnemonic; L1798 equi:instruction scheduling; L1812 equi:instruction scheduling; L1826 equi:instruction scheduling; L1840 equi:instruction scheduling; L1854 equi:instruction scheduling
+0x0000007100012ba0,_ZN3blz9to_stringEPcmRKNS_7int_fmtEm,Contrib/Contrib/blz/src/format.cpp,mismatch,mismatch,equivalent-encoding,def L1801; checker: wrong mnemonic; L1798 equi:instruction scheduling; L1812 equi:instruction scheduling; L1826 equi:instruction scheduling; L1840 equi:instruction scheduling; L1854 equi:instruction scheduling
+0x0000007100012c50,_ZN3blz9to_stringEPcmRKNS_9float_fmtEf,Contrib/Contrib/blz/src/format.cpp,mismatch,mismatch,equivalent-encoding,def L1801; checker: instruction differs outside a ; L1798 equi:instruction scheduling; L1812 equi:instruction scheduling; L1826 equi:instruction scheduling; L1840 equi:instruction scheduling; L1854 equi:instruction scheduling
+0x0000007100012d00,_ZL13__OutputValueIc14SnprintfOutputEvP10PrintfSpecIT_E9PrintfArgRT0_IS2_E,Contrib/Contrib/blz/src/format.cpp,mismatch,mismatch,unknown,def L345; checker: wrong function size; L338 unkn:control-flow difference not shown equivalent
+0x0000007100013f90,_ZL13__OutputValueIc12PrintfOutputEvP10PrintfSpecIT_E9PrintfArgRT0_IS2_E,Contrib/Contrib/blz/src/format.cpp,mismatch,mismatch,unknown,def L345; checker: wrong function size; L338 unkn:control-flow difference not shown equivalent
+0x0000007100017270,_ZL5sDrawii,X/Client/CGame.cpp,mismatch,mismatch,equivalent-encoding,def L3094; checker: wrong function size; L3092 equi:register allocation
+0x0000007100018870,_ZN20LoadingScreenManager6UpdateEv,X/Client/CGame.cpp,mismatch,mismatch,equivalent-encoding,def L574; checker: wrong function size; L572 equi:register allocation / block layout
+0x0000007100018b80,_Z10ClientIdlej,X/Client/CGame.cpp,mismatch,mismatch,equivalent-encoding,def L5757; checker: wrong function size; L5754 equi:register allocation
+0x0000007100019e90,_ZN11AsyncRender5FlushEv,X/Client/CGame.cpp,mismatch,mismatch,equivalent-encoding,def L7571; checker: wrong function size; L7530 equi:block layout/merging
+0x000000710001b550,_ZL18sRenderDrawDefaultR7RWindowR7IRect2DS2_,X/Client/CGame.cpp,mismatch,mismatch,unknown,def L2899; checker: instruction differs outside a ; L2895 unkn:inverse-matrix reload via selected pointer
+0x0000007100065c10,_ZN6google8protobuf8internal20RepeatedPtrFieldBase9MergeFromINS0_16RepeatedPtrFieldIN2D312Achievements23AchievementUpdateRecordEE11TypeHandlerEEEvRKS2_,X/Client/Console/SaveMigration.cpp,mismatch,mismatch,unknown,def=Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/repeated_field.h:922; checker: wrong function size; no NON_MATCHING marker
+0x000000710009b620,_ZN11NX64NVNHeap7MemFreeEPv,X/Client/Gfx/NX64/NX64NVNHeap.cpp,mismatch,mismatch,equivalent-encoding,def L63; checker: unknown reason; L61 equi:inlining decision
+0x000000710009d940,_ZN10GFXNX64NVN18CreateVertexShaderEP16ShaderDefinitioni,X/Client/Gfx/NX64/NX64NVNShaders.cpp,mismatch,mismatch,equivalent-encoding,def L597; checker: wrong function size; L594 equi:inlining decision
+0x000000710012a160,_ZN11UIInventory7Console17UIInventoryScreen21OnSelectedItemChangedEv,X/Client/UserInterface/Console/UIConsoleMystic.cpp,mismatch,mismatch,unknown,def=X/Client/UserInterface/Console/UIConsoleInventoryView.h:269 (in-class); checker: wrong mnemonic; no NON_MATCHING marker
+0x0000007100137c30,_ZN11UIInventory7Console22UIInventoryDetailsView8UpdateUIEv,X/Client/UserInterface/Console/UIConsoleInventoryDetailsView.cpp,mismatch,mismatch,equivalent-encoding,def L346; checker: wrong function size; L343 equi:stack layout
+0x000000710013e290,_ZN11UIInventory7Console17FilterHasNewItemsEi5ACDIDRKNS0_23NewItemIndicatorManagerIS1_EEi,X/Client/UserInterface/Console/UIConsoleInventoryFilters.cpp,mismatch,mismatch,unknown,def L552; checker: wrong function size; L551 unkn:control-flow difference not shown equivalent
+0x000000710013e9e0,_GLOBAL__sub_I_UIConsoleInventoryFilters.cpp,X/Client/UserInterface/Console/UIConsoleInventoryFilters.cpp,mismatch,mismatch,equivalent-encoding,def=TU init; checker: wrong function size; L105 equi:store pairing
+0x00000071001473e0,_ZNK11UIInventory7Console21CosmeticItemsProvider9ItemIsNewE5ACDID,X/Client/UserInterface/Console/UIConsoleInventoryView.cpp,mismatch,mismatch,equivalent-encoding,def=X/Client/UserInterface/Console/UIConsoleInventoryView.h:122 (in-class); checker: wrong function size; L418 equi:block layout/merging
+0x000000710015c8e0,_ZN14UIPartyDisplay7Console16HidePartyDisplayEv,X/Client/UserInterface/Console/UIConsolePartyDisplay.cpp,mismatch,mismatch,equivalent-encoding,def L200; checker: wrong function size; L198 equi:inlining decision
+0x00000071001620a0,_ZN7UIParty7Console19InspectSkillsScreen24UpdateUIForSelectedTraitEiP6Player,X/Client/UserInterface/Console/UIConsolePartyTab.cpp,mismatch,mismatch,equivalent-encoding,def L1443; checker: wrong function size; L1439 equi:block layout/merging
+0x0000007100162270,_ZN7UIParty7Console19InspectSkillsScreen22OnIconSelectionChangedERK4UIIDi,X/Client/UserInterface/Console/UIConsolePartyTab.cpp,mismatch,mismatch,unknown,def L1498; checker: unverified GOT reference: rebuilt undefined GOT target symbo; L1495 equi:block layout/merging
+0x000000710017cd60,_ZN9UIDyeItem10GetAllDyesERN3blz6vectorIiNS0_9allocatorIiEEEE,X/Client/UserInterface/Interface/UIDyeItemCommon.cpp,mismatch,mismatch,unknown,def L37; checker: wrong function size; L36 unkn:vague codegen difference
+0x00000071001a0820,_Z30CameraManagerBuildShadowCameraiRK8Vector3D,X/Client/Camera/CameraManager.cpp,mismatch,mismatch,equivalent-encoding,def L436; checker: wrong function size; L432 equi:GlobalOpt/SRA difference
+0x00000071001a17c0,_ZL19sUpdateChildCamerasRK11CameraState,X/Client/Camera/CameraManager.cpp,mismatch,mismatch,unknown,def L275; checker: unverified GOT reference: rebuilt undefined GOT target symbo; L273 equi:register allocation
+0x00000071001a45d0,_Z29ListenerSetMicrophoneLocationRK11PRTransformS1_ff,X/Client/Camera/Listener.cpp,mismatch,mismatch,unknown,def L45; try_file: instructions identical; checker flags GOT data identity/interior offset of cgwvZAxis (0x75b58 vs 0x75b40) - data ref unproven
+0x00000071001b0f50,_ZN5Prefs11CheckActionEii,X/Client/Definitions/PreferencesDefinition.cpp,mismatch,mismatch,equivalent-encoding,def L599; checker: wrong branch target; L597 equi:operand order / branch sense
+0x00000071001c9cd0,_ZL10sParseTextPKcjjRN3blz6vectorIP18FormattedTextDeltaNS1_9allocatorIS4_EEEE,X/Client/Font/FormattedText.cpp,mismatch,mismatch,real-difference,def L221; checker: wrong function size; L216 real:switch char loaded ldrsb vs ldrb (signedness)
+0x00000071001f8a80,_ZNK13OnlineService13DetailsDigest15CanSelectQuestsEv,X/Client/OnlineService/OnlineServiceClientBase.cpp,mismatch,mismatch,equivalent-encoding,def L34; checker: wrong mnemonic; L32 equi:instruction scheduling
+0x00000071002677a0,_ZN12UIStoryboard7AdvanceEf,X/Client/UserInterface/UIStoryboard.cpp,mismatch,mismatch,equivalent-encoding,def L515; checker: wrong function size; L512 equi:block layout/merging
+0x000000710028f750,_ZN8UISkills7Console19PlayerSkillsGlobals16UpdateTouchInputEv,X/Client/UserInterface/Console/UISkillsConsole.cpp,mismatch,mismatch,equivalent-encoding,def L877; checker: wrong function size; L875 equi:store sinking
+0x0000007100291ac0,_ZN8UISkills7Console19PlayerSkillsGlobals17UpdateSkillItemUIEii,X/Client/UserInterface/Console/UISkillsConsole.cpp,mismatch,mismatch,equivalent-encoding,def L1106; checker: wrong function size; L1104 equi:instruction scheduling
+0x0000007100293f30,_ZN8UISkills7Console19PlayerSkillsGlobals19AssignSelectedSkillEv,X/Client/UserInterface/Console/UISkillsConsole.cpp,mismatch,mismatch,unknown,def L1594; checker: unverified GOT reference: original GOT target lacks known da; L1592 equi:equivalent instruction selection
+0x00000071002952e0,_ZN8UISkills7Console19PlayerSkillsGlobals23OnSkillSelectionChangedERK4UIIDiii,X/Client/UserInterface/Console/UISkillsConsole.cpp,mismatch,mismatch,equivalent-encoding,def L2013; checker: wrong mnemonic; L2010 equi:equivalent instruction selection
+0x0000007100295e50,_ZN8UISkills7Console19InitializeForPlayerEi,X/Client/UserInterface/Console/UISkillsConsole.cpp,mismatch,mismatch,equivalent-encoding,def L2217; checker: wrong function size; L2215 equi:block layout/merging
+0x0000007100298090,_ZN8UISkills7Console19UpdateSkillSlotIconERK4UIIDiPK6Playeriiiii,X/Client/UserInterface/Console/UISkillsConsole.cpp,mismatch,mismatch,equivalent-encoding,def L3242; checker: wrong function size; L3240 equi:stack layout
+0x0000007100298520,_ZN8UISkills7Console19UpdateTraitSlotIconERK4UIIDiPK6Playeriiiii,X/Client/UserInterface/Console/UISkillsConsole.cpp,mismatch,mismatch,equivalent-encoding,def L3324; checker: wrong function size; L3322 equi:block layout/merging
+0x0000007100299070,_ZN8UISkills7Console18sGetSkillListEntryEiiiRNS0_14SkillListEntryE,X/Client/UserInterface/Console/UISkillsConsole.cpp,mismatch,mismatch,equivalent-encoding,def L3022; checker: wrong function size; L3020 equi:equivalent instruction selection
+0x000000710029b270,_ZN16UIConsoleListBox19RefreshVisibleItemsEv,X/Client/UserInterface/Controls/UIConsoleListboxControl.cpp,mismatch,mismatch,equivalent-encoding,def L673; checker: wrong function size; L670 equi:loop exit/flag shape
+0x000000710029ba70,_ZN16UIConsoleListBox17SetLastVisibleRowEi,X/Client/UserInterface/Controls/UIConsoleListboxControl.cpp,mismatch,mismatch,unknown,def L584; checker: instruction differs outside a ; L581 unkn:clamp computes on different expression
+0x000000710029d1d0,_ZN16UIConsoleListBoxD2Ev,X/Client/UserInterface/Controls/UIConsoleListboxControl.cpp,mismatch,mismatch,real-difference,def=implicit/template (not located); call: different callee (_Z16UI_DeleteControlR4UIIDi vs _Z16UI_DeleteControlRK4UIIDi); no NON_MATCHING marker
+0x00000071002a5470,_ZN9UIControl17CreateFromXMLDataEiPK16UIControlDataExtRK4UIIDS5_i,X/Client/UserInterface/Controls/UIControlControl.cpp,mismatch,mismatch,equivalent-encoding,def L513; call: C1/C2 or D1/D2 variant of same ctor/dtor; no NON_MATCHING marker
+0x00000071002a6400,_ZNK9UIControl16CanHandleMessageERK5UIMsgm,X/Client/UserInterface/Controls/UIControlControl.cpp,mismatch,mismatch,equivalent-encoding,def L878; checker: wrong function size; L873 equi:operand order / branch sense
+0x00000071002a7520,_ZN14UIControlGroup23UpdateCachedActiveStateEv,X/Client/UserInterface/Controls/UIControlGroup.cpp,mismatch,mismatch,unknown,def L190; checker: wrong mnemonic; L189 unkn:IsActive flag load width differs
+0x00000071002a7680,_ZN14UIControlGroup14ForwardMessageERK5UIMsgm,X/Client/UserInterface/Controls/UIControlGroup.cpp,mismatch,mismatch,real-difference,def L233; try_file confirms: original cmp #2;b.ls (unsigned msg<=2) vs ours cmp #3;b.lt (signed); L230 real:unsigned msg<=2 vs signed msg<3 compare
+0x00000071002adaa0,_ZN24ItemButtonCreationParamsC1EiRK4UIIDS2_,X/Client/UserInterface/Controls/UIItemButtonControl.cpp,mismatch,mismatch,equivalent-encoding,def L91; call: C1/C2 or D1/D2 variant of same ctor/dtor; no NON_MATCHING marker
+0x00000071002adbf0,_ZN12UIItemButtonC1ERK24ItemButtonCreationParamsPK6Rect2D,X/Client/UserInterface/Controls/UIItemButtonControl.cpp,mismatch,mismatch,equivalent-encoding,def L130; call: C1/C2 or D1/D2 variant of same ctor/dtor; no NON_MATCHING marker
+0x00000071002aec70,_ZN9UIItemTagC1ERK20ButtonCreationParamsRK8Vector2DS5_,X/Client/UserInterface/Controls/UIItemTagControl.cpp,mismatch,mismatch,equivalent-encoding,def L34; call: C1/C2 or D1/D2 variant of same ctor/dtor; L33 equi:C1/C2 ctor variant
+0x00000071002aed00,_ZN9UIItemTagC1ERK20ButtonCreationParamsPK6Rect2D,X/Client/UserInterface/Controls/UIItemTagControl.cpp,mismatch,mismatch,equivalent-encoding,def L34; call: C1/C2 or D1/D2 variant of same ctor/dtor; L40 equi:C1/C2 ctor variant
+0x00000071002af300,_ZN30KeyMappingButtonCreationParamsC1EiRK4UIIDS2_,X/Client/UserInterface/Controls/UIKeyMappingButtonControl.cpp,mismatch,mismatch,equivalent-encoding,def L35; call: C1/C2 or D1/D2 variant of same ctor/dtor; L34 equi:C1/C2 ctor variant
+0x00000071002af380,_ZN18UIKeyMappingButtonC1ERK30KeyMappingButtonCreationParamsPK6Rect2D,X/Client/UserInterface/Controls/UIKeyMappingButtonControl.cpp,mismatch,mismatch,equivalent-encoding,def L65; call: C1/C2 or D1/D2 variant of same ctor/dtor; L64 equi:C1/C2 ctor variant
+0x00000071002b0e80,_ZN13UIProgressBar13sOnRepositionEv,X/Client/UserInterface/Controls/UIProgressBarControl.cpp,mismatch,mismatch,equivalent-encoding,def L158; checker: wrong mnemonic; L156 equi:instruction scheduling
+0x00000071002b8550,_ZN6UIText15ApplyFormattingEv,X/Client/UserInterface/Controls/UITextControl.cpp,mismatch,mismatch,equivalent-encoding,def L680; checker: wrong function size; L677 equi:block layout/merging
+0x00000071002b8de0,_ZN6UIText20sTruncateIfNecessaryEv,X/Client/UserInterface/Controls/UITextControl.cpp,mismatch,mismatch,equivalent-encoding,def L919; checker: unknown reason; L915 equi:block layout/merging
+0x00000071002b94b0,_ZN6UIText7SetTextEPKci,X/Client/UserInterface/Controls/UITextControl.cpp,mismatch,mismatch,equivalent-encoding,def L474; checker: wrong mnemonic; L471 equi:register allocation
+0x00000071002bb1f0,_ZN6UIText13HandleMessageERK5UIMsgm,X/Client/UserInterface/Controls/UITextControl.cpp,mismatch,mismatch,equivalent-encoding,def L2210; checker: wrong function size; L2208 equi:block layout/merging
+0x00000071002c7050,_ZN15UIBossEncounter11Enter_CloseEv,X/Client/UserInterface/Interface/UIBossElements.cpp,mismatch,mismatch,equivalent-encoding,def L185; checker: wrong function size; L181 equi:GlobalOpt/SRA difference
+0x00000071002c70a0,_ZN15UIBossEncounter12Enter_UpdateERK4UIID,X/Client/UserInterface/Interface/UIBossElements.cpp,mismatch,mismatch,equivalent-encoding,def L193; checker: wrong function size; L192 equi:GlobalOpt/SRA difference
+0x00000071002c71e0,_ZN15UIBossEncounter10Enter_OpenEP6PlayerPK20BossEncounterMessage,X/Client/UserInterface/Interface/UIBossElements.cpp,mismatch,mismatch,equivalent-encoding,def L225; checker: wrong function size; L224 equi:GlobalOpt/SRA difference
+0x00000071002c74b0,_ZN15UIBossEncounter15Enter_OnButton1ERK4UIIDi,X/Client/UserInterface/Interface/UIBossElements.cpp,mismatch,mismatch,equivalent-encoding,def L237; checker: wrong function size; L236 equi:GlobalOpt/SRA difference
+0x00000071002c7570,_ZN15UIBossEncounter15Enter_OnButton2ERK4UIIDi,X/Client/UserInterface/Interface/UIBossElements.cpp,mismatch,mismatch,equivalent-encoding,def L247; checker: wrong function size; L246 equi:GlobalOpt/SRA difference
+0x00000071002c7630,_ZN15UIBossEncounter16JoinParty_UpdateERK4UIID,X/Client/UserInterface/Interface/UIBossElements.cpp,mismatch,mismatch,unknown,def L257; checker: unverified GOT reference: rebuilt undefined GOT target symbo; L256 equi:GlobalOpt/SRA difference
+0x00000071002c7890,_ZN15UIBossEncounter14JoinParty_OpenEP6PlayerPK20BossEncounterMessage,X/Client/UserInterface/Interface/UIBossElements.cpp,mismatch,mismatch,equivalent-encoding,def L302; checker: wrong function size; L301 equi:GlobalOpt/SRA difference
+0x00000071002c7c00,_ZN15UIBossEncounter19JoinParty_OnButton1ERK4UIIDi,X/Client/UserInterface/Interface/UIBossElements.cpp,mismatch,mismatch,equivalent-encoding,def L321; checker: wrong function size; L320 equi:GlobalOpt/SRA difference
+0x00000071002c7c20,_ZN15UIBossEncounter19JoinParty_OnButton2ERK4UIIDi,X/Client/UserInterface/Interface/UIBossElements.cpp,mismatch,mismatch,equivalent-encoding,def L330; checker: wrong function size; L329 equi:GlobalOpt/SRA difference
+0x00000071002ca400,_ZN7UIBuffs7AddBuffEiiiPK6Player,X/Client/UserInterface/Interface/UIBuffs.cpp,mismatch,mismatch,equivalent-encoding,def L337; checker: wrong function size; L335 equi:equivalent instruction selection
+0x00000071002fe760,_ZN8UIQuests15CanShowXPRewardEm,X/Client/UserInterface/Interface/UIQuests.cpp,mismatch,mismatch,equivalent-encoding,def L601; checker: unknown reason; L598 equi:block layout/merging
+0x0000007100300620,_ZN17ObjectiveHUDEntry6UpdateEP12UIStackPaneli,X/Client/UserInterface/Interface/UIQuests.cpp,mismatch,mismatch,equivalent-encoding,def L1812; checker: wrong function size; L1807 equi:block layout/merging
+0x0000007100301120,_ZN8StepText6UpdateERK4UIIDRK17ObjectiveHUDEntryi,X/Client/UserInterface/Interface/UIQuests.cpp,mismatch,mismatch,equivalent-encoding,def L2845; checker: wrong function size; L2841 equi:register allocation / division strength reduction
+0x000000710033f9b0,_ZNK10ParentData20RegisterParentObjectEv,X/Client/AttachmentParent.cpp,mismatch,mismatch,equivalent-encoding,def L162; checker: wrong function size; L159 equi:block layout/merging
+0x0000007100386bb0,_ZN19DetailsSkillsScreen24UpdateUIForSelectedSkillEiP6Player,X/Client/UserInterface/Console/UIConsoleEquipmentManagerDetails.cpp,mismatch,mismatch,equivalent-encoding,def L927; checker: wrong function size; L923 equi:jump threading
+0x00000071003b11d0,_GLOBAL__sub_I_UIConsoleGameSettings.cpp,X/Client/UserInterface/Console/UIConsoleGameSettings.cpp,mismatch,mismatch,real-difference,def=TU init; checker: wrong function size; L20 real:original body not implemented
+0x00000071003c8c10,_ZN11UIInventory7Console23UIInventoryCategoryView10OnGotFocusEv,X/Client/UserInterface/Console/UIConsoleInventoryCategoryView.cpp,mismatch,mismatch,equivalent-encoding,def L40; checker: wrong function size; L39 equi:operand order / branch sense
+0x00000071003dcb60,_GLOBAL__sub_I_SoundBankDefinition.cpp,X/Client/Definitions/SoundBankDefinition.cpp,mismatch,mismatch,real-difference,def=TU init; checker: wrong function size; L47 real:TU initializer omits original header-global initialisation
+0x00000071003ea590,_ZN7Console18AchievementsShared29SendAchievementAwardedMessageERKN13OnlineService17GameAccountHandleEPKmm,X/Common/Achievements/Console/ConsoleAchievementsShared.cpp,ok,ok,checker-ok,def L23; ok both modes
+0x00000071003ea7e0,_ZN7Console18AchievementsShared29SendAchievementCriteriaUpdateERKN13OnlineService17GameAccountHandleEPKNS1_18AchievementsEngine20CriteriaUpdateRecordEm,X/Common/Achievements/Console/ConsoleAchievementsShared.cpp,ok,ok,checker-ok,def L53; ok both modes
+0x0000007100428580,_ZN7Console2IO23DecompressionTaskThread21DecompressAheadSectorEv,X/Common/Console/IO/ConsoleIO_TaskThread.cpp,mismatch,mismatch,equivalent-encoding,def L159; checker: wrong function size; L156 equi:block layout/merging
+0x00000071004289e0,_ZN7Console2IO23DecompressionTaskThread10ThreadProcEv,X/Common/Console/IO/ConsoleIO_TaskThread.cpp,mismatch,mismatch,equivalent-encoding,def L331; checker: unknown reason; L328 equi:instruction scheduling
+0x0000007100428d40,_ZN7Console2IO18IOAccessTaskThread11GetBestTaskERj,X/Common/Console/IO/ConsoleIO_TaskThread.cpp,mismatch,mismatch,equivalent-encoding,def L399; checker: unknown reason; L396 equi:instruction scheduling
+0x00000071004319e0,_Z19FileSystemGetLocalev,X/Common/Game.cpp,mismatch,mismatch,equivalent-encoding,def L1513; checker: wrong function size; L1509 equi:inlining decision
+0x0000007100431ec0,_Z24ShowSystemLocaleAOCOfferiN13OnlineService8CallbackIFviEEE,X/Common/Game.cpp,mismatch,mismatch,equivalent-encoding,def L1725; checker: wrong function size; L1723 equi:equivalent instruction selection
+0x00000071004335a0,_Z22GameStartConsoleClientjiijiiiiiijiPm,X/Common/Game.cpp,mismatch,mismatch,equivalent-encoding,def L2836; checker: wrong function size; L2793 equi:register allocation
+0x0000007100434fa0,_Z7AppIdlev,X/Common/Game.cpp,mismatch,mismatch,unknown,def L4192; checker: wrong mnemonic; L4189 unkn:bool bit-0 test vs BOOL nonzero test
+0x000000710047cf70,_ZN10JobManager10WorkerLoopEv,X/Common/JobManager/JobManager.cpp,mismatch,mismatch,equivalent-encoding,def L159; checker: wrong function size; L155 equi:instruction scheduling
+0x000000710047d4e0,_ZN10JobManager11WaitForIdleEv,X/Common/JobManager/JobManager.cpp,mismatch,mismatch,equivalent-encoding,def L178; checker: unknown reason; L174 equi:instruction scheduling
+0x00000071005c1d40,_ZNK6Target18IsInvalidForSourceEPK15ActorCommonData,X/Common/Target.cpp,mismatch,mismatch,equivalent-encoding,def L45; checker: wrong function size; L43 equi:return-block merging
+0x00000071005c25e0,_ZNK6Target11GetNavPlaceER8NavPlace,X/Common/Target.cpp,mismatch,mismatch,equivalent-encoding,def L319; checker: wrong function size; L316 equi:equivalent instruction selection
+0x00000071005c2970,_GLOBAL__sub_I_Target.cpp,X/Common/Target.cpp,mismatch,mismatch,real-difference,def=TU init; checker: wrong function size; L20 real:TU initializer omits original header-global initialisation
+0x00000071005c37a0,_GLOBAL__sub_I_ThreadGlobals.cpp,X/Common/ThreadGlobals.cpp,mismatch,mismatch,real-difference,def=TU init; checker: wrong function size; L24 real:TU initializer omits original header-global initialisation
+0x00000071005c5ad0,_ZN16XGrowableMap_SubIiRKiiiED2Ev,X/Common/Tutorials.cpp,mismatch,mismatch,unknown,def=X/Sigma/DataStructures/XGrowableMap.h:98 (in-class); checker: wrong function size; no NON_MATCHING marker
+0x00000071005ce700,_GLOBAL__sub_I_WorldPlace.cpp,X/Common/WorldPlace.cpp,mismatch,mismatch,real-difference,def=TU init; checker: wrong function size; L16 real:TU initializer omits original header-global initialisation
+0x00000071005d04a0,_ZNK29AttributeCompressorBoundedInt7_DecodeER8XDecoderR20NetAttributeKeyValue,X/Common/Attributes/AttributeCompressor.cpp,mismatch,mismatch,unknown,def L238; checker: wrong function size; L237 unkn:unclassified marker
+0x00000071005d0920,_GLOBAL__sub_I_AttributeCompressor.cpp,X/Common/Attributes/AttributeCompressor.cpp,mismatch,mismatch,unknown,def=TU init; checker: wrong function size; L14 unkn:initializer layout differs
+0x00000071005efe40,_Z29FastAttributeBBECompileAttribRK19TokenizedIdentifierP16IdentifierResult,X/Common/Attributes/FastAttribute.cpp,mismatch,mismatch,unknown,def L141; checker: wrong branch target; L140 unkn:unclassified marker
+0x00000071005f4590,_Z28FastAttribValueWentAboveZero13FastAttribKey15FastAttribValueS0_,X/Common/Attributes/FastAttribute.cpp,mismatch,mismatch,equivalent-encoding,def L232; checker: unknown reason; L231 equi:x<=0 vs x<1 (same for integers)
+0x00000071005fe8a0,_ZNK29TypeDescriptorClass_DT_TAGMAP19SerializeFromBinaryEPvRK15UnserializeDataRK19TypeDescriptorField,X/Common/D3TypeDescriptor/D3DescribedType.cpp,mismatch,mismatch,equivalent-encoding,def L2185; checker: wrong mnemonic; L2184 equi:register allocation
+0x00000071005ffac0,_ZNK38TypeDescriptorClass_DT_ACTOR_ATTRIBUTE21ToXMLSerializedStringERK36TypeDescriptorFieldSerializationInfoPKvR10CRefString,X/Common/D3TypeDescriptor/D3DescribedType.cpp,mismatch,mismatch,equivalent-encoding,def L2720; checker: unknown reason; L2719 equi:author: equivalent
+0x00000071005ffef0,_ZNK36TypeDescriptorClass_DT_STARTLOC_NAME11FromVariantEPvRK9TDVariant,X/Common/D3TypeDescriptor/D3DescribedType.cpp,mismatch,mismatch,equivalent-encoding,def L2869; checker: wrong branch target; L2868 equi:block layout/merging
+0x00000071006003a0,_ZNK21ComplexTypeDescriptor23IterateDefinitionFieldsEPKvRK19TypeDescriptorFieldPFvPK15XTypeDescriptorPS3_S1_PvES9_,X/Sigma/TypeDescriptor/TypeExtensions.cpp,mismatch,mismatch,unknown,def L80; checker: wrong mnemonic; L79 unkn:guard evaluation order swapped
+0x00000071006048a0,_ZNK36TypeDescriptorClass_DT_VARIABLEARRAY19SerializeFromBinaryEPvRK15UnserializeDataRK19TypeDescriptorField,X/Sigma/TypeDescriptor/TypeExtensions.cpp,mismatch,mismatch,unknown,def L1959; checker: unverified GOT reference: rebuilt undefined GOT target symbo; L1958 equi:instruction scheduling
+0x0000007100605790,_ZNK21ComplexTypeDescriptor6SizeOfEv,X/Sigma/TypeDescriptor/TypeExtensions.cpp,mismatch,mismatch,equivalent-encoding,def=X/Sigma/TypeDescriptor/TypeDescriptor.h:210 (in-class); checker: wrong function size; L266 equi:inlining decision
+0x0000007100605870,_ZNK21ComplexTypeDescriptor19LoadFromDefaultDataERK19TypeDescriptorFieldPv,X/Sigma/TypeDescriptor/TypeExtensions.cpp,mismatch,mismatch,equivalent-encoding,def=X/Sigma/TypeDescriptor/TypeDescriptor.h:219 (in-class); checker: wrong function size; L272 equi:inlining decision
+0x000000710060a4c0,_GLOBAL__sub_I_ActorDefinition.cpp,X/Common/Definitions/ActorDefinition.cpp,mismatch,mismatch,real-difference,def=TU init; checker: wrong function size; L56 real:TU initializer omits original header-global initialisation
+0x000000710060d280,_GLOBAL__sub_I_AttachmentDefinition.cpp,X/Common/Definitions/AttachmentDefinition.cpp,mismatch,mismatch,real-difference,def=TU init; checker: wrong function size; L49 real:TU initializer omits original header-global initialisation
+0x0000007100613680,_GLOBAL__sub_I_Definitions.cpp,X/Common/Definitions/Definitions.cpp,mismatch,mismatch,real-difference,def=TU init; checker: wrong function size; L82 real:TU initializer omits original header-global initialisation
+0x00000071006137e0,_ZN24GlobalCachePurgeOverrideC1E15GlobalCacheType,X/Common/Definitions/Definitions.cpp,mismatch,mismatch,equivalent-encoding,def L319; try_file: only TLS access differs (TLSDESC call vs original local-exec movz/movk)
+0x0000007100613810,_ZN24GlobalCachePurgeOverrideD1Ev,X/Common/Definitions/Definitions.cpp,mismatch,mismatch,equivalent-encoding,def L326; try_file: only TLS access differs (TLSDESC call vs original local-exec movz/movk)
+0x0000007100613840,_Z38sDefinitionTryMemAllocWithPurgeTracked15GlobalCacheTypeP9XBaseHeapjjiiPKcj,X/Common/Definitions/Definitions.cpp,mismatch,mismatch,equivalent-encoding,def L362; try_file: only TLS access differs (TLSDESC vs local-exec); calls in order
+0x0000007100615270,_ZN15GroupDefinition9DeleteAllEv,X/Common/Definitions/Definitions.cpp,mismatch,mismatch,equivalent-encoding,def L2012; checker: unknown reason; L1968 equi:register allocation
+0x00000071006175d0,_ZNK15GroupDefinition6ExistsEiPi,X/Common/Definitions/Definitions.cpp,mismatch,mismatch,equivalent-encoding,def L5887; checker: wrong function size; L5885 equi:equivalent instruction selection
+0x0000007100618690,_ZN15GroupDefinition35GlobalCacheManagerGeneratePurgeListE15GlobalCacheTypei,X/Common/Definitions/Definitions.cpp,mismatch,mismatch,equivalent-encoding,def L3448; checker: wrong function size; L3445 equi:block layout/merging
+0x0000007100618d10,_ZN15GroupDefinition14sCreateAndLoadEiiii,X/Common/Definitions/Definitions.cpp,mismatch,mismatch,equivalent-encoding,def L3983; checker: wrong function size; L3837 equi:GlobalOpt/SRA difference
+0x0000007100618e90,_ZN15GroupDefinition5sLoadEiiiiRPvR16DefDataElementIDii,X/Common/Definitions/Definitions.cpp,mismatch,mismatch,equivalent-encoding,def L4280; checker: wrong function size; L4278 equi:failure-path merging
+0x000000710061af60,_ZN15GroupDefinition11sGetForLoadILb1EEEP14DefDataElementiiii,X/Common/Definitions/Definitions.cpp,mismatch,mismatch,equivalent-encoding,def L4856; checker: wrong function size; L4852 equi:register allocation / address folding
+0x000000710061b560,_ZN15GroupDefinition11sGetForLoadILb0EEEP14DefDataElementiiii,X/Common/Definitions/Definitions.cpp,mismatch,mismatch,equivalent-encoding,def L4856; checker: unknown reason; L4852 equi:register allocation / address folding
+0x000000710061c270,_GLOBAL__sub_I_FlagSetDefinition.cpp,X/Common/Definitions/FlagSetDefinition.cpp,mismatch,mismatch,real-difference,def=TU init; checker: wrong function size; L16 real:TU initializer omits original header-global initialisation
+0x000000710062f670,_ZN14GlobalGroupDef11PostprocessEPv,X/Common/Definitions/GlobalDefinition.cpp,mismatch,mismatch,equivalent-encoding,def L81; checker: wrong function size; L77 equi:zero-count guard shape
+0x00000071006318f0,_ZN16XGrowableMap_SubIjjjjED2Ev,X/Common/Definitions/GlobalDefinition.cpp,mismatch,mismatch,unknown,def=X/Sigma/DataStructures/XGrowableMap.h:98 (in-class); checker: wrong function size; no NON_MATCHING marker
+0x0000007100640e30,_GLOBAL__sub_I_SceneDefinition.cpp,X/Common/Definitions/SceneDefinition.cpp,mismatch,mismatch,real-difference,def=TU init; checker: wrong function size; L39 real:TU initializer omits original header-global initialisation
+0x00000071006422f0,_GLOBAL__sub_I_SkillKitDefinition.cpp,X/Common/Definitions/SkillKitDefinition.cpp,mismatch,mismatch,real-difference,def=TU init; checker: wrong function size; L23 real:TU initializer omits original header-global initialisation
+0x00000071006436d0,_Z22StringListEntryReplacePKcS0_S0_i,X/Common/Definitions/StringListDefinition.cpp,mismatch,mismatch,equivalent-encoding,def L397; checker: wrong mnemonic; L395 equi:loop test order (all forms give same code)
+0x00000071006439b0,_Z21StringListApplyHotfixPKc,X/Common/Definitions/StringListDefinition.cpp,mismatch,mismatch,equivalent-encoding,def L473; checker: wrong function size; L471 equi:block layout/merging
+0x0000007100645e90,_GLOBAL__sub_I_WorldDefinition.cpp,X/Common/Definitions/WorldDefinition.cpp,mismatch,mismatch,real-difference,def=TU init; checker: wrong function size; L45 real:TU initializer omits original header-global initialisation
+0x000000710064ab10,_ZN18SmartMarkerGlobalsC2Ev,X/Common/Marker/SmartMarker.cpp,mismatch,mismatch,equivalent-encoding,def L23; call: C1/C2 or D1/D2 variant of same ctor/dtor; no NON_MATCHING marker
+0x000000710064ae60,_ZN11SmartMarker23GetMarkerObjectFromTypeE10MarkerType,X/Common/Marker/SmartMarker.cpp,mismatch,mismatch,equivalent-encoding,def L208; call: C1/C2 or D1/D2 variant of same ctor/dtor; no NON_MATCHING marker
+0x0000007100658e90,_Z25NavMeshGetHeightAndNormalRK13NavMeshHandleRK8Vector3DiRfRS2_,X/Common/Nav/NavigationMesh.cpp,mismatch,mismatch,equivalent-encoding,def L786; checker: wrong function size; L782 equi:block layout/merging
+0x0000007100659b20,_Z17NavMeshRollMarbleR15NavMeshRollData,X/Common/Nav/NavigationMesh.cpp,mismatch,mismatch,equivalent-encoding,def L2002; checker: wrong function size; L1998 equi:register allocation
+0x0000007100662c50,_Z20SweptCircleAndAABB2DRK6CircleRK8Vector2DfS4_S4_S4_RfRS2_,X/Common/Nav/NavZoneIntersectPrim.cpp,mismatch,mismatch,equivalent-encoding,def L162; checker: wrong function size; L160 equi:equivalent instruction selection
+0x0000007100662f50,_Z27SweptCircleAndRoundedAABB2DRK6CircleRK8Vector2DfS4_S4_S4_tRfRS2_,X/Common/Nav/NavZoneIntersectPrim.cpp,mismatch,mismatch,equivalent-encoding,def L238; checker: wrong function size; L235 equi:GlobalOpt/SRA difference
+0x0000007100663560,_Z26SweptPointAndRoundedAABB2DRK8Vector2DS1_S1_S1_tRfRS_,X/Common/Nav/NavZoneIntersectPrim.cpp,mismatch,mismatch,equivalent-encoding,def L408; checker: wrong function size; L406 equi:GlobalOpt/SRA difference
+0x00000071006637f0,_Z26Point2DInsideRoundedAABB2DRK8Vector2DS1_S1_t,X/Common/Nav/NavZoneIntersectPrim.cpp,mismatch,mismatch,equivalent-encoding,def L453; checker: wrong function size; L451 equi:GlobalOpt/SRA difference
+0x0000007100676130,_ZN13OnlineService17SetShellDisposingEi,X/Common/OnlineService/OnlineService.cpp,mismatch,mismatch,equivalent-encoding,def L205; checker: wrong function size; L198 equi:GlobalOpt/SRA difference
+0x000000710069ddb0,_GLOBAL__sub_I_SNOName.cpp,X/Common/SNO/SNOName.cpp,mismatch,mismatch,real-difference,def=TU init; checker: wrong function size; L21 real:TU initializer omits original header-global initialisation
+0x00000071006a36d0,_Z19TagMapDisposeForAppv,X/Common/TagMaps/Tags.cpp,mismatch,mismatch,equivalent-encoding,def L196; checker: wrong function size; L194 equi:inlining decision
+0x00000071006a39c0,_Z20TagMapDisposeForGamev,X/Common/TagMaps/Tags.cpp,mismatch,mismatch,equivalent-encoding,def L235; checker: wrong function size; L234 equi:inlining decision
+0x00000071006a82f0,_ZN7Console2IO16CPKArchiveReader27InitializeArchiveFromMemoryEi,X/Common/Console/IO/ConsoleIO_ArchiveReader.cpp,mismatch,mismatch,equivalent-encoding,def L344; checker: instruction differs outside a ; L342 equi:register allocation
+0x00000071006a9550,_ZN7Console2IO16CPKArchiveReader22FindBestReadSectorInfoEPS1_iPNS0_10FileRecordEiiRiS5_S5_S5_,X/Common/Console/IO/ConsoleIO_ArchiveReader.cpp,mismatch,mismatch,equivalent-encoding,def L763; checker: unknown reason; L761 equi:instruction scheduling
+0x00000071006a9950,_ZN7Console2IO16CPKArchiveReader29FindBestReadAndCompSectorInfoEPS1_iPNS0_10FileRecordEiiRiS5_S5_S5_S5_S5_S5_,X/Common/Console/IO/ConsoleIO_ArchiveReader.cpp,mismatch,mismatch,equivalent-encoding,def L824; checker: unknown reason; L822 equi:register allocation
+0x00000071006a9f50,_Z18SkipDecompressDataP10z_stream_siPhiiRjRi,X/Common/Console/IO/ConsoleIO_Decompress.cpp,ok,ok,checker-ok,def L23; ok both modes
+0x00000071006aa150,_Z14DecompressDataP10z_stream_siPhiRjRi,X/Common/Console/IO/ConsoleIO_Decompress.cpp,ok,ok,checker-ok,def L116; ok both modes
+0x00000071006ac400,_ZN7Console2IO27ReadAndDecompressRecordTask12SetCompletedEPNS0_10TaskThreadE,X/Common/Console/IO/ConsoleIO_Tasks.cpp,mismatch,mismatch,equivalent-encoding,def L751; checker: instruction differs outside a ; L749 equi:register allocation
+0x00000071006beac0,_GLOBAL__sub_I_HotbarButton.cpp,X/Common/HotbarButton.cpp,mismatch,mismatch,real-difference,def=TU init; checker: wrong function size; L16 real:TU initializer omits original header-global initialisation
+0x00000071006c7350,_ZN21MapSerializationUtils12SerializeIntEiRPvRi,X/Common/TagMaps/MapSerializationUtils.cpp,ok,ok,checker-ok,def L18; ok both modes
+0x00000071006c73a0,_ZN21MapSerializationUtils12SerializeIntEjRPvRi,X/Common/TagMaps/MapSerializationUtils.cpp,ok,ok,checker-ok,def L18; ok both modes
+0x00000071006c73d0,_ZN21MapSerializationUtils16SerializeFormulaER6XPtr64IhERPvRi,X/Common/TagMaps/MapSerializationUtils.cpp,ok,ok,checker-ok,def L76; ok both modes
+0x00000071006c7610,_ZN21MapSerializationUtils18UnserializeFormulaERPvR6XPtr64IhEi,X/Common/TagMaps/MapSerializationUtils.cpp,ok,ok,checker-ok,def L234; ok both modes
+0x00000071006c7760,_ZN21MapSerializationUtils16SerializeVariantEiR10TagVariantRPvRi,X/Common/TagMaps/MapSerializationUtils.cpp,ok,ok,checker-ok,def L301; ok both modes
+0x00000071006c77d0,_ZN21MapSerializationUtils18UnserializeVariantEiRPvR10TagVarianti,X/Common/TagMaps/MapSerializationUtils.cpp,ok,ok,checker-ok,def L328; ok both modes
+0x00000071006c7870,_ZN21MapSerializationUtils11FreeVariantEiR10TagVariant,X/Common/TagMaps/MapSerializationUtils.cpp,ok,ok,checker-ok,def L434; ok both modes
+0x00000071006c84e0,_Z47AttributeSerializer_CheckAndMendHellfireExploitR15ActorCommonDatai,X/Common/Attributes/AttributeSerializer.cpp,mismatch,mismatch,equivalent-encoding,def L81; checker: wrong function size; L80 equi:operand order / branch sense
+0x00000071007f3fc0,_ZL24_wrap_NavMeshHandle___eqP9lua_State,X/Server/LuaScript/LuaScriptInterface_wrap.cpp,mismatch,mismatch,equivalent-encoding,def L964; checker: wrong function size; L963 equi:block layout/merging
+0x0000007100867290,_Z24ScriptEventDispatchEventiP20ScriptEventParamListP22ScriptEventReturnValueP10WorldPlacef5ACDID,X/Server/LuaScript/ScriptEvent.cpp,mismatch,mismatch,equivalent-encoding,def L914; checker: wrong function size; L912 equi:register allocation
+0x000000710088fba0,_ZN7Minimap17AddWaypointMarkerERK6SScene,X/Server/Map/Minimap.cpp,mismatch,mismatch,unknown,def L761; checker: unverified GOT reference: rebuilt undefined GOT target symbo; L759 equi:speculated load + csel
+0x0000007100973770,_ZN29ErrorManagerBlizzardErrorData11AddMetadataEPKcS1_,X/Sigma/ErrorManager/ErrorManagerInspectorData.cpp,ok,ok,checker-ok,def L98; ok both modes
+0x0000007100973ac0,_ZN3blz6vectorI33ErrorManagerBlizzardErrorMetaDataNS_9allocatorIS1_EEE9push_backERKS1_,X/Sigma/ErrorManager/ErrorManagerInspectorData.cpp,ok,ok,checker-ok,def=Contrib/Contrib/blz/include/blz/vector.h:392 (in-class); ok both modes
+0x0000007100973b90,_ZN3blz6vectorI33ErrorManagerBlizzardErrorMetaDataNS_9allocatorIS1_EEE9_transferEPS1_,X/Sigma/ErrorManager/ErrorManagerInspectorData.cpp,ok,ok,checker-ok,def=Contrib/Contrib/blz/include/blz/vector.h:698 (in-class); ok both modes
+0x0000007100973c50,_ZN33ErrorManagerBlizzardErrorMetaDataC2ERKS_,X/Sigma/ErrorManager/ErrorManagerInspectorData.cpp,ok,ok,checker-ok,def=implicit/template (not located); ok both modes
+0x000000710097f1d0,_Z15SigmaMemoryMovePvS_m,X/Sigma/Memory/SigmaMemory.cpp,mismatch,mismatch,real-difference,def L290; call: original Blizzard::String::MemCopy; source MoveMemory->memmove
+0x0000007100980700,_ZN11XSocketBase6SendToEPKvjRK11XNetAddressRj,X/Sigma/Networking/XSocketBase.cpp,mismatch,mismatch,equivalent-encoding,def L23; checker: wrong function size; L20 equi:equivalent instruction selection
+0x0000007100983d00,_ZNK21ComplexTypeDescriptor16ScanForSubfieldsERK19TypeDescriptorField,X/Sigma/TypeDescriptor/TypeDescriptor.cpp,mismatch,mismatch,equivalent-encoding,def L57; checker: wrong function size; L53 equi:register allocation
+0x0000007100984480,_Z18GenericFloatDecodePvRK19TypeDescriptorFieldR8XDecoder,X/Sigma/TypeDescriptor/TypeDescriptor.cpp,mismatch,mismatch,equivalent-encoding,def L354; checker: wrong function size; L350 equi:block layout/merging
+0x0000007100a5f220,luaA_pushobject,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L93; exact under pinned Lua backend; normal: wrong function size; L92 equi:O0/Nintendo param spills
+0x0000007100a5f290,lua_checkstack,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L100; exact under pinned Lua backend; normal: wrong function size; L99 equi:O0/Nintendo param spills
+0x0000007100a5f390,lua_xmove,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L117; exact under pinned Lua backend; normal: wrong function size; L116 equi:O0/Nintendo param spills
+0x0000007100a5f470,lua_newthread,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L136; exact under pinned Lua backend; normal: wrong function size; L135 equi:O0/Nintendo param spills
+0x0000007100a5f510,lua_gettop,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L156; exact under pinned Lua backend; normal: wrong function size; L155 equi:O0/Nintendo param spills
+0x0000007100a5f550,lua_settop,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L162; exact under pinned Lua backend; normal: wrong function size; L161 equi:O0/Nintendo param spills
+0x0000007100a5f600,lua_remove,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L179; exact under pinned Lua backend; normal: wrong function size; L178 equi:O0/Nintendo param spills
+0x0000007100a5f6b0,index2adr,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L51; exact under pinned Lua backend; normal: wrong function size; L50 equi:O0/Nintendo param spills
+0x0000007100a5f8b0,lua_insert,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L191; exact under pinned Lua backend; normal: wrong function size; L190 equi:O0/Nintendo param spills
+0x0000007100a5f9a0,lua_replace,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L204; exact under pinned Lua backend; normal: wrong function size; L203 equi:O0/Nintendo param spills
+0x0000007100a5fbb0,lua_pushvalue,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L230; exact under pinned Lua backend; normal: wrong function size; L229 equi:O0/Nintendo param spills
+0x0000007100a5fc30,lua_type,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L245; exact under pinned Lua backend; normal: wrong function size; L244 equi:O0/Nintendo param spills
+0x0000007100a5fcb0,lua_typename,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L252; exact under pinned Lua backend; normal: wrong function size; L251 equi:O0/Nintendo param spills
+0x0000007100a5fd20,lua_iscfunction,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L259; exact under pinned Lua backend; normal: wrong function size; L258 equi:O0/Nintendo param spills
+0x0000007100a5fdb0,lua_isnumber,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L266; exact under pinned Lua backend; normal: wrong function size; L265 equi:O0/Nintendo param spills
+0x0000007100a5fe40,lua_isstring,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L274; exact under pinned Lua backend; normal: wrong function size; L273 equi:O0/Nintendo param spills
+0x0000007100a5fec0,lua_isuserdata,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L281; exact under pinned Lua backend; normal: wrong function size; L280 equi:O0/Nintendo param spills
+0x0000007100a5ff50,lua_rawequal,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L288; exact under pinned Lua backend; normal: wrong function size; L287 equi:O0/Nintendo param spills
+0x0000007100a60010,lua_lessthan,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L300; exact under pinned Lua backend; normal: wrong function size; L299 equi:O0/Nintendo param spills
+0x0000007100a600e0,lua_tonumber,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L315; exact under pinned Lua backend; normal: wrong function size; L314 equi:O0/Nintendo param spills
+0x0000007100a60170,lua_tointeger,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L326; exact under pinned Lua backend; normal: wrong function size; L325 equi:O0/Nintendo param spills
+0x0000007100a60220,lua_toboolean,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L341; exact under pinned Lua backend; normal: wrong function size; L340 equi:O0/Nintendo param spills
+0x0000007100a602d0,lua_tolstring,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L348; exact under pinned Lua backend; normal: wrong function size; L347 equi:O0/Nintendo param spills
+0x0000007100a603f0,lua_objlen,Contrib/Contrib/lua/src/lapi.c,mismatch,mismatch,equivalent-encoding,def L367; checker: wrong function size; L366 equi:O0/Nintendo param spills
+0x0000007100a60510,lua_tocfunction,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L386; exact under pinned Lua backend; normal: wrong function size; L385 equi:O0/Nintendo param spills
+0x0000007100a605a0,lua_touserdata,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L393; exact under pinned Lua backend; normal: wrong function size; L392 equi:O0/Nintendo param spills
+0x0000007100a60650,lua_tothread,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L404; exact under pinned Lua backend; normal: wrong function size; L403 equi:O0/Nintendo param spills
+0x0000007100a606d0,lua_topointer,Contrib/Contrib/lua/src/lapi.c,mismatch,mismatch,equivalent-encoding,def L411; checker: wrong function size; L410 equi:O0/Nintendo param spills
+0x0000007100a607a0,lua_pushnil,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L432; exact under pinned Lua backend; normal: wrong function size; L431 equi:O0/Nintendo param spills
+0x0000007100a607e0,lua_pushnumber,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L441; exact under pinned Lua backend; normal: wrong function size; L440 equi:O0/Nintendo param spills
+0x0000007100a60840,lua_pushinteger,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L450; exact under pinned Lua backend; normal: wrong function size; L449 equi:O0/Nintendo param spills
+0x0000007100a608a0,lua_pushlstring,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L459; exact under pinned Lua backend; normal: wrong function size; L458 equi:O0/Nintendo param spills
+0x0000007100a60950,lua_pushstring,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L469; exact under pinned Lua backend; normal: wrong function size; L468 equi:O0/Nintendo param spills
+0x0000007100a609d0,lua_pushvfstring,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L477; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a60a70,lua_pushfstring,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L489; exact under pinned Lua backend; normal: wrong function size; L488 equi:O0/Nintendo param spills
+0x0000007100a60b80,lua_pushcclosure,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L503; exact under pinned Lua backend; normal: wrong function size; L502 equi:O0/Nintendo param spills
+0x0000007100a60ce0,getcurrenv,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L82; exact under pinned Lua backend; normal: wrong function size; L81 equi:O0/Nintendo param spills
+0x0000007100a60d50,lua_pushboolean,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L521; exact under pinned Lua backend; normal: wrong function size; L520 equi:O0/Nintendo param spills
+0x0000007100a60dc0,lua_pushlightuserdata,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L530; exact under pinned Lua backend; normal: wrong function size; L529 equi:O0/Nintendo param spills
+0x0000007100a60e20,lua_pushthread,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L539; exact under pinned Lua backend; normal: wrong function size; L538 equi:O0/Nintendo param spills
+0x0000007100a60e90,lua_gettable,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L555; exact under pinned Lua backend; normal: wrong function size; L554 equi:O0/Nintendo param spills
+0x0000007100a60ef0,lua_getfield,Contrib/Contrib/lua/src/lapi.c,mismatch,mismatch,equivalent-encoding,def L566; checker: wrong function size; L565 equi:O0/Nintendo param spills
+0x0000007100a60fc0,lua_rawget,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L580; exact under pinned Lua backend; normal: wrong function size; L579 equi:O0/Nintendo param spills
+0x0000007100a61050,lua_rawgeti,Contrib/Contrib/lua/src/lapi.c,mismatch,mismatch,equivalent-encoding,def L591; checker: wrong function size; L590 equi:O0/Nintendo param spills
+0x0000007100a61100,lua_createtable,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L603; exact under pinned Lua backend; normal: wrong function size; L602 equi:O0/Nintendo param spills
+0x0000007100a611b0,lua_getmetatable,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L613; exact under pinned Lua backend; normal: wrong function size; L612 equi:O0/Nintendo param spills
+0x0000007100a612d0,lua_getfenv,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L643; exact under pinned Lua backend; normal: wrong function size; L642 equi:O0/Nintendo param spills
+0x0000007100a61420,lua_settable,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L673; exact under pinned Lua backend; normal: wrong function size; L672 equi:O0/Nintendo param spills
+0x0000007100a61490,lua_setfield,Contrib/Contrib/lua/src/lapi.c,mismatch,mismatch,equivalent-encoding,def L686; checker: wrong function size; L685 equi:O0/Nintendo param spills
+0x0000007100a61560,lua_rawset,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L701; exact under pinned Lua backend; normal: wrong function size; L700 equi:O0/Nintendo param spills
+0x0000007100a61660,lua_rawseti,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L715; exact under pinned Lua backend; normal: wrong function size; L714 equi:O0/Nintendo param spills
+0x0000007100a61770,lua_setmetatable,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L729; exact under pinned Lua backend; normal: wrong function size; L728 equi:O0/Nintendo param spills
+0x0000007100a61910,lua_setfenv,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L767; exact under pinned Lua backend; normal: wrong function size; L766 equi:O0/Nintendo param spills
+0x0000007100a61a80,lua_call,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L810; exact under pinned Lua backend; normal: wrong function size; L809 equi:O0/Nintendo param spills
+0x0000007100a61b30,lua_pcall,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L841; exact under pinned Lua backend; normal: wrong function size; L840 equi:O0/Nintendo param spills
+0x0000007100a61c50,f_call,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L833; exact under pinned Lua backend; normal: wrong function size; L832 equi:O0/Nintendo param spills
+0x0000007100a61cb0,lua_load,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L879; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a61d50,lua_dump,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L893; exact under pinned Lua backend; normal: wrong function size; L892 equi:O0/Nintendo param spills
+0x0000007100a61e00,lua_status,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L909; exact under pinned Lua backend; normal: wrong function size; L908 equi:O0/Nintendo param spills
+0x0000007100a61e20,lua_gc,Contrib/Contrib/lua/src/lapi.c,mismatch,mismatch,equivalent-encoding,def L919; checker: wrong function size; L918 equi:O0/Nintendo param spills
+0x0000007100a61fe0,lua_error,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L982; exact under pinned Lua backend; normal: wrong function size; L981 equi:O0/Nintendo param spills
+0x0000007100a62020,lua_next,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L992; exact under pinned Lua backend; normal: wrong function size; L991 equi:O0/Nintendo param spills
+0x0000007100a620c0,lua_concat,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L1010; exact under pinned Lua backend; normal: wrong function size; L1009 equi:O0/Nintendo param spills
+0x0000007100a621d0,lua_newuserdata,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L1034; exact under pinned Lua backend; normal: wrong function size; L1033 equi:O0/Nintendo param spills
+0x0000007100a622a0,lua_getupvalue,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L1068; exact under pinned Lua backend; normal: wrong function size; L1067 equi:O0/Nintendo param spills
+0x0000007100a62350,aux_upvalue,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L1049; exact under pinned Lua backend; normal: wrong function size; L1048 equi:O0/Nintendo param spills
+0x0000007100a624c0,lua_setupvalue,Contrib/Contrib/lua/src/lapi.c,mismatch,mismatch,equivalent-encoding,def L1083; checker: wrong function size; L1082 equi:O0/Nintendo param spills
+0x0000007100a625f0,lua_abortaddress,Contrib/Contrib/lua/src/lapi.c,mismatch,ok,equivalent-encoding,def L1102; exact under pinned Lua backend; normal: wrong function size; L1101 equi:O0/Nintendo param spills
+0x0000007100a62610,luaL_argerror,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L43; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a62740,luaL_error,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L86; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a62840,luaL_typerror,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L61; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a628e0,luaL_where,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L73; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a629a0,luaL_checkoption,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L99; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a62ae0,luaL_optlstring,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L165; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a62bb0,luaL_checklstring,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L158; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a62c30,luaL_newmetatable,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L112; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a62cf0,luaL_checkudata,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L124; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a62dd0,luaL_checkstack,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L140; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a62e40,luaL_checktype,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L146; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a62eb0,tag_error,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L68; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a62f30,luaL_checkany,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L152; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a62fa0,luaL_checknumber,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L176; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a63020,luaL_optnumber,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L184; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a630a0,luaL_checkinteger,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L189; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a63120,luaL_optinteger,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L197; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a631a0,luaL_getmetafield,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L203; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a63260,luaL_callmeta,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L219; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a63350,luaL_register,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def=implicit/template (not located); exact under pinned Lua backend; normal: wrong function size
+0x0000007100a633b0,luaL_openlib,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def=implicit/template (not located); exact under pinned Lua backend; normal: wrong function size
+0x0000007100a635a0,libsize,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L235; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a63600,luaL_findtable,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L357; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a637e0,luaL_gsub,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L340; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a638e0,luaL_buffinit,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L472; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a63930,luaL_addlstring,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L347; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a63a00,luaL_addstring,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L348; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a63a60,luaL_pushresult,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L447; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a63ab0,luaL_prepbuffer,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L429; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a63b00,emptybuffer,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L398; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a63b90,adjuststack,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L410; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a63cb0,luaL_addvalue,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L454; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a63db0,luaL_loadfile,Contrib/Contrib/lua/src/lauxlib.c,mismatch,mismatch,unknown,def L552; checker: wrong function size; no NON_MATCHING marker
+0x0000007100a64110,errfile,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L543; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a641b0,getF,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L529; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a642c0,luaL_loadbuffer,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L610; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a64330,getS,Contrib/Contrib/lua/src/lauxlib.c,mismatch,ok,equivalent-encoding,def L600; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a66a30,luaD_seterrorobj,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L51; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a66b70,luaD_throw,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L94; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a66c20,resetstack,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L81; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a66cd0,luaD_rawrunprotected,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L111; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a66d70,luaD_reallocstack,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L141; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a66e50,correctstack,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L126; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a66fa0,luaD_reallocCI,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L152; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a670a0,luaD_growstack,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L161; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a67120,luaD_callhook,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L181; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a672b0,luaD_precall,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L264; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a67740,tryfuncTM,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L243; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a678d0,adjust_varargs,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L208; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a67bc0,growCI,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L169; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a67c70,luaD_poscall,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L342; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a67e00,callrethooks,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L331; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a67ec0,luaD_call,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L369; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a67fe0,lua_resume,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L417; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a68110,resume_error,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L408; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a681f0,resume,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L383; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a68300,lua_yield,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L441; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a68380,luaD_pcall,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L453; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a684d0,restore_stack_limit,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L71; exact under pinned Lua backend; normal: wrong mnemonic
+0x0000007100a68570,luaD_protectedparser,Contrib/Contrib/lua/src/ldo.c,mismatch,ok,equivalent-encoding,def L506; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a68640,f_parser,Contrib/Contrib/lua/src/ldo.c,mismatch,mismatch,unknown,def L488; checker: wrong function size; no NON_MATCHING marker
+0x0000007100a687e0,luaU_dump,Contrib/Contrib/lua/src/ldump.c,mismatch,ok,equivalent-encoding,def L153; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a68880,DumpHeader,Contrib/Contrib/lua/src/ldump.c,mismatch,ok,equivalent-encoding,def L143; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a688d0,DumpFunction,Contrib/Contrib/lua/src/ldump.c,mismatch,ok,equivalent-encoding,def L129; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a68a00,DumpBlock,Contrib/Contrib/lua/src/ldump.c,mismatch,ok,equivalent-encoding,def L26; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a68a80,DumpString,Contrib/Contrib/lua/src/ldump.c,mismatch,ok,equivalent-encoding,def L61; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a68b30,DumpInt,Contrib/Contrib/lua/src/ldump.c,mismatch,ok,equivalent-encoding,def L45; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a68b90,DumpChar,Contrib/Contrib/lua/src/ldump.c,mismatch,ok,equivalent-encoding,def L39; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a68bf0,DumpVector,Contrib/Contrib/lua/src/ldump.c,mismatch,ok,equivalent-encoding,def L55; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a68c60,DumpConstants,Contrib/Contrib/lua/src/ldump.c,mismatch,mismatch,unknown,def L80; checker: wrong function size; no NON_MATCHING marker
+0x0000007100a68df0,DumpDebug,Contrib/Contrib/lua/src/ldump.c,mismatch,ok,equivalent-encoding,def L111; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a68fd0,DumpNumber,Contrib/Contrib/lua/src/ldump.c,mismatch,ok,equivalent-encoding,def L50; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a69030,luaF_newCclosure,Contrib/Contrib/lua/src/lfunc.c,mismatch,ok,equivalent-encoding,def L24; exact under pinned Lua backend; normal: wrong function size; L23 equi:O0/Nintendo param spills
+0x0000007100a690e0,luaF_newLclosure,Contrib/Contrib/lua/src/lfunc.c,mismatch,ok,equivalent-encoding,def L35; exact under pinned Lua backend; normal: wrong function size; L34 equi:O0/Nintendo param spills
+0x0000007100a691c0,luaF_newupval,Contrib/Contrib/lua/src/lfunc.c,mismatch,ok,equivalent-encoding,def L47; exact under pinned Lua backend; normal: wrong function size; L46 equi:O0/Nintendo param spills
+0x0000007100a69230,luaF_findupval,Contrib/Contrib/lua/src/lfunc.c,mismatch,ok,equivalent-encoding,def L57; exact under pinned Lua backend; normal: wrong function size; L56 equi:O0/Nintendo param spills
+0x0000007100a693e0,luaF_freeupval,Contrib/Contrib/lua/src/lfunc.c,mismatch,ok,equivalent-encoding,def L95; exact under pinned Lua backend; normal: wrong function size; L94 equi:O0/Nintendo param spills
+0x0000007100a69460,unlinkupval,Contrib/Contrib/lua/src/lfunc.c,mismatch,ok,equivalent-encoding,def L87; exact under pinned Lua backend; normal: wrong function size; L86 equi:O0/Nintendo param spills
+0x0000007100a694a0,luaF_close,Contrib/Contrib/lua/src/lfunc.c,mismatch,ok,equivalent-encoding,def L103; exact under pinned Lua backend; normal: wrong function size; L102 equi:O0/Nintendo param spills
+0x0000007100a695d0,luaF_newproto,Contrib/Contrib/lua/src/lfunc.c,mismatch,ok,equivalent-encoding,def L123; exact under pinned Lua backend; normal: wrong function size; L122 equi:O0/Nintendo param spills
+0x0000007100a696d0,luaF_freeproto,Contrib/Contrib/lua/src/lfunc.c,mismatch,ok,equivalent-encoding,def L150; exact under pinned Lua backend; normal: wrong function size; L149 equi:O0/Nintendo param spills
+0x0000007100a69850,luaF_freeclosure,Contrib/Contrib/lua/src/lfunc.c,mismatch,ok,equivalent-encoding,def L162; exact under pinned Lua backend; normal: wrong function size; L161 equi:O0/Nintendo param spills
+0x0000007100a698e0,luaF_getlocalname,Contrib/Contrib/lua/src/lfunc.c,mismatch,ok,equivalent-encoding,def L174; exact under pinned Lua backend; normal: wrong function size; L173 equi:O0/Nintendo param spills
+0x0000007100a6c1d0,luaL_openlibs,Contrib/Contrib/lua/src/linit.c,mismatch,ok,equivalent-encoding,def L50; exact under pinned Lua backend; normal: wrong function size; L49 equi:O0/Nintendo param spills
+0x0000007100a6deb0,luaopen_math,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L251; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6df70,math_abs,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L26; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6dfc0,math_acos,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L66; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e010,math_asin,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L61; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e060,math_atan2,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L76; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e0d0,math_atan,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L71; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e120,math_ceil,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L81; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e170,math_cosh,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L46; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e1c0,math_cos,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L41; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e210,math_deg,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L129; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e270,math_exp,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L124; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e2c0,math_floor,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L86; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e310,math_fmod,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L91; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e380,math_frexp,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L139; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e3e0,math_ldexp,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L146; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e450,math_log10,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L119; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e4a0,math_log,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L114; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e4f0,math_max,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L167; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e5b0,math_min,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L153; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e670,math_modf,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L96; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e6d0,math_pow,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L109; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e740,math_rad,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L134; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e7a0,math_random,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L181; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6e9e0,math_randomseed,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L209; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6ea30,math_sinh,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L36; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6ea80,math_sin,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L31; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6ead0,math_sqrt,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L104; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6eb20,math_tanh,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L56; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6eb70,math_tan,Contrib/Contrib/lua/src/lmathlib.c,mismatch,ok,equivalent-encoding,def L51; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a6ebc0,luaM_growaux_,Contrib/Contrib/lua/src/lmem.c,mismatch,ok,equivalent-encoding,def L49; exact under pinned Lua backend; normal: wrong function size; L48 equi:O0/Nintendo param spills
+0x0000007100a6ed40,luaM_realloc_,Contrib/Contrib/lua/src/lmem.c,mismatch,ok,equivalent-encoding,def L81; exact under pinned Lua backend; normal: wrong function size; L80 equi:O0/Nintendo param spills
+0x0000007100a6ee10,luaM_toobig,Contrib/Contrib/lua/src/lmem.c,mismatch,ok,equivalent-encoding,def L70; exact under pinned Lua backend; normal: wrong function size; L69 equi:O0/Nintendo param spills
+0x0000007100a70500,twoto,Contrib/Contrib/lua/src/lobject.c,mismatch,ok,equivalent-encoding,def L29; exact under pinned Lua backend; normal: wrong function size; L28 equi:O0/Nintendo param spills
+0x0000007100a70530,luaO_int2fb,Contrib/Contrib/lua/src/lobject.c,mismatch,ok,equivalent-encoding,def L42; exact under pinned Lua backend; normal: wrong function size; L41 equi:O0/Nintendo param spills
+0x0000007100a705d0,luaO_fb2int,Contrib/Contrib/lua/src/lobject.c,mismatch,ok,equivalent-encoding,def L55; exact under pinned Lua backend; normal: wrong function size; L54 equi:O0/Nintendo param spills
+0x0000007100a70630,luaO_log2,Contrib/Contrib/lua/src/lobject.c,mismatch,ok,equivalent-encoding,def L63; exact under pinned Lua backend; normal: wrong function size; L62 equi:O0/Nintendo param spills
+0x0000007100a706a0,luaO_rawequalObj,Contrib/Contrib/lua/src/lobject.c,mismatch,mismatch,equivalent-encoding,def L82; checker: wrong function size; L81 equi:O0/Nintendo param spills
+0x0000007100a707d0,luaO_str2d,Contrib/Contrib/lua/src/lobject.c,mismatch,ok,equivalent-encoding,def L101; exact under pinned Lua backend; normal: wrong function size; L100 equi:O0/Nintendo param spills
+0x0000007100a70900,__isspace@lobject.c,Contrib/Contrib/lua/src/lobject.c,mismatch,ok,equivalent-encoding,def=NintendoSDK/Compilers/NX/nx/aarch64/include/ctype.h:6; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a70960,luaO_pushvfstring,Contrib/Contrib/lua/src/lobject.c,mismatch,ok,equivalent-encoding,def L124; exact under pinned Lua backend; normal: wrong function size; L123 equi:O0/Nintendo param spills
+0x0000007100a70f40,pushstr,Contrib/Contrib/lua/src/lobject.c,mismatch,ok,equivalent-encoding,def L116; exact under pinned Lua backend; normal: wrong function size; L115 equi:O0/Nintendo param spills
+0x0000007100a71010,luaO_pushfstring,Contrib/Contrib/lua/src/lobject.c,mismatch,ok,equivalent-encoding,def L186; exact under pinned Lua backend; normal: wrong function size; L185 equi:O0/Nintendo param spills
+0x0000007100a710f0,luaO_chunkid,Contrib/Contrib/lua/src/lobject.c,mismatch,ok,equivalent-encoding,def L197; exact under pinned Lua backend; normal: wrong function size; L196 equi:O0/Nintendo param spills
+0x0000007100a712f0,luaopen_os,Contrib/Contrib/lua/src/loslib.c,mismatch,ok,equivalent-encoding,def L240; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a71340,os_clock,Contrib/Contrib/lua/src/loslib.c,mismatch,ok,equivalent-encoding,def L85; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a71390,os_date,Contrib/Contrib/lua/src/loslib.c,mismatch,ok,equivalent-encoding,def L135; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a71600,os_difftime,Contrib/Contrib/lua/src/loslib.c,mismatch,ok,equivalent-encoding,def L195; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a71670,os_execute,Contrib/Contrib/lua/src/loslib.c,mismatch,ok,equivalent-encoding,def L38; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a71690,os_exit,Contrib/Contrib/lua/src/loslib.c,mismatch,ok,equivalent-encoding,def L216; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a716d0,os_getenv,Contrib/Contrib/lua/src/loslib.c,mismatch,ok,equivalent-encoding,def L74; exact under pinned Lua backend; normal: wrong mnemonic
+0x0000007100a71730,os_remove,Contrib/Contrib/lua/src/loslib.c,mismatch,ok,equivalent-encoding,def L46; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a717a0,os_rename,Contrib/Contrib/lua/src/loslib.c,mismatch,ok,equivalent-encoding,def L52; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a71830,os_setlocale,Contrib/Contrib/lua/src/loslib.c,mismatch,ok,equivalent-encoding,def L204; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a718e0,os_time,Contrib/Contrib/lua/src/loslib.c,mismatch,ok,equivalent-encoding,def L170; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a71a60,os_tmpname,Contrib/Contrib/lua/src/loslib.c,mismatch,ok,equivalent-encoding,def L59; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a71aa0,setfield,Contrib/Contrib/lua/src/loslib.c,mismatch,ok,equivalent-encoding,def L99; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a71b00,setboolfield,Contrib/Contrib/lua/src/loslib.c,mismatch,ok,equivalent-encoding,def L104; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a71b70,os_pushresult,Contrib/Contrib/lua/src/loslib.c,mismatch,ok,equivalent-encoding,def L23; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a71c50,getfield,Contrib/Contrib/lua/src/loslib.c,mismatch,ok,equivalent-encoding,def L120; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a71d20,getboolfield,Contrib/Contrib/lua/src/loslib.c,mismatch,ok,equivalent-encoding,def L111; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a76ef0,luaS_resize,Contrib/Contrib/lua/src/lstring.c,mismatch,ok,equivalent-encoding,def L23; exact under pinned Lua backend; normal: wrong function size; L22 equi:O0/Nintendo param spills
+0x0000007100a770f0,luaS_newlstr,Contrib/Contrib/lua/src/lstring.c,mismatch,ok,equivalent-encoding,def L78; exact under pinned Lua backend; normal: wrong function size; L77 equi:O0/Nintendo param spills
+0x0000007100a772a0,newlstr,Contrib/Contrib/lua/src/lstring.c,mismatch,ok,equivalent-encoding,def L52; exact under pinned Lua backend; normal: wrong function size; L51 equi:O0/Nintendo param spills
+0x0000007100a77470,luaS_newudata,Contrib/Contrib/lua/src/lstring.c,mismatch,ok,equivalent-encoding,def L100; exact under pinned Lua backend; normal: wrong function size; L99 equi:O0/Nintendo param spills
+0x0000007100a77570,luaopen_string,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L859; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a775f0,createmetatable,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L844; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a776b0,str_byte,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L105; exact under pinned Lua backend; normal: wrong mnemonic
+0x0000007100a77870,str_char,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L124; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a779d0,str_dump,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L146; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a77a80,str_find,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L537; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a77ac0,str_format,Contrib/Contrib/lua/src/lstrlib.c,mismatch,mismatch,unknown,def L755; checker: wrong function size; no NON_MATCHING marker
+0x0000007100a77e50,gfind_nodef,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L583; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a77e90,gmatch,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L573; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a77f30,str_gsub,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L647; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a78190,str_len,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L28; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a781f0,str_lower,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L67; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a782f0,str_match,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L542; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a78330,str_rep,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L92; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a783e0,str_reverse,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L56; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a784c0,str_sub,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L42; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a785e0,str_upper,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L80; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a786e0,posrelat,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L36; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a78740,writer,Contrib/Contrib/lua/src/lstrlib.c,mismatch,mismatch,unknown,def L139; checker: wrong function size; no NON_MATCHING marker
+0x0000007100a787c0,str_find_aux,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L494; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a78ab0,lmemfind,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L443; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a78c10,match@lstrlib.c,Contrib/Contrib/lua/src/lstrlib.c,mismatch,mismatch,unknown,def L364; checker: wrong function size; no NON_MATCHING marker
+0x0000007100a790e0,push_captures,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L484; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a791d0,start_capture,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L328; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a792c0,end_capture,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L342; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a79360,matchbalance,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L280; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a794e0,classend,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L201; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a79660,matchbracketclass,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L244; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a79820,match_capture,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L353; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a798f0,singlematch,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L267; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a799e0,max_expand,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L300; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a79b10,min_expand,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L315; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a79bf0,capture_to_close,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L193; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a79ca0,match_class,Contrib/Contrib/lua/src/lstrlib.c,mismatch,mismatch,unknown,def L225; checker: wrong function size; no NON_MATCHING marker
+0x0000007100a79e70,__isspace@lstrlib.c,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def=NintendoSDK/Compilers/NX/nx/aarch64/include/ctype.h:6; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a79ed0,check_capture,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L185; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a79f80,push_onecapture,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L465; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7a0e0,scanformat,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L724; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7a3a0,addintlen,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L746; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7a430,addquoted,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L695; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7a740,gmatch_aux,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L547; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7a8b0,add_value,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L611; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7aa90,add_s,Contrib/Contrib/lua/src/lstrlib.c,mismatch,ok,equivalent-encoding,def L589; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7ace0,luaH_next,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L167; exact under pinned Lua backend; normal: wrong function size; L166 equi:O0/Nintendo param spills
+0x0000007100a7af30,findindex,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L141; exact under pinned Lua backend; normal: wrong function size; L140 equi:O0/Nintendo param spills
+0x0000007100a7b0d0,luaH_resizearray,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L340; exact under pinned Lua backend; normal: wrong function size; L339 equi:O0/Nintendo param spills
+0x0000007100a7b170,resize,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L309; exact under pinned Lua backend; normal: wrong function size; L308 equi:O0/Nintendo param spills
+0x0000007100a7b450,luaH_new,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L373; exact under pinned Lua backend; normal: wrong function size; L372 equi:O0/Nintendo param spills
+0x0000007100a7b530,setarrayvector,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L273; exact under pinned Lua backend; normal: wrong function size; L272 equi:O0/Nintendo param spills
+0x0000007100a7b630,setnodevector,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L283; exact under pinned Lua backend; normal: wrong function size; L282 equi:O0/Nintendo param spills
+0x0000007100a7b7f0,luaH_free,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L390; exact under pinned Lua backend; normal: wrong function size; L389 equi:O0/Nintendo param spills
+0x0000007100a7b8e0,luaH_getnum,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L454; exact under pinned Lua backend; normal: wrong function size; L453 equi:O0/Nintendo param spills
+0x0000007100a7b9f0,hashnum,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L85; exact under pinned Lua backend; normal: wrong function size; L84 equi:O0/Nintendo param spills
+0x0000007100a7bad0,luaH_getstr,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L475; exact under pinned Lua backend; normal: wrong function size; L474 equi:O0/Nintendo param spills
+0x0000007100a7bbc0,luaH_get,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L490; exact under pinned Lua backend; normal: wrong function size; L489 equi:O0/Nintendo param spills
+0x0000007100a7bd20,mainposition,Contrib/Contrib/lua/src/ltable.c,mismatch,mismatch,equivalent-encoding,def L102; checker: wrong function size; L101 equi:O0/Nintendo param spills
+0x0000007100a7bec0,luaH_set,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L516; exact under pinned Lua backend; normal: wrong function size; L515 equi:O0/Nintendo param spills
+0x0000007100a7bfd0,newkey,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L417; exact under pinned Lua backend; normal: wrong function size; L416 equi:O0/Nintendo param spills
+0x0000007100a7c1d0,luaH_setnum,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L531; exact under pinned Lua backend; normal: wrong function size; L530 equi:O0/Nintendo param spills
+0x0000007100a7c290,luaH_setstr,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L544; exact under pinned Lua backend; normal: wrong function size; L543 equi:O0/Nintendo param spills
+0x0000007100a7c340,luaH_getn,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L586; exact under pinned Lua backend; normal: wrong function size; L585 equi:O0/Nintendo param spills
+0x0000007100a7c470,unbound_search,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L557; exact under pinned Lua backend; normal: wrong function size; L556 equi:O0/Nintendo param spills
+0x0000007100a7c5c0,arrayindex,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L123; exact under pinned Lua backend; normal: wrong function size; L122 equi:O0/Nintendo param spills
+0x0000007100a7c650,getfreepos,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L399; exact under pinned Lua backend; normal: wrong function size; L398 equi:O0/Nintendo param spills
+0x0000007100a7c6d0,rehash,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L347; exact under pinned Lua backend; normal: wrong function size; L346 equi:O0/Nintendo param spills
+0x0000007100a7c800,numusearray,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L230; exact under pinned Lua backend; normal: wrong function size; L229 equi:O0/Nintendo param spills
+0x0000007100a7c960,numusehash,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L256; exact under pinned Lua backend; normal: wrong function size; L255 equi:O0/Nintendo param spills
+0x0000007100a7ca50,countint,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L218; exact under pinned Lua backend; normal: wrong function size; L217 equi:O0/Nintendo param spills
+0x0000007100a7cb10,computesizes,Contrib/Contrib/lua/src/ltable.c,mismatch,ok,equivalent-encoding,def L195; exact under pinned Lua backend; normal: wrong function size; L194 equi:O0/Nintendo param spills
+0x0000007100a7cc40,luaopen_table,Contrib/Contrib/lua/src/ltablib.c,mismatch,ok,equivalent-encoding,def L274; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7cc90,tconcat,Contrib/Contrib/lua/src/ltablib.c,mismatch,ok,equivalent-encoding,def L134; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7ce50,foreach,Contrib/Contrib/lua/src/ltablib.c,mismatch,ok,equivalent-encoding,def L39; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7cf40,foreachi,Contrib/Contrib/lua/src/ltablib.c,mismatch,ok,equivalent-encoding,def L22; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7d060,getn,Contrib/Contrib/lua/src/ltablib.c,mismatch,ok,equivalent-encoding,def L72; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7d0c0,maxn,Contrib/Contrib/lua/src/ltablib.c,mismatch,ok,equivalent-encoding,def L56; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7d190,tinsert,Contrib/Contrib/lua/src/ltablib.c,mismatch,ok,equivalent-encoding,def L90; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7d300,tremove,Contrib/Contrib/lua/src/ltablib.c,mismatch,ok,equivalent-encoding,def L118; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7d420,setn,Contrib/Contrib/lua/src/ltablib.c,mismatch,ok,equivalent-encoding,def L78; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7d490,sort,Contrib/Contrib/lua/src/ltablib.c,mismatch,ok,equivalent-encoding,def L247; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7d550,auxsort,Contrib/Contrib/lua/src/ltablib.c,mismatch,ok,equivalent-encoding,def L184; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7d980,sort_comp,Contrib/Contrib/lua/src/ltablib.c,mismatch,ok,equivalent-encoding,def L169; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7da60,set2,Contrib/Contrib/lua/src/ltablib.c,mismatch,ok,equivalent-encoding,def L164; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7dac0,luaT_init,Contrib/Contrib/lua/src/ltm.c,mismatch,ok,equivalent-encoding,def L33; exact under pinned Lua backend; normal: wrong function size; L32 equi:O0/Nintendo param spills
+0x0000007100a7db90,luaT_gettm,Contrib/Contrib/lua/src/ltm.c,mismatch,ok,equivalent-encoding,def L54; exact under pinned Lua backend; normal: wrong function size; L53 equi:O0/Nintendo param spills
+0x0000007100a7dc30,luaT_gettmbyobj,Contrib/Contrib/lua/src/ltm.c,mismatch,ok,equivalent-encoding,def L66; exact under pinned Lua backend; normal: wrong function size; L65 equi:O0/Nintendo param spills
+0x0000007100a7dd30,luaU_undump,Contrib/Contrib/lua/src/lundump.c,mismatch,ok,equivalent-encoding,def L191; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7de50,LoadHeader,Contrib/Contrib/lua/src/lundump.c,mismatch,ok,equivalent-encoding,def L179; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7ded0,LoadFunction,Contrib/Contrib/lua/src/lundump.c,mismatch,ok,equivalent-encoding,def L160; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7e080,luaU_header,Contrib/Contrib/lua/src/lundump.c,mismatch,ok,equivalent-encoding,def L210; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7e150,LoadBlock,Contrib/Contrib/lua/src/lundump.c,mismatch,ok,equivalent-encoding,def L42; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7e1d0,error,Contrib/Contrib/lua/src/lundump.c,mismatch,ok,equivalent-encoding,def L33; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7e250,LoadString,Contrib/Contrib/lua/src/lundump.c,mismatch,ok,equivalent-encoding,def L75; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7e2f0,LoadInt,Contrib/Contrib/lua/src/lundump.c,mismatch,ok,equivalent-encoding,def L60; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7e350,LoadChar,Contrib/Contrib/lua/src/lundump.c,mismatch,ok,equivalent-encoding,def L53; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7e390,LoadCode,Contrib/Contrib/lua/src/lundump.c,mismatch,ok,equivalent-encoding,def L89; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7e460,LoadConstants,Contrib/Contrib/lua/src/lundump.c,mismatch,mismatch,unknown,def L99; checker: wrong function size; no NON_MATCHING marker
+0x0000007100a7e7b0,LoadDebug,Contrib/Contrib/lua/src/lundump.c,mismatch,ok,equivalent-encoding,def L136; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a7eaf0,LoadNumber,Contrib/Contrib/lua/src/lundump.c,mismatch,ok,equivalent-encoding,def L68; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a82930,luaZ_fill,Contrib/Contrib/lua/src/lzio.c,mismatch,ok,equivalent-encoding,def L23; exact under pinned Lua backend; normal: wrong function size; L22 equi:O0/Nintendo param spills
+0x0000007100a829f0,luaZ_lookahead,Contrib/Contrib/lua/src/lzio.c,mismatch,ok,equivalent-encoding,def L38; exact under pinned Lua backend; normal: wrong function size; L37 equi:O0/Nintendo param spills
+0x0000007100a82a90,luaZ_init,Contrib/Contrib/lua/src/lzio.c,mismatch,ok,equivalent-encoding,def L52; exact under pinned Lua backend; normal: wrong function size; L51 equi:O0/Nintendo param spills
+0x0000007100a82b10,luaZ_read,Contrib/Contrib/lua/src/lzio.c,mismatch,ok,equivalent-encoding,def L63; exact under pinned Lua backend; normal: wrong function size; L62 equi:O0/Nintendo param spills
+0x0000007100a82c40,luaZ_openspace,Contrib/Contrib/lua/src/lzio.c,mismatch,ok,equivalent-encoding,def L80; exact under pinned Lua backend; normal: wrong function size; L79 equi:O0/Nintendo param spills
+0x0000007100a85030,luaK_nil,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L35; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a851c0,luaK_codeABC,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L50; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a85240,luaK_jump,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L54; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a852b0,luaK_codeABx,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L804; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a85320,luaK_concat,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L59; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a853f0,luaK_ret,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L64; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a85460,luaK_getlabel,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L89; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a85490,luaK_patchlist,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L164; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a85520,luaK_patchtohere,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L174; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a85570,patchlistaux,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L145; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a85640,getjump,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L95; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a856c0,fixjump,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L75; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a85780,luaK_checkstack,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L194; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a85830,luaK_reserveregs,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L204; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a85880,luaK_stringK,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L245; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a858f0,addk,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L224; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a85b20,luaK_numberK,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L252; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a85b90,luaK_setreturns,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L275; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a85ca0,luaK_setoneret,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L287; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a85d60,luaK_dischargevars,Contrib/Contrib/lua/src/lcode.c,mismatch,mismatch,unknown,def L299; checker: wrong function size; no NON_MATCHING marker
+0x0000007100a85eb0,freereg,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L210; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a85f10,luaK_exp2nextreg,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L409; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a85f80,freeexp,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L218; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a85fe0,exp2reg,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L385; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a861c0,luaK_exp2anyreg,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L417; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a862b0,luaK_exp2val,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L431; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a86320,luaK_exp2RK,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L439; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a864c0,nilK,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L266; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a86530,boolK,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L259; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a865a0,luaK_storevar,Contrib/Contrib/lua/src/lcode.c,mismatch,mismatch,unknown,def L467; checker: wrong function size; no NON_MATCHING marker
+0x0000007100a866f0,luaK_self,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L498; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a867e0,luaK_goiftrue,Contrib/Contrib/lua/src/lcode.c,mismatch,mismatch,unknown,def L534; checker: wrong function size; no NON_MATCHING marker
+0x0000007100a868e0,invertjump,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L511; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a86950,jumponcond,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L519; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a86a60,luaK_indexed,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L624; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a86ac0,luaK_prefix,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L686; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a86be0,codearith,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L656; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a86cf0,codenot,Contrib/Contrib/lua/src/lcode.c,mismatch,mismatch,unknown,def L589; checker: wrong function size; no NON_MATCHING marker
+0x0000007100a86e30,luaK_infix,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L707; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a86f10,luaK_goiffalse,Contrib/Contrib/lua/src/lcode.c,mismatch,mismatch,unknown,def L562; checker: wrong function size; no NON_MATCHING marker
+0x0000007100a87000,isnumeral,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L30; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a87080,luaK_posfix,Contrib/Contrib/lua/src/lcode.c,mismatch,mismatch,unknown,def L729; checker: wrong function size; no NON_MATCHING marker
+0x0000007100a873a0,codecomp,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L670; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a874a0,luaK_fixline,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L776; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a874e0,luaK_code,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L781; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a87640,luaK_setlist,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L811; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a87770,patchtestreg,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L126; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a87870,getjumpcontrol,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L104; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a87910,discharge2reg,Contrib/Contrib/lua/src/lcode.c,mismatch,mismatch,unknown,def L338; checker: wrong function size; no NON_MATCHING marker
+0x0000007100a87ae0,need_value,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L117; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a87b90,code_label,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L332; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a87c00,condjump,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L69; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a87c80,discharge2anyreg,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L377; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a87cf0,constfolding,Contrib/Contrib/lua/src/lcode.c,mismatch,mismatch,unknown,def L630; checker: wrong function size; no NON_MATCHING marker
+0x0000007100a87ec0,removevalues,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L139; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a87f40,dischargejpc,Contrib/Contrib/lua/src/lcode.c,mismatch,ok,equivalent-encoding,def L158; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a87f90,luaopen_debug,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L393; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a87fe0,db_debug,Contrib/Contrib/lua/src/ldblib.c,mismatch,mismatch,unknown,def L301; checker: wrong function size; no NON_MATCHING marker
+0x0000007100a88140,db_getfenv,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L47; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a88180,db_gethook,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L280; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a882c0,db_getinfo,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L98; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a885f0,db_getlocal,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L143; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a88710,db_getregistry,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L22; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a88750,db_getmetatable,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L28; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a887b0,db_getupvalue,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L191; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a887f0,db_setfenv,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L53; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a88870,db_sethook,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L257; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a889f0,db_setlocal,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L164; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a88b20,db_setmetatable,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L37; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a88c00,db_setupvalue,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L196; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a88c40,db_errorfb,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L321; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a88ff0,getthread,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L75; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a89080,hookf,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L206; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a89170,gethooktable,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L244; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a89220,unmakemask,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L234; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a892f0,settabss,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L63; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a89350,settabsi,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L69; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a893b0,treatstackoption,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L87; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a89450,auxupvalue,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L178; exact under pinned Lua backend; normal: wrong function size
+0x0000007100a89560,makemask,Contrib/Contrib/lua/src/ldblib.c,mismatch,ok,equivalent-encoding,def L224; exact under pinned Lua backend; normal: wrong function size
+0x0000007100aae7d0,_ZNK6google8protobuf14DescriptorPool29TryFindFileInFallbackDatabaseERKN3blz12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.cc,mismatch,mismatch,unknown,def L1432; checker: wrong function size; L1431 unkn:header-version compare order
+0x0000007100aae910,_ZNK6google8protobuf14DescriptorPool31TryFindSymbolInFallbackDatabaseERKN3blz12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.cc,mismatch,mismatch,unknown,def L1468; checker: wrong function size; L1467 unkn:header-version compare order
+0x0000007100aaf5a0,_ZNK6google8protobuf14DescriptorPool21BuildFileFromDatabaseERKNS0_19FileDescriptorProtoE,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.cc,mismatch,mismatch,unknown,def L2723; checker: wrong function size; L2722 unkn:header-version compare order
+0x0000007100aaf8c0,_ZNK6google8protobuf14DescriptorPool22IsSubSymbolOfBuiltTypeERKN3blz12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.cc,mismatch,mismatch,equivalent-encoding,def L1446; checker: wrong function size; L1445 equi:register allocation
+0x0000007100aafce0,_ZNK6google8protobuf15FieldDescriptor20DefaultValueAsStringEb,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.cc,mismatch,mismatch,equivalent-encoding,def L1535; checker: unknown reason; L1534 equi:redundant reload
+0x0000007100ab3fe0,_ZN6google8protobuf17DescriptorBuilder9BuildFileERKNS0_19FileDescriptorProtoE,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.cc,mismatch,mismatch,equivalent-encoding,def L3315; checker: wrong function size; L3314 equi:inlining decision
+0x0000007100ab6180,_ZN6google8protobuf17DescriptorBuilder10AddPackageERKN3blz12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEERKNS0_7MessageEPKNS0_14FileDescriptorE,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.cc,mismatch,mismatch,unknown,def L3149; checker: wrong function size; L3148 unkn:header-version clamp folded
+0x0000007100ab92f0,_ZN6google8protobuf17DescriptorBuilder9AddSymbolERKN3blz12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEPKvSA_RKNS0_7MessageENS0_12_GLOBAL__N_16SymbolE,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.cc,mismatch,mismatch,unknown,def L3111; checker: wrong function size; L3110 unkn:header-version clamp folded
+0x0000007100ab9d30,_ZN6google8protobuf17DescriptorBuilder21BuildFieldOrExtensionERKNS0_20FieldDescriptorProtoEPKNS0_10DescriptorEPNS0_15FieldDescriptorEb,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.cc,mismatch,mismatch,unknown,def L3616; checker: wrong function size; L3615 unkn:different blz header version
+0x0000007100abcb90,_ZN6google8protobuf17DescriptorBuilder12LookupSymbolERKN3blz12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_NS1_15PlaceholderTypeENS1_11ResolveModeE,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.cc,mismatch,mismatch,unknown,def L2979; checker: wrong function size; L2978 unkn:header-version clamp folded
+0x0000007100abd2b0,_ZN6google8protobuf17DescriptorBuilder10FindSymbolERKN3blz12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.cc,mismatch,mismatch,equivalent-encoding,def L2864; checker: wrong function size; L2863 equi:inlining decision
+0x0000007100abd6a0,_ZN6google8protobuf17DescriptorBuilder25LookupSymbolNoPlaceholderERKN3blz12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_NS1_11ResolveModeE,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.cc,mismatch,mismatch,unknown,def L2904; checker: wrong function size; L2903 unkn:header-version clamp folded
+0x0000007100abf2d0,_ZN6google8protobuf17DescriptorBuilder17OptionInterpreter21InterpretSingleOptionEPNS0_7MessageE,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.cc,mismatch,mismatch,unknown,def L4760; checker: wrong function size; L4759 unkn:different blz header version
+0x0000007100ac0b60,_ZN6google8protobuf17DescriptorBuilder17OptionInterpreter14SetOptionValueEPKNS0_15FieldDescriptorEPNS0_15UnknownFieldSetE,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.cc,mismatch,mismatch,unknown,def L5021; checker: wrong function size; L5020 unkn:different blz header version
+0x0000007100ac1e80,_ZN6google8protobuf17DescriptorBuilder17OptionInterpreter18SetAggregateOptionEPKNS0_15FieldDescriptorEPNS0_15UnknownFieldSetE,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.cc,mismatch,mismatch,equivalent-encoding,def L5287; call: C1/C2 or D1/D2 variant of same ctor/dtor; no NON_MATCHING marker
+0x0000007100ac2730,_ZN6google8protobuf12_GLOBAL__N_123AggregateErrorCollectorD2Ev,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.cc,mismatch,mismatch,equivalent-encoding,def=implicit/template (not located); call: C1/C2 or D1/D2 variant of same ctor/dtor; no NON_MATCHING marker
+0x0000007100ac3ca0,_ZN6google8protobuf12_GLOBAL__N_123AggregateErrorCollectorD0Ev,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.cc,mismatch,mismatch,equivalent-encoding,def=implicit/template (not located); call: C1/C2 or D1/D2 variant of same ctor/dtor; no NON_MATCHING marker
+0x0000007100ac3d50,_ZN6google8protobuf17DescriptorBuilder17OptionInterpreter21AggregateOptionFinderD0Ev,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.cc,mismatch,mismatch,equivalent-encoding,def=implicit/template (not located); call: C1/C2 or D1/D2 variant of same ctor/dtor; no NON_MATCHING marker
+0x0000007100ac5180,_ZN3blz18chained_hash_tableINS_23chained_hash_set_traitsINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEEEN6google8protobuf4hashIS7_EENS_8equal_toIS7_EENS5_IS7_EEE11_insert_rawERKS7_PNS_17chained_hash_nodeIS7_EE,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.cc,mismatch,mismatch,unknown,def=Contrib/Contrib/blz/include/blz/chained_hash_table.h:712 (in-class); checker: wrong function size; no NON_MATCHING marker
+0x0000007100b141f0,_ZN19bdUnicastConnection7receiveEPKhj,Contrib/Contrib/DemonWare/bdConnection/bdUnicastConnection.cpp,mismatch,mismatch,equivalent-encoding,def L161; checker: wrong function size; L159 equi:block layout/merging
+0x0000007100b14910,_ZN19bdUnicastConnection16handleCookieEchoER11bdReferenceI7bdChunkEj,Contrib/Contrib/DemonWare/bdConnection/bdUnicastConnection.cpp,mismatch,mismatch,unknown,def L474; checker: wrong function size; L472 unkn:control-flow difference not shown equivalent
+0x0000007100b152d0,_ZN19bdUnicastConnection17handleShutdownAckER11bdReferenceI7bdChunkE,Contrib/Contrib/DemonWare/bdConnection/bdUnicastConnection.cpp,mismatch,mismatch,equivalent-encoding,def L597; checker: wrong function size; L595 equi:equivalent instruction selection
+0x0000007100b15500,_ZN19bdUnicastConnection13getDataToSendEPhj,Contrib/Contrib/DemonWare/bdConnection/bdUnicastConnection.cpp,mismatch,mismatch,equivalent-encoding,def L246; checker: wrong function size; L244 equi:block layout/merging
+0x0000007100b164d0,_ZN19bdUnicastConnection11sendInitAckE11bdReferenceI11bdInitChunkE,Contrib/Contrib/DemonWare/bdConnection/bdUnicastConnection.cpp,mismatch,mismatch,unknown,def L641; checker: unknown reason; L639 unkn:unclassified marker
+0x0000007100b16de0,_ZN22bdConnectionStatisticsC1Ev,Contrib/Contrib/DemonWare/bdConnection/bdConnectionStatistics.cpp,mismatch,mismatch,equivalent-encoding,def L3; checker: wrong function size; L2 equi:instruction scheduling
+0x0000007100b173c0,_ZN20bdReliableSendWindow3addE11bdReferenceI11bdDataChunkE,Contrib/Contrib/DemonWare/bdConnection/bdWindow/bdReliableSendWindow.cpp,mismatch,mismatch,equivalent-encoding,def L10; checker: unknown reason; L9 equi:operand order / branch sense
+0x0000007100b175b0,_ZN20bdReliableSendWindow13getDataToSendER8bdPacket,Contrib/Contrib/DemonWare/bdConnection/bdWindow/bdReliableSendWindow.cpp,mismatch,mismatch,unknown,def L24; checker: unknown reason; L23 unkn:control-flow difference not shown equivalent
+0x0000007100b17c00,_ZN20bdReliableSendWindow9handleAckE11bdReferenceI11bdSAckChunkERf,Contrib/Contrib/DemonWare/bdConnection/bdWindow/bdReliableSendWindow.cpp,mismatch,mismatch,unknown,def L103; checker: unknown reason; L102 unkn:control-flow difference not shown equivalent
+0x0000007100b1b1e0,_ZNK11bdDataChunk9serializeEPhj,Contrib/Contrib/DemonWare/bdConnection/bdPacket/bdDataChunk.cpp,mismatch,mismatch,unknown,def L44; checker: wrong function size; L43 unkn:control-flow difference not shown equivalent
+0x0000007100b1c3e0,_ZN8bdPacket9serializeEPhj,Contrib/Contrib/DemonWare/bdConnection/bdPacket/bdPacket.cpp,mismatch,mismatch,equivalent-encoding,def L21; checker: wrong mnemonic; L20 equi:equivalent instruction selection
+0x0000007100b1c660,_ZN8bdPacket11deserializeEPKhj,Contrib/Contrib/DemonWare/bdConnection/bdPacket/bdPacket.cpp,mismatch,mismatch,unknown,def L59; checker: wrong function size; L58 unkn:control-flow difference not shown equivalent
+0x0000007100b21060,_ZN12bdByteBuffer11writeStringEPKcm,Contrib/Contrib/DemonWare/bdCore/bdContainers/bdByteBuffer.cpp,mismatch,mismatch,equivalent-encoding,def L131; checker: wrong function size; L130 equi:branch layout
+0x0000007100b21de0,_ZN12bdByteBuffer28readAndAllocateCompressedMsgERPhRjS2_,Contrib/Contrib/DemonWare/bdCore/bdContainers/bdByteBuffer.cpp,mismatch,mismatch,unknown,def L288; checker: wrong function size; L287 unkn:unclassified marker
+0x0000007100b22bf0,_Z8bdMemsetPvim,Contrib/Contrib/DemonWare/bdCore/bdCrypto/bdCryptoUtils.cpp,ok,ok,checker-ok,def=implicit/template (not located); ok both modes
+0x0000007100b22c20,_ZN13bdCryptoUtils12getNewIVSeedEv,Contrib/Contrib/DemonWare/bdCore/bdCrypto/bdCryptoUtils.cpp,ok,ok,checker-ok,def L29; ok both modes
+0x0000007100b22c40,_ZN13bdCryptoUtils16constTimeCompareEPVKhS1_m,Contrib/Contrib/DemonWare/bdCore/bdCrypto/bdCryptoUtils.cpp,ok,ok,checker-ok,def L161; ok both modes
+0x0000007100b22d00,_ZN13bdCryptoUtils10zeroBufferEPvm,Contrib/Contrib/DemonWare/bdCore/bdCrypto/bdCryptoUtils.cpp,mismatch,mismatch,unknown,def L175; checker: unverified GOT reference: original GOT target lacks known da; no NON_MATCHING marker
+0x0000007100b22e80,_ZN13bdCryptoUtils10hkdfExpandEPKvjS1_jPvj16bdHashAlgorithms,Contrib/Contrib/DemonWare/bdCore/bdCrypto/bdCryptoUtils.cpp,ok,ok,checker-ok,def L217; ok both modes
+0x0000007100b231b0,libTomCryptQsort,Contrib/Contrib/DemonWare/bdCore/bdCrypto/bdCryptoUtils.cpp,ok,ok,checker-ok,def L303; ok both modes
+0x0000007100b248b0,_Z21bdAlignedOffsetMallocmmm,Contrib/Contrib/DemonWare/bdCore/bdMemory/bdAlignedOffsetMemory.cpp,ok,ok,checker-ok,def L14; ok both modes
+0x0000007100b24920,_Z19bdAlignedOffsetFreePv,Contrib/Contrib/DemonWare/bdCore/bdMemory/bdAlignedOffsetMemory.cpp,ok,ok,checker-ok,def L49; ok both modes
+0x0000007100b24930,_Z22bdAlignedOffsetReallocPvmmmm,Contrib/Contrib/DemonWare/bdCore/bdMemory/bdAlignedOffsetMemory.cpp,ok,ok,checker-ok,def L59; ok both modes
+0x0000007100b26ea0,_ZN13bdMatchMakingC1EP19bdRemoteTaskManagerPKc,Contrib/Contrib/DemonWare/bdLobby/bdMatchMaking/bdMatchMaking.cpp,ok,ok,checker-ok,def L26; ok both modes
+0x0000007100b26f10,_ZN13bdMatchMakingD1Ev,Contrib/Contrib/DemonWare/bdLobby/bdMatchMaking/bdMatchMaking.cpp,ok,ok,checker-ok,def L40; ok both modes
+0x0000007100b26f20,_ZN13bdMatchMaking13createSessionEP17bdMatchMakingInfoP11bdSessionID,Contrib/Contrib/DemonWare/bdLobby/bdMatchMaking/bdMatchMaking.cpp,ok,ok,checker-ok,def L45; ok both modes
+0x0000007100b27050,_ZN13bdMatchMaking13updateSessionERK11bdSessionIDP17bdMatchMakingInfo,Contrib/Contrib/DemonWare/bdLobby/bdMatchMaking/bdMatchMaking.cpp,ok,ok,checker-ok,def L77; ok both modes
+0x0000007100b27180,_ZN13bdMatchMaking20updateSessionPlayersERK11bdSessionIDP17bdMatchMakingInfoj,Contrib/Contrib/DemonWare/bdLobby/bdMatchMaking/bdMatchMaking.cpp,ok,ok,checker-ok,def L105; ok both modes
+0x0000007100b272c0,_ZN13bdMatchMaking13deleteSessionERK11bdSessionID,Contrib/Contrib/DemonWare/bdLobby/bdMatchMaking/bdMatchMaking.cpp,ok,ok,checker-ok,def L140; ok both modes
+0x0000007100b273c0,_ZN13bdMatchMaking12findSessionsEjjjP15bdSessionParamsP17bdMatchMakingInfo,Contrib/Contrib/DemonWare/bdLobby/bdMatchMaking/bdMatchMaking.cpp,ok,ok,checker-ok,def L233; ok both modes
+0x0000007100b29040,_ZN19bdRemoteTaskManager18sendWithTaskParamsE11bdReferenceI12bdRemoteTaskER12bdTaskParams,Contrib/Contrib/DemonWare/bdLobby/bdRemoteTaskManager/bdRemoteTaskManager.cpp,mismatch,mismatch,unknown,def L42; checker: wrong function size; L41 unkn:control-flow difference not shown equivalent
+0x0000007100b29ef0,_ZN19bdRemoteTaskManager17cleanUpAsyncStateEv,Contrib/Contrib/DemonWare/bdLobby/bdRemoteTaskManager/bdRemoteTaskManager.cpp,mismatch,mismatch,unknown,def L152; checker: wrong function size; L150 unkn:control-flow difference not shown equivalent
+0x0000007100b2b350,_ZN16bdLinkedAccountsC1EP19bdRemoteTaskManager,Contrib/Contrib/DemonWare/bdLobby/bdLinkedAccounts/bdLinkedAccounts.cpp,ok,ok,checker-ok,def L23; ok both modes
+0x0000007100b2b370,_ZN16bdLinkedAccountsD1Ev,Contrib/Contrib/DemonWare/bdLobby/bdLinkedAccounts/bdLinkedAccounts.cpp,ok,ok,checker-ok,def L28; ok both modes
+0x0000007100b2b380,_ZN16bdLinkedAccountsD0Ev,Contrib/Contrib/DemonWare/bdLobby/bdLinkedAccounts/bdLinkedAccounts.cpp,ok,ok,checker-ok,def L28; ok both modes
+0x0000007100b2b390,_ZN16bdLinkedAccounts17getLinkedAccountsEPK15bdUserAccountIDP22bdLinkedAccountsResultj,Contrib/Contrib/DemonWare/bdLobby/bdLinkedAccounts/bdLinkedAccounts.cpp,ok,ok,checker-ok,def L33; ok both modes
+0x0000007100b2b600,_ZN21bdRichPresenceServiceC1EP19bdRemoteTaskManagerPKc,Contrib/Contrib/DemonWare/bdLobby/bdRichPresence/bdRichPresenceService.cpp,ok,ok,checker-ok,def L16; ok both modes
+0x0000007100b2b660,_ZN21bdRichPresenceServiceD1Ev,Contrib/Contrib/DemonWare/bdLobby/bdRichPresence/bdRichPresenceService.cpp,ok,ok,checker-ok,def L23; ok both modes
+0x0000007100b2b670,_ZN21bdRichPresenceService15setRichPresenceERK18bdRichPresenceData,Contrib/Contrib/DemonWare/bdLobby/bdRichPresence/bdRichPresenceService.cpp,ok,ok,checker-ok,def L27; ok both modes
+0x0000007100b2b740,_ZN21bdRichPresenceService27getRichPresenceAndSubscribeEPK15bdUserAccountIDP18bdRichPresenceDataj,Contrib/Contrib/DemonWare/bdLobby/bdRichPresence/bdRichPresenceService.cpp,ok,ok,checker-ok,def L62; ok both modes
+0x0000007100b2b8c0,_ZN21bdRichPresenceService20unsubscribeFromUsersEPK15bdUserAccountIDj,Contrib/Contrib/DemonWare/bdLobby/bdRichPresence/bdRichPresenceService.cpp,ok,ok,checker-ok,def L105; ok both modes
+0x0000007100b2c1b0,_ZN7bdStats37readStatsByLeaderboardIDsAndEntityIDsEPKmPKjPP13bdStatsInfoExjj,Contrib/Contrib/DemonWare/bdLobby/bdStats/bdStats.cpp,mismatch,mismatch,equivalent-encoding,def L80; checker: wrong function size; L79 equi:block layout/merging
+0x0000007100b38340,_ZN11bdMessaging24sendGlobalInstantMessageEmPKvj,Contrib/Contrib/DemonWare/bdLobby/bdMessaging/bdMessaging.cpp,ok,ok,checker-ok,def L501; ok both modes
+0x0000007100b38470,_ZN11bdMessagingC1EP19bdRemoteTaskManager,Contrib/Contrib/DemonWare/bdLobby/bdMessaging/bdMessaging.cpp,ok,ok,checker-ok,def L835; ok both modes
+0x0000007100b38480,_ZN11bdMessagingD1Ev,Contrib/Contrib/DemonWare/bdLobby/bdMessaging/bdMessaging.cpp,ok,ok,checker-ok,def L840; ok both modes
+0x0000007100b38b70,_ZN5bdDMLC1EP19bdRemoteTaskManager,Contrib/Contrib/DemonWare/bdLobby/bdDML/bdDML.cpp,ok,ok,checker-ok,def L22; ok both modes
+0x0000007100b38b80,_ZN5bdDMLD1Ev,Contrib/Contrib/DemonWare/bdLobby/bdDML/bdDML.cpp,ok,ok,checker-ok,def L27; ok both modes
+0x0000007100b38b90,_ZN5bdDML11getUserDataEP9bdDMLInfo,Contrib/Contrib/DemonWare/bdLobby/bdDML/bdDML.cpp,ok,ok,checker-ok,def L53; ok both modes
+0x0000007100b39810,_ZN26bdStructBufferDeserializer10readStringEjPcj,Contrib/Contrib/DemonWare/bdLobby/bdLobbyCommon/bdStructBufferDeserializer.cpp,mismatch,mismatch,equivalent-encoding,def L146; checker: wrong mnemonic; L145 equi:author: equivalent
+0x0000007100b39c30,_ZN10bdEventLogC1EP19bdRemoteTaskManagerb,Contrib/Contrib/DemonWare/bdLobby/bdEventLog/bdEventLog.cpp,ok,ok,checker-ok,def L18; ok both modes
+0x0000007100b39cf0,_ZN10bdEventLogD1Ev,Contrib/Contrib/DemonWare/bdLobby/bdEventLog/bdEventLog.cpp,ok,ok,checker-ok,def L29; ok both modes
+0x0000007100b39d00,_ZN10bdEventLog23resetFilteredCategoriesEv,Contrib/Contrib/DemonWare/bdLobby/bdEventLog/bdEventLog.cpp,ok,ok,checker-ok,def L154; ok both modes
+0x0000007100b39d10,_ZN10bdEventLog23setReceivedCategoryDataEb,Contrib/Contrib/DemonWare/bdLobby/bdEventLog/bdEventLog.cpp,ok,ok,checker-ok,def L120; ok both modes
+0x0000007100b39d20,_ZN10bdEventLog19addFilteredCategoryEj,Contrib/Contrib/DemonWare/bdLobby/bdEventLog/bdEventLog.cpp,ok,ok,checker-ok,def L160; ok both modes
+0x0000007100b3a570,_ZN9bdCounterC1EP19bdRemoteTaskManager,Contrib/Contrib/DemonWare/bdLobby/bdCounter/bdCounter.cpp,ok,ok,checker-ok,def L17; ok both modes
+0x0000007100b3a580,_ZN9bdCounterD1Ev,Contrib/Contrib/DemonWare/bdLobby/bdCounter/bdCounter.cpp,ok,ok,checker-ok,def L22; ok both modes
+0x0000007100b3a590,_ZN9bdCounter17incrementCountersEP14bdCounterValuej,Contrib/Contrib/DemonWare/bdLobby/bdCounter/bdCounter.cpp,ok,ok,checker-ok,def L26; ok both modes
+0x0000007100b3a6f0,_ZN9bdTencentC1EP19bdRemoteTaskManager,Contrib/Contrib/DemonWare/bdLobby/bdTencent/bdTencent.cpp,ok,ok,checker-ok,def L26; ok both modes
+0x0000007100b3a740,_ZN9bdTencentD1Ev,Contrib/Contrib/DemonWare/bdLobby/bdTencent/bdTencent.cpp,ok,ok,checker-ok,def L35; ok both modes
+0x0000007100b3a750,_ZN9bdTencent26setAntibotSendDataIntervalEj,Contrib/Contrib/DemonWare/bdLobby/bdTencent/bdTencent.cpp,ok,ok,checker-ok,def L528; ok both modes
+0x0000007100b3f440,_ZN16bdTitleUtilitiesC1EP19bdRemoteTaskManager,Contrib/Contrib/DemonWare/bdLobby/bdTitleUtilities/bdTitleUtilities.cpp,ok,ok,checker-ok,def L22; ok both modes
+0x0000007100b3f460,_ZN16bdTitleUtilitiesD1Ev,Contrib/Contrib/DemonWare/bdLobby/bdTitleUtilities/bdTitleUtilities.cpp,ok,ok,checker-ok,def L27; ok both modes
+0x0000007100b3f470,_ZN16bdTitleUtilitiesD0Ev,Contrib/Contrib/DemonWare/bdLobby/bdTitleUtilities/bdTitleUtilities.cpp,ok,ok,checker-ok,def L27; ok both modes
+0x0000007100b3f480,_ZN16bdTitleUtilities13getServerTimeEP11bdTimeStamp,Contrib/Contrib/DemonWare/bdLobby/bdTitleUtilities/bdTitleUtilities.cpp,ok,ok,checker-ok,def L118; ok both modes
+0x0000007100b3f570,_ZN16bdTitleUtilities12getUserNamesEPmjP10bdUserInfo,Contrib/Contrib/DemonWare/bdLobby/bdTitleUtilities/bdTitleUtilities.cpp,ok,ok,checker-ok,def L241; ok both modes
+0x0000007100b42c40,_ZN25bdLobbyConnectionListenerC1Ev,Contrib/Contrib/DemonWare/bdLobby/bdLobbyConnectionListener.cpp,ok,ok,checker-ok,def L12; ok both modes
+0x0000007100b42c60,_ZN25bdLobbyConnectionListenerD1Ev,Contrib/Contrib/DemonWare/bdLobby/bdLobbyConnectionListener.cpp,ok,ok,checker-ok,def L16; ok both modes
+0x0000007100b42c70,_ZN25bdLobbyConnectionListenerD0Ev,Contrib/Contrib/DemonWare/bdLobby/bdLobbyConnectionListener.cpp,ok,ok,checker-ok,def L16; ok both modes
+0x0000007100b42c80,_ZN25bdLobbyConnectionListener9onConnectE11bdReferenceI17bdLobbyConnectionE,Contrib/Contrib/DemonWare/bdLobby/bdLobbyConnectionListener.cpp,ok,ok,checker-ok,def L20; ok both modes
+0x0000007100b42c90,_ZN25bdLobbyConnectionListener15onConnectFailedE11bdReferenceI17bdLobbyConnectionE,Contrib/Contrib/DemonWare/bdLobby/bdLobbyConnectionListener.cpp,ok,ok,checker-ok,def L24; ok both modes
+0x0000007100b42ca0,_ZN25bdLobbyConnectionListener12onDisconnectE11bdReferenceI17bdLobbyConnectionE,Contrib/Contrib/DemonWare/bdLobby/bdLobbyConnectionListener.cpp,ok,ok,checker-ok,def L28; ok both modes
+0x0000007100b472d0,_ZN15bdGetHostByNameC1Ej,Contrib/Contrib/DemonWare/bdNet/bdGetHostByName/bdGetHostByName.cpp,ok,ok,checker-ok,def L18; ok both modes
+0x0000007100b47350,_ZN15bdGetHostByNameD1Ev,Contrib/Contrib/DemonWare/bdNet/bdGetHostByName/bdGetHostByName.cpp,mismatch,mismatch,equivalent-encoding,def L26; call: C1/C2 or D1/D2 variant of same ctor/dtor; no NON_MATCHING marker
+0x0000007100b47390,_ZN15bdGetHostByNameD0Ev,Contrib/Contrib/DemonWare/bdNet/bdGetHostByName/bdGetHostByName.cpp,mismatch,mismatch,equivalent-encoding,def L26; call: C1/C2 or D1/D2 variant of same ctor/dtor; no NON_MATCHING marker
+0x0000007100b473d0,_ZN15bdGetHostByName5startEPKc21bdGetHostByNameConfig,Contrib/Contrib/DemonWare/bdNet/bdGetHostByName/bdGetHostByName.cpp,ok,ok,checker-ok,def L31; ok both modes
+0x0000007100b474c0,_ZN15bdGetHostByName4pumpEv,Contrib/Contrib/DemonWare/bdNet/bdGetHostByName/bdGetHostByName.cpp,ok,ok,checker-ok,def L64; ok both modes
+0x0000007100b47540,_ZN15bdGetHostByName12cancelLookupEv,Contrib/Contrib/DemonWare/bdNet/bdGetHostByName/bdGetHostByName.cpp,ok,ok,checker-ok,def L109; ok both modes
+0x0000007100b47590,_ZNK15bdGetHostByName9getStatusEv,Contrib/Contrib/DemonWare/bdNet/bdGetHostByName/bdGetHostByName.cpp,ok,ok,checker-ok,def L81; ok both modes
+0x0000007100b475a0,_ZNK15bdGetHostByName15getNumAddressesEv,Contrib/Contrib/DemonWare/bdNet/bdGetHostByName/bdGetHostByName.cpp,ok,ok,checker-ok,def L86; ok both modes
+0x0000007100b475b0,_ZNK15bdGetHostByName12getAddressAtEj,Contrib/Contrib/DemonWare/bdNet/bdGetHostByName/bdGetHostByName.cpp,ok,ok,checker-ok,def L91; ok both modes
+0x0000007100b48270,_ZNK21bdGameInfoFactoryImpl6createEv,Contrib/Contrib/DemonWare/bdNet/bdLANDiscovery/bdGameInfoFactory.cpp,ok,ok,checker-ok,def L15; ok both modes
+0x0000007100b48280,_ZN21bdGameInfoFactoryImpl8setClassEP13bdCreatorBaseI10bdGameInfoE,Contrib/Contrib/DemonWare/bdNet/bdLANDiscovery/bdGameInfoFactory.cpp,ok,ok,checker-ok,def L25; ok both modes
+0x0000007100b482a0,_ZN21bdGameInfoFactoryImplC1Ev,Contrib/Contrib/DemonWare/bdNet/bdLANDiscovery/bdGameInfoFactory.cpp,ok,ok,checker-ok,def L37; ok both modes
+0x0000007100b482b0,_ZN21bdGameInfoFactoryImplD1Ev,Contrib/Contrib/DemonWare/bdNet/bdLANDiscovery/bdGameInfoFactory.cpp,ok,ok,checker-ok,def L42; ok both modes
+0x0000007100b4b0b0,_ZN15bdGetHostByName3runEPv,Contrib/Contrib/DemonWare/bdNet/bdGetHostByName/bdGetHostByName-switch.cpp,ok,ok,checker-ok,def L15; ok both modes
+0x0000007100b4b110,_ZN15bdGetHostByName4quitEv,Contrib/Contrib/DemonWare/bdNet/bdGetHostByName/bdGetHostByName-switch.cpp,ok,ok,checker-ok,def L37; ok both modes
+0x0000007100b4d430,_Z17bdGetRandomUChar8Phj,Contrib/Contrib/DemonWare/bdPlatform/bdPlatformRandom/bdPlatformTrulyRandom-switch.cpp,ok,ok,checker-ok,def L14; ok both modes
+0x0000007100b4d440,_ZN15bdPlatformMutex11createMutexEv,Contrib/Contrib/DemonWare/bdPlatform/bdPlatformThread/bdPlatformMutex-switch.cpp,ok,ok,checker-ok,def L13; ok both modes
+0x0000007100b4d450,_ZN15bdPlatformMutex4lockERN2nn2os9MutexTypeE,Contrib/Contrib/DemonWare/bdPlatform/bdPlatformThread/bdPlatformMutex-switch.cpp,ok,ok,checker-ok,def L20; ok both modes
+0x0000007100b4d470,_ZN15bdPlatformMutex6unlockERN2nn2os9MutexTypeE,Contrib/Contrib/DemonWare/bdPlatform/bdPlatformThread/bdPlatformMutex-switch.cpp,ok,ok,checker-ok,def L26; ok both modes
+0x0000007100b4d490,_ZN15bdPlatformMutex7destroyERN2nn2os9MutexTypeE,Contrib/Contrib/DemonWare/bdPlatform/bdPlatformThread/bdPlatformMutex-switch.cpp,ok,ok,checker-ok,def L32; ok both modes
+0x0000007100b4e0b0,_ZNK12bdAddressMap14findAddrHandleE11bdReferenceI12bdCommonAddrERK12bdSecurityIDRS0_I12bdAddrHandleE,Contrib/Contrib/DemonWare/bdSocket/bdAddressMap.cpp,mismatch,mismatch,equivalent-encoding,def L18; checker: wrong function size; L17 equi:instruction scheduling
+0x0000007100b4e3e0,_ZN12bdAddressMap14unregisterAddrER11bdReferenceI12bdAddrHandleE,Contrib/Contrib/DemonWare/bdSocket/bdAddressMap.cpp,mismatch,mismatch,equivalent-encoding,def L56; checker: wrong function size; L55 equi:inlining decision
+0x0000007100b4fb10,_ZN10bdQoSProbe12acceptPacketEP8bdSocket6bdAddrPvjh,Contrib/Contrib/DemonWare/bdSocket/bdQoS/bdQoSProbe.cpp,mismatch,mismatch,equivalent-encoding,def L64; checker: wrong function size; L63 equi:stack layout
+0x0000007100b4fc60,_ZN10bdQoSProbe13handleRequestER18bdQoSRequestPacketR6bdAddri,Contrib/Contrib/DemonWare/bdSocket/bdQoS/bdQoSProbe.cpp,mismatch,mismatch,equivalent-encoding,def L196; checker: instruction differs outside a ; L195 equi:register allocation
+0x0000007100b4feb0,_ZN10bdQoSProbe11handleReplyER16bdQoSReplyPacketR6bdAddrj,Contrib/Contrib/DemonWare/bdSocket/bdQoS/bdQoSProbe.cpp,mismatch,mismatch,equivalent-encoding,def L89; checker: wrong function size; L88 equi:stack layout
+0x0000007100b50190,_ZN10bdQoSProbe4pumpEv,Contrib/Contrib/DemonWare/bdSocket/bdQoS/bdQoSProbe.cpp,mismatch,mismatch,unknown,def L301; checker: wrong function size; L300 unkn:control-flow difference not shown equivalent
+0x0000007100b50d00,_ZN10bdQoSProbe9sendReplyERK6bdAddrRKNS_14bdQosProbeHostE,Contrib/Contrib/DemonWare/bdSocket/bdQoS/bdQoSProbe.cpp,mismatch,mismatch,unknown,def L218; checker: instruction differs outside a ; L217 unkn:control-flow difference not shown equivalent
+0x0000007100b50f90,_ZN10bdQoSProbe21processRequestPacketsERK18bdQoSRequestPacketRK6bdAddri,Contrib/Contrib/DemonWare/bdSocket/bdQoS/bdQoSProbe.cpp,mismatch,mismatch,unknown,def L249; checker: unknown reason; L248 unkn:control-flow difference not shown equivalent
+0x0000007100b51370,_ZN10bdQoSProbe19singleProbeCompleteER16bdQoSReplyPacketRNS_22bdQoSProbeEntryWrapperEj,Contrib/Contrib/DemonWare/bdSocket/bdQoS/bdQoSProbe.cpp,mismatch,mismatch,equivalent-encoding,def L276; checker: unknown reason; L275 equi:operand order / branch sense
+0x0000007100b517b0,_ZN7bdArrayIN10bdQoSProbe22bdQoSProbeEntryWrapperEEaSERKS2_,Contrib/Contrib/DemonWare/bdSocket/bdQoS/bdQoSProbe.cpp,mismatch,mismatch,equivalent-encoding,def=implicit/template (not located); checker: wrong function size; L132 equi:operand order / branch sense
+0x0000007100b524c0,_ZN15bdNATTravClientD1Ev,Contrib/Contrib/DemonWare/bdSocket/bdNAT/bdNATTravClient.cpp,mismatch,mismatch,equivalent-encoding,def L25; checker: wrong function size; L23 equi:inlining decision
+0x0000007100b52ae0,_ZN15bdNATTravClient13sendKeepAliveEv,Contrib/Contrib/DemonWare/bdSocket/bdNAT/bdNATTravClient.cpp,mismatch,mismatch,equivalent-encoding,def L343; checker: wrong function size; L341 equi:stack layout
+0x0000007100b52c20,_ZN15bdNATTravClient7connectE11bdReferenceI12bdCommonAddrEP17bdNATTravListenerb,Contrib/Contrib/DemonWare/bdSocket/bdNAT/bdNATTravClient.cpp,mismatch,mismatch,unknown,def L252; checker: wrong function size; L250 unkn:unexplained extra instruction(s)
+0x0000007100b53150,_ZN15bdNATTravClient10sendStage2ER19bdNATTravClientData,Contrib/Contrib/DemonWare/bdSocket/bdNAT/bdNATTravClient.cpp,mismatch,mismatch,equivalent-encoding,def L410; checker: unproven ADRP pair: no common ; L409 equi:block layout/merging
+0x0000007100b53410,_ZN15bdNATTravClient10sendStage1ER19bdNATTravClientData,Contrib/Contrib/DemonWare/bdSocket/bdNAT/bdNATTravClient.cpp,mismatch,mismatch,equivalent-encoding,def L368; checker: unknown reason; L367 equi:register allocation
+0x0000007100b53d70,_ZN15bdNATTravClient11receiveFromERK6bdAddrR20bdNATTraversalPacket,Contrib/Contrib/DemonWare/bdSocket/bdNAT/bdNATTravClient.cpp,mismatch,mismatch,equivalent-encoding,def L502; checker: unproven ADRP pair: no common ; L501 equi:block merging / buffer placement
+0x0000007100b54280,_ZN15bdNATTravClient4pumpEv,Contrib/Contrib/DemonWare/bdSocket/bdNAT/bdNATTravClient.cpp,mismatch,mismatch,unknown,def L69; checker: wrong function size; L67 unkn:control-flow difference not shown equivalent
+0x0000007100b54e10,_ZN15bdNATTravClient12acceptPacketEP8bdSocket6bdAddrPvjh,Contrib/Contrib/DemonWare/bdSocket/bdNAT/bdNATTravClient.cpp,mismatch,mismatch,equivalent-encoding,def L325; checker: wrong function size; L324 equi:stack layout
+0x0000007100b54f60,_ZN7bdArrayI6bdAddrEaSERKS1_,Contrib/Contrib/DemonWare/bdSocket/bdNAT/bdNATTravClient.cpp,mismatch,mismatch,equivalent-encoding,def=implicit/template (not located); checker: wrong function size; L133 equi:inlining decision
+0x0000007100b558b0,_ZN20bdNATTraversalPacket11deserializeEPKvjjRj,Contrib/Contrib/DemonWare/bdSocket/bdNAT/bdPacket/bdNATTraversalPacket.cpp,mismatch,mismatch,unknown,def L20; checker: wrong function size; L19 unkn:unexplained extra instruction(s)
+0x0000007100b56740,_ZN24bdNATTypeDiscoveryClient4initEP8bdSocketRK6bdAddr24bdNATTypeDiscoveryConfig,Contrib/Contrib/DemonWare/bdSocket/bdNAT/bdNATTypeDiscoveryClient.cpp,mismatch,mismatch,equivalent-encoding,def L11; checker: wrong function size; L10 equi:block layout/merging
+0x0000007100b567f0,_ZN24bdNATTypeDiscoveryClient12sendForTest1Ev,Contrib/Contrib/DemonWare/bdSocket/bdNAT/bdNATTypeDiscoveryClient.cpp,mismatch,mismatch,equivalent-encoding,def L72; checker: wrong function size; L71 equi:register allocation
+0x0000007100b56990,_ZN24bdNATTypeDiscoveryClient14pumpActiveTestEv,Contrib/Contrib/DemonWare/bdSocket/bdNAT/bdNATTypeDiscoveryClient.cpp,mismatch,mismatch,equivalent-encoding,def L171; checker: wrong function size; L170 equi:inlining decision
+0x0000007100b56b80,_ZN24bdNATTypeDiscoveryClient12sendForTest2Ev,Contrib/Contrib/DemonWare/bdSocket/bdNAT/bdNATTypeDiscoveryClient.cpp,mismatch,mismatch,equivalent-encoding,def L81; checker: wrong function size; L80 equi:register allocation
+0x0000007100b56c20,_ZN24bdNATTypeDiscoveryClient12sendForTest3Ev,Contrib/Contrib/DemonWare/bdSocket/bdNAT/bdNATTypeDiscoveryClient.cpp,mismatch,mismatch,equivalent-encoding,def L90; checker: wrong function size; L89 equi:register allocation
+0x0000007100b56cc0,_ZN24bdNATTypeDiscoveryClient14handleResponseERK6bdAddrRK29bdNATTypeDiscoveryPacketReply,Contrib/Contrib/DemonWare/bdSocket/bdNAT/bdNATTypeDiscoveryClient.cpp,mismatch,mismatch,equivalent-encoding,def L99; checker: wrong function size; L98 equi:instruction scheduling
+0x0000007100b5c5a0,_ZN11bdDTLSErrorC1Ev,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSError.cpp,mismatch,mismatch,equivalent-encoding,def L11; call: C1/C2 or D1/D2 variant of same ctor/dtor; no NON_MATCHING marker
+0x0000007100b5c5e0,_ZN11bdDTLSErrorC1EtNS_15bdDTLSErrorTypeERK12bdSecurityID,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSError.cpp,mismatch,mismatch,equivalent-encoding,def L11; call: C1/C2 or D1/D2 variant of same ctor/dtor; no NON_MATCHING marker
+0x0000007100b5c640,_ZN11bdDTLSErrorD1Ev,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSError.cpp,mismatch,mismatch,equivalent-encoding,def L25; call: C1/C2 or D1/D2 variant of same ctor/dtor; no NON_MATCHING marker
+0x0000007100b5c680,_ZN11bdDTLSErrorD0Ev,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSError.cpp,mismatch,mismatch,equivalent-encoding,def L25; call: C1/C2 or D1/D2 variant of same ctor/dtor; no NON_MATCHING marker
+0x0000007100b5c6c0,_ZNK11bdDTLSError9serializeEPvjjRj,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSError.cpp,ok,ok,checker-ok,def L29; ok both modes
+0x0000007100b5c760,_ZN11bdDTLSError11deserializeEPKvjjRj,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSError.cpp,ok,ok,checker-ok,def L50; ok both modes
+0x0000007100b5c810,_ZNK11bdDTLSError8getEtypeEv,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSError.cpp,ok,ok,checker-ok,def L72; ok both modes
+0x0000007100b5c820,_ZNK11bdDTLSError8getSecIDER12bdSecurityID,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSError.cpp,ok,ok,checker-ok,def L77; ok both modes
+0x0000007100b5d200,_ZN15bdDTLSCookieAckC1Ev,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSCookieAck.cpp,mismatch,mismatch,equivalent-encoding,def L12; call: C1/C2 or D1/D2 variant of same ctor/dtor; no NON_MATCHING marker
+0x0000007100b5d240,_ZN15bdDTLSCookieAckD1Ev,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSCookieAck.cpp,mismatch,mismatch,equivalent-encoding,def L16; call: C1/C2 or D1/D2 variant of same ctor/dtor; no NON_MATCHING marker
+0x0000007100b5d280,_ZN15bdDTLSCookieAckD0Ev,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSCookieAck.cpp,mismatch,mismatch,equivalent-encoding,def L16; call: C1/C2 or D1/D2 variant of same ctor/dtor; no NON_MATCHING marker
+0x0000007100b5d2c0,_ZN15bdDTLSCookieAckC1EtPKh12bdSecurityID,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSCookieAck.cpp,mismatch,mismatch,equivalent-encoding,def L12; call: C1/C2 or D1/D2 variant of same ctor/dtor; no NON_MATCHING marker
+0x0000007100b5d330,_ZNK15bdDTLSCookieAck9serializeEPvjjRj,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSCookieAck.cpp,ok,ok,checker-ok,def L29; ok both modes
+0x0000007100b5d3d0,_ZN15bdDTLSCookieAck11deserializeEPKvjjRj,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSCookieAck.cpp,ok,ok,checker-ok,def L49; ok both modes
+0x0000007100b5d470,_ZNK15bdDTLSCookieAck9getECCKeyEv,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSCookieAck.cpp,ok,ok,checker-ok,def L68; ok both modes
+0x0000007100b5d480,_ZNK15bdDTLSCookieAck8getSecIDER12bdSecurityID,Contrib/Contrib/DemonWare/bdSocket/bdDTLS/bdPacket/bdDTLSCookieAck.cpp,ok,ok,checker-ok,def L73; ok both modes
+0x0000007100b65b00,_ZN13bdJSONUtility20getCodePointFromJSONEPKc,Contrib/Contrib/DemonWare/bdJSON/bdJSONUtility.cpp,mismatch,mismatch,equivalent-encoding,def L552; checker: unknown reason; L550 equi:register allocation
+0x0000007100b65c80,_ZN7bdArrayI11bdJSONValueEaSERKS1_,Contrib/Contrib/DemonWare/bdJSON/bdJSONArray.cpp,mismatch,mismatch,unknown,def=implicit/template (not located); checker: wrong function size; no NON_MATCHING marker
+0x0000007100b7e260,Curl_slist_append_nodup,Externals/curl/lib/slist.c,ok,ok,checker-ok,def L65; ok both modes
+0x0000007100b7e2c0,curl_slist_append,Externals/curl/lib/slist.c,ok,ok,checker-ok,def L95; ok both modes
+0x0000007100b7e340,curl_slist_free_all,Externals/curl/lib/slist.c,ok,ok,checker-ok,def L113; ok both modes
+0x0000007100b88970,curlx_ultous,Externals/curl/lib/warnless.c,ok,ok,checker-ok,def L71; ok both modes
+0x0000007100b88980,curlx_ultouc,Externals/curl/lib/warnless.c,ok,ok,checker-ok,def L86; ok both modes
+0x0000007100b88990,curlx_uztosi,Externals/curl/lib/warnless.c,ok,ok,checker-ok,def L101; ok both modes
+0x0000007100b889a0,curlx_uztoui,Externals/curl/lib/warnless.c,ok,ok,checker-ok,def L116; ok both modes
+0x0000007100b889b0,curlx_sltosi,Externals/curl/lib/warnless.c,ok,ok,checker-ok,def L133; ok both modes
+0x0000007100b889c0,curlx_sltoui,Externals/curl/lib/warnless.c,ok,ok,checker-ok,def L151; ok both modes
+0x0000007100b889d0,curlx_sltous,Externals/curl/lib/warnless.c,ok,ok,checker-ok,def L169; ok both modes
+0x0000007100b889e0,curlx_sotouz,Externals/curl/lib/warnless.c,ok,ok,checker-ok,def L185; ok both modes
+0x0000007100b889f0,Curl_wildcard_init,Externals/curl/lib/wildcard.c,mismatch,mismatch,unknown,def L171; checker: unverified GOT reference: original GOT target lacks known da; no NON_MATCHING marker
+0x0000007100b88a30,Curl_wildcard_dtor,Externals/curl/lib/wildcard.c,ok,ok,checker-ok,def L182; ok both modes
+0x0000007100b8d710,Curl_freeaddrinfo,Externals/curl/lib/curl_addrinfo.c,ok,ok,checker-ok,def L300; ok both modes
+0x0000007100b8d760,Curl_he2ai,Externals/curl/lib/curl_addrinfo.c,ok,ok,checker-ok,def L324; ok both modes
+0x0000007100b8d8a0,Curl_ip2addr,Externals/curl/lib/curl_addrinfo.c,ok,ok,checker-ok,def L286; ok both modes
+0x0000007100b8d960,Curl_str2addr,Externals/curl/lib/curl_addrinfo.c,ok,ok,checker-ok,def L477; ok both modes
+0x0000007100b8da20,Curl_memrchr,Externals/curl/lib/curl_memrchr.c,ok,ok,checker-ok,def L45; ok both modes
+0x0000007100b8dcf0,curl_easy_unescape,Externals/curl/lib/escape.c,ok,ok,checker-ok,def L210; ok both modes
+0x0000007100b8dd50,Curl_urldecode,Externals/curl/lib/escape.c,ok,ok,checker-ok,def L143; ok both modes
+0x0000007100b8df40,Curl_fileinfo_dtor,Externals/curl/lib/fileinfo.c,ok,ok,checker-ok,def L78; ok both modes
+0x0000007100b8df80,curl_getenv,Externals/curl/lib/getenv.c,ok,ok,checker-ok,def L37; ok both modes
+0x0000007100b8dfb0,Curl_hash_init,Externals/curl/lib/hash.c,ok,ok,checker-ok,def L125; ok both modes
+0x0000007100b8e0a0,hash_element_dtor,Externals/curl/lib/hash.c,ok,ok,checker-ok,def L105; ok both modes
+0x0000007100b8e0f0,Curl_hash_alloc,Externals/curl/lib/hash.c,ok,ok,checker-ok,def L167; ok both modes
+0x0000007100b8e180,Curl_hash_add,Externals/curl/lib/hash.c,ok,ok,checker-ok,def L224; ok both modes
+0x0000007100b8e2a0,Curl_hash_delete,Externals/curl/lib/hash.c,ok,ok,checker-ok,def L259; ok both modes
+0x0000007100b8e340,Curl_hash_pick,Externals/curl/lib/hash.c,ok,ok,checker-ok,def L277; ok both modes
+0x0000007100b8e3d0,Curl_hash_clean,Externals/curl/lib/hash.c,ok,ok,checker-ok,def L299; ok both modes
+0x0000007100b8e450,Curl_hash_clean_with_criterium,Externals/curl/lib/hash.c,ok,ok,checker-ok,def L315; ok both modes
+0x0000007100b8e500,Curl_hash_destroy,Externals/curl/lib/hash.c,ok,ok,checker-ok,def L343; ok both modes
+0x0000007100b8e590,Curl_hash_str,Externals/curl/lib/hash.c,ok,ok,checker-ok,def L353; ok both modes
+0x0000007100b8e5d0,Curl_str_key_compare,Externals/curl/lib/hash.c,ok,ok,checker-ok,def L368; ok both modes
+0x0000007100b8e620,Curl_hash_start_iterate,Externals/curl/lib/hash.c,ok,ok,checker-ok,def L382; ok both modes
+0x0000007100b8e630,Curl_hash_next_element,Externals/curl/lib/hash.c,ok,ok,checker-ok,def L391; ok both modes
+0x0000007100b93e60,Curl_ipv6_scope,Externals/curl/lib/if2ip.c,ok,ok,checker-ok,def L38; ok both modes
+0x0000007100b93e70,Curl_if2ip,Externals/curl/lib/if2ip.c,ok,ok,checker-ok,def L44; ok both modes
+0x0000007100b93e80,Curl_llist_alloc,Externals/curl/lib/llist.c,ok,ok,checker-ok,def L66; ok both modes
+0x0000007100b93eb0,Curl_llist_insert_next,Externals/curl/lib/llist.c,ok,ok,checker-ok,def L91; ok both modes
+0x0000007100b93f60,Curl_llist_remove,Externals/curl/lib/llist.c,ok,ok,checker-ok,def L132; ok both modes
+0x0000007100b94010,Curl_llist_destroy,Externals/curl/lib/llist.c,ok,ok,checker-ok,def L167; ok both modes
+0x0000007100b940e0,Curl_llist_count,Externals/curl/lib/llist.c,ok,ok,checker-ok,def L178; ok both modes
+0x0000007100b940f0,Curl_llist_move,Externals/curl/lib/llist.c,ok,ok,checker-ok,def L186; ok both modes
+0x0000007100b96930,Curl_strtok_r,Externals/curl/lib/strtok.c,ok,ok,checker-ok,def L31; ok both modes
+0x0000007100b97600,Curl_bundle_create,Externals/curl/lib/bundles.c,ok,ok,checker-ok,def L48; ok both modes
+0x0000007100b97680,conn_llist_dtor,Externals/curl/lib/bundles.c,ok,ok,checker-ok,def L40; ok both modes
+0x0000007100b97690,Curl_bundle_destroy,Externals/curl/lib/bundles.c,ok,ok,checker-ok,def L68; ok both modes
+0x0000007100b976e0,Curl_bundle_add_conn,Externals/curl/lib/bundles.c,ok,ok,checker-ok,def L81; ok both modes
+0x0000007100b97740,Curl_bundle_remove_conn,Externals/curl/lib/bundles.c,ok,ok,checker-ok,def L94; ok both modes
+0x0000007100bce160,_ZN15dmConvexContact15ComputeManifoldERK10dmManifoldPS0_P10dmGJKCacheP10dmSATCacheP7dmShapeS9_RK11dmTransformSC_NS8_4TypeESD_b,Contrib/Contrib/Domino/Dynamics/Contacts/dmConvexContact.cpp,mismatch,mismatch,equivalent-encoding,def L80; checker: wrong mnemonic; L77 equi:register allocation
+0x0000007100bdfa40,_ZN13dmDynamicTree7ShuffleEi,Contrib/Contrib/Domino/Collision/BroadPhase/dmDynamicTree.cpp,mismatch,mismatch,equivalent-encoding,def L264; checker: wrong function size; L263 equi:register allocation
+0x0000007100be55c0,_Z12dmCCManifoldP10dmManifoldPK9dmCapsuleS3_,Contrib/Contrib/Domino/Collision/Functions/dmCCManifold.cpp,mismatch,mismatch,equivalent-encoding,def L7; checker: wrong function size; L6 equi:instruction scheduling
+0x0000007100be5a20,_Z10dmDistanceP16dmDistanceOutputPK15dmDistanceInput,Contrib/Contrib/Domino/Collision/Functions/dmDistance.cpp,mismatch,mismatch,equivalent-encoding,def L423; checker: wrong function size; L421 equi:register allocation
+0x0000007100be89d0,_ZN16dmHomingFunction10InitializeEPK16dmDistanceOutputPK10dmGJKProxyRK7dmSweepS5_S8_bRK13__Float32x4_t,Contrib/Contrib/Domino/Collision/Functions/dmHomingFunction.cpp,mismatch,mismatch,unknown,def L16; checker: wrong function size; L15 unkn:branch structure differs
+0x0000007100beadc0,_Z23dmManifold_ReducePointsP10dmManifoldPK15dmManifoldPointi,Contrib/Contrib/Domino/Collision/Functions/dmManifold.cpp,mismatch,mismatch,equivalent-encoding,def L17; checker: wrong function size; L14 equi:instruction scheduling
+0x0000007100bf4920,_ZN10dmPolytopeC1Ev,Contrib/Contrib/Domino/Collision/Shapes/dmPolytope.cpp,mismatch,mismatch,equivalent-encoding,def L8; checker: wrong mnemonic; L7 equi:instruction scheduling
+0x0000007100bfb320,_ZN7dmTimer10InitializeEv,Contrib/Contrib/Domino/Common/dmTimer.cpp,ok,ok,checker-ok,def L4; ok both modes
+0x0000007100bfb330,_ZN7dmTimerC1Ev,Contrib/Contrib/Domino/Common/dmTimer.cpp,ok,ok,checker-ok,def L8; ok both modes
+0x0000007100bff7b0,_ZN16SavedDataAdapter9SaveDWORDEj,X/Common/SavedData.cpp,ok,ok,checker-ok,def L26; ok both modes
+0x0000007100bff910,_ZN16SavedDataAdapter10SaveUInt64Em,X/Common/SavedData.cpp,ok,ok,checker-ok,def L64; ok both modes
+0x0000007100bff940,_ZN16SavedDataAdapter13RestoreUInt64ERm,X/Common/SavedData.cpp,ok,ok,checker-ok,def L76; ok both modes
+0x0000007100bffb10,_ZN16SavedDataAdapter13FreeAllBlocksEv,X/Common/SavedData.cpp,ok,ok,checker-ok,def L86; ok both modes
+0x0000007100bffc10,_ZN17TChainedDataArrayI9SaveBlockiE10ElementNewEv,X/Common/SavedData.cpp,ok,ok,checker-ok,def=implicit/template (not located); ok both modes
+0x0000007100c00790,_ZN8bdSocketC1Ev,Contrib/Contrib/DemonWare/bdCore/bdSocket/bdSocket.cpp,ok,ok,checker-ok,def L16; ok both modes
+0x0000007100c007b0,_ZN8bdSocketD1Ev,Contrib/Contrib/DemonWare/bdCore/bdSocket/bdSocket.cpp,ok,ok,checker-ok,def L22; ok both modes
+0x0000007100c007d0,_ZN8bdSocketD0Ev,Contrib/Contrib/DemonWare/bdCore/bdSocket/bdSocket.cpp,ok,ok,checker-ok,def L22; ok both modes
+0x0000007100c00810,_ZN8bdSocket6createEbbb,Contrib/Contrib/DemonWare/bdCore/bdSocket/bdSocket.cpp,ok,ok,checker-ok,def L27; ok both modes
+0x0000007100c00830,_ZN8bdSocket6createEtbbb,Contrib/Contrib/DemonWare/bdCore/bdSocket/bdSocket.cpp,ok,ok,checker-ok,def L27; ok both modes
+0x0000007100c00890,_ZN8bdSocket4bindEt,Contrib/Contrib/DemonWare/bdCore/bdSocket/bdSocket.cpp,ok,ok,checker-ok,def L85; ok both modes
+0x0000007100c008b0,_ZN8bdSocket4bindEtt,Contrib/Contrib/DemonWare/bdCore/bdSocket/bdSocket.cpp,ok,ok,checker-ok,def L85; ok both modes
+0x0000007100c00940,_ZN8bdSocket4bindERK6bdAddr,Contrib/Contrib/DemonWare/bdCore/bdSocket/bdSocket.cpp,ok,ok,checker-ok,def L85; ok both modes
+0x0000007100c00990,_ZN8bdSocket6sendToERK6bdAddrPKvj,Contrib/Contrib/DemonWare/bdCore/bdSocket/bdSocket.cpp,ok,ok,checker-ok,def L114; ok both modes
+0x0000007100c00a00,_ZN8bdSocket11receiveFromER6bdAddrPvj,Contrib/Contrib/DemonWare/bdCore/bdSocket/bdSocket.cpp,ok,ok,checker-ok,def L125; ok both modes
+0x0000007100c00f00,_ZN13bdTokenBucket12removeTokensEj,Contrib/Contrib/DemonWare/bdCore/bdUtilities/bdTokenBucket.cpp,ok,ok,checker-ok,def L81; ok both modes
+0x0000007100c00f20,_ZN13bdTokenBucket19setTokensRestrictedEb,Contrib/Contrib/DemonWare/bdCore/bdUtilities/bdTokenBucket.cpp,ok,ok,checker-ok,def L93; ok both modes
+0x0000007100c00fc0,_ZN13bdTokenBucket14setMinFragmentEj,Contrib/Contrib/DemonWare/bdCore/bdUtilities/bdTokenBucket.cpp,ok,ok,checker-ok,def L113; ok both modes
+0x0000007100c01900,_ZN8bdRandomC1Ev,Contrib/Contrib/DemonWare/bdCore/bdUtilities/bdRandom.cpp,ok,ok,checker-ok,def L20; ok both modes
+0x0000007100c01950,_ZN8bdRandomD1Ev,Contrib/Contrib/DemonWare/bdCore/bdUtilities/bdRandom.cpp,ok,ok,checker-ok,def L30; ok both modes
+0x0000007100c01960,_ZN8bdRandom8nextUIntEv,Contrib/Contrib/DemonWare/bdCore/bdUtilities/bdRandom.cpp,ok,ok,checker-ok,def L34; ok both modes
+0x0000007100c02040,_ZN21bdSequenceNumberStore5checkERK16bdSequenceNumber,Contrib/Contrib/DemonWare/bdCore/bdContainers/bdSequenceNumberStore.cpp,ok,ok,checker-ok,def L21; ok both modes
+0x0000007100c028d0,_ZN14bdStreamSocketD1Ev,Contrib/Contrib/DemonWare/bdCore/bdSocket/bdStreamSocket.cpp,ok,ok,checker-ok,def L21; ok both modes
+0x0000007100c028e0,_ZN14bdStreamSocket6createEb,Contrib/Contrib/DemonWare/bdCore/bdSocket/bdStreamSocket.cpp,ok,ok,checker-ok,def L25; ok both modes
+0x0000007100c02910,_ZNK14bdStreamSocket7connectE6bdAddr,Contrib/Contrib/DemonWare/bdCore/bdSocket/bdStreamSocket.cpp,ok,ok,checker-ok,def L51; ok both modes
+0x0000007100c02960,_ZNK14bdStreamSocket11isConnectedEv,Contrib/Contrib/DemonWare/bdCore/bdSocket/bdStreamSocket.cpp,ok,ok,checker-ok,def L59; ok both modes
+0x0000007100c02970,_ZNK14bdStreamSocket10isWritableER18bdSocketStatusCode,Contrib/Contrib/DemonWare/bdCore/bdSocket/bdStreamSocket.cpp,ok,ok,checker-ok,def L66; ok both modes
+0x0000007100c02980,_ZNK14bdStreamSocket4sendEPKvj,Contrib/Contrib/DemonWare/bdCore/bdSocket/bdStreamSocket.cpp,ok,ok,checker-ok,def L72; ok both modes
+0x0000007100c02990,_ZNK14bdStreamSocket4recvEPvj,Contrib/Contrib/DemonWare/bdCore/bdSocket/bdStreamSocket.cpp,ok,ok,checker-ok,def L78; ok both modes
+0x0000007100c029a0,_ZN14bdStreamSocket5closeEv,Contrib/Contrib/DemonWare/bdCore/bdSocket/bdStreamSocket.cpp,ok,ok,checker-ok,def L84; ok both modes
+0x0000007100c03010,_ZN16bdPlatformThread12createThreadEPFvPvES0_RN2nn2os10ThreadTypeEijS0_iPKc,Contrib/Contrib/DemonWare/bdPlatform/bdPlatformThread/bdPlatformThread-switch.cpp,ok,ok,checker-ok,def L18; ok both modes
+0x0000007100c03070,_ZN16bdPlatformThread11startThreadERN2nn2os10ThreadTypeEPvj,Contrib/Contrib/DemonWare/bdPlatform/bdPlatformThread/bdPlatformThread-switch.cpp,ok,ok,checker-ok,def L41; ok both modes
+0x0000007100c03090,_ZN16bdPlatformThread10nameThreadERN2nn2os10ThreadTypeEPKc,Contrib/Contrib/DemonWare/bdPlatform/bdPlatformThread/bdPlatformThread-switch.cpp,ok,ok,checker-ok,def L47; ok both modes
+0x0000007100c030a0,_ZN16bdPlatformThread10joinThreadERN2nn2os10ThreadTypeE,Contrib/Contrib/DemonWare/bdPlatform/bdPlatformThread/bdPlatformThread-switch.cpp,ok,ok,checker-ok,def L53; ok both modes
+0x0000007100c030b0,_ZN16bdPlatformThread12deleteThreadERN2nn2os10ThreadTypeE,Contrib/Contrib/DemonWare/bdPlatform/bdPlatformThread/bdPlatformThread-switch.cpp,ok,ok,checker-ok,def L62; ok both modes
+0x0000007100b65ef0,_ZN11bdJSONArray5parseEPKcPS1_,Contrib/Contrib/DemonWare/bdJSON/bdJSONArray.cpp,mismatch,mismatch,equivalent-encoding,Q=O; L23 equi:inlining decision
+0x0000007100b50180,_ZThn8_N10bdQoSProbe12acceptPacketEP8bdSocket6bdAddrPvjh,Contrib/Contrib/DemonWare/bdSocket/bdQoS/bdQoSProbe.cpp,ok,ok,checker-ok,Q=O; L63 equi:stack layout; checker ok both (marker likely stale)
+0x0000007100b529b0,_ZN15bdNATTravClientD0Ev,Contrib/Contrib/DemonWare/bdSocket/bdNAT/bdNATTravClient.cpp,ok,ok,checker-ok,Q=O; L23 equi:inlining decision; checker ok both (marker likely stale)
+0x0000007100adb6e0,_ZN6google8protobuf23SourceCodeInfo_Location9MergeFromERKS1_,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.pb.cc,ok,ok,checker-ok,Q=O; L8851 equi:same instructions; checker ok both (marker likely stale)
+0x0000007100adc880,_ZN6google8protobuf23SourceCodeInfo_Location9MergeFromERKNS0_7MessageE,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.pb.cc,ok,ok,checker-ok,Q=O; L8851 equi:same instructions; checker ok both (marker likely stale)
+,GOOGLE_CHECK_NE,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/descriptor.pb.cc:8864,n/a,n/a,equivalent-encoding,marker not bound to an inventory row (header inline/note); calls identical-code duplicate (ICF difference)
+0x0000007100afda50,_ZN6google8protobuf7strings19SubstituteAndAppendEPN3blz12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEPKcRKNS1_8internal13SubstituteArgESF_SF_SF_SF_SF_SF_SF_SF_SF_,Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/stubs/substitute.cc,ok,ok,checker-ok,Q=O; L65 real:char signedness (ldrsb vs ldrb); checker ok both (marker likely stale)
+,(file-level note),Contrib/Contrib/lua/src/lstrlib.c:139,n/a,n/a,equivalent-encoding,marker not bound to an inventory row (header inline/note); O0/Nintendo param spills
+,(file-level note),Contrib/Contrib/lua/src/ldo.c:488,n/a,n/a,equivalent-encoding,marker not bound to an inventory row (header inline/note); addressing mode (GOT vs adrp)
+,seekoff,Contrib/Contrib/blz/include/blz/sstream.h:114,n/a,n/a,equivalent-encoding,marker not bound to an inventory row (header inline/note); instruction scheduling
+,merge,Contrib/Contrib/blz/include/blz/algo_merge.h:13,n/a,n/a,equivalent-encoding,marker not bound to an inventory row (header inline/note); loop-exit codegen
+,swap,Contrib/Contrib/blz/include/blz/vector.h:522,n/a,n/a,equivalent-encoding,marker not bound to an inventory row (header inline/note); operand order / branch sense
+,swap,Contrib/Contrib/blz/include/blz/string.h:603,n/a,n/a,equivalent-encoding,marker not bound to an inventory row (header inline/note); operand order
+,__isspace,NintendoSDK/Compilers/NX/nx/aarch64/include/ctype.h:5,n/a,n/a,equivalent-encoding,marker not bound to an inventory row (header inline/note); O0/Nintendo param spills
+0x0000007100987cd0,_ZN13LanguageRules18ApplyLanguageRulesEPKc,X/Sigma/LanguageRules.cpp,mismatch,mismatch,unknown,Q=W; L94 unkn:large reconstruction from decompiler
+0x000000710098dd10,_ZN11UnicodeText10CapitalizeEPKc,X/Sigma/UnicodeText.cpp,ok,ok,checker-ok,Q=O; L115 unkn:mask loaded from member vs constant 0xFF; checker ok both (marker likely stale)
+0x000000710098de20,_ZN11UnicodeText12UncapitalizeEPKc,X/Sigma/UnicodeText.cpp,ok,ok,checker-ok,Q=O; L136 unkn:mask loaded from member vs constant 0xFF; checker ok both (marker likely stale)
+0x000000710098dff0,_ZN11UnicodeText10InitializeEv,X/Sigma/UnicodeText.cpp,ok,ok,checker-ok,Q=O; L184 unkn:mask loaded from member vs constant 0xFF; checker ok both (marker likely stale)
+0x000000710098e220,_ZN11UnicodeText7ToUpperEPcm,X/Sigma/UnicodeText.cpp,ok,ok,checker-ok,Q=O; L250 unkn:mask loaded from member vs constant 0xFF; checker ok both (marker likely stale)
+0x000000710098e440,_ZN11UnicodeText16sProcessGroupingEPKcji,X/Sigma/UnicodeText.cpp,mismatch,mismatch,unknown,Q=W; L301 unkn:loop condition test order differs
+0x0000007100986af0,_Z23GamePerfCollectAveragesv,X/Sigma/GamePerf.cpp,mismatch,mismatch,equivalent-encoding,Q=W; L416 equi:instruction scheduling
+0x0000007100986d20,_Z17GamePerfCtrDeletePjP25XMemoryAllocatorInterface,X/Sigma/GamePerf.cpp,mismatch,mismatch,equivalent-encoding,Q=W; L482 equi:block layout/merging
+0x000000710096cba0,_ZNK6Octree20sWalkLinearRecursiveERK9LineSeg3DPK10OctreeNodePvRiPFiPK10OctreeLeafS6_S7_E,X/Sigma/DataStructures/Octree.cpp,mismatch,mismatch,equivalent-encoding,Q=W; L452 equi:instruction scheduling
+,FixedBlockAllocator::GetNextBlock,X/Sigma/DataStructures/XFixedBlockAllocator.h:650,n/a,n/a,equivalent-encoding,marker not bound to an inventory row (header inline/note); inlining decision
+0x00000071009707d0,_ZN12XVarRegistry15RegisterCmdLineEPKc,X/Sigma/DataStructures/XVar.cpp,mismatch,mismatch,equivalent-encoding,Q=W; L1086 equi:inlining decision
+0x000000710060b070,_GLOBAL__sub_I_AdventureDefinition.cpp,X/Common/Definitions/AdventureDefinition.cpp,mismatch,mismatch,real-difference,Q=O; L23 real:TU initializer omits original header-global initialisation
+0x000000710060ae90,_ZN17AdventureGroupDefC1Ev,X/Common/Definitions/AdventureDefinition.cpp,ok,ok,checker-ok,Q=O; L90 unkn:depends on header constant derivation; checker ok both (marker likely stale)
+0x0000007100427940,_ZN16XGrowableMap_SubImmPN7Console2IO14GlobalFileInfoES3_EC2EiP25XMemoryAllocatorInterface,X/Common/Console/IO/ConsoleIO.cpp,ok,ok,checker-ok,Q=O; L47 real:extra source guard absent in original; checker ok both (marker likely stale)
+0x000000710033eef0,_Z15Animation2DDrawiRK9AnimStateRK6Rect2DS4_hfRK9RGBAColori11RenderLayer,X/Client/Animation2D.cpp,mismatch,mismatch,unknown,Q=O; L109 unkn:unmeasured
+,(file-level note),X/Client/DebugTextDraw.cpp:14,n/a,n/a,unknown,marker not bound to an inventory row (header inline/note); note only; bodies missing from DWARF
+,(file-level note),X/Client/DebugTextDraw.cpp:20,n/a,n/a,unknown,marker not bound to an inventory row (header inline/note); author marks unverified
+,(file-level note),X/Client/DebugTextDraw.cpp:26,n/a,n/a,unknown,marker not bound to an inventory row (header inline/note); author marks unverified
+,(file-level note),X/Client/CVisualInventory.cpp:36,n/a,n/a,unknown,marker not bound to an inventory row (header inline/note); note only; bodies missing from DWARF
+0x0000007100268770,_ZN16XGrowableMap_SubImmP22UIManagedAnimationNodeS1_EC2EiP25XMemoryAllocatorInterface,X/Client/UserInterface/UIStoryboard.cpp,ok,ok,checker-ok,Q=O; L56 unkn:unclassified marker; checker ok both (marker likely stale)
+0x0000007100294cf0,_ZN8UISkills7Console19PlayerSkillsGlobals22OnIconSelectionChangedERK4UIIDi,X/Client/UserInterface/Console/UISkillsConsole.cpp,mismatch,mismatch,equivalent-encoding,Q=O; L1943 equi:instruction scheduling

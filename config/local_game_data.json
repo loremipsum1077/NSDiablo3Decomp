@@ -1,0 +1,191 @@
+{
+  "descriptors": {
+    "Account": {
+      "address": "0xe4a00c",
+      "length": 5798,
+      "sha256": "1c8aabb4952b50cd76f1c6829673c853b3d1bdff7b0fc11cbdf774f652303387",
+      "cc_sha256": "2ca47458bc2ffd89442bd7be9c9a5352f7951451aaba2f65233dcc304c4c9270",
+      "h_sha256": "9dcf12816c8b727ff0b523bda642ad31d005f23586841d41abc76da0652c8e9b"
+    },
+    "AccountMigration": {
+      "address": "0xdc1e1e",
+      "length": 4621,
+      "sha256": "3819150e118b2dd92b4d1cd7427318a5aaa7808932510b90f50da976eaee9684",
+      "cc_sha256": "d1cd7f5192133ff8927bae1365d0430b1d047475a52fda136f74b5d96dde7b8d",
+      "h_sha256": "6520723275eb32e23c4cd64e77d8d07fa261476068e34f51d1c3aae2955c236c"
+    },
+    "Achievements": {
+      "address": "0xdc308e",
+      "length": 812,
+      "sha256": "04059bdf860bb1784d05747f5d5229049a0060f571b476c857f1750cc673546a",
+      "cc_sha256": "9e7e45a742bf747270b78bf2717416505caa0e708dfaf522197db623280892a9",
+      "h_sha256": "1c2575055895bb8a9e116034269a92524ad4cc0baec5115488bd901fc4b97619"
+    },
+    "AchievementsStaticData": {
+      "address": "0xdf3876",
+      "length": 1574,
+      "sha256": "b4a2b51db7c804bcb4adbaba0f5fb8bce18efcb1dde519822a10399f757b1b51",
+      "cc_sha256": "9d3aea94b8a444179c738fa9caac0087b81dd375c0ca10e154ba3cb7a91ce794",
+      "h_sha256": "9cab4259a2e62e38609913d6f2193619f7498c8b5a72dbbf4da47df1c3f91337"
+    },
+    "AttributeSerializer": {
+      "address": "0xdc342b",
+      "length": 238,
+      "sha256": "ff7582e4bb95dc5c5f0a2b23fa752b8c8f1b8d31754fe87d85787ba49e338d5d",
+      "cc_sha256": "fd3b855664033e5d3bfee4c1473fbcd5472696939068177960076586792eb7f8",
+      "h_sha256": "e5fd7fb61a27b61d4f75fefee29e208ad490e905b5a438eafc7149ed900e64f5"
+    },
+    "CS": {
+      "address": "0xdc4136",
+      "length": 2517,
+      "sha256": "595ad46389bb728437a32c5bc000ec41e3d7f7f84e5496194cdfc10d509d69e8",
+      "cc_sha256": "3def5984acc89943ef3607a47ed2e36f2845602c9ea2eebfaec6629c14d9c5f9",
+      "h_sha256": "666a8d83fa30e0c0049c4a622914173cdffe9c4e35e14fde9fe933fec6b13110"
+    },
+    "ChallengeRifts": {
+      "address": "0xdc3580",
+      "length": 435,
+      "sha256": "6fce2f6af12b77b57dc0bc7d4afd9e9d967499751859e2e9d18f9a44f4ca995f",
+      "cc_sha256": "623e33cb45421417dd8912b6ca477ae4ee5579beb899e1c8b74904454e383452",
+      "h_sha256": "5a65efe6c64be752e2379bb56a2077318ff5be0590bcdab352e26ba72e9a086e"
+    },
+    "Console": {
+      "address": "0xdc378c",
+      "length": 1257,
+      "sha256": "4205125e04f273d17891c02cb9f549b45741eda06e481366814731f96fd1891c",
+      "cc_sha256": "b575db355053673348b93caaa3cbed9c1cab901691b3aa3f0252beae8348b561",
+      "h_sha256": "f6e31942a92f0e826af623cf13a2e5e46352e2d8e71baaa8c558f27f73ca0767"
+    },
+    "ConsoleMail": {
+      "address": "0xdc3cd6",
+      "length": 669,
+      "sha256": "acd183a3475c8c6bf3e51d3cab4b868446b610b2851de7aeb6f26d079794487d",
+      "cc_sha256": "b0ca9899a2f5663145e904e05cd099fcf3509ad56c883446e95a302bf185753b",
+      "h_sha256": "bbc41b71bcca31488783333e9894bf2e3f5812764c1bbb61577daeeece8a106c"
+    },
+    "CosmeticItems": {
+      "address": "0xdc3fd8",
+      "length": 271,
+      "sha256": "e4707e60c046b3cc7182d69aad6d6a3497ff270993b14aba48e65c3404e204b2",
+      "cc_sha256": "2c3de559da59c854604711fffb3d1b56527921fba2fb8f5a0166de36dd73f862",
+      "h_sha256": "8fa71947ee0e88861c3fd2176292db2cc240e124e484b864e3f923e672c65c62"
+    },
+    "GameBalance": {
+      "address": "0xdc4b6c",
+      "length": 189,
+      "sha256": "d0d69539adc434c7e21c1892b48638071cc1186a6bfe542dbbf733ec505a3ab7",
+      "cc_sha256": "c691b47cb1bd96c0502037d2a3fcf40e81a0499a4b2ab541c99c577adea0b655",
+      "h_sha256": "7cfaaab4b00d553cce784df45de5536c67bb56b3294979dfd931ad35b9348644"
+    },
+    "GameMessage": {
+      "address": "0xe4c330",
+      "length": 12746,
+      "sha256": "6fe7100a417d355a1b8662a88c4b4eccd96f97a17e8aeb4b7304e41ce31b92bd",
+      "cc_sha256": "aeb6c47776a6f36798a02b0bf89392a1381c3f432650f3d35a82a1a88565f59e",
+      "h_sha256": "5651dd658466f763533ecb9e9524cc4713ef84d703cfb4a45bb7f33b3fad72a4"
+    },
+    "Guild": {
+      "address": "0xdc4cde",
+      "length": 3409,
+      "sha256": "81c840167221cc6a4b926d31eb777358cf7e9b96ebb485f714d1b91bcd3dd2c2",
+      "cc_sha256": "53d5cd9d7a02b1af7c7322f777aa50fd0c46aa6adeca886db8b64828f56ed2f3",
+      "h_sha256": "1ccda4bb53abf1c7d7a48ffd2a9651366c6aac2175b89779b19f305443efab2d"
+    },
+    "Hero": {
+      "address": "0xdc5a82",
+      "length": 3040,
+      "sha256": "4633d2af92fe5a9bb615065c75d2ef5f826cb74c84b2bc20d1039690d8e873f6",
+      "cc_sha256": "d7dec6408158e9b9a56a5de15ca9a75b3e736444f478df8f6fdaad6be195cc8c",
+      "h_sha256": "63323b3c468df35dcb190181ae02ecfeca6b4574fe1cb0e9bd318b56049c04cb"
+    },
+    "HeroCommon": {
+      "address": "0xdc66c1",
+      "length": 1814,
+      "sha256": "a7a283d01da6864ab5d83621f74e6099bfab33167bf65c6415a0a6bcda624df8",
+      "cc_sha256": "9ad4f07bab180c2a27563a273ccdfa528ee7dbed613f52af97ffdab4bdc92f31",
+      "h_sha256": "b17a1d87f8b79af2767df5a6181d095d397fd84a85dd367b64ec1c32022944a5"
+    },
+    "Hireling": {
+      "address": "0xdc6e32",
+      "length": 320,
+      "sha256": "f9ff3110e17a232b931d4230a4f120af44357f99d9290e6df4494c7ec97b5ae7",
+      "cc_sha256": "97af864bd3cbee6e62289329a5571f785460e73470a78d54543f481846e3da4f",
+      "h_sha256": "91c8bf9524400219612c10a5234cfaab2cc7e3197b0b6b7c1cbe8d0b160a06a0"
+    },
+    "ItemCrafting": {
+      "address": "0xdc6fd5",
+      "length": 557,
+      "sha256": "f37dcf7054fa871534410ade8c21d6b6030c6438efd413af0e5c90e0916a7c01",
+      "cc_sha256": "941efdd48ec8d5dcacbc5138bdef4991ca1f31f15ab5f7fcf71cd5a2fdc20231",
+      "h_sha256": "fd9b4fef539d1a22a33e184ea9c582f1e5a1d3ea368a37c07782758fa7a31dce"
+    },
+    "Items": {
+      "address": "0xdc7257",
+      "length": 2470,
+      "sha256": "67ef4897043b0c99adb95b17449c8ff4b9446cc90ce94b56367da36751f5dee4",
+      "cc_sha256": "6e942cc8c8344b9e31a2390a9997fc679590ddbd984aad813084ef91777ec3b4",
+      "h_sha256": "d4763616afb3beea5839247c0f8b8774ba21f192a4568cd7518969e1a4a5c28f"
+    },
+    "Leaderboard": {
+      "address": "0xe501d4",
+      "length": 3352,
+      "sha256": "3e916629d0e8d6ff6690961a25998ef6e66cd5462acce7e880d2af205de6641f",
+      "cc_sha256": "ad798ea613bc3dfbff685159096f608e019cad7be859cbd7a2929951da1e9371",
+      "h_sha256": "993f45efa566e40177a0119287a66526e6f26a5e9789e21c851c55d1ec9edde2"
+    },
+    "OnlineService": {
+      "address": "0xdc7cc2",
+      "length": 1760,
+      "sha256": "e82f04bc64a2be405e3e9742893644c07414e372009390eeaf720449d7502ad9",
+      "cc_sha256": "2d0cb948606593ff5dcc3853aa974af757be981b159bcfd0bec966d620105803",
+      "h_sha256": "3b3d162a6d0940581d4243096cfe747094ebfa827611694a2cf014427b9d63a6"
+    },
+    "PartyMessage": {
+      "address": "0xd7ce7c",
+      "length": 754,
+      "sha256": "fff62d638243bda58ad80c1b25f5da0ed389a5b1c763cb7827dba1e00a58c5eb",
+      "cc_sha256": "8af3c5c31a2804b1d01f8931f30eff6c22fb287fbdf49667945e7194c3bb49f3",
+      "h_sha256": "63084f02bdfdd51bb14dea29757268e267afefb0bce1e6a6a6cff4c99ad07c3a"
+    },
+    "Profile": {
+      "address": "0xdc83fb",
+      "length": 3732,
+      "sha256": "0583da45e358d97d3abc7522f2bf54372fb626457eef6ef912c7f258b22896a0",
+      "cc_sha256": "b025f342a0431191b192f539e4f366a84dcc311df44d2efc9ddf1c8cbc932945",
+      "h_sha256": "e826e707f68ca66edb2a1d31e1117a81cbc9e8474f9a9be31ec810807826b0bd"
+    },
+    "Quest": {
+      "address": "0xdc92e4",
+      "length": 497,
+      "sha256": "8dd921f6da4ffbfe9c9c488d55c301e543c2fc948ed0cdba80128bbe1ee61070",
+      "cc_sha256": "a1fce4ea2db3ed10f0037c12b93bd510e6a38c6a771481f3d48911efeecd01fd",
+      "h_sha256": "f4d3fb97b7cf58cd6b9d2408c90430760ea19d731baa6aa95412f50fb2079576"
+    },
+    "Settings": {
+      "address": "0xe519ac",
+      "length": 7724,
+      "sha256": "cd26a68c1e676b85424d5f8b1e91a90e8ed665687fe4adf503e5c637818b2298",
+      "cc_sha256": "12b5142c1171ad55367e6bfe2540b66f6465dc7bbfc6ca89bfccc14f287f02cc",
+      "h_sha256": "a256c39c67d50465fdbbc8895578c334acf01f8628080b1813cde5558e035871"
+    }
+  },
+  "includes": {
+    "account_attribs.inc": "223675c0fd0977721173c282116da18ec3ab409a241123375f35d93e014bd3ac",
+    "account_wide_attribs.inc": "a4cd360bf15c5576b6778f0d95d4c04dc9cb7fc49b52e40ab4ae6ede4bbb6899",
+    "actor_particles.inc": "842233af7a197c053ea15a1d6e54b056f3ce0c8fc7b6eb34b1c81c6d2af71875",
+    "error_sounds.inc": "583c7d79c9f568f593c952935d5adf64d2681f78501dbb3f5465b83dfc615aba",
+    "gbid_rows.inc": "7cd1c6e2bdacea01451e4c169ab4a17a60a605858f1fae7373b996817bc47a95",
+    "hero_attribs.inc": "6a5ba6267ff01e43d54b32d55f363695871e71a00aefef9204bfb2a9dd326327",
+    "partition_attribs.inc": "82b6376b3ceb3867da80efd56440d07556eb9f6b7cdaa1044d141ce4ea9c0d9e",
+    "sno_calls.inc": "e7c3676e90a69d2e254747c7dcad924a98eee2834c7ac36c09f360f21edd511f",
+    "lua_tables.inc": "9449d1178315ffe58ffb2833efc04749877155219e32080b832d1522d461d841",
+    "button_maps.inc": "1f21804548679669d364963c5a458011850e14227bb036fbb142c103ff94b05f",
+    "achievement_events.inc": "4c7dbd16bf7fa13be1bcb52c9ebf922627b1c63390d4f4163e6ad0a2e805859b",
+    "font_colors.inc": "a1c30891791f09287c58e891b3484076f9b26ca8dc44ccf21955351bc690fdd1",
+    "hotbar_anchors.inc": "7e04e227f0b46a8540b23ae79cf317b20709453bcc53dceea0595c0c24c39211",
+    "mirror_attacks.inc": "f95e6ef209dcb2f88eae6c73521bc815295f8c602c70cdc8fc78c8956fd95f59",
+    "nvn_entry_points.inc": "27cd2838f7e9fa1ad2bf5f98beaa8f4e019bcddaea7a9485f829601dd22aba8f",
+    "issuer_mapping.inc": "29c644a448adfefd56afb2e2ce0fbf8c1059732f41f54db4a5a3bc36b31d9929"
+  },
+  "lua_evidence_sha256": "8663b7ca842eac1e2fcbc9b1e32960fda21a9d2a405ff6170e005f7509ff2687"
+}

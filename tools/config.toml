@@ -1,0 +1,10 @@
+# Single game version (2.6.2). tools/check looks for:
+#   data/2.6.2/main.elf        the target (tools/setup.py)
+#   data/2.6.2/functions.csv   the function list (tools/gen_functions_csv.py)
+#   build/2.6.2/d3             our compiled output (tools/build.py)
+default_version = "2.6.2"
+functions_csv = "data/{version}/functions.csv"
+build_target = "d3"
+
+[decomp_me]
+preset_id = ""

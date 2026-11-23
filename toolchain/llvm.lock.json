@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "version": "5.0.1",
+  "provenance": {
+    "release_index": "https://releases.llvm.org/5.0.1/",
+    "observed_date": "2026-10-22",
+    "method": "SHA-256 of exact archives fetched over verified HTTPS from the original LLVM release URLs; not an independently authenticated vendor checksum",
+    "signature_status": "Detached signatures obtained but NOT verified: 2017 signer absent from current official release key bundle",
+    "signature_key_fingerprint": "11E521D646982372EB577A1F8F0871F202119294",
+    "fingerprint_source": "https://lists.llvm.org/pipermail/llvm-dev/2017-August/116388.html",
+    "current_key_bundle": "https://releases.llvm.org/release-keys.asc",
+    "details": "llvm-downloads.md"
+  },
+  "archives": {
+    "linux/arm64": {
+      "arch": "aarch64-linux-gnu",
+      "filename": "clang+llvm-5.0.1-aarch64-linux-gnu.tar.xz",
+      "url": "https://releases.llvm.org/5.0.1/clang+llvm-5.0.1-aarch64-linux-gnu.tar.xz",
+      "size_bytes": 224589020,
+      "sha256": "d2ad679b42b4b1eb0fc45d0a69d6a3cbd7dde5ca4c1e7d1d0f937a3177cb0817",
+      "signature_sha256": "d80aa8d079d367711c2f02af974e79a5a21594668559a874e09ebe59b6a12cbc"
+    },
+    "linux/amd64": {
+      "arch": "x86_64-linux-gnu-ubuntu-16.04",
+      "filename": "clang+llvm-5.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz",
+      "url": "https://releases.llvm.org/5.0.1/clang+llvm-5.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz",
+      "size_bytes": 259331976,
+      "sha256": "005f21861cd2953138df7cf511f1552ef7041bafb7cfc4b172264b7ff5fe09b4",
+      "signature_sha256": "98324f301a6911ff879d612d517610b6b60964e6800d0d0907bd3d1c1f6b9e9d"
+    },
+    "source": {
+      "arch": "source",
+      "filename": "llvm-5.0.1.src.tar.xz",
+      "url": "https://releases.llvm.org/5.0.1/llvm-5.0.1.src.tar.xz",
+      "size_bytes": 23428720,
+      "sha256": "5fa7489fc0225b11821cab0362f5813a05f2bcf2533e8a4ea9c9c860168807b0",
+      "signature_sha256": "ca03410bc30a69aca5f2638aac550c87720b6b76e5d421f732b5a2a3e2e030ea"
+    }
+  }
+}

@@ -1,0 +1,49 @@
+diff --git a/viking/src/checks.rs b/viking/src/checks.rs
+--- a/viking/src/checks.rs
++++ b/viking/src/checks.rs
+@@ -220,6 +220,9 @@ struct State {
+     entries: HashMap<u64, PairSnapshot>,
+     unsupported_flow: bool,
+     table_error: Option<(usize, &'static str)>,
++    // First changed ADRP (original, rebuilt address) in a function whose flow
++    // forbids pair normalization: no consumer can verify its page.
++    unverified_adrp: Option<(u64, u64)>,
+ }
+ 
+ impl State {
+@@ -539,7 +542,18 @@ impl<'a, 'functions, 'orig_elf, 'decomp_elf>
+             }
+             off += 4;
+         }
+-        self.check_range(cs, orig_fn, decomp_fn, &mut state, start, len)
++        if let Some(m) = self.check_range(cs, orig_fn, decomp_fn, &mut state, start, len)? {
++            return Ok(Some(m));
++        }
++        // Reported last, so earlier mismatches keep their existing diagnostics.
++        if let Some((addr_orig, addr_decomp)) = state.unverified_adrp {
++            return Ok(Some(Mismatch {
++                addr_orig,
++                addr_decomp,
++                cause: state.missing_pair(addr_orig),
++            }));
++        }
++        Ok(None)
+     }
+ 
+     fn check_range(
+@@ -631,6 +645,15 @@ impl<'a, 'functions, 'orig_elf, 'decomp_elf>
+                         return Self::make_mismatch(&i1, &i2, MismatchCause::Register);
+                     }
+ 
++                    // Unmodeled flow requires literal pairs. A changed page is
++                    // otherwise excused whenever its use happens to be raw-equal.
++                    if state.unsupported_flow
++                        && i1.bytes() != i2.bytes()
++                        && state.unverified_adrp.is_none()
++                    {
++                        state.unverified_adrp = Some((i1.address(), i2.address()));
++                    }
++
+                     state.gprs1.insert(reg.0, imm.0);
+                     state.gprs2.insert(reg.1, imm.1);
+                     state.adrp_pair_registers.insert(reg.0);

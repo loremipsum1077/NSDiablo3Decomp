@@ -1,0 +1,40 @@
+// Adopted from tools/gen_headers.py output; hand-maintained from here on.
+// Original file: X/Common/PlayerSwig.h
+
+#pragma once
+
+#include "../../BlizzardCore/Include/Blizzard/Types.h"
+
+enum {
+    CET_NONE = 0,
+    CET_KILL_MONSTER = 1,
+    CET_KILL_OBJECT_DESTRUCTION = 2,
+    CET_KILL_SINGLE_ATTACK = 3,
+    CET_KILL_ENVIRONMENT_ATTACK = 4,
+    CET_SAVIOR = 5,
+    CET_LOW_HEALTH_SURVIVAL = 6,
+    CET_NEPHALEM_GLORY_GAINED = 7,
+    CET_NEPHALEM_GLORY_BOOST = 8,
+    CET_NEPHALEM_GLORY_EXPIRED = 9,
+    CET_PVP_FIRST_KILL = 10,
+    CET_PVP_KILLED_ALL_ENEMY_PLAYERS = 11,
+    CET_PVP_NO_DEATHS_ENTIRE_MATCH = 12,
+    CET_PVP_NO_DAMAGE_TAKEN_ENTIRE_MATCH = 13,
+    CET_PVP_LAST_PLAYER_STANDING = 14,
+    CET_PVP_AVENGER_KILL = 15,
+    CET_PVP_2_FAST_KILLS = 16,
+    CET_PVP_3_FAST_KILLS = 17,
+    CET_PVP_4_FAST_KILLS = 18,
+    CET_PVP_KILLSTREAK_3 = 19,
+    CET_PVP_KILLSTREAK_5 = 20,
+    CET_PVP_KILLSTREAK_7 = 21,
+    CET_PVP_KILLSTREAK_10 = 22,
+    CET_PVP_KILLSTREAK_ENDER = 23,
+    CET_PVP_REVENGE = 24,
+    CET_PVP_ACE = 25,
+    CET_PVP_KILL = 26,
+    CET_COUNT = 27,
+};
+
+typedef int32 CalloutEventType;
+

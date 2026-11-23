@@ -1,0 +1,4 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+# Unified-diff context lines for blank source lines are a single space.
+tools/patches/*.patch -whitespace

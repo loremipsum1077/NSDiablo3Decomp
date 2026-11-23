@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "version": "2.6.2",
+  "platform": "Switch",
+  "provenance": "Local reference observed read-only on 2026-10-21; see docs/original_inputs.md. Not publisher-certified canonical hashes or redistribution clearance.",
+  "inputs": [
+    {
+      "id": "nso",
+      "filename": "exefs/main",
+      "role": "Required original compressed executable NSO; existing setup pin retained",
+      "required": true,
+      "size": 9857069,
+      "sha256": "9f0cb00de2ae3c1bd05757d100e834d5480bb56d51aa664103058a7c7006c115",
+      "equivalent_filenames": [
+        "romfs/DiabloIIINX64r.nso",
+        "romfs/DiabloIIINX64r.nspd/program0.ncd/code/main"
+      ]
+    },
+    {
+      "id": "nss",
+      "filename": "romfs/DiabloIIINX64r.nss",
+      "role": "Required original unstripped ELF64 AArch64 debug/type/ownership evidence for r",
+      "required": true,
+      "size": 248855960,
+      "sha256": "dffc3f496a03cb1c10ef59db13c04779fb89d087fdf1050e87197f2284807a4f",
+      "build_id": "eafc2cef9b161d20514260d11266b5ae"
+    },
+    {
+      "id": "r_nso_evidence",
+      "filename": "romfs/DiabloIIINX64r.nso",
+      "role": "Optional original RomFS executable evidence; byte-identical to ExeFS main",
+      "required": false,
+      "size": 9857069,
+      "sha256": "9f0cb00de2ae3c1bd05757d100e834d5480bb56d51aa664103058a7c7006c115"
+    },
+    {
+      "id": "ra_nss_evidence",
+      "filename": "romfs/DiabloIIINX64ra.nss",
+      "role": "Optional debug evidence for a different program; never a substitute for r.nss",
+      "required": false,
+      "size": 264533296,
+      "sha256": "0a9e060b840d7abf7ecf5562cd8b8090259a93ae0e64d00632699948fd3eec4c",
+      "build_id": "7247a8c62a57a0fe030f19a3d717bde4"
+    }
+  ]
+}

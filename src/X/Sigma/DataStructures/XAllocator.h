@@ -1,0 +1,13 @@
+#pragma once
+
+enum XAllocatorGrowAlgorithm {
+    XALLOC_GROW_NONE = 0,
+    XALLOC_GROW_LINEAR = 1,
+    XALLOC_GROW_EXPONENTIAL = 2,
+};
+
+enum {
+    XALLOC_FLAG_MANAGE_MEM_BLOCK = 0,
+    XALLOC_FLAG_USE_SYSTEM_MEMORY = 1,
+    XALLOC_FLAG_SHRINKABLE = 2,
+};

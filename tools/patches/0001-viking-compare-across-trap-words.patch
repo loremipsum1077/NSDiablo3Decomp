@@ -1,0 +1,107 @@
+diff --git a/viking/src/checks.rs b/viking/src/checks.rs
+index c1e2a88..6278a32 100644
+--- a/viking/src/checks.rs
++++ b/viking/src/checks.rs
+@@ -192,6 +192,24 @@ pub struct FunctionChecker<'a, 'functions, 'orig_elf, 'decomp_elf> {
+     orig_got_section: Option<&'orig_elf goblin::elf::SectionHeader>,
+ }
+ 
++// Keep track of registers that are used with ADRP so that we can check global data
++// references even when data is not placed at the same addresses
++// as in the original executable.
++#[derive(Default)]
++struct State {
++    gprs1: HashMap<cs::RegId, u64>,
++    gprs2: HashMap<cs::RegId, u64>,
++    adrp_pair_registers: HashSet<cs::RegId>,
++}
++
++impl State {
++    fn forget_modified_registers(&mut self, detail: &cs::InsnDetail) {
++        for reg in detail.regs_write() {
++            self.adrp_pair_registers.remove(reg);
++        }
++    }
++}
++
+ impl<'a, 'functions, 'orig_elf, 'decomp_elf>
+     FunctionChecker<'a, 'functions, 'orig_elf, 'decomp_elf>
+ {
+@@ -232,24 +250,6 @@ impl<'a, 'functions, 'orig_elf, 'decomp_elf>
+         orig_fn: &elf::Function,
+         decomp_fn: &elf::Function,
+     ) -> Result<Option<Mismatch>> {
+-        // Keep track of registers that are used with ADRP so that we can check global data
+-        // references even when data is not placed at the same addresses
+-        // as in the original executable.
+-        #[derive(Default)]
+-        struct State {
+-            gprs1: HashMap<cs::RegId, u64>,
+-            gprs2: HashMap<cs::RegId, u64>,
+-            adrp_pair_registers: HashSet<cs::RegId>,
+-        }
+-
+-        impl State {
+-            fn forget_modified_registers(&mut self, detail: &cs::InsnDetail) {
+-                for reg in detail.regs_write() {
+-                    self.adrp_pair_registers.remove(reg);
+-                }
+-            }
+-        }
+-
+         let mut state = State::default();
+ 
+         if orig_fn.code.len() != decomp_fn.code.len() {
+@@ -260,8 +260,51 @@ impl<'a, 'functions, 'orig_elf, 'decomp_elf>
+             }));
+         }
+ 
++        // The NX clang fork is built with `-mllvm -trap-unreachable`: every
++        // noreturn call is followed by `udf #0xdefe` (0xe7ffdefe), which
++        // capstone cannot decode -- a plain disasm_iter over the whole body
++        // would stop there and silently pass everything after it.  Compare
++        // in segments split at those words, requiring our object to carry a
++        // trap (`brk`, or the same `udf`) at each one.
++        const TRAP: [u8; 4] = [0xfe, 0xde, 0xff, 0xe7];
++        let len = orig_fn.code.len();
++        let mut start = 0usize;
++        let mut off = 0usize;
++        while off + 4 <= len {
++            if orig_fn.code[off..off + 4] == TRAP {
++                if let Some(m) = self.check_range(cs, orig_fn, decomp_fn, &mut state, start, off)? {
++                    return Ok(Some(m));
++                }
++                let ours = &decomp_fn.code[off..off + 4];
++                let is_brk = ours[3] == 0xd4 && (ours[2] & 0xe0) == 0x20;
++                if ours != TRAP && !is_brk {
++                    return Ok(Some(Mismatch {
++                        addr_orig: orig_fn.addr + off as u64,
++                        addr_decomp: decomp_fn.addr + off as u64,
++                        cause: MismatchCause::Unknown,
++                    }));
++                }
++                start = off + 4;
++            }
++            off += 4;
++        }
++        self.check_range(cs, orig_fn, decomp_fn, &mut state, start, len)
++    }
++
++    fn check_range(
++        &self,
++        cs: &mut cs::Capstone,
++        orig_fn: &elf::Function,
++        decomp_fn: &elf::Function,
++        state: &mut State,
++        start: usize,
++        end: usize,
++    ) -> Result<Option<Mismatch>> {
++        if start >= end {
++            return Ok(None);
++        }
+         let mut instructions = try_map_two(&orig_fn, &decomp_fn, |func| {
+-            cs.disasm_iter(func.code, func.addr)
++            cs.disasm_iter(&func.code[start..end], func.addr + start as u64)
+         })?;
+ 
+         // Check every pair of instructions.

@@ -1,0 +1,186 @@
+// Adopted from tools/gen_headers.py output; hand-maintained from here on.
+// Original file: X/Common/GameSwig.h
+
+#pragma once
+
+#include "../../BlizzardCore/Include/Blizzard/Types.h"
+
+enum {
+    ACT_INVALID = -1,
+    ACT_1 = 0,
+    ACT_2 = 100,
+    ACT_3 = 200,
+    ACT_4 = 300,
+    ACT_5 = 400,
+    ACT_TEST = 1000,
+    ACT_OPEN_WORLD = 3000,
+    ACT_MAX_VALUE = 3000,
+    ACT_MAX_CAMPAIGN = 400,
+};
+
+typedef int32 Act;
+
+enum {
+    DL_INVALID = -1,
+    DL_NORMAL = 0,
+    DL_NIGHTMARE = 1,
+    DL_HELL = 2,
+    DL_INFERNO = 3,
+    DL_X1 = 4,
+    DL_DYNAMIC = 5,
+    DL_NUM_DIFFICULTY_LEVELS = 6,
+};
+
+enum {
+    HC_INVALID = -1,
+    HC_NORMAL = 0,
+    HC_HARD = 1,
+    HC_EXPERT = 2,
+    HC_MASTER = 3,
+    HC_TORMENT_1 = 4,
+    HC_TORMENT_2 = 5,
+    HC_TORMENT_3 = 6,
+    HC_TORMENT_4 = 7,
+    HC_TORMENT_5 = 8,
+    HC_TORMENT_6 = 9,
+    HC_TORMENT_7 = 10,
+    HC_TORMENT_8 = 11,
+    HC_TORMENT_9 = 12,
+    HC_TORMENT_10 = 13,
+    HC_TORMENT_11 = 14,
+    HC_TORMENT_12 = 15,
+    HC_TORMENT_13 = 16,
+    HC_NUM_HANDICAP_LEVELS = 17,
+    MAX_RAISE_DIFFICULTY_HANDICAP = 1,
+};
+
+enum {
+    WARP_UNKNOWN = 0,
+    WARP_TOWN_PORTAL = 1,
+    WARP_WAYPOINT = 2,
+    WARP_CHANGING_ACTS = 3,
+    WARP_HEARTH_PORTAL = 4,
+    WARP_CHECKPOINT = 5,
+    WARP_COMPANION = 6,
+    WARP_BOSS_FIGHT = 7,
+    WARP_ELEVATOR = 8,
+    WARP_PORTAL = 9,
+    WARP_SCRIPT = 10,
+    WARP_HEADSTONE = 11,
+    WARP_CONSOLE_PORTAL = 12,
+    WARP_CHALLENGE = 13,
+    WARP_CANCELLED = 14,
+    WARP_CONSOLE_PVP_SS = 15,
+    WARP_TIERED_RIFT = 16,
+    WARP_SET_DUNGEON = 17,
+    WARP_COUNT = 18,
+};
+
+enum {
+    BUTTON_INVALID = -1,
+    BUTTON_1 = 0,
+    BUTTON_2 = 1,
+    BUTTON_3 = 2,
+    BUTTON_4 = 3,
+    BUTTON_LEFT_SHOULDER = 4,
+    BUTTON_RIGHT_SHOULDER = 5,
+    BUTTON_LEFT_TRIGGER = 6,
+    BUTTON_RIGHT_TRIGGER = 7,
+    BUTTON_DPAD_UP = 8,
+    BUTTON_DPAD_DOWN = 9,
+    BUTTON_DPAD_LEFT = 10,
+    BUTTON_DPAD_RIGHT = 11,
+    BUTTON_BACK = 12,
+    BUTTON_START = 13,
+    BUTTON_LEFT_STICK_BUTTON = 14,
+    BUTTON_RIGHT_STICK_BUTTON = 15,
+    BUTTON_TOUCH_PAD = 16,
+    BUTTON_OPTIONS = 17,
+    CONSOLE_BUTTON_COUNT = 18,
+};
+
+enum {
+    PVP_GR_INVALID = -1,
+    PVP_GR_WIN = 0,
+    PVP_GR_LOSS = 1,
+    PVP_GR_TIE = 2,
+    NUM_PVP_GAME_RESULTS = 3,
+};
+
+typedef int32 PVPGameResult;
+
+enum {
+    REVIVAL_TYPE_IN_TOWN = 0,
+    REVIVAL_TYPE_AT_CHECKPOINT = 1,
+    REVIVAL_TYPE_AT_CORPSE_DELAYED = 2,
+    REVIVAL_TYPE_AT_CORPSE_NOW = 3,
+    REVIVAL_TYPE_AT_CORPSE_NOW_DO_NOT_WARP = 4,
+};
+
+typedef int32 RevivalType;
+
+enum {
+    PLAYER_CLASS_NONE = -1,
+    PLAYER_CLASS_DEMONHUNTER = 0,
+    PLAYER_CLASS_BARBARIAN = 1,
+    PLAYER_CLASS_WIZARD = 2,
+    PLAYER_CLASS_WITCHDOCTOR = 3,
+    PLAYER_CLASS_MONK = 4,
+    PLAYER_CLASS_CRUSADER = 5,
+    PLAYER_CLASS_NECROMANCER = 6,
+    NUM_PLAYER_CLASSES = 7,
+};
+
+typedef int32 PlayerClass;
+
+enum {
+    ACTOR_GENDER_INVALID = -1,
+    ACTOR_GENDER_MALE = 0,
+    ACTOR_GENDER_FEMALE = 1,
+    NUM_ACTOR_GENDERS = 2,
+};
+
+typedef int32 ActorGender;
+
+enum {
+    GEM_NONE = 0,
+    GEM_AMETHYST = 1,
+    GEM_EMERALD = 2,
+    GEM_RUBY = 3,
+    GEM_TOPAZ = 4,
+    GEM_DIAMOND = 5,
+    GEM_NUM_GEM_TYPES = 6,
+};
+
+typedef int32 GemType;
+
+typedef int32 ChallengeType;
+
+enum {
+    OPENWORLD_MODE_INVALID = -1,
+    OPENWORLD_MODE_IDLE = 0,
+    OPENWORLD_MODE_BOUNTY = 1,
+    OPENWORLD_MODE_DUNGEONFINDER = 2,
+    OPENWORLD_MODE_RESET_PENDING = 3,
+    NUM_OPENWORLD_MODES = 4,
+};
+
+typedef int32 OpenWorldMode;
+
+enum {
+    OPENWORLD_STATUS_INVALID = -1,
+    OPENWORLD_STATUS_TOWN = 0,
+    OPENWORLD_STATUS_NOT_IN_TOWN = 1,
+    OPENWORLD_STATUS_DUNGEONFINDER = 2,
+    OPENWORLD_STATUS_BRAWLING = 3,
+    OPENWORLD_STATUS_UBER_REALM = 4,
+    NUM_OPENWORLD_STATUSES = 5,
+};
+
+typedef int32 OpenWorldStatus;
+
+enum {
+    GREATERRIFTLEVEL_MINIMUM = 0,
+    GREATERRIFTLEVEL_MAXIMUM = 511,
+};
+

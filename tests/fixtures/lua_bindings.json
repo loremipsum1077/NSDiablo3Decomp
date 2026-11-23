@@ -1,0 +1,15 @@
+{
+  "description": "Synthetic input for testing wrapper generation without game files.",
+  "fixed": {
+    "example": [
+      {
+        "ShortName": "ExampleCount",
+        "Shape": "(int)->int",
+        "signature": "int ExampleCount(int value)",
+        "locals": [["int", "arg1"], ["int", "result"]],
+        "line": "10"
+      }
+    ]
+  },
+  "dispatch": {}
+}

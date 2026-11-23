@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/open-ead/nx-decomp-tools-binaries",
+  "revision": "a3a33d94c9336f296404e31ab67ae0d90ce7b597",
+  "sha256": {
+    "linux/hactool": "f1e5fc7b4dd6c1f2a08a8cdb677e3d771f613dc33db5d348535d2adc1b67f193",
+    "linux/llvm-objdump": "dd92d62a734cbecfb795805945a5edf4eb206a04f57cbfabde2d1832532fce50",
+    "linux/nx2elf": "350322db6c0ac86b1c1bb87b08156fb085cebf2e00e6e54c45642b2228a90f3d",
+    "macos/hactool": "26008193121572a70c6c0c7962be60dcc653bc5894ea2617b91c41ee460cf67c",
+    "macos/llvm-objdump": "3867aa7adb0b29da0f09dff0783089e77940fe086ff08c548db143108d09fd92",
+    "macos/nx2elf": "78cc6b7787a4dc2ef119b071b642d270923b41c1cbec4c9d325ed7e3638817f4"
+  }
+}

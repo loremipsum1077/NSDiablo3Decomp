@@ -1,0 +1,80 @@
+// Adopted from tools/gen_headers.py output; hand-maintained from here on.
+// Original file: X/Common/ActorCommonDataSwig.h
+
+#pragma once
+
+#include "../../BlizzardCore/Include/Blizzard/Types.h"
+
+enum {
+    RESOURCE_TYPE_INVALID = -1,
+    RESOURCE_TYPE_MANA = 0,
+    RESOURCE_TYPE_ARCANUM = 1,
+    RESOURCE_TYPE_FURY = 2,
+    RESOURCE_TYPE_SPIRIT = 3,
+    RESOURCE_TYPE_POWER = 4,
+    RESOURCE_TYPE_HATRED = 5,
+    RESOURCE_TYPE_DISCIPLINE = 6,
+    RESOURCE_TYPE_FAITH = 7,
+    RESOURCE_TYPE_ESSENCE = 8,
+    RESOURCE_TYPE_COUNT = 9,
+};
+
+typedef int32 ResourceType;
+
+typedef int32 MonsterType;
+
+typedef int32 MonsterFamily;
+
+enum {
+    TEAM_INVALID = -1,
+    TEAM_SCENERY = 0,
+    TEAM_NEUTRAL = 1,
+    TEAM_PLAYER_FIRST = 2,
+    TEAM_PLAYER_0 = 2,
+    TEAM_PLAYER_1 = 3,
+    TEAM_PLAYER_2 = 4,
+    TEAM_PLAYER_3 = 5,
+    TEAM_PLAYER_4 = 6,
+    TEAM_PLAYER_5 = 7,
+    TEAM_PLAYER_6 = 8,
+    TEAM_PLAYER_7 = 9,
+    TEAM_PLAYER_LAST = 9,
+    TEAM_MONSTER_FIRST = 10,
+    TEAM_MONSTER_0 = 10,
+    TEAM_MONSTER_1 = 11,
+    TEAM_MONSTER_2 = 12,
+    TEAM_MONSTER_3 = 13,
+    TEAM_MONSTER_LAST = 13,
+    TEAM_MONSTER_FRIEND = 14,
+    TEAM_HATE_ALL_EXCEPT_PLAYERS_FIRST = 15,
+    TEAM_HATE_ALL_EXCEPT_PLAYERS_0 = 15,
+    TEAM_HATE_ALL_EXCEPT_PLAYERS_1 = 16,
+    TEAM_HATE_ALL_EXCEPT_PLAYERS_2 = 17,
+    TEAM_HATE_ALL_EXCEPT_PLAYERS_3 = 18,
+    TEAM_HATE_ALL_EXCEPT_PLAYERS_4 = 19,
+    TEAM_HATE_ALL_EXCEPT_PLAYERS_5 = 20,
+    TEAM_HATE_ALL_EXCEPT_PLAYERS_6 = 21,
+    TEAM_HATE_ALL_EXCEPT_PLAYERS_7 = 22,
+    TEAM_HATE_ALL_EXCEPT_PLAYERS_LAST = 22,
+    TEAM_NUM_TEAMS = 23,
+    TEAM_NUM_MONSTER_TEAMS = 4,
+    TEAM_NUM_PLAYER_TEAMS = 8,
+};
+
+enum {
+    MT_INVALID = -1,
+    MT_UNDEAD = 0,
+    MT_DEMON = 1,
+    MT_BEAST = 2,
+    MT_HUMAN = 3,
+    MT_BREAKABLE = 4,
+    MT_SCENERY = 5,
+    MT_ALLY = 6,
+    MT_TEAM = 7,
+    MT_HELPER = 8,
+    MT_CORRUPTED_ANGEL = 9,
+    MT_PANDEMONIUM = 10,
+    MT_ADRIA = 11,
+    MT_BLOOD_GOLEM = 12,
+    NUM_MONSTER_TYPE = 13,
+};

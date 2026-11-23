@@ -1,0 +1,106 @@
+diff --git a/viking/src/checks.rs b/viking/src/checks.rs
+--- a/viking/src/checks.rs
++++ b/viking/src/checks.rs
+@@ -281,6 +281,21 @@
+         || word & 0xffff_fc1f == 0xd65f_0000
+ }
+ 
++/// BRK has a 16-bit immediate in bits 20:5; every other bit is fixed.
++fn is_brk(word: u32) -> bool {
++    word & 0xffe0_001f == 0xd420_0000
++}
++
++/// Compare the non-relocated bits of B, B.cond and BL.
++fn same_branch_encoding(original: u32, ours: u32) -> bool {
++    let immediate = if original & 0xff00_0010 == 0x5400_0000 {
++        0x00ff_ffe0 // B.cond imm19; retain the condition in bits 3:0.
++    } else {
++        0x03ff_ffff // B / BL imm26.
++    };
++    original & !immediate == ours & !immediate
++}
++
+ impl<'a, 'functions, 'orig_elf, 'decomp_elf>
+     FunctionChecker<'a, 'functions, 'orig_elf, 'decomp_elf>
+ {
+@@ -347,7 +362,7 @@
+                     return Ok(Some(m));
+                 }
+                 let ours = &decomp_fn.code[off..off + 4];
+-                let is_brk = ours[3] == 0xd4 && (ours[2] & 0xe0) == 0x20;
++                let is_brk = is_brk(u32::from_le_bytes(ours.try_into().unwrap()));
+                 if ours != TRAP && !is_brk {
+                     return Ok(Some(Mismatch {
+                         addr_orig: orig_fn.addr + off as u64,
+@@ -378,8 +393,26 @@
+             cs.disasm_iter(&func.code[start..end], func.addr + start as u64)
+         })?;
+ 
+-        // Check every pair of instructions.
+-        while let (Some(i1), Some(i2)) = (instructions.0.next(), instructions.1.next()) {
++        // A decoder stops at unknown words and incomplete trailing instructions.
++        // Require a full pair at every offset, including after embedded traps;
++        // exhausting either iterator early must never count as a match.
++        for off in (start..end).step_by(4) {
++            let mismatch = || Some(Mismatch {
++                addr_orig: orig_fn.addr + off as u64,
++                addr_decomp: decomp_fn.addr + off as u64,
++                cause: MismatchCause::Unknown,
++            });
++            let (Some(i1), Some(i2)) = (instructions.0.next(), instructions.1.next()) else {
++                return Ok(mismatch());
++            };
++            if end - off < 4
++                || i1.bytes().len() != 4
++                || i2.bytes().len() != 4
++                || i1.address() != orig_fn.addr + off as u64
++                || i2.address() != decomp_fn.addr + off as u64
++            {
++                return Ok(mismatch());
++            }
+             let ids = map_two(&i1, &i2, |i| i.id().0);
+             let detail = try_map_two(&i1, &i2, |insn| cs.insn_detail(insn))?;
+             let arch_detail = map_pair(&detail, |d| d.arch_detail());
+@@ -409,6 +442,12 @@
+                     // If we are branching outside the function, this is likely a tail call.
+                     // Treat it as a function call.
+                     if !orig_fn.get_addr_range().contains(&target.0) {
++                        // Only the immediate target may relocate. In particular,
++                        // b.eq and b.ne have the same Capstone instruction ID.
++                        let ours = u32::from_le_bytes(i2.bytes().try_into().unwrap());
++                        if !same_branch_encoding(word, ours) {
++                            return Self::make_mismatch(&i1, &i2, MismatchCause::Unknown);
++                        }
+                         if let Some(mismatch_cause) = self.check_function_call(target.0, target.1) {
+                             return Self::make_mismatch(&i1, &i2, mismatch_cause);
+                         }
+@@ -718,3 +757,29 @@
+         assert!(!is_unconditional(0x9400_0004)); // bl
+     }
+ }
++
++#[cfg(test)]
++mod strict_encoding_tests {
++    use super::{is_brk, same_branch_encoding};
++
++    #[test]
++    fn accepts_only_brk_encodings() {
++        for immediate in 0..=0xffff {
++            assert!(is_brk(0xd420_0000 | (immediate << 5)));
++        }
++        for bit in 0..32 {
++            if (0xffe0_001f & (1u32 << bit)) != 0 {
++                assert!(!is_brk(0xd420_0000 ^ (1u32 << bit)));
++            }
++        }
++    }
++
++    #[test]
++    fn relocated_branches_retain_condition_and_opcode() {
++        assert!(same_branch_encoding(0x5400_0020, 0x54ff_ffe0));
++        assert!(!same_branch_encoding(0x5400_0020, 0x5400_0021));
++        assert!(same_branch_encoding(0x1400_0004, 0x17ff_fffe));
++        assert!(same_branch_encoding(0x9400_0004, 0x97ff_fffe));
++        assert!(!same_branch_encoding(0x1400_0004, 0x9400_0004));
++    }
++}

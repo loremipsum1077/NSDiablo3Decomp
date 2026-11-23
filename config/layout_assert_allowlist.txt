@@ -1,0 +1,98 @@
+# Headers under src/ that define a struct/class/union but carry no layout checks.
+# tools/test_layout_asserts.py fails for any other such header. One path per line,
+# relative to src/, then # and the reason. Remove a line once the header gains checks.
+
+BlizzardCore/Include/Blizzard/Sys/Allocator_STL.h  # class templates only; the DWARF has only their instantiations
+BlizzardCore/Include/Blizzard/Thread.h  # no complete non-template DWARF definition of TLSSlot, TlsSlot
+BlizzardCore/Include/Blizzard/Util.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/DemonWare/bdCore/bdContainers/bdAligned.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/DemonWare/bdCore/bdContainers/bdArray.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/DemonWare/bdCore/bdContainers/bdFastArray.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/DemonWare/bdCore/bdContainers/bdLinkedList.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/DemonWare/bdCore/bdContainers/bdNonce.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/DemonWare/bdCore/bdContainers/bdQueue.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/DemonWare/bdCore/bdReference/bdReference.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/DemonWare/bdCore/bdUtilities/bdFactory.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/DemonWare/bdLobby/bdLobbyCommon/bdStructFixedSizeString.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/DemonWare/bdLobby/bdStorage/bdFileInfo.h  # no complete non-template DWARF definition of bdFileInfo
+Contrib/Contrib/Domino/Common/Platform/dmThreading_Linux.h  # layout differs from the DWARF: dmMutex host pthread_mutex_t: 0x30 here, 0x20 in the DWARF
+Contrib/Contrib/Domino/Common/dmArray.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/Domino/Common/dmPool.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/Domino/Include/dmBuffer.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/OggVorbis/libtheora/include/theora/theora.h  # no complete non-template DWARF definition of theora_colorspace, theora_comment, theora_info, theora_pixelformat, theora_state, yuv_buffer
+Contrib/Contrib/blz/include/blz/algo_memory.h  # no complete non-template DWARF definition of placement_t
+Contrib/Contrib/blz/include/blz/array.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/atomic.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/chained_hash_map.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/chained_hash_set.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/chained_hash_table.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/deque.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/embedded_string.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/external_string.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/func_bind.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/func_hash.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/func_invoke.h  # no complete non-template DWARF definition of is_reference_wrapper
+Contrib/Contrib/blz/include/blz/func_op.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/func_poly.h  # no complete non-template DWARF definition of impl, impl_base
+Contrib/Contrib/blz/include/blz/intrusive_ptr.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/istream.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/iter_insert.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/iter_move.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/iter_reverse.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/limits.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/map.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/mem_alloc.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/ostream.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/queue.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/ref_count_base.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/set.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/sstream.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/streambuf.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/string.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/string_view.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/temp_buffer.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/type_traits.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/unordered_map.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/unordered_set.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/util_int_seq.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/util_pair.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/blz/include/blz/vector.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/lua/src/luaconf.h  # no complete non-template DWARF definition of luai_Cast
+NintendoSDK/Include/nn/util/util_TypedStorage.h  # class templates only; the DWARF has only their instantiations
+X/Client/UISpritePool.h  # class templates only; the DWARF has only their instantiations
+X/Client/UserInterface/UIAnimation.h  # class templates only; the DWARF has only their instantiations
+X/Common/OnlineService/Callback/Callback.h  # class templates only; the DWARF has only their instantiations
+X/Common/OnlineService/Callback/Callback_Impl.h  # class templates only; the DWARF has only their instantiations
+X/Common/OnlineService/LRUCache.h  # class templates only; the DWARF has only their instantiations
+X/Common/OnlineService/SubscriptionEvent.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/BlzExt/fixed_vector.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/ChainedDataArrayTemplated.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XArray.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XBaseArray.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XBaseList.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XBaseListNode.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XBaseMap.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XBinaryHeap.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XBitArray.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XFixedAllocator.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XGrowableArray.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XGrowableList.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XGrowableMap.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XGrowableMapTS.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XList.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XMap.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XMapAssoc.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XOptional.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XPooledAllocator.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XPooledList.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XPooledMap.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XPtr64.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/XRingBuffer.h  # class templates only; the DWARF has only their instantiations
+X/Sigma/DataStructures/stl/checked_delete.h  # class templates only; the DWARF has only their instantiations
+Contrib/Contrib/DemonWare/external/libtomcrypt/upstream-headers/tomcrypt_cipher.h  # pristine upstream header, never edited; the original objects have no DWARF to assert against
+Contrib/Contrib/DemonWare/external/libtomcrypt/upstream-headers/tomcrypt_hash.h  # pristine upstream header, never edited; the original objects have no DWARF to assert against
+Contrib/Contrib/DemonWare/external/libtomcrypt/upstream-headers/tomcrypt_mac.h  # pristine upstream header, never edited; the original objects have no DWARF to assert against
+Contrib/Contrib/DemonWare/external/libtomcrypt/upstream-headers/tomcrypt_math.h  # pristine upstream header, never edited; the original objects have no DWARF to assert against
+Contrib/Contrib/DemonWare/external/libtomcrypt/upstream-headers/tomcrypt_pk.h  # pristine upstream header, never edited; the original objects have no DWARF to assert against
+Contrib/Contrib/DemonWare/external/libtomcrypt/upstream-headers/tomcrypt_prng.h  # pristine upstream header, never edited; the original objects have no DWARF to assert against
+Contrib/Contrib/DemonWare/external/libtommath/tommath.h  # pristine upstream header, never edited; the original objects have no DWARF to assert against

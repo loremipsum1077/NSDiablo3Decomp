@@ -1,0 +1,240 @@
+diff --git a/viking/src/tools/check.rs b/viking/src/tools/check.rs
+index f091160..e2beb43 100644
+--- a/viking/src/tools/check.rs
++++ b/viking/src/tools/check.rs
+@@ -13,7 +13,7 @@ use std::collections::{HashMap, HashSet};
+ use std::env;
+ use std::fs::File;
+ use std::io::{BufRead, BufReader};
+-use std::path::PathBuf;
++use std::path::{Path, PathBuf};
+ use std::process::Command;
+ use std::sync::atomic;
+ use std::sync::Mutex;
+@@ -33,6 +33,13 @@ static GLOBAL: MiMalloc = MiMalloc;
+ #[derive(Default)]
+ struct Args {
+     function: Option<String>,
++    /// A JSON request containing exact {address, name} identities to check.
++    /// This is deliberately separate from the interactive/single-name mode:
++    /// callers using it must have already selected an unambiguous CSV row.
++    batch: Option<PathBuf>,
++    /// Where to write the JSON results for --batch. Keeping machine output out
++    /// of stdout lets diagnostics from ELF/link-map setup remain useful.
++    batch_output: Option<PathBuf>,
+     version: Option<String>,
+     always_diff: bool,
+     warnings_as_errors: bool,
+@@ -41,6 +48,35 @@ struct Args {
+     other_args: Vec<String>,
+ }
+ 
++#[derive(serde::Deserialize)]
++struct BatchRequest {
++    functions: Vec<BatchIdentity>,
++}
++
++#[derive(serde::Deserialize)]
++struct BatchIdentity {
++    address: String,
++    name: String,
++}
++
++#[derive(serde::Serialize)]
++struct BatchResponse {
++    format: u32,
++    results: Vec<BatchResult>,
++}
++
++/// The status names deliberately match verify_all.py's historical result
++/// vocabulary. `reason` is empty for OK, and is a terse checker/load error for
++/// results that could not be compared. Detailed asm diffs are intentionally
++/// not launched here; the authoritative byte comparison is FunctionChecker.
++#[derive(serde::Serialize)]
++struct BatchResult {
++    address: String,
++    name: String,
++    status: String,
++    reason: String,
++}
++
+ impl Args {
+     fn get_version(&self) -> Option<&str> {
+         self.version.as_deref()
+@@ -106,7 +142,13 @@ fn main() -> Result<()> {
+     )
+     .context("failed to construct FunctionChecker")?;
+ 
+-    if let Some(func) = &args.function {
++    if let Some(batch) = &args.batch {
++        let output = args
++            .batch_output
++            .as_deref()
++            .context("--batch requires --batch-output")?;
++        check_batch(&checker, &functions, batch, output, version)?;
++    } else if let Some(func) = &args.function {
+         check_single(&checker, &functions, &all_functions, func, &args)?;
+     } else {
+         check_all(&checker, &functions, &args)?;
+@@ -127,6 +169,12 @@ fn parse_args() -> Result<Args, lexopt::Error> {
+             Long("version") => {
+                 args.version = Some(parser.value()?.into_string()?);
+             }
++            Long("batch") => {
++                args.batch = Some(parser.value()?.into());
++            }
++            Long("batch-output") => {
++                args.batch_output = Some(parser.value()?.into());
++            }
+             Long("always-diff") => {
+                 args.always_diff = true;
+             }
+@@ -163,6 +211,17 @@ fn parse_args() -> Result<Args, lexopt::Error> {
+         }
+     }
+ 
++    if args.batch.is_some() && args.function.is_some() {
++        return Err(lexopt::Error::Custom(
++            "--batch cannot be combined with a function name".into(),
++        ));
++    }
++    if args.batch_output.is_some() && args.batch.is_none() {
++        return Err(lexopt::Error::Custom(
++            "--batch-output requires --batch".into(),
++        ));
++    }
++
+     Ok(args)
+ }
+ 
+@@ -177,6 +236,8 @@ optional arguments:
+ 
+  -h, --help             Show this help message and exit
+  --version VERSION      Check the function against version VERSION of the game elf
++ --batch REQUEST.json --batch-output RESULT.json
++                        Check explicit {{address,name}} identities after loading both ELFs once
+  --always-diff          Show an assembly diff, even if the function matches
+  --warnings-as-errors   Errors instead of printing a warning if a function can't be checked (mainly for CI)
+  --check-mismatch-comments   Checks that all mismatching functions have a NON_MATCHING comment with a decomp.me link above them
+@@ -426,2 +487,121 @@ fn check_single(
+     Ok(())
+ }
++
++/// Check a list selected by the caller's CSV identities.  Unlike check_single,
++/// this never fuzzy-searches or prompts: accepting a partial name here would
++/// make a bulk gate capable of checking the wrong duplicate/overload.
++///
++/// FunctionChecker and all of its ELF, symbol, PLT, and global-data inputs are
++/// constructed by main before this runs.  Status changes are accumulated and
++/// written once, so a batch has the same promotion semantics as individual
++/// `check NAME` calls without the lost-update race of multiple processes.
++fn check_batch(
++    checker: &FunctionChecker,
++    functions: &[functions::Info],
++    request_path: &Path,
++    output_path: &Path,
++    version: Option<&str>,
++) -> Result<()> {
++    let request_text = std::fs::read_to_string(request_path)
++        .with_context(|| format!("failed to read batch request {}", request_path.display()))?;
++    let request: BatchRequest = serde_json::from_str(&request_text)
++        .with_context(|| format!("failed to parse batch request {}", request_path.display()))?;
++
++    let by_addr: HashMap<u64, &functions::Info> = functions
++        .iter()
++        .map(|function| (function.addr, function))
++        .collect();
++    let mut changed_statuses = HashMap::new();
++    let mut cs = make_cs()?;
++    let mut results = Vec::with_capacity(request.functions.len());
++
++    for identity in request.functions {
++        let mut result = BatchResult {
++            address: identity.address.clone(),
++            name: identity.name.clone(),
++            status: "not-checkable".to_string(),
++            reason: String::new(),
++        };
++
++        let addr = match functions::parse_address(&identity.address) {
++            Ok(addr) => addr,
++            Err(error) => {
++                result.reason = format!("invalid address: {error}");
++                results.push(result);
++                continue;
++            }
++        };
++        let Some(function) = by_addr.get(&addr).copied() else {
++            result.reason = "address is not present in functions.csv".to_string();
++            results.push(result);
++            continue;
++        };
++        if function.name != identity.name {
++            result.reason = format!(
++                "identity name disagrees with functions.csv (expected {:?})",
++                function.name
++            );
++            results.push(result);
++            continue;
++        }
++        if matches!(function.status, Status::Library) {
++            result.reason = "L functions should not be decompiled".to_string();
++            results.push(result);
++            continue;
++        }
++
++        let decomp_fn = match elf::get_function_by_name(
++            checker.decomp_elf,
++            checker.decomp_symtab,
++            function.name.as_str(),
++        ) {
++            Ok(function) => function,
++            Err(error) => {
++                result.reason = error.to_string();
++                results.push(result);
++                continue;
++            }
++        };
++        let orig_fn = match elf::get_function(checker.orig_elf, function.addr, function.size as u64)
++        {
++            Ok(function) => function,
++            Err(error) => {
++                result.reason = error.to_string();
++                results.push(result);
++                continue;
++            }
++        };
++
++        match checker.check(&mut cs, &orig_fn, &decomp_fn) {
++            Ok(None) => {
++                result.status = "ok".to_string();
++                if function.status != Status::Matching {
++                    changed_statuses.insert(function.addr, Status::Matching);
++                }
++            }
++            Ok(Some(mismatch)) => {
++                result.status = "mismatch".to_string();
++                result.reason = mismatch.to_string();
++                if function.status == Status::NotDecompiled {
++                    changed_statuses.insert(function.addr, Status::Wip);
++                }
++            }
++            Err(error) => {
++                result.reason = format!("checking {}: {error}", function.name);
++            }
++        }
++        results.push(result);
++    }
++
++    // This is intentionally after every comparison and before publishing the
++    // response. A successful response therefore describes the same CSV state
++    // that individual check_single calls would have left behind.
++    update_function_statuses(functions, &changed_statuses, version)
++        .context("failed to update function statuses after batch check")?;
++
++    let response = BatchResponse { format: 1, results };
++    let encoded = serde_json::to_vec_pretty(&response).context("failed to encode batch results")?;
++    std::fs::write(output_path, encoded)
++        .with_context(|| format!("failed to write batch result {}", output_path.display()))?;
++    Ok(())
++}

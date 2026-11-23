@@ -1,0 +1,679 @@
+diff --git a/viking/src/checks.rs b/viking/src/checks.rs
+--- a/viking/src/checks.rs
++++ b/viking/src/checks.rs
+@@ -8,6 +8,9 @@
+ use std::path::{Path, PathBuf};
+ 
+ use crate::{capstone_utils::*, elf, functions, repo, ui};
++
++#[path = "jump_tables.rs"]
++mod jump_tables;
+ 
+ struct DataSymbol {
+     /// Address of the symbol in the original executable.
+@@ -137,6 +140,7 @@
+     FunctionCall(ReferenceDiff),
+     DataReference(ReferenceDiff),
+     Immediate,
++    JumpTable(&'static str),
+     PairEncoding,
+     PairEvidence(&'static str),
+     Unknown,
+@@ -153,6 +157,7 @@
+             Self::FunctionCall(diff) => write!(f, "wrong function call\n{diff}"),
+             Self::DataReference(diff) => write!(f, "wrong data reference\n{diff}"),
+             Self::Immediate => write!(f, "wrong immediate"),
++            Self::JumpTable(reason) => write!(f, "unproven jump table: {reason}"),
+             Self::PairEncoding => write!(
+                 f,
+                 "instruction differs outside a supported relocation immediate"
+@@ -194,6 +199,7 @@
+     known_data_symbols: KnownDataSymbolMap,
+     known_functions: FxHashMap<u64, &'functions functions::Info>,
+ 
++    table_map: Option<jump_tables::TableMap>,
+     pub orig_elf: &'orig_elf elf::OwnedElf,
+     orig_got_section: Option<&'orig_elf goblin::elf::SectionHeader>,
+ }
+@@ -210,6 +216,7 @@
+     adrp_pair_registers: HashSet<cs::RegId>,
+     entries: HashMap<u64, PairSnapshot>,
+     unsupported_flow: bool,
++    table_error: Option<(usize, &'static str)>,
+ }
+ 
+ impl State {
+@@ -255,6 +262,7 @@
+ struct FlowNode {
+     successors: Vec<usize>,
+     killed: HashSet<u8>,
++    zeroed: HashSet<u8>,
+     generated: Option<(cs::RegId, (u64, u64))>,
+     unknown_successors: bool,
+ }
+@@ -263,6 +271,7 @@
+     cs: &cs::Capstone,
+     original: &elf::Function,
+     rebuilt: &elf::Function,
++    table_map: Option<&jump_tables::TableMap>,
+ ) -> Result<State> {
+     let count = original.code.len() / 4;
+     let mut nodes: Vec<FlowNode> = (0..count).map(|_| FlowNode::default()).collect();
+@@ -292,6 +301,9 @@
+             for &reg in detail.regs_write() {
+                 if let Some(number) = gpr_number(cs, reg) {
+                     node.killed.insert(number);
++                    if cs.reg_name(reg).map_or(false, |name| name.starts_with('w')) {
++                        node.zeroed.insert(number);
++                    }
+                 }
+             }
+         }
+@@ -335,6 +347,12 @@
+             node.successors.push(index + 1);
+         }
+     }
++    if let Some(table_error) = jump_tables::resolve(original, rebuilt, &mut nodes, table_map) {
++        return Ok(State {
++            table_error: Some(table_error),
++            ..State::default()
++        });
++    }
+     let mut entries: Vec<Option<PairSnapshot>> = vec![None; count];
+     let mut work = VecDeque::new();
+     if count > 0 {
+@@ -451,6 +469,7 @@
+         let orig_got_section = elf::find_section(orig_elf, ".got").ok();
+ 
+         Ok(FunctionChecker {
++            table_map: jump_tables::TableMap::load(decomp_elf, version),
+             decomp_elf,
+             decomp_symtab,
+             decomp_glob_data_table,
+@@ -479,7 +498,14 @@
+             }));
+         }
+ 
+-        let mut state = pair_flow(cs, orig_fn, decomp_fn)?;
++        let mut state = pair_flow(cs, orig_fn, decomp_fn, self.table_map.as_ref())?;
++        if let Some((offset, reason)) = state.table_error {
++            return Ok(Some(Mismatch {
++                addr_orig: orig_fn.addr + offset as u64 * 4,
++                addr_decomp: decomp_fn.addr + offset as u64 * 4,
++                cause: MismatchCause::JumpTable(reason),
++            }));
++        }
+ 
+         // The NX clang fork is built with `-mllvm -trap-unreachable`: every
+         // noreturn call is followed by `udf #0xdefe` (0xe7ffdefe), which
+@@ -745,8 +771,11 @@
+             .filter(|sym| sym.st_type() == goblin::elf::sym::STT_FUNC)
+             .map(|sym| sym.st_value)
+             .or_else(|| {
+-                if elf::has_defined_symbol(self.decomp_elf, name) { None }
+-                else { elf::plt_name_to_addr(self.decomp_elf, name) }
++                if elf::has_defined_symbol(self.decomp_elf, name) {
++                    None
++                } else {
++                    elf::plt_name_to_addr(self.decomp_elf, name)
++                }
+             })
+         else {
+             let actual_symbol_name = self.translate_decomp_addr_to_name(decomp_addr);
+diff --git a/viking/src/elf.rs b/viking/src/elf.rs
+--- a/viking/src/elf.rs
++++ b/viking/src/elf.rs
+@@ -444,7 +444,7 @@
+     map_sha256: String,
+ }
+ 
+-fn verify_link_map_provenance(elf: &OwnedElf, path: &Path, map: &[u8]) -> Result<()> {
++pub(crate) fn verify_link_map_provenance(elf: &OwnedElf, path: &Path, map: &[u8]) -> Result<()> {
+     let receipt_path = PathBuf::from(format!("{}.provenance", path.display()));
+     let receipt: LinkMapProvenance = serde_json::from_slice(
+         &std::fs::read(&receipt_path).with_context(|| format!("missing link provenance {}; relink", receipt_path.display()))?
+diff --git a/viking/src/jump_tables.rs b/viking/src/jump_tables.rs
+new file mode 100644
+--- /dev/null
++++ b/viking/src/jump_tables.rs
+@@ -0,0 +1,540 @@
++//! Bounded R1 proof: signed word tables with a dominating unsigned guard.
++//! Inputs are the live ELF/map artifacts, never the offline audit's cached claims.
++use super::{direct_branch_target, elf, FlowNode};
++use std::collections::HashSet;
++
++struct InputSection {
++    addr: u64,
++    size: u64,
++    object: String,
++    name: String,
++}
++
++pub(super) struct TableMap {
++    symbols: Vec<elf::LinkMapSymbol>,
++    sections: Vec<InputSection>,
++}
++
++impl TableMap {
++    pub(super) fn load(image: &elf::OwnedElf, version: Option<&str>) -> Option<Self> {
++        let path = elf::link_map_path(version).ok()?;
++        let text = std::fs::read_to_string(&path).ok()?;
++        elf::verify_link_map_provenance(image, &path, text.as_bytes()).ok()?;
++        let symbols = elf::parse_link_map(&text).ok()?;
++        let header = text.lines().find(|line| {
++            line.contains("Symbol") && line.contains(" In ") && line.contains("Out")
++        })?;
++        let cols: Vec<_> = header.split_whitespace().collect();
++        let numeric = cols.iter().position(|&c| c == "Out")?;
++        let size_col = cols.iter().position(|&c| c == "Size")?;
++        let col_in = header.find("In")?;
++        let col_symbol = header.find("Symbol")?;
++        let mut sections = Vec::new();
++        for line in text.lines() {
++            let tokens: Vec<_> = line.split_whitespace().collect();
++            if tokens.len() <= numeric {
++                continue;
++            }
++            let mut rest = line;
++            let mut offset = 0;
++            for _ in 0..numeric {
++                let leading = rest.len() - rest.trim_start().len();
++                offset += leading;
++                rest = rest.trim_start();
++                let token = rest.split_whitespace().next()?;
++                offset += token.len();
++                rest = &rest[token.len()..];
++            }
++            offset += rest.len() - rest.trim_start().len();
++            if offset < col_in || offset >= col_symbol {
++                continue;
++            }
++            let Some((object, section)) = rest.trim().rsplit_once(":(") else {
++                continue;
++            };
++            let Some(name) = section.strip_suffix(')') else {
++                continue;
++            };
++            let (Ok(addr), Ok(size)) = (
++                u64::from_str_radix(tokens[0].trim_start_matches("0x"), 16),
++                u64::from_str_radix(tokens[size_col].trim_start_matches("0x"), 16),
++            ) else {
++                continue;
++            };
++            sections.push(InputSection {
++                addr,
++                size,
++                object: object.into(),
++                name: name.into(),
++            });
++        }
++        Some(Self { symbols, sections })
++    }
++
++    fn owns(&self, function: &elf::Function, table: u64, size: u64) -> bool {
++        let Ok(strings) = elf::SymbolStringTable::from_elf(function.owner_elf) else {
++            return false;
++        };
++        let names: HashSet<_> = function
++            .owner_elf
++            .syms
++            .iter()
++            .filter(|s| {
++                s.st_type() == goblin::elf::sym::STT_FUNC
++                    && s.st_value == function.addr
++                    && s.st_size == function.code.len() as u64
++            })
++            .map(|s| strings.get_string(s.st_name))
++            .collect();
++        let definitions: Vec<_> = self
++            .symbols
++            .iter()
++            .filter(|symbol| {
++                symbol.addr == function.addr
++                    && symbol.size == function.code.len() as u64
++                    && names.contains(symbol.name.as_str())
++            })
++            .collect();
++        let owners: HashSet<_> = definitions.iter().map(|s| s.object.as_str()).collect();
++        if owners.len() != 1 {
++            return false;
++        }
++        let Some(end) = table.checked_add(size) else {
++            return false;
++        };
++        self.sections.iter().any(|section| {
++            owners.contains(section.object.as_str())
++                && section.addr <= table
++                && section
++                    .addr
++                    .checked_add(section.size)
++                    .map_or(false, |limit| end <= limit)
++                && definitions
++                    .iter()
++                    .any(|s| section.name == format!(".rodata.{}", s.name))
++        })
++    }
++}
++
++#[derive(Clone, Copy)]
++enum Value {
++    Unknown,
++    Zero32,
++    Bounded(bool),
++    Page(u64),
++    Address(u64),
++}
++
++fn words(function: &elf::Function) -> Vec<u32> {
++    function
++        .code
++        .chunks_exact(4)
++        .map(|bytes| u32::from_le_bytes(bytes.try_into().unwrap()))
++        .collect()
++}
++
++fn step(values: &mut [Value; 31], word: u32, addr: u64, node: &FlowNode) {
++    let old = *values;
++    for &reg in &node.killed {
++        if reg < 31 {
++            values[reg as usize] = if node.zeroed.contains(&reg) {
++                Value::Zero32
++            } else {
++                Value::Unknown
++            };
++        }
++    }
++    let rd = (word & 31) as usize;
++    let rn = ((word >> 5) & 31) as usize;
++    let rm = ((word >> 16) & 31) as usize;
++    if rd == 31 {
++        return;
++    }
++    if word & 0x9f00_0000 == 0x9000_0000 {
++        let immediate = (((word >> 5) & 0x7ffff) << 2) | ((word >> 29) & 3);
++        let signed = ((immediate << 11) as i32 >> 11) as i64;
++        if let Some(page) = (addr & !0xfff).checked_add_signed(signed * 4096) {
++            values[rd] = Value::Page(page);
++        }
++    } else if word & 0xffc0_0000 == 0x9100_0000 && rn < 31 {
++        if let Value::Page(page) = old[rn] {
++            if let Some(address) = page.checked_add(((word >> 10) & 0xfff) as u64) {
++                values[rd] = Value::Address(address);
++            }
++        }
++    } else if word & 0xffe0_ffe0 == 0x2a00_03e0 && rm < 31 {
++        values[rd] = match old[rm] {
++            Value::Bounded(_) => Value::Bounded(true),
++            _ => Value::Zero32,
++        };
++    } else if word & 0xffe0_ffe0 == 0xaa00_03e0 && rm < 31 {
++        values[rd] = old[rm];
++    }
++}
++
++#[derive(Clone)]
++struct Proof {
++    targets: Vec<usize>,
++    table: u64,
++    count: usize,
++}
++
++// Structural recognition is deliberately narrow. Other branch expressions remain
++// unresolved, including absolute pointer loads and all tail-call hypotheses.
++fn shape(code: &[u32], branch: usize) -> Option<(usize, usize)> {
++    if branch < 2 {
++        return None;
++    }
++    let br = code[branch];
++    let add = code[branch - 1];
++    let load = code[branch - 2];
++    if br & 0xffff_fc1f != 0xd61f_0000
++        || add & 0xffe0_fc00 != 0x8b00_0000
++        || load & 0xffe0_fc00 != 0xb8a0_7800
++    {
++        return None;
++    }
++    let target = ((br >> 5) & 31) as usize;
++    let entry = (load & 31) as usize;
++    let base = ((load >> 5) & 31) as usize;
++    if target == 31
++        || entry == 31
++        || base == 31
++        || entry == base
++        || (add & 31) as usize != target
++        || ((add >> 5) & 31) as usize != entry
++        || ((add >> 16) & 31) as usize != base
++    {
++        return None;
++    }
++    Some((base, ((load >> 16) & 31) as usize))
++}
++
++fn predecessors(nodes: &[FlowNode]) -> Vec<Vec<usize>> {
++    let mut incoming = vec![Vec::new(); nodes.len()];
++    for (source, node) in nodes.iter().enumerate() {
++        for &target in &node.successors {
++            if target < incoming.len() && !incoming[target].contains(&source) {
++                incoming[target].push(source);
++            }
++        }
++    }
++    incoming
++}
++
++fn table_targets(function: &elf::Function, table: u64, count: usize) -> Option<Vec<usize>> {
++    let size = (count as u64).checked_mul(4)?;
++    let end = table.checked_add(size)?;
++    let section = function.owner_elf.section_headers.iter().find(|section| {
++        section.sh_type == goblin::elf::section_header::SHT_PROGBITS
++            && section.sh_flags & goblin::elf::section_header::SHF_ALLOC as u64 != 0
++            && section.sh_flags
++                & (goblin::elf::section_header::SHF_WRITE
++                    | goblin::elf::section_header::SHF_EXECINSTR) as u64
++                == 0
++            && section.sh_addr <= table
++            && section
++                .sh_addr
++                .checked_add(section.sh_size)
++                .map_or(false, |limit| end <= limit)
++    })?;
++    // File bytes are not a proof of runtime entries when the loader may rewrite
++    // this section. Reject even adjacent relocations rather than guessing widths.
++    let section_end = section.sh_addr.checked_add(section.sh_size)?;
++    if function
++        .owner_elf
++        .dynrelas
++        .iter()
++        .chain(function.owner_elf.dynrels.iter())
++        .chain(function.owner_elf.pltrelocs.iter())
++        .any(|reloc| {
++            section.sh_addr.saturating_sub(16) <= reloc.r_offset && reloc.r_offset < section_end
++        })
++    {
++        return None;
++    }
++    // Some minimal images expose relocation sections without PT_DYNAMIC.
++    // Inspect those too, and reject packed RELR rather than guessing its writes.
++    for relocation_section in &function.owner_elf.section_headers {
++        let width = match relocation_section.sh_type {
++            4 => 24,                                              // SHT_RELA, ELF64
++            9 => 16,                                              // SHT_REL, ELF64
++            19 if relocation_section.sh_size != 0 => return None, // SHT_RELR
++            _ => continue,
++        };
++        if relocation_section.sh_size == 0 {
++            continue;
++        }
++        if relocation_section.sh_entsize != width || relocation_section.sh_size % width != 0 {
++            return None;
++        }
++        let start = usize::try_from(relocation_section.sh_offset).ok()?;
++        let end = usize::try_from(
++            relocation_section
++                .sh_offset
++                .checked_add(relocation_section.sh_size)?,
++        )
++        .ok()?;
++        for relocation in function
++            .owner_elf
++            .as_owner()
++            .1
++            .get(start..end)?
++            .chunks_exact(width as usize)
++        {
++            let target = u64::from_le_bytes(relocation[..8].try_into().ok()?);
++            if section.sh_addr.saturating_sub(16) <= target && target < section_end {
++                return None;
++            }
++        }
++    }
++    if function
++        .owner_elf
++        .dynamic
++        .as_ref()
++        .map_or(false, |dynamic| {
++            dynamic
++                .dyns
++                .iter()
++                .any(|entry| entry.d_tag == 36 && entry.d_val != 0)
++        })
++    {
++        // DT_RELR
++        return None;
++    }
++    let offset = section
++        .sh_offset
++        .checked_add(table.checked_sub(section.sh_addr)?)?;
++    // Require section bytes to match the wholly file-backed loader mapping.
++    let mappings: Vec<_> = function
++        .owner_elf
++        .program_headers
++        .iter()
++        .filter(|segment| {
++            segment.p_type == goblin::elf::program_header::PT_LOAD
++                && segment.p_vaddr <= table
++                && segment
++                    .p_vaddr
++                    .checked_add(segment.p_filesz)
++                    .map_or(false, |limit| end <= limit)
++        })
++        .collect();
++    if mappings.len() != 1
++        || mappings[0].p_flags & goblin::elf::program_header::PF_W != 0
++        || mappings[0]
++            .p_offset
++            .checked_add(table.checked_sub(mappings[0].p_vaddr)?)?
++            != offset
++    {
++        return None;
++    }
++    let bytes = function
++        .owner_elf
++        .as_owner()
++        .1
++        .get(usize::try_from(offset).ok()?..usize::try_from(offset.checked_add(size)?).ok()?)?;
++    bytes
++        .chunks_exact(4)
++        .map(|entry| {
++            let target =
++                table.checked_add_signed(i32::from_le_bytes(entry.try_into().ok()?) as i64)?;
++            if !function.get_addr_range().contains(&target) || (target - function.addr) % 4 != 0 {
++                return None;
++            }
++            Some(((target - function.addr) / 4) as usize)
++        })
++        .collect()
++}
++
++fn prove(
++    function: &elf::Function,
++    code: &[u32],
++    nodes: &[FlowNode],
++    incoming: &[Vec<usize>],
++    branch: usize,
++) -> Option<Proof> {
++    let (base, index) = shape(code, branch)?;
++    if index == 31 {
++        return None;
++    }
++    let load = branch - 2;
++    // Search one adjacent CMP/B.HI or CMP/B.LS guard. No union-of-guards,
++    // flag-neutral gaps, loop-carried copies or arbitrary reaching definitions.
++    for guard in (1..load).rev().take(128) {
++        let condition = code[guard];
++        let cmp = code[guard - 1];
++        if cmp & 0xffc0_001f != 0x7100_001f
++            || condition & 0xff00_001f != 0x5400_0008 && condition & 0xff00_001f != 0x5400_0009
++        {
++            continue;
++        }
++        if incoming[guard] != [guard - 1] {
++            continue;
++        }
++        let cmp_reg = ((cmp >> 5) & 31) as usize;
++        if cmp_reg == 31 {
++            continue;
++        }
++        let count = ((cmp >> 10) & 0xfff) as usize + 1;
++        if count > 4096 {
++            continue;
++        }
++        let destination = direct_branch_target(condition, function.addr + guard as u64 * 4)?;
++        let start = if condition & 15 == 8 {
++            guard + 1
++        } else {
++            if !function.get_addr_range().contains(&destination)
++                || (destination - function.addr) % 4 != 0
++            {
++                continue;
++            }
++            ((destination - function.addr) / 4) as usize
++        };
++        if start <= guard
++            || start > load
++            || (condition & 15 == 8 && destination == function.addr + start as u64 * 4)
++            || (condition & 15 == 9 && start == guard + 1)
++        {
++            continue;
++        }
++        // Every edge into the guarded suffix is either the proving edge itself
++        // or its unique fallthrough predecessor. Recheck after adding tables.
++        if incoming[start] != [guard] || (start + 1..=branch).any(|at| incoming[at] != [at - 1]) {
++            continue;
++        }
++        if (start..branch).any(|at| nodes[at].successors != [at + 1]) {
++            continue;
++        }
++        let mut begin = guard - 1;
++        for _ in 0..128 {
++            if begin == 0
++                || incoming[begin] != [begin - 1]
++                || nodes[begin - 1].successors != [begin]
++            {
++                break;
++            }
++            begin -= 1;
++        }
++        let mut values = [Value::Unknown; 31];
++        for at in begin..guard - 1 {
++            step(
++                &mut values,
++                code[at],
++                function.addr + at as u64 * 4,
++                &nodes[at],
++            );
++        }
++        let zeroed = matches!(values[cmp_reg], Value::Zero32 | Value::Bounded(true));
++        values[cmp_reg] = Value::Bounded(zeroed);
++        for at in start..load {
++            step(
++                &mut values,
++                code[at],
++                function.addr + at as u64 * 4,
++                &nodes[at],
++            );
++        }
++        if !matches!(values[index], Value::Bounded(true)) {
++            continue;
++        }
++        let Value::Address(table) = values[base] else {
++            continue;
++        };
++        if let Some(targets) = table_targets(function, table, count) {
++            return Some(Proof {
++                targets,
++                table,
++                count,
++            });
++        }
++    }
++    None
++}
++
++/// Returns a reachable table failure, or installs independently proved local
++/// successors. Unknown non-table BR nodes stay unknown and preserve F02 policy.
++pub(super) fn resolve(
++    original: &elf::Function,
++    rebuilt: &elf::Function,
++    nodes: &mut [FlowNode],
++    map: Option<&TableMap>,
++) -> Option<(usize, &'static str)> {
++    let left = words(original);
++    let right = words(rebuilt);
++    let incoming = predecessors(nodes);
++    let mut candidates = Vec::new();
++    for branch in 0..nodes.len() {
++        if shape(&left, branch).is_none() && shape(&right, branch).is_none() {
++            continue;
++        }
++        let result = (|| {
++            let a = prove(original, &left, nodes, &incoming, branch).ok_or(
++                "original jump table lacks a supported guard, base or readable target list",
++            )?;
++            let b = prove(rebuilt, &right, nodes, &incoming, branch).ok_or(
++                "rebuilt jump table lacks a supported guard, base or readable target list",
++            )?;
++            if a.count != b.count || a.targets != b.targets {
++                return Err("jump-table function-relative target lists differ");
++            }
++            if !map.map_or(false, |map| map.owns(rebuilt, b.table, b.count as u64 * 4)) {
++                return Err("jump table lacks verified owner input-section provenance");
++            }
++            Ok(a)
++        })();
++        if let Ok(proof) = &result {
++            nodes[branch].successors = proof.targets.clone();
++            nodes[branch].unknown_successors = false;
++        }
++        candidates.push((branch, result));
++    }
++    // New edges may bypass a guard or overwrite a base. No optimistic table
++    // proof survives without a second proof against the complete proposed CFG.
++    let incoming = predecessors(nodes);
++    for (branch, result) in &mut candidates {
++        if result.is_ok() {
++            let a = prove(original, &left, nodes, &incoming, *branch);
++            let b = prove(rebuilt, &right, nodes, &incoming, *branch);
++            if a.as_ref().map(|p| &p.targets) != result.as_ref().ok().map(|p| &p.targets)
++                || b.as_ref().map(|p| &p.targets) != result.as_ref().ok().map(|p| &p.targets)
++            {
++                *result =
++                    Err("jump-table proof depends on a bypassed guard or unsupported cyclic flow");
++                // Keep proposed edges for reachability of failures, but the
++                // resulting function can never be accepted if this is reached.
++                nodes[*branch].unknown_successors = true;
++            }
++        }
++    }
++    let mut reached = vec![false; nodes.len()];
++    let mut work = if nodes.is_empty() { vec![] } else { vec![0] };
++    while let Some(at) = work.pop() {
++        if reached[at] {
++            continue;
++        }
++        reached[at] = true;
++        work.extend(nodes[at].successors.iter().copied());
++    }
++    if let Some((table, _)) = candidates
++        .iter()
++        .find(|(at, result)| reached[*at] && result.is_ok())
++    {
++        if nodes
++            .iter()
++            .enumerate()
++            .any(|(at, node)| reached[at] && node.unknown_successors)
++        {
++            return Some((
++                *table,
++                "jump-table guard cannot be proved with unresolved indirect predecessors",
++            ));
++        }
++    }
++    candidates.into_iter().find_map(|(at, result)| {
++        if reached[at] {
++            result.err().map(|reason| (at, reason))
++        } else {
++            None
++        }
++    })
++}

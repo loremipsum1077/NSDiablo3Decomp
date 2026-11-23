@@ -1,0 +1,166 @@
+diff --git a/viking/src/checks.rs b/viking/src/checks.rs
+--- a/viking/src/checks.rs
++++ b/viking/src/checks.rs
+@@ -139,6 +139,7 @@
+     BranchTarget,
+     FunctionCall(ReferenceDiff),
+     DataReference(ReferenceDiff),
++    GotEvidence(String),
+     Immediate,
+     JumpTable(&'static str),
+     PairEncoding,
+@@ -156,6 +157,7 @@
+             Self::BranchTarget => write!(f, "wrong branch target"),
+             Self::FunctionCall(diff) => write!(f, "wrong function call\n{diff}"),
+             Self::DataReference(diff) => write!(f, "wrong data reference\n{diff}"),
++            Self::GotEvidence(reason) => write!(f, "unverified GOT reference: {reason}"),
+             Self::Immediate => write!(f, "wrong immediate"),
+             Self::JumpTable(reason) => write!(f, "unproven jump table: {reason}"),
+             Self::PairEncoding => write!(
+@@ -190,7 +192,8 @@
+ pub struct FunctionChecker<'a, 'functions, 'orig_elf, 'decomp_elf> {
+     pub decomp_elf: &'decomp_elf elf::OwnedElf,
+     pub decomp_symtab: &'a elf::SymbolTableByName<'decomp_elf>,
+-    decomp_glob_data_table: elf::GlobDataTable,
++    orig_got_targets: elf::GotTargets,
++    decomp_got_targets: elf::GotTargets,
+     decomp_plt_section: Option<&'decomp_elf goblin::elf::SectionHeader>,
+ 
+     // Optional, only initialized when a mismatch is detected.
+@@ -456,7 +459,7 @@
+         orig_elf: &'orig_elf elf::OwnedElf,
+         decomp_elf: &'decomp_elf elf::OwnedElf,
+         decomp_symtab: &'a elf::SymbolTableByName<'decomp_elf>,
+-        decomp_glob_data_table: elf::GlobDataTable,
++        _decomp_glob_data_table: elf::GlobDataTable,
+         functions: &'functions [functions::Info],
+         version: Option<&str>,
+     ) -> Result<Self> {
+@@ -472,7 +475,8 @@
+             table_map: jump_tables::TableMap::load(decomp_elf, version),
+             decomp_elf,
+             decomp_symtab,
+-            decomp_glob_data_table,
++            orig_got_targets: elf::build_got_targets(orig_elf)?,
++            decomp_got_targets: elf::build_got_targets(decomp_elf)?,
+             decomp_plt_section,
+             decomp_addr_to_name_map: Lazy::new(),
+ 
+@@ -841,20 +845,46 @@
+         orig_addr_ptr: u64,
+         decomp_addr_ptr: u64,
+     ) -> Option<MismatchCause> {
++        // Non-GOT references retain the separate P19-F01 policy. Once the
++        // original slot is recognized as GOT, absence of proof is a mismatch.
+         if !elf::is_in_section(self.orig_got_section?, orig_addr_ptr, 8) {
+             return None;
+         }
+-
+-        let orig_addr = u64::from_le_bytes(
+-            elf::get_elf_bytes(self.orig_elf, orig_addr_ptr, 8)
+-                .ok()?
+-                .try_into()
+-                .ok()?,
+-        );
+-
+-        let data_symbol = self.known_data_symbols.get_symbol(orig_addr)?;
+-        let decomp_addr = *self.decomp_glob_data_table.get(&decomp_addr_ptr)?;
+-        self.check_data_symbol_ex(orig_addr, decomp_addr, data_symbol)
++        let verify = || -> std::result::Result<(), String> {
++            let original = self.orig_got_targets.get(&orig_addr_ptr)
++                .ok_or("original GOT slot has no supported relocation")?
++                .as_ref().map_err(|e| format!("original {e}"))?;
++            let rebuilt = self.decomp_got_targets.get(&decomp_addr_ptr)
++                .ok_or("rebuilt GOT slot has no supported relocation")?
++                .as_ref().map_err(|e| format!("rebuilt {e}"))?;
++            // Preserve an interior offset where the existing data map has range
++            // evidence; exact bases also work for zero-sized definitions. Do not
++            // choose arbitrarily among overlapping/aliased original identities.
++            let mut candidates = self.known_data_symbols.symbols.iter().filter(|symbol| {
++                original.address == symbol.addr || original.address.checked_sub(symbol.addr)
++                    .map_or(false, |offset| offset < symbol.size)
++            });
++            let symbol = candidates.next().ok_or("original GOT target lacks known data identity")?;
++            if candidates.next().is_some() {
++                return Err("original GOT target has ambiguous data identity".into());
++            }
++            if original.symbol_name.as_ref().map_or(false, |name| name != &symbol.name) {
++                return Err("original GOT relocation disagrees with data identity".into());
++            }
++            if rebuilt.symbol_name.as_ref().map_or(false, |name| name != &symbol.name) {
++                return Err(format!("rebuilt GOT target identity differs from {}", symbol.name));
++            }
++            let target = self.decomp_symtab.get(symbol.name.as_str())
++                .ok_or("known GOT target is missing from rebuilt symbols")?;
++            let offset = original.address - symbol.addr;
++            let expected = target.st_value.checked_add(offset).ok_or("GOT target offset overflow")?;
++            if rebuilt.address != expected {
++                return Err(format!("GOT target or interior offset differs for {}: expected {:#x}, got {:#x}",
++                    symbol.name, expected, rebuilt.address));
++            }
++            Ok(())
++        };
++        verify().err().map(MismatchCause::GotEvidence)
+     }
+ 
+     fn make_mismatch(
+diff --git a/viking/src/elf.rs b/viking/src/elf.rs
+--- a/viking/src/elf.rs
++++ b/viking/src/elf.rs
+@@ -713,3 +713,56 @@
+         .get_at(elf.dynsyms.get(reloc.r_sym)?.st_name)?;
+     Some(name)
+ }
++
++/// Relocation-backed GOT evidence. Invalid/duplicate relocations remain visible
++/// rather than being silently omitted and mistaken for an unchecked reference.
++pub struct GotTarget {
++    pub address: u64,
++    pub symbol_name: Option<String>,
++}
++
++pub type GotTargets = FxHashMap<u64, std::result::Result<GotTarget, String>>;
++
++pub fn build_got_targets(elf: &OwnedElf) -> Result<GotTargets> {
++    let mut targets = GotTargets::default();
++    let Ok(got) = find_section(elf, ".got") else { return Ok(targets); };
++    let Ok(header) = find_section(elf, ".rela.dyn") else { return Ok(targets); };
++    let bytes = &elf.as_owner().1;
++    let relocs = RelocSection::parse(bytes, header.sh_offset as usize,
++        header.sh_size as usize, true, make_goblin_ctx())?;
++    let sym_header = get_linked_section(elf, header)?;
++    let symbols = parse_symtab(elf, sym_header)?;
++    let strings_header = get_linked_section(elf, sym_header)?;
++    let strings = Strtab::parse(bytes, strings_header.sh_offset as usize,
++        strings_header.sh_size as usize, 0)?;
++    for relocation in relocs.iter().filter(|r| is_in_section(got, r.r_offset, 8)) {
++        let resolved = (|| -> Result<GotTarget> {
++            let addend = relocation.r_addend.context("missing GOT relocation addend")?;
++            match relocation.r_type {
++                reloc::R_AARCH64_RELATIVE => {
++                    if relocation.r_sym != 0 { bail!("RELATIVE GOT relocation has a symbol index"); }
++                    Ok(GotTarget { address: u64::try_from(addend)
++                        .context("negative RELATIVE GOT address")?, symbol_name: None })
++                }
++                reloc::R_AARCH64_GLOB_DAT => {
++                    let symbol = symbols.get(relocation.r_sym).context("invalid GOT symbol index")?;
++                    if symbol.st_shndx == section_header::SHN_UNDEF as usize {
++                        bail!("undefined GOT target symbol");
++                    }
++                    let name = strings.get_at(symbol.st_name).context("invalid GOT symbol name")?;
++                    if name.is_empty() { bail!("empty GOT symbol name"); }
++                    let value = (symbol.st_value as i128) + (addend as i128);
++                    Ok(GotTarget { address: u64::try_from(value)
++                        .context("GOT target address overflow")?, symbol_name: Some(name.to_string()) })
++                }
++                _ => bail!("unsupported GOT relocation type {}", relocation.r_type),
++            }
++        })().map_err(|error| error.to_string());
++        if targets.contains_key(&relocation.r_offset) {
++            targets.insert(relocation.r_offset, Err("duplicate GOT relocations".to_string()));
++        } else {
++            targets.insert(relocation.r_offset, resolved);
++        }
++    }
++    Ok(targets)
++}

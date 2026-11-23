@@ -1,0 +1,12 @@
+Address,Name,Category,Reason
+0x0000007100000030,_init,sdk-runtime,"Nintendo SDK startup object (rocrt.cpp), not game code. Defining it in this build sets DT_INIT and changes the link."
+0x0000007100000170,_fini,sdk-runtime,"Nintendo SDK startup object (rocrt.cpp), not game code. Defining it in this build sets DT_FINI and changes the link."
+0x00000071000001b0,__aeabi_atexit,sdk-runtime,"Nintendo SDK startup object (rocrt.cpp). Defining the atexit trio rebinds 114 existing callers under -Bsymbolic."
+0x00000071000001c0,__cxa_atexit,sdk-runtime,"Nintendo SDK startup object (rocrt.cpp). Defining the atexit trio rebinds 114 existing callers under -Bsymbolic."
+0x00000071000001d0,__cxa_finalize,sdk-runtime,"Nintendo SDK startup object (rocrt.cpp). Defining the atexit trio rebinds 114 existing callers under -Bsymbolic."
+0x00000071000001e0,__nnDetailNintendoSdkRuntimeObjectFileRefer,sdk-runtime,"Nintendo SDK startup object (rocrt.cpp), not game code."
+0x00000071000001f0,nndetailRoGetRoDataStart,sdk-runtime,"Nintendo SDK startup object (rocrt_LinkerSymbolGetter.cpp); returns a linker-defined symbol."
+0x0000007100000200,nndetailRoGetRoDataEnd,sdk-runtime,"Nintendo SDK startup object (rocrt_LinkerSymbolGetter.cpp); returns a linker-defined symbol."
+0x0000007100000210,__nnDetailNintendoSdkRuntimeObjectFile,sdk-runtime,"Nintendo SDK runtime marker (MainRuntimeObject.cpp), not game code."
+0x0000007100c059d8,FUN_00c059d8,skipped,"static qsort_helper of LibTomCrypt der_encode_set.c. The source is vendored and compiled, but the function has no DWARF and shares its name with the one in der_encode_setof.c, so the checker cannot identify it."
+0x0000007100c05f30,FUN_00c05f30,skipped,"static qsort_helper of LibTomCrypt der_encode_setof.c. The source is vendored and compiled, but the function has no DWARF and shares its name with the one in der_encode_set.c, so the checker cannot identify it."
