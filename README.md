@@ -74,6 +74,40 @@ with the copyright and permission notice. Third-party components carry their own
 terms. See the [source provenance inventory](docs/source_provenance.md) for
 upstream notices and the status of recovered game and SDK source.
 
+### Getting the game files
+
+Nothing from the game is included here, and nobody can give it to you. You make the
+inputs yourself from a copy of the game you own:
+
+1. **Own the game.** Diablo III: Eternal Collection for Nintendo Switch (title ID
+   `01001B300B9BE000`), on cartridge or bought from the eShop.
+2. **Have the right version: 2.6.2.52309.** The title screen shows it in small print
+   at the bottom (`C2.6.2.52309`). Any other version, older or newer, will not
+   match: the files are checked byte for byte.
+   This is the version on the cartridge, with no updates installed. A copy that has
+   been updated to a later version will not match.
+3. **Dump it from your own Switch.** This needs a console that can run homebrew,
+   and a dumping tool such as nxdumptool, which reads the installed game with your
+   console's own keys. Follow that tool's documentation; this project does not
+   provide keys, firmware or instructions for getting around the console's
+   protections. Do not download the game or keys from anywhere else.
+4. **Extract the ExeFS and RomFS** of the game's program (most dumping tools can do
+   this directly) and lay them out as:
+
+   ```
+   <your folder>/
+     exefs/main
+     romfs/DiabloIIINX64r.nss
+     romfs/...            (the rest of the RomFS)
+   ```
+
+   Allow about 30 GB of free space while extracting.
+5. **Check them** with `python3 -B tools/verify_original_inputs.py --input-root <your folder>`.
+   It needs no network or extra tools and reports exactly which file is missing or
+   wrong. See [original input identity](docs/original_inputs.md) for the hashes.
+
+Keep the dump private: do not commit it, upload it or share it.
+
 ### Generate private build inputs
 
 From the repository root, point the bootstrap at your own extracted Switch 2.6.2
