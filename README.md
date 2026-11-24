@@ -1,8 +1,17 @@
-# NSD3Decomp
+# NSDiablo3Decomp
 
 A C/C++ decompilation of **Diablo III 2.6.2 for Nintendo Switch**. This target
 ships matching NSS debug files with DWARF types, symbols and ownership information,
 which made evidence-based recovery of every function body possible.
+
+> **Not affiliated with Blizzard Entertainment or Nintendo.** This is an unofficial
+> fan project for research and preservation, not endorsed by either company.
+> Diablo is a trademark of Blizzard Entertainment, Inc.; Nintendo Switch is a
+> trademark of Nintendo. This repository contains no game executables, assets, data
+> files, keys or Nintendo SDK files. Building it needs your own legally obtained copy
+> of Diablo III: Eternal Collection for Nintendo Switch. The MIT licence in
+> [`LICENSES/`](LICENSES/) covers only the project's own tooling, as listed in
+> [`REUSE.toml`](REUSE.toml); it grants no rights in the game.
 
 ## Project status
 
@@ -33,9 +42,10 @@ The remaining non-matching functions are accepted as they are. Most differ only
 because of compiler version, register allocation or instruction ordering and layout,
 and each one's cause is recorded. Matching them further is welcome but not required. See the
 [exact-decompilation operating plan](docs/exact_decompilation.md) for the compiler,
-proof and build-resource background. Native desktop recompilation was out of scope;
-the [native subsystem harness](desktop/README.md) is preserved for anyone who wants
-to take it further.
+proof and build-resource background. Native desktop recompilation was out of scope here; it is
+being done in [NSD3Recomp](https://github.com/loremipsum1077/NSD3Recomp), which builds
+this source for macOS. The [native subsystem harness](desktop/README.md) is preserved
+for anyone who wants to take it further.
 
 The focus is this base target first. Decompilation of later patches is a future
 ambition, not a supported target today. The repository supplies no game originals,
