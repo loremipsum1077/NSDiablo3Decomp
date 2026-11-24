@@ -1,8 +1,9 @@
 # Contributor startup
 
-Start with a fork PR and the existing setup/claim/per-file/checker tools. The
-campaign stays paused; arrange a selected owner and read [CONTRIBUTING.md](../CONTRIBUTING.md)
-before recovery. Documentation and synthetic tests need no original game inputs.
+This repository is not maintained, and pull requests to it will not be reviewed (see
+[CONTRIBUTING.md](../CONTRIBUTING.md)). This guide describes the setup/claim/per-file/checker
+tools for anyone continuing the work in their own fork; "maintainers" and "PR" below
+mean that fork's. Documentation and synthetic tests need no original game inputs.
 
 ## Guided terminal setup
 
@@ -182,7 +183,7 @@ Supply your own legally obtained matching inputs and required toolchain/assets
 access. Bootstrap never extracts/downloads proprietary materials, reads keys,
 modifies credentials/security settings or launches a model. Extraction is a
 separate user-managed step; [technical reference](technical_reference.md) describes tools/layout. Never
-upload inputs via Git, Discord, PR attachments, CI caches/artifacts or registries.
+upload inputs via Git, chat, PR attachments, CI caches/artifacts or registries.
 Owning a copy does not itself establish permission for every use/distribution.
 
 Distribution/licensing remains unresolved: there is no root license granting
@@ -268,8 +269,9 @@ Keep both modes' artifacts separate and normal inventory normal only.
 
 ## 4. Coordinate and recover one owner
 
-Follow [CONTRIBUTING](../CONTRIBUTING.md) to choose the real `SRC-…` ID, post a
-manual Discord claim, create a local claim workspace and authenticate evidence.
+Choose the real `SRC-…` ID from `python3 tools/project_plan.py --actionable`, create a
+local claim workspace with `tools/claim.py` and authenticate evidence
+([decompilation workflow](decomp_workflow.md)).
 
 ## 5. Check locally and submit a fork PR
 
@@ -294,7 +296,7 @@ it on merge, withdrawal or handoff. A report never means landed/merged.
 | x86 host selects ARM64 | Set `D3_DOCKER_PLATFORM=linux/amd64` |
 | Output already exists | Pick a new name; inspect retained evidence, no automatic cleanup |
 | Missing compile commands/headers | Resolve the failed setup/build stage in your primary clone |
-| Claim busy/stale | Reconcile local ledger and Discord; don't delete state/bypass locks |
+| Claim busy/stale | Reconcile the local ledger; don't delete state/bypass locks |
 | Object OK, linked/data/unwind fails | Keep pending; masked object equality is incomplete proof |
 | Public CI green, matching absent | Expected: synthetic CI has no originals; request exact-commit private review |
 

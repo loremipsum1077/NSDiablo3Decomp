@@ -134,17 +134,14 @@ reuses the 48 previously verified files and still regenerates every table from t
 For a full build, place the verified inputs under `build/exefs/` and `build/romfs/` and run
 `python3 setup.py`. With those inputs in place the wizard can run the bootstrap for you.
 
-Want to help?
+## Not maintained
 
-1. Fork/clone, then run **`python3 setup.py`** from the repository root.
-   The guided terminal wizard checks prerequisites and explains fixes before asking consent for downloads or builds.
-2. Use `python3 setup.py --check` for read-only unattended diagnostics, or
-   `python3 setup.py --plan` to preview stages. See the [startup guide](docs/contributor_startup.md).
-3. Coordinate one owner and inspect its authentic evidence.
-4. Recover locally and run `python3 tools/land.py --no-commit <file>`.
-5. Submit a fork PR under [CONTRIBUTING.md](CONTRIBUTING.md).
-
-Discord coordinates claims across clones; local queue locks do not.
+This is a personal project, shared as it is. I will not be maintaining this
+repository: issues and pull requests will not be reviewed or merged. If you want to
+take it further, you are encouraged to do so in your own fork. The tools, the
+[startup guide](docs/contributor_startup.md) and the
+[decompilation workflow](docs/decomp_workflow.md) are all here for that; see
+[CONTRIBUTING.md](CONTRIBUTING.md).
 
 [Completion plan](docs/project_plan.md) · [Technical reference](docs/technical_reference.md)
 · [Local reports and PR checks](docs/contributor_ci.md)
