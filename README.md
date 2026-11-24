@@ -1,15 +1,41 @@
 # NSD3Decomp
 
-An experimental C/C++ decompilation of **Diablo III 2.6.2 for Nintendo Switch**.
-This target has matching NSS debug files with DWARF types, symbols and ownership
-information, which makes evidence-based recovery possible. Function bodies still
-need reconstruction and strict validation.
+A C/C++ decompilation of **Diablo III 2.6.2 for Nintendo Switch**. This target
+ships matching NSS debug files with DWARF types, symbols and ownership information,
+which made evidence-based recovery of every function body possible.
 
-The owner-approved priority is **full exact decompilation first**, with native
-desktop recompilation deferred. Reviewed nonmatching source is useful staging,
-but does not satisfy completion. See the [exact-decompilation operating plan](docs/exact_decompilation.md)
-for compiler, proof and build-resource prerequisites. The existing
-[native subsystem harness](desktop/README.md) is preserved for later work.
+## Project status
+
+The decompilation is **complete as far as it will go**: every function in the game
+is either matching byte for byte, written with a documented reason it does not match,
+or accounted for as code the compiler emits elsewhere. Some game data is not shipped
+here and is rebuilt locally from your own game files (see
+[Generate private build inputs](#generate-private-build-inputs)).
+
+<!-- progress:start -->
+![Functions](https://img.shields.io/badge/functions-98.1%25-brightgreen) ![Code bytes](https://img.shields.io/badge/code_bytes-92.6%25-brightgreen) ![Missing code](https://img.shields.io/badge/missing_game_code-0-brightgreen) ![Status](https://img.shields.io/badge/status-decompilation_complete-blue)
+
+<p align="center"><img src="docs/progress.svg" alt="Decompilation progress infographic" width="880"></p>
+
+| | Functions | Original code |
+|---|---:|---:|
+| **Matching byte for byte** | 33,729 (98.1%) | 10,794,444 B (92.6%) |
+| Written, not byte-identical | 631 | 854,432 B |
+| Not written as its own symbol | 8 | 2,536 B |
+| **Total counted** | 34,368 | 11,651,412 B |
+
+Of the 639 functions that do not match, **613** have no known behavioural difference, **26** possibly differ, and **0** are missing code the game needs. Each one is listed with its reason in [remaining_functions.md](docs/remaining_functions.md). 2,191 excluded library functions (FMOD, SDK runtime) are not counted; see [library_functions.md](docs/library_functions.md).
+
+<sub>Regenerate with `python3 tools/progress_graphic.py` after landing functions.</sub>
+<!-- progress:end -->
+
+The remaining non-matching functions are accepted as they are. Most differ only
+because of compiler version, register allocation or instruction ordering and layout,
+and each one's cause is recorded. Matching them further is welcome but not required. See the
+[exact-decompilation operating plan](docs/exact_decompilation.md) for the compiler,
+proof and build-resource background. Native desktop recompilation was out of scope;
+the [native subsystem harness](desktop/README.md) is preserved for anyone who wants
+to take it further.
 
 The focus is this base target first. Decompilation of later patches is a future
 ambition, not a supported target today. The repository supplies no game originals,
