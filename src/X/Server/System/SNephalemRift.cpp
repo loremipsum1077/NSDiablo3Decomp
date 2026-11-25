@@ -445,6 +445,11 @@ inline void CancelStart()
 
 
 
+// 2.7.7 calls CancelStart out of line here (0x710077a3d0: SendRiftInviteStateMessage(NULL),
+// SMSG_RIFT_CANCELED, ResetState). Ours still inlines CancelStart until NephalemRiftState
+// gains its 2.7.7 members (0xd0 bytes), so the call goes through the unnamed address.
+extern "C" void sub_710077a3d0();
+
 void OnVoteTimeOut(TimerID, DataID, void *)
 {
 
@@ -453,7 +458,12 @@ void OnVoteTimeOut(TimerID, DataID, void *)
     {
         if (ptPlayer->dwNephalemRiftFlags & (1 << ESF_PENDING_ACCEPT))
         {
-            PlayerVoteCancel(ptPlayer);
+            if ((GetGameState()->dwFlags & (1 << FLAG_PROMPT_CONTINUE_WITHOUT)) &&
+                (ptPlayer->dwNephalemRiftFlags & (1 << ESF_CONTINUE_WITHOUT)))
+            {
+                ptPlayer->dwNephalemRiftFlags = (1 << ESF_DECLINED);
+                sub_710077a3d0();
+            }
         }
         if (pState->dwFlags & (1 << FLAG_IN_PROGRESS))
         {
@@ -461,7 +471,7 @@ void OnVoteTimeOut(TimerID, DataID, void *)
         }
     }
 
-    CancelStart();
+    sub_710077a3d0();
 }
 
 
