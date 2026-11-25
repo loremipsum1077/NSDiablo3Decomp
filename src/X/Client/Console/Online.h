@@ -35,11 +35,11 @@ class bdBitBuffer;
 
 namespace Console {
 namespace Online {
-struct GamePresence {  // size 0x28
+struct GamePresence {  // size 0x2c
     // Online.h:297; recovered from the inlined Friend construction in
     // UIConsolePartyDisplay.cpp:444 and UIConsoleFriendsList.cpp:163.
     GamePresence() : m_eOnlineState(0), m_bInGame(FALSE), m_bIsChallenge(FALSE),
-        m_bIsHardcore(FALSE), m_bIsSeasonal(FALSE), m_uSeason(0), m_nHandicap(0),
+        m_bIsHardcore(FALSE), m_bIsSeasonal(FALSE), unk_14(FALSE), m_uSeason(0), m_nHandicap(0),
         m_eAct(-1), m_snoQuest(-1), m_uNumPlayers(0) {}
     void Serialize(bdBitBuffer & tBitBuffer) const;  // Online.cpp:2796
     bdBool Deserialize(bdBitBuffer & tBitBuffer);  // Online.cpp:2812
@@ -48,13 +48,16 @@ struct GamePresence {  // size 0x28
     BOOL m_bIsChallenge;  // 0x08
     BOOL m_bIsHardcore;  // 0x0c
     BOOL m_bIsSeasonal;  // 0x10
-    uint32 m_uSeason;  // 0x14
-    int32 m_nHandicap;  // 0x18
-    int32 m_eAct;  // 0x1c
-    SNO m_snoQuest;  // 0x20
-    uint32 m_uNumPlayers;  // 0x24
+    BOOL unk_14;  // 0x14; serialized after the season
+    uint32 m_uSeason;  // 0x18
+    int32 m_nHandicap;  // 0x1c
+    int32 m_eAct;  // 0x20
+    SNO m_snoQuest;  // 0x24
+    uint32 m_uNumPlayers;  // 0x28
 };
-static_assert(sizeof(GamePresence) == 0x28, "GamePresence");
+static_assert(sizeof(GamePresence) == 0x2c, "GamePresence");
+static_assert(__builtin_offsetof(GamePresence, unk_14) == 0x14, "GamePresence flag");
+static_assert(__builtin_offsetof(GamePresence, m_eAct) == 0x20, "GamePresence act");
 
 struct UserPresence {  // size 0x34
     // Online.h:329. The name buffer is intentionally left untouched.
@@ -71,17 +74,17 @@ struct UserPresence {  // size 0x34
 };
 static_assert(sizeof(UserPresence) == 0x34, "UserPresence");
 
-struct GameInfo : public Console::Online::GamePresence {  // size 0x138
+struct GameInfo : public Console::Online::GamePresence {  // size 0x150
     void Serialize(bdBitBuffer & tBitBuffer) const;  // Online.cpp:2760
     bdBool Deserialize(bdBitBuffer & tBitBuffer);  // Online.cpp:2776
-    char m_szUsername[16];  // 0x28
+    char m_szUsername[32];  // 0x2c
     struct Player {  // size 0x40
         OnlineUserId m_idUser;  // 0x00
         Console::Online::UserPresence m_tUserPresence;  // 0x08
     };
-    Console::Online::GameInfo::Player m_tPlayers[4];  // 0x38
+    Console::Online::GameInfo::Player m_tPlayers[4];  // 0x50
 };
-static_assert(sizeof(GameInfo) == 0x138, "GameInfo");
+static_assert(sizeof(GameInfo) == 0x150, "GameInfo");
 #line 380
 struct SwitchUniqueID {  // size 0x10
     char value[16];  // 0x00; Inference: operator< / operator== (382-383) are inlined 16-byte memcmp calls; Empty (384-387) compares with zeroed local kEmpty (386).
@@ -95,11 +98,11 @@ struct SwitchUniqueID {  // size 0x10
 };
 static_assert(sizeof(SwitchUniqueID) == 0x10, "SwitchUniqueID");
 #line 94
-struct SwitchAdhocCustomData {  // size 0x148
+struct SwitchAdhocCustomData {  // size 0x160
     Console::Online::GameInfo m_gameInfo;  // 0x00
-    Console::Online::SwitchUniqueID m_uniqueID;  // 0x138
+    Console::Online::SwitchUniqueID m_uniqueID;  // 0x150
 };
-static_assert(sizeof(SwitchAdhocCustomData) == 0x148, "SwitchAdhocCustomData");
+static_assert(sizeof(SwitchAdhocCustomData) == 0x160, "SwitchAdhocCustomData");
 
 struct PartyConnectionInfo {  // size 0x4b0
     PartyConnectionInfo();
@@ -116,15 +119,15 @@ struct PartyConnectionInfo {  // size 0x4b0
 };
 static_assert(sizeof(PartyConnectionInfo) == 0x4b0, "PartyConnectionInfo");
 
-struct PartyInfo : public Console::Online::PartyConnectionInfo {  // size 0x618
+struct PartyInfo : public Console::Online::PartyConnectionInfo {  // size 0x630
     PartyInfo();
     char m_szName[32];  // 0x4ac
     Console::Online::GameInfo m_tGameInfo;  // 0x4d0
-    Console::Online::SwitchUniqueID m_UniqueID;  // 0x608
+    Console::Online::SwitchUniqueID m_UniqueID;  // 0x620
 };
-static_assert(sizeof(PartyInfo) == 0x618, "PartyInfo");
+static_assert(sizeof(PartyInfo) == 0x630, "PartyInfo");
 
-struct Friend {  // size 0x98
+struct Friend {  // size 0xa0
     // Online.h:942; both presence blocks default-construct before these clears.
     Friend() : m_idBDUser(0), m_bInGame(FALSE), m_bInPlatformParty(FALSE), m_bFavorite(FALSE) {
         SigmaMemoryClear(&m_idFriend, sizeof(m_idFriend));
@@ -138,9 +141,9 @@ struct Friend {  // size 0x98
     BOOL m_bFavorite;  // 0x18
     CHAR m_szUsername[32];  // 0x1c
     Console::Online::GamePresence m_tGamePresence;  // 0x3c
-    Console::Online::UserPresence m_tUserPresence;  // 0x64
+    Console::Online::UserPresence m_tUserPresence;  // 0x68
 };
-static_assert(sizeof(Friend) == 0x98, "Friend");
+static_assert(sizeof(Friend) == 0xa0, "Friend");
 }  // namespace Online
 }  // namespace Console
 
@@ -217,6 +220,7 @@ struct GameParams {
     int32 m_eGameType;
     BOOL m_bIsHardcore;
     BOOL m_bIsSeasonal;
+    BOOL unk_14;  // 0x14; serialized after the challenge configuration
     BOOL m_bResumeFromSave;
     uint32 m_uSeason;
     int32 m_nLevel;
@@ -231,6 +235,8 @@ struct GameParams {
     D3::Leaderboard::WeeklyChallengeData m_tWeeklyChallengeData;
 };
 static_assert(sizeof(GameParams) == 0xc0, "GameParams");
+static_assert(__builtin_offsetof(GameParams, unk_14) == 0x14, "GameParams flag");
+static_assert(__builtin_offsetof(GameParams, m_nHandicap) == 0x30, "GameParams handicap");
 BOOL PartyIsHost();
 BOOL PartyIsInParty();
 BOOL PartyIsInParty(int32 nControllerIndex);  // Online.cpp:3987

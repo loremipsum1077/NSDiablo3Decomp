@@ -181,13 +181,13 @@ struct PresenceFriend : public Friend
 
     void ParsePresence(const bdUByte8 * abBuffer, uint32 uDataSize);
 
-    PresenceManagerInternal * m_ptPresenceManager;  // 0x98
-    uint32 m_fFlags;  // 0xa0
-    bdQoSRemoteAddr m_tHostAddr;  // 0xa8
-    Blizzard::Time::Millisecond m_uLastGameInfoUpdate;  // 0xc8
-    BOOL m_bSubscribedTo;  // 0xcc
+    PresenceManagerInternal * m_ptPresenceManager;  // 0xa0
+    uint32 m_fFlags;  // 0xa8
+    bdQoSRemoteAddr m_tHostAddr;  // 0xb0
+    Blizzard::Time::Millisecond m_uLastGameInfoUpdate;  // 0xd0
+    BOOL m_bSubscribedTo;  // 0xd4
 };
-static_assert(sizeof(PresenceFriend) == 0xd0, "PresenceFriend");
+static_assert(sizeof(PresenceFriend) == 0xd8, "PresenceFriend");
 
 
 
