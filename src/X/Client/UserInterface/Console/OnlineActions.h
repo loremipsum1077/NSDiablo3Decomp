@@ -44,7 +44,8 @@ enum {
     GAME_START_ERROR_CHALLENGE_RIFT_ENDED = 13,
     GAME_START_ERROR_MISSING_NECROMANCER_LICENSE = 14,
     GAME_START_ERROR_LOCAL_PLAYERS_OFFLINE = 15,
-    GAME_START_ERROR_UNKNOWN = 16,
+    GAME_START_ERROR_UNK_16 = 16,  // 2.7.7: party of 2+ with a solo hero (message "ConsoleErrors:MatchmakeFailureSolo")
+    GAME_START_ERROR_UNKNOWN = 17,
 };
 
 typedef int32 GameStartValidationError;

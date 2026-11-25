@@ -259,49 +259,49 @@ static void sPlayerLevelUpPower(const ACDID idACD, const SNO snoPower)
     PowerStart(idACD, snoPower, cgTargetNone);
 }
 
-//@ 263
-static void sUpdateAccountFlagsForNewLevel(Player * ptPlayer, int32 nLevel)
-
-
-
-{
-    const int32 APOCALYPSE_LEVEL_MIN = 60;
-    BOOL bSendFlagsSyncMessage = FALSE;
-
-    if (nLevel >= APOCALYPSE_LEVEL_MIN)
-    {
-        if (!(ptPlayer->tHeroStateData.uPlayerFlags & (1 << PLAYERFLAG_HARDCORE)))
-        {
-            if (!(ptPlayer->tAccount.uDigestFlags & (1 << D3::Account::Digest_Flags_TORMENT_DIFFICULTY_UNLOCKED_DEPRECATED)))
-            {
-                ptPlayer->tAccount.uDigestFlags |= (1 << D3::Account::Digest_Flags_MASTER_DIFFICULTY_UNLOCKED_DEPRECATED) | (1 << D3::Account::Digest_Flags_TORMENT_DIFFICULTY_UNLOCKED_DEPRECATED);
-                bSendFlagsSyncMessage = TRUE;
-            }
-        }
-
-
-        else if (!(ptPlayer->tAccount.uDigestFlags & (1 << D3::Account::Digest_Flags_HARDCORE_TORMENT_DIFFICULTY_UNLOCKED_DEPRECATED)))
-        {
-            ptPlayer->tAccount.uDigestFlags |= (1 << D3::Account::Digest_Flags_HARDCORE_MASTER_DIFFICULTY_UNLOCKED_DEPRECATED) | (1 << D3::Account::Digest_Flags_HARDCORE_TORMENT_DIFFICULTY_UNLOCKED_DEPRECATED);
-            bSendFlagsSyncMessage = TRUE;
-        }
-    }
+// 2.7.7: sUpdateAccountFlagsForNewLevel (2.6.2 //@ 263) is gone; sExperienceLevelUp no longer syncs the deprecated digest difficulty flags.
 
 
 
 
 
-    if (bSendFlagsSyncMessage)
-    {
-        SPlayerAddToSaveList(*ptPlayer, 0, PlayerSaveReason_AcctFlags, PLAYER_SAVE_MODE_END_OF_FRAME);
 
-        DWordDataMessage tMessage;
-        tMessage.dwData = ptPlayer->tAccount.uDigestFlags;
-        PlayerList listDestPlayers(PlayerListGetElementPool());
-        PlayerListGetSingle(listDestPlayers, *ptPlayer);
-        MessageSendToClient(listDestPlayers, SMSG_ACCOUNT_FLAGS_SYNC, &tMessage, sizeof(tMessage));
-    }
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //@ 309
 static void sUpdateGameStatsForLevel(Player * ptPlayer, int32 nLevel, ActorCommonData & tACD)
@@ -361,12 +361,13 @@ static void sExperienceLevelUp(ActorCommonData & tACD, BOOL fUpdateClient, BOOL 
 
 
 
-    tACD.AttributesSetInt(FastAttribKey(eAttribLevel), nLevel);
+
 
 
 
     if (fUseAltLevels)
     {
+        tACD.AttributesSetInt(FastAttribKey(eAttribLevel), nLevel);
         SNO snoXPTable = GlobalSNOGet(GLOBALSNO_GB_EXPERIENCE_ALT);
         ScopedGameBalanceDefinitionLockR ptGameBalDef(snoXPTable);
         const ExperienceTableAlt & tExpTableAlt = ptGameBalDef->tExperienceTableAlt;
@@ -377,6 +378,7 @@ static void sExperienceLevelUp(ActorCommonData & tACD, BOOL fUpdateClient, BOOL 
     }
     else
     {
+        tACD.AttributesSetInt(FastAttribKey(ATTRIBUTE_LEVEL), nLevel);
         SNO snoXPTable = GlobalSNOGet(GLOBALSNO_GB_EXPERIENCE);
         ScopedGameBalanceDefinitionLockR ptGameBalDef(snoXPTable);
         const ExperienceTable & tExpTable = ptGameBalDef->tExperienceTable;
@@ -408,7 +410,7 @@ static void sExperienceLevelUp(ActorCommonData & tACD, BOOL fUpdateClient, BOOL 
             SGameStatsPlayerTimedEventFinish(ptPlayer, STAT_COUNTER_PLAYER_TIME_SPENT_AT_LEVEL, nLevel - 1, 0);
             SGameStatsPlayerTimedEventStart(ptPlayer, STAT_COUNTER_PLAYER_TIME_SPENT_AT_LEVEL, nLevel, 0, TRUE);
 
-            sUpdateAccountFlagsForNewLevel(ptPlayer, nLevel);
+
 
 
             ACDID idACDHireling = PlayerGetHireling(tACD.id);
@@ -511,7 +513,7 @@ static void sExperienceLevelUp(ActorCommonData & tACD, BOOL fUpdateClient, BOOL 
     }
     else
     {
-        DisplayInternalError(NULL, "", 514, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 467, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 
     BOOL bResetParam = GameIsParamFlagSet(GPF_RESET_LIFE_STATS_UPON_LEVEL_UP);
@@ -561,8 +563,8 @@ void sPVPExperienceRankUp(ActorCommonData & tACD)
     tACD.SetPvPExperienceNext(uNewPVPXPDiff);
 }
 
-// NON_MATCHING: size 512 != 508. At line 601 the original has one `mov x0, x19` before the
-// fUseAltLevels branch, shared by the GetAltExperienceNext/GetExperienceNext calls; ours has one per arm.
+
+
 //@ 570
 #line 570
 BOOL sExperienceGrantToACD(

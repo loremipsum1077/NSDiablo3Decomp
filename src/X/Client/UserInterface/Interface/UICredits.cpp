@@ -485,7 +485,7 @@ BOOL IsActive()
     {
         return FALSE;
     }
-    return UI_GetWindowFromID( idCurCreditsWindow ).IsActive();
+    return UI_TestID( idCurCreditsWindow ) && UI_GetWindowFromID( idCurCreditsWindow ).IsActive();
 }
 
 

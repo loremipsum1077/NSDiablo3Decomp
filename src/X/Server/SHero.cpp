@@ -38,7 +38,7 @@ extern const uint32 HERO_DEFINITION_VERSION_2_0_0;
 // DWARF: HeroDefinition.cpp:43-44 defines the version globals above.
 // DWARF signatures: SPlayer.cpp:2352, :2936, :5016, :5149, :7224, :8473;
 // Player.cpp:1438; AccountDefinition.cpp:719; ActorInventory.cpp:5697; SHireling.cpp:431.
-ACDID PlayerActorCreate(Player & tPlayer, const uint32 dwPlayerFlags, const WorldPlace & tPlace, const Quaternion & q, const BOOL bResetLifeStats, const D3::Hero::SavedDefinition & tHeroDefinition, const D3::Account::SavedDefinition & tAccountDefinition, const D3::Items::Mails & tMails, const uint32 dwSaveOptionBits);
+ACDID PlayerActorCreate(Player & tPlayer, const uint32 dwPlayerFlags, const uint32 dwPlayerFlags2, const WorldPlace & tPlace, const Quaternion & q, const BOOL bResetLifeStats, const D3::Hero::SavedDefinition & tHeroDefinition, const D3::Account::SavedDefinition & tAccountDefinition, const D3::Items::Mails & tMails, const uint32 dwSaveOptionBits);  extern "C" int sub_71004c8e20();  // 0x71004c8e20 (unnamed; as declared in Achievements.h)
 void SPlayerSendBanner(const PlayerList & listDestPlayers, const Player & tPlayer);
 BOOL SPlayerRemoveFromSaveList(Player & tPlayer);
 void SPlayerClearEnemyList(Player & tPlayer);
@@ -137,13 +137,13 @@ void AccountDefinition_SerializeAttributes(ActorCommonData &, D3::AttributeSeria
 // DWARF X/Server/SPlayer.cpp:14710.
 void SPlayerExportDeliveredRewards(const Player &, D3::Account::DeliveredRewards *);
 namespace SHero {
-// NON_MATCHING: 6544 vs 6544 bytes, 4 insns: only GOT-load placement around two calls differs. Inline tree now as the DWARF (Math::Min(GameGetHandicapLevel(), ...) at 336, mutable_partitions()->Add() at 2035).
+
+// NON_MATCHING: same size; register allocation only (the original spills x21+0x60 to [sp,#0x28] at the first call, ours keeps it in x25 and spills it later), with the stack and branch offsets that follow.
 BOOL Save(
     Player & tPlayer,
     PlayerSaveData & tSaveData,
     uint32 dwHeroSaveOptions)
 {
-
 
     tSaveData.idGameAccount = tPlayer.tAccount.tHandle;
     tSaveData.uHeroSaveOptions = dwHeroSaveOptions;
@@ -271,13 +271,13 @@ static void sComposeHeroDefinition(
     tDigest.set_level(tACDPlayer.AttributesGetInt(FastAttribKey(ATTRIBUTE_LEVEL)));
     tDigest.set_pvp_rank(tACDPlayer.AttributesGetInt(FastAttribKey(ATTRIBUTE_PVP_RANK)));
     tDigest.set_player_flags(tPlayer.tHeroStateData.uPlayerFlags);
-    tDigest.set_player_flags2(tPlayer.tHeroStateData.uPlayerFlags2);
     tDigest.set_highest_unlocked_act(tPlayer.tHeroStateData.eHighestUnlockedAct);
     tDigest.set_last_played_quest(SNO_NONE);
     tDigest.set_last_played_quest_step(-1);
     tDigest.set_time_played(tPlayer.tHeroStateData.tSavedData.uSecondsPlayed);
     tDigest.set_season_created(tPlayer.uSeasonCreated);
     tDigest.set_highest_solo_rift_completed(tACDPlayer.AttributesGetInt(FastAttribKey(ATTRIBUTE_HIGHEST_HERO_SOLO_RIFT_LEVEL)));
+    tDigest.set_player_flags2(tPlayer.tHeroStateData.uPlayerFlags2);
 
     D3::Hero::SavedData & tSavedData = *tSavedDefinition.mutable_saved_data();
     tSavedData.set_main_quest_handicap_snapshot(-1);
@@ -722,7 +722,7 @@ static void sSaveLoadouts(
     tSavedData.clear_loadouts();
 
 
-    for (int32 nLoadout = 0; nLoadout < 5; ++nLoadout)
+    for (int32 nLoadout = 0; nLoadout < 10; ++nLoadout)
     {
         D3::Hero::Loadout & tSavedLoadout = *tSavedData.add_loadouts();
         const LoadoutSavedData & tPlayerLoadout = tPlayer.tLoadouts[nLoadout];
@@ -745,7 +745,7 @@ static void sRestoreLoadouts(
     const D3::Hero::EquipmentManagerData & tSavedData = tSavedDefinition.equipment_manager_data();
 
 
-    for (int32 nLoadout = 0; nLoadout < 5 && nLoadout < tSavedData.loadouts_size(); ++nLoadout)
+    for (int32 nLoadout = 0; nLoadout < 10 && nLoadout < tSavedData.loadouts_size(); ++nLoadout)
     {
         const D3::Hero::Loadout & tSavedLoadout = tSavedData.loadouts(nLoadout);
         LoadoutSavedData & tPlayerLoadout = tPlayer.tLoadouts[nLoadout];
@@ -786,7 +786,7 @@ static BOOL sFindEquipmentManagerItemCallBack(
 
 
 
-    for (int32 nLoadout = 0; nLoadout < 5; ++nLoadout)
+    for (int32 nLoadout = 0; nLoadout < 10; ++nLoadout)
     {
         LoadoutSavedData & tPlayerLoadout = ptCallbackData->ptLoadouts[nLoadout];
         if (tPlayerLoadout.bEmpty)
@@ -850,7 +850,7 @@ static void sRestoreLoadoutEquipment(
 
     PlayerInventoryIterateLoadoutEquipmentSlots(*ptACDPlayer, sFindEquipmentManagerItemCallBack, &tData);
 
-    for (int32 nLoadout = 0; nLoadout < 5; ++nLoadout)
+    for (int32 nLoadout = 0; nLoadout < 10; ++nLoadout)
     {
         LoadoutSavedData & tPlayerLoadout = tPlayer.tLoadouts[nLoadout];
         for (int32 i = 0; i < 13; ++i)
@@ -932,7 +932,7 @@ static void sRestoreLoadoutEquipment(
 namespace SHero {
 
 ActorID CreateActor(
-    uint32 dwPlayerFlags,
+    uint32 dwPlayerFlags, const uint32 dwPlayerFlags2,
     const WorldPlace & tPlace,
     const Quaternion & q,
     Player & tPlayer,
@@ -1183,7 +1183,7 @@ ActorID CreateActor(
 
         GBUnlockR(pdefHeros);
 
-        tPlayer.tHeroStateData.uPlayerFlags = dwPlayerFlags;
+        tPlayer.tHeroStateData.uPlayerFlags = dwPlayerFlags;  tPlayer.tHeroStateData.uPlayerFlags2 = dwPlayerFlags2;
         tPlayer.uSeasonCreated = tHeroDefinition.digest().season_created();
 
         if (bNewHero)
@@ -1332,7 +1332,7 @@ ActorID CreateActor(
 
     // Inference (as Load, 1659-1661): bIsHardcore's initializer leaves no code (local optimised out, GetPartition inlined); only the GameIsSeasonal call survives.
     BOOL bIsHardcore = (tPlayer.tHeroStateData.uPlayerFlags & (1u << PLAYERFLAG_HARDCORE)) != 0;
-    int32 uPartitionNum = GetPartition(bIsHardcore, GameIsSeasonal());
+    int32 uPartitionNum = GetPartition(bIsHardcore, GameIsSeasonal(), sub_71004c8e20());
 
 
 
@@ -1668,7 +1668,7 @@ void Load(
 
     // Inference: bIsHardcore initializer is unproven after optimization; current-player flags are assumed.
     BOOL bIsHardcore = (tPlayer.tHeroStateData.uPlayerFlags & (1u << PLAYERFLAG_HARDCORE)) != 0;
-    int32 uPartitionNum = GetPartition(bIsHardcore, GameIsSeasonal());
+    int32 uPartitionNum = GetPartition(bIsHardcore, GameIsSeasonal(), sub_71004c8e20());
 
 
 
@@ -1713,7 +1713,7 @@ void Load(
         }
 
 
-        for (int32 i = 0; i < 3; ++i)
+        for (int32 i = 0; i < 4; ++i)
         {
             GBID gbidItem = tPlayer.tHeroStateData.tSavedData.gbidLegendaryPowers[i];
             if (gbidItem != -1 && !GBIDExists(gbidItem, GB_ITEMS))
@@ -2107,8 +2107,8 @@ static ACDID sResetPlayer(
     Player * ptPlayer,
     const GBID gbidHeroClass,
     const uint32 dwPlayerFlags,
-    const uint32 dwSaveOptionBits,
-    const BOOL bResetAllHeroData)
+    const uint32 dwPlayerFlags2,
+    const uint32 dwSaveOptionBits)
 {
     ActorCommonData & tACDPlayer = ACDGet(ptPlayer->idPlayerACD);
 
@@ -2128,7 +2128,7 @@ static ACDID sResetPlayer(
     AccountDefinition_ToDefaults(tAccountDefinition);
 
     {
-        D3AccountPartition idPartition = GetPartition((ptPlayer->tHeroStateData.uPlayerFlags & (1u << PLAYERFLAG_HARDCORE)) != 0, GameIsSeasonal());
+        D3AccountPartition idPartition = GetPartition((ptPlayer->tHeroStateData.uPlayerFlags & (1u << PLAYERFLAG_HARDCORE)) != 0, GameIsSeasonal(), sub_71004c8e20());
         tAccountDefinition.mutable_partitions(0)->set_partition_id(idPartition);
     }
 
@@ -2197,20 +2197,13 @@ static ACDID sResetPlayer(
     PlayerSetACD(*ptPlayer, ACDID_INVALID);
     ActorDelete(idActorPlayer);
 
-    if (bResetAllHeroData)
-    {
-        HeroResetSavedData(*ptPlayer);
+    // 2.7.7: always the full reset (no bResetAllHeroData branch; the 5th parameter is now dwSaveOptionBits).
+    HeroResetSavedData(*ptPlayer);
 
 
-        for (int32 i = 0; i < 20; ++i)
-        {
-            ptPlayer->tCurrencySavedData.arCurrency[i].uFlags = 9;
-        }
-    }
-    else
+    for (int32 i = 0; i < NUM_CURRENCY_TYPES; ++i)
     {
-        SigmaMemoryClear(&ptPlayer->tHeroStateData, sizeof(ptPlayer->tHeroStateData));
-        ptPlayer->tHeroStateData.SetDefaults();
+        ptPlayer->tCurrencySavedData.arCurrency[i].uFlags = 9;
     }
     SPlayerSyncWaypointsToGame(*ptPlayer);
 
@@ -2219,7 +2212,7 @@ static ACDID sResetPlayer(
     tHeroDefinition.mutable_saved_attributes()->mutable_gb_handle()->set_gbid(gbidHeroClass);
 
     D3::Items::Mails tMails;
-    ACDID idACDPlayerNew = PlayerActorCreate(*ptPlayer, dwPlayerFlags, tPlace, q, TRUE, tHeroDefinition, tAccountDefinition, tMails, dwSaveOptionBits);
+    ACDID idACDPlayerNew = PlayerActorCreate(*ptPlayer, dwPlayerFlags, dwPlayerFlags2, tPlace, q, TRUE, tHeroDefinition, tAccountDefinition, tMails, dwSaveOptionBits);
 
 
 

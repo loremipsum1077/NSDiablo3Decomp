@@ -361,7 +361,10 @@ void UIText::sInit(const TextCreationParams & tParams)
     else
     {
         SetWordWrap(tParams.fWordWrap);
-        m_uTCFlags = !tParams.fShrinkToFit ? (m_uTCFlags & ~(1 << UITCF_SHRINK_TO_FIT_BIT)) : (m_uTCFlags | (1 << UITCF_SHRINK_TO_FIT_BIT));
+        if (tParams.fShrinkToFit)
+            m_uTCFlags |= (1 << UITCF_SHRINK_TO_FIT_BIT);
+        else
+            m_uTCFlags &= ~(1 << UITCF_SHRINK_TO_FIT_BIT);
     }
     SetResizeToFit(tParams.eResizeToFit);
     m_uTCFlags = !tParams.fIsPassword ? (m_uTCFlags & ~(1 << UITCF_ISPASSWORD_BIT)) : (m_uTCFlags | (1 << UITCF_ISPASSWORD_BIT));
@@ -702,14 +705,14 @@ void UIText::ApplyFormatting()
 
     if (m_tText.Length() != 0)
     {
-        BreakStyle eBreakStyle = BREAKSTYLE_LINE;
-        if (m_eTextJustify == UIJH_CENTER && UnicodeText::GetStringDisplayLocale() == XLOCALE_KOREAN)
-            eBreakStyle = BREAKSTYLE_WORD;
+        // 2.7.7: always BREAKSTYLE_LINE; the centred-Korean case is passed as the iterator's second argument.
+        const BreakStyle eBreakStyle = BREAKSTYLE_LINE;
+        BOOL bUnk = m_eTextJustify == UIJH_CENTER && UnicodeText::GetStringDisplayLocale() == XLOCALE_KOREAN;
 
 
 
 
-        UTBreakIterator tIterator(eBreakStyle);
+        UTBreakIterator tIterator(eBreakStyle, bUnk);
 
         CRefString strStripped((LPCSTR)m_tText);
         UIText_RemoveFormattingCharacters(strStripped, TRUE, IsValidatingHyperlinks());
@@ -868,7 +871,7 @@ void UIText::ApplyFormatting()
 void UIText::SetSnapToPixelCenter(const BOOL bVal)
 {
 
-    m_uTCFlags = bVal ? (m_uTCFlags & ~(1 << UITCF_DISABLE_SNAP_TO_PIXEL_BIT)) : (m_uTCFlags | (1 << UITCF_DISABLE_SNAP_TO_PIXEL_BIT));
+    m_uTCFlags = !bVal ? (m_uTCFlags | (1 << UITCF_DISABLE_SNAP_TO_PIXEL_BIT)) : (m_uTCFlags & ~(1 << UITCF_DISABLE_SNAP_TO_PIXEL_BIT));
 }
 
 

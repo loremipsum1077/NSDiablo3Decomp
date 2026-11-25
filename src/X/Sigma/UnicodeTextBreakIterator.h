@@ -16,7 +16,7 @@ typedef int32 BreakStyle;
 
 class UTBreakIterator {
 public:
-    UTBreakIterator(BreakStyle eBreakStyle);
+    UTBreakIterator(BreakStyle eBreakStyle, BOOL bUnk);  // 2.7.7: bUnk is stored in the BreakIteratorParams key (+8)
     ~UTBreakIterator();
     void SetText(LPCSTR szText);
     int32 Next();

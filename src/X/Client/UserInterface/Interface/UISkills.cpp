@@ -1138,11 +1138,11 @@ void UISkills::DisplayToggle(const UIID &) {
         if (ptACD == NULL)
             return;
         if (!PlayerCanViewSkillorTrait(*ptACD)) {
-            // 55 / 57 are GameError values with no recovered enumerator names.
+            // 56 / 58 (2.6.2: 55 / 57) are GameError values with no recovered enumerator names.
             if (ACDIsParticipatingInTieredLootRun(*ptACD) || ACDIsParticipatingInSetDungeon(*ptACD)) {
-                UIGame::DisplayError(GameErrorData(57), FALSE, NULL);
+                UIGame::DisplayError(GameErrorData(58), FALSE, NULL);
             } else {
-                UIGame::DisplayError(GameErrorData(55), FALSE, NULL);
+                UIGame::DisplayError(GameErrorData(56), FALSE, NULL);
             }
             return;
         }

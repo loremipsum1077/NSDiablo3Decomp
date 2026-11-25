@@ -53,10 +53,10 @@ namespace Console { namespace GamerProfile { void SignOut(int32 nUserIdx); struc
 namespace Console { namespace GamerProfile { typedef OnlineService::Callback<void (LoadHeroResult)> LoadHeroCallback; enum DeleteHeroResult { DELETE_HERO_FAILED = 0, DELETE_HERO_FAILED_NOT_FOUND = 1, DELETE_HERO_FAILED_CONTENT_MISSING = 2, DELETE_HERO_FAILED_NOT_OWNER = 3, DELETE_HERO_FAILED_IN_USE = 4, DELETE_HERO_SUCCESS = 5 }; typedef OnlineService::Callback<void (DeleteHeroResult)> DeleteHeroCallback; void LoadHero(int32 nUserIdx, OnlineService::HeroId idHero, LoadHeroCallback pfnCallback); void DeleteHero(int32 nUserIdx, OnlineService::HeroId idHero, DeleteHeroCallback pfnCallback); D3::Console::Profile & GetProfile(int32 nUserIdx); uint32 GetNumAvailableHeroes(int32 nUserIdx); } }
 namespace Console { namespace UIOnlineActions { void CreatePartyIfNeeded(int32 nControllerIndex); void FinalizeLocalPlayerJoin(int32 nControllerIndex, OnlineService::Callback<void (int)> pfnCallback); } }  // OnlineActions.h
 namespace Console { namespace Online { void PartyStartGame(); BOOL IsSeasonsInitialized(); void IsSeasonInProgress(int32 nUserIndex, IsSeasonInProgressCallback pfnCallback); } namespace DLCManager { uint32 GetLicenses(); } }  // Online.h, DLCManager.h
-namespace Console { namespace SaveMigration { void RebirthHero(int32 nControllerIndex, uint32 uSeason); } } namespace UIGameSettings { namespace Console { void ClearGameSettingsViewed(); } }  // SaveMigration.h, UIConsoleGameSettings.h
+namespace Console { namespace SaveMigration { void RebirthHero(int32 nControllerIndex, uint32 uSeason, BOOL bUnk); } } namespace UIGameSettings { namespace Console { void ClearGameSettingsViewed(); } }  // SaveMigration.h, UIConsoleGameSettings.h
 namespace Console { namespace GamerProfile {  OnlinePlayPrivilege GetOnlinePlayPrivilege(int32 nUserIdx); } }  // GamerProfile.h
 extern UIID UITEXT_CONSOLE_PLAYER_NUMBER, UITEXT_CONSOLE_HEROSELECT_REBIRTH_WARNING_TITLE, UITEXT_CONSOLE_HEROSELECT_REBIRTH_WARNING_DESCRIPTION, UITEXT_CONSOLE_HERO_NAME, UITEXT_CONSOLE_HERO_QUEST, UIWND_CONSOLE_HERO_SELECT_HARDCORE, UIWND_CONSOLE_HERO_SELECT_SEASONAL, UIWND_CONSOLE_HERO_SELECT_SEASONAL_HARDCORE;  // UIIDs.h
-namespace UIUtils { namespace Console { int32 GetParagonLevel(const D3::Account::SavedDefinition & tAccount, BOOL bHardcore, BOOL bSeasonal); CRefString PlayerGetDecoratedPlayerNum(int32 nControllerIndex); } }  // UIUtils.h
+namespace UIUtils { namespace Console { int32 GetParagonLevel(const D3::Account::SavedDefinition & tAccount, BOOL bHardcore, BOOL bSeasonal, BOOL bUnk); CRefString PlayerGetDecoratedPlayerNum(int32 nControllerIndex); } }  // UIUtils.h
 int32 GetConsoleMaxHeroesAllowed(int32 nControllerIndex); BOOL PlayersAreAllLocal(); SNO UI_GetDefaultHeroLight(); LightID LightAdd(uint32 dwFlags, SNO snoLight, const PRTransform & tTransform, BOOL bUnused, RenderContext eContext);  // Game.h, CPlayer.h, UI.h, Light.h
 CRefString CPlayerGetLevelString(const int32 nLevel, const int32 nAltLevel); CRefString DisplayActName(int32 eAct); PlayerClass PlayerClassFromGBID(const GBID gbid); CRefString PlayerGetClassUIName(const PlayerClass ePlayerClass, const BOOL fIsMale);  // X/Client/CPlayer.h, X/Common/Act.h, X/Common/Player.h
 SNO GetActBackgroundSNO(Act eAct); void UIStartup_SetBackgroundWorld(SNO snoWorld); SNO GetFrontendCharacterSNO(PlayerClass eClass, BOOL bIsFemale);  // UIStartup.h, UIConsoleCharacterSelect.h
@@ -135,6 +135,7 @@ struct BlizzconGame {
     char szCurrentMessage[512] = {};
     char szDesiredGameName[512] = {};
     ::Console::Online::SwitchUniqueID tDesiredGameID = {};
+    int32 unk_46c = -1;  // 0x46c; static init stores -1 after the memset
 
 
 
@@ -243,6 +244,8 @@ inline BOOL IsSeasonalMismatchInGameOnly(const ::Console::GamerProfile::HeroInfo
 }
 
 
+extern "C" BOOL sub_710072e0b0(uint32 uSeasonCreated, uint32 uFlags);  // OnlineService.cpp region (after GetSeasonState)
+uint32 PlayerGetLocalPlayerCount();  // CPlayer.h
 BOOL IsHeroSelectable(const ::Console::GamerProfile::HeroInfo & tHeroInfo, const D3::Account::SavedDefinition & tAccountDefinition)
 {
     // a necromancer hero needs the necromancer pack
@@ -255,8 +258,21 @@ BOOL IsHeroSelectable(const ::Console::GamerProfile::HeroInfo & tHeroInfo, const
     BOOL bIsDeceased = tHeroInfo.uPlayerFlags & (1 << PLAYERFLAG_DECEASED);
     BOOL bHardcoreMismatch = IsHardcoreMismatchInGameOnly(tHeroInfo);
     BOOL bSeasonalMismatch = IsSeasonalMismatchInGameOnly(tHeroInfo, tAccountDefinition);
+    // 2.7.7: game-create param bit 20 (no enumerator in Game.h) against the hero's flag from sub_710072e0b0
+    // NON_MATCHING: 2.7.7 solo (bit 20) mismatch check reproduced; 376 vs 352 bytes, target folds the
+    // check into a single cset/cmp chain ending in csel (block layout/register allocation differ)
+    BOOL bUnkMismatch = FALSE;
+    if (!GameIsStartUp() && !GameIsWeeklyChallenge())
+    {
+        uint32 dwFlags = sgtAppGlobals.dwGameCreateParamFlags;
+        BOOL bHeroFlag = sub_710072e0b0(tHeroInfo.uSeasonCreated, tHeroInfo.unk_70);
+        if (((dwFlags & (1 << 20)) != 0) != (bHeroFlag != FALSE))
+            bUnkMismatch = TRUE;
+        else if ((dwFlags & (1 << 20)) && PlayerGetLocalPlayerCount() != 0)
+            bUnkMismatch = TRUE;
+    }
 
-    return !bIsDeceased && !bHardcoreMismatch && !bSeasonalMismatch;
+    return !bIsDeceased && !bHardcoreMismatch && !bSeasonalMismatch && !bUnkMismatch;
 }
 
 class HeroListDataSource : public ConsoleListBoxDataSource {
@@ -374,6 +390,7 @@ struct HeroSelectionGlobals {
     Blizzard::Time::Millisecond nModalOpenTime;
     uint32 uSeasonNum;
     OnlineService::SeasonState eSeasonState;
+    BOOL unk_170c;  // 0x170c; OnRebirth stores its third argument here (TRUE from UIHeroSelect_RebirthSolo)
 
 
 
@@ -387,6 +404,7 @@ struct HeroSelectionGlobals {
         nModalOpenTime = 0;
         uSeasonNum = 0;
         eSeasonState = OnlineService::SEASON_STATE_PRE;
+        unk_170c = FALSE;
     }
 };
 
@@ -513,13 +531,14 @@ void UpdateName(const ::Console::GamerProfile::HeroInfo & tHeroInfo)
     {
         nAltLevel = UIUtils::Console::GetParagonLevel(::Console::GamerProfile::GetAccount(UI_GetPrimaryUIController()),
                                                       tHeroInfo.uPlayerFlags & (1 << PLAYERFLAG_HARDCORE),
-                                                      ::Console::UIOnlineActions::IsActiveSeason(tHeroInfo.uSeasonCreated, ::Console::GamerProfile::GetAccount(sgtHeroSelectionGlobals.tHeroListDataSource.nControllerIndex).digest()));
+                                                      ::Console::UIOnlineActions::IsActiveSeason(tHeroInfo.uSeasonCreated, ::Console::GamerProfile::GetAccount(sgtHeroSelectionGlobals.tHeroListDataSource.nControllerIndex).digest()),
+                                                      sub_710072e0b0(tHeroInfo.uSeasonCreated, tHeroInfo.unk_70));
     }
 
     PlayerClass eClass = tHeroInfo.eClass;
-    Act eAct = tHeroInfo.eLastAct;
     BOOL bIsFemale = tHeroInfo.uPlayerFlags & (1 << PLAYERFLAG_FEMALE);
     BOOL bDeceased = tHeroInfo.uPlayerFlags & (1 << PLAYERFLAG_DECEASED);
+    Act eAct = tHeroInfo.eLastAct;
 
     CRefString sName = LocalizedSprintf(StringListFetch("ConsoleHeroSelect:HeroLevelInfo").str(), CPlayerGetLevelString(nLevel, nAltLevel).str(), PlayerGetClassUIName(eClass, !bIsFemale).str(), NULL);
     if (bDeceased)
@@ -1438,7 +1457,7 @@ void OnChosenHeroLoaded(int32 nControllerIndex, BOOL bLoadForRebirth, ::Console:
 
                 }
 
-                ::Console::SaveMigration::RebirthHero(nControllerIndex, uCachedSeasonAtConfirmation);
+                ::Console::SaveMigration::RebirthHero(nControllerIndex, uCachedSeasonAtConfirmation, sgtHeroSelectionGlobals.unk_170c);
             }
 
 
@@ -2144,7 +2163,7 @@ void OnCancelModalWarning(const UIID &, const int32)
 
 
 
-void OnRebirth(const UIID &, const int32 nControllerIndex)
+void OnRebirth(const UIID &, const int32 nControllerIndex, const BOOL bSolo)
 {
 
     if (sgtHeroSelectionGlobals.tHeroListDataSource.nHeroCount == 0 ||
@@ -2214,22 +2233,56 @@ void OnRebirth(const UIID &, const int32 nControllerIndex)
             }
         }
 
+        sgtHeroSelectionGlobals.unk_170c = bSolo;
         if (!bHardcore)
         {
-            tModalTitle.SetText(StringListFetch("ConsoleHeroSelect:RebirthTitle"), FALSE);
-            tModalTitle.SetTextColor(RGBAColor(0x0a, 0x47, 0x00));
-            tModalDesc.SetText(StringListFetch("ConsoleHeroSelect:HeroRebirthWarning"), FALSE);
+            if (bSolo)
+            {
+                tModalTitle.SetText(StringListFetch("ConsoleHeroSelect:RebirthTitleSolo"), FALSE);
+                tModalTitle.SetTextColor(RGBAColor(0x0a, 0x47, 0x00));
+                tModalDesc.SetText(StringListFetch("ConsoleHeroSelect:HeroRebirthWarningSolo"), FALSE);
+            }
+            else
+            {
+                tModalTitle.SetText(StringListFetch("ConsoleHeroSelect:RebirthTitle"), FALSE);
+                tModalTitle.SetTextColor(RGBAColor(0x0a, 0x47, 0x00));
+                tModalDesc.SetText(StringListFetch("ConsoleHeroSelect:HeroRebirthWarning"), FALSE);
+            }
         }
         else
         {
-            tModalTitle.SetText(StringListFetch("ConsoleHeroSelect:RebirthTitle"), FALSE);
-            tModalTitle.SetTextColor(RGBAColor(0x3f, 0x00, 0x00));
-            tModalDesc.SetText(StringListFetch("ConsoleHeroSelect:HardcoreRebirthDescription"), FALSE);
+            if (bSolo)
+            {
+                tModalTitle.SetText(StringListFetch("ConsoleHeroSelect:RebirthTitleSolo"), FALSE);
+                tModalTitle.SetTextColor(RGBAColor(0x3f, 0x00, 0x00));
+                tModalDesc.SetText(StringListFetch("ConsoleHeroSelect:HardcoreRebirthDescriptionSolo"), FALSE);
+            }
+            else
+            {
+                tModalTitle.SetText(StringListFetch("ConsoleHeroSelect:RebirthTitle"), FALSE);
+                tModalTitle.SetTextColor(RGBAColor(0x3f, 0x00, 0x00));
+                tModalDesc.SetText(StringListFetch("ConsoleHeroSelect:HardcoreRebirthDescription"), FALSE);
+            }
         }
 
         ::Console::Screens::ShowModalDialog(nControllerIndex, UIWND_CONSOLE_HEROSELECT_REBIRTH_WARNING, TRUE, GetUIIDNone());
     }
 }
+
+} }  // namespace UIHeroSelect::Console
+
+// The 2.7.7 UI function table entries "UIHeroSelect_Rebirth" / "UIHeroSelect_RebirthSolo".
+extern "C" void sub_710035ae80(const UIID & id, const int32 nControllerIndex)
+{
+    UIHeroSelect::Console::OnRebirth(id, nControllerIndex, FALSE);
+}
+
+extern "C" void sub_710035ae90(const UIID & id, const int32 nControllerIndex)
+{
+    UIHeroSelect::Console::OnRebirth(id, nControllerIndex, TRUE);
+}
+
+namespace UIHeroSelect { namespace Console {
 
 }  // namespace Console
 }  // namespace UIHeroSelect

@@ -481,16 +481,18 @@ struct RareMonsterNamesEntry {  // size 0xa0
 };
 static_assert(sizeof(RareMonsterNamesEntry) == 0xa0, "RareMonsterNamesEntry");
 
-struct ParagonBonus {  // size 0x190
+struct ParagonBonus {  // size 0x1f0
     GBHeader tHeader;  // 0x00
     int32 nPointsMax;  // 0x18
+    int32 unk_1c;  // 0x1c
     AttributeSpecifier ptAttributes[4];  // 0x20
-    int32 nCategory;  // 0x80
-    int32 nIndex;  // 0x84
-    PlayerClass ePlayerClass;  // 0x88
-    CHAR szIcon[256];  // 0x8c
+    AttributeSpecifier unk_80[4];  // 0x80
+    int32 nCategory;  // 0xe0
+    int32 nIndex;  // 0xe4
+    PlayerClass ePlayerClass;  // 0xe8
+    CHAR szIcon[256];  // 0xec
 };
-static_assert(sizeof(ParagonBonus) == 0x190, "ParagonBonus");
+static_assert(sizeof(ParagonBonus) == 0x1f0, "ParagonBonus");
 
 struct ParagonBonusesTable {  // size 0x10
     SerializeData serParagonBonuses;  // 0x00

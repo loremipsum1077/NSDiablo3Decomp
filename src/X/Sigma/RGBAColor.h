@@ -72,6 +72,7 @@ extern const RGBAColor crgbaGold;
 extern const RGBAColor crgbaUIGold;
 extern const RGBAColor crgbaBlack;
 extern const RGBAColor crgbaUIOrange;
+extern const RGBAColor unk_7100ed3648;
 extern const RGBAColor crgbaDisabled;
 
 extern const RGBAColorValue crgbavalNull;

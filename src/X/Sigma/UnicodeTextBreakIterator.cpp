@@ -19,18 +19,19 @@ class BreakIteratorParams {
 public:
     BreakIteratorParams() {}
     BOOL operator==(const BreakIteratorParams& rhs) const;
-    BreakIteratorParams(BreakStyle eStyle, XLocale eXLocale);
+    BreakIteratorParams(BreakStyle eStyle, XLocale eXLocale, BOOL bUnk);
 
     BreakStyle m_eStyle;
     XLocale m_eXLocale;
+    BOOL unk_8;  // 2.7.7: UTBreakIterator ctor's 2nd arg; hashed with the key but not compared by operator==
 };
 
 inline BOOL BreakIteratorParams::operator==(const BreakIteratorParams& rhs) const {
     return m_eStyle == rhs.m_eStyle && m_eXLocale == rhs.m_eXLocale;
 }
 
-inline BreakIteratorParams::BreakIteratorParams(BreakStyle eStyle, XLocale eXLocale)
-    : m_eStyle(eStyle), m_eXLocale(eXLocale) {}
+inline BreakIteratorParams::BreakIteratorParams(BreakStyle eStyle, XLocale eXLocale, BOOL bUnk)
+    : m_eStyle(eStyle), m_eXLocale(eXLocale), unk_8(bUnk) {}
 
 template <>
 inline uint32 XHashKey<const BreakIteratorParams&>(const BreakIteratorParams& tParams) {
@@ -316,8 +317,8 @@ BreakIteratorData* UnicodeTextBreakIterators::GetBreakIterator(const BreakIterat
     return ptIteratorData;
 }
 
-UTBreakIterator::UTBreakIterator(BreakStyle eBreakStyle) : m_eBreakStyle(eBreakStyle), m_data(NULL) {
-    BreakIteratorParams tParams(eBreakStyle, UnicodeText::GetStringDisplayLocale());
+UTBreakIterator::UTBreakIterator(BreakStyle eBreakStyle, BOOL bUnk) : m_eBreakStyle(eBreakStyle), m_data(NULL) {
+    BreakIteratorParams tParams(eBreakStyle, UnicodeText::GetStringDisplayLocale(), bUnk);
     m_data = UnicodeTextBreakIterators::GetBreakIterator(tParams);
 }
 

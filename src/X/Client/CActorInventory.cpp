@@ -316,7 +316,7 @@ static void sInventoryCancelUse( const UIID & )
     stACDInventoryRequestTarget.Clear();
 }
 
-BOOL CACDInventoryGetUseMessagePrompt( const ActorCommonData & tACDUser, const ActorCommonData & tACDItem, const Target &, CRefString & sMsg );
+BOOL CACDInventoryGetUseMessagePrompt( const ActorCommonData & tACDUser, const ActorCommonData & tACDItem, const Target &, CRefString & sMsg ); namespace Tutorial { void Shown(Player & tPlayer, const SNO snoTutorial); } namespace Console { namespace Notifications { void ShowAmiiboTutorial(int32 nControllerIndex); } }  // X/Common/Tutorials.cpp, ConsoleScreenManager.cpp
 void CACDInventoryRequestUse( ActorCommonData & tACDItem,
                               const Target & tTarget,
                               BOOL bPlaySound,
@@ -366,9 +366,6 @@ void CACDInventoryRequestUse( ActorCommonData & tACDItem,
         return;
     }
 
-
-
-
     CRefString sMsg;
     if ( CACDInventoryGetUseMessagePrompt( *ptACDPlayer, tACDItem, tTarget, sMsg ) )
     {
@@ -379,6 +376,10 @@ void CACDInventoryRequestUse( ActorCommonData & tACDItem,
     }
     else
     {
+        if ( tACDItem.snoActor == SNOFileLookupGUID( ACTOR_SNO, "Amiibo_Portal_Device" ) && !Tutorial::PlayerHasSeen( *ptPlayer, GlobalSNOGet( GLOBALSNO_TUTORIAL_AMIIBO_USAGE ) ) )
+        {
+            Console::Notifications::ShowAmiiboTutorial( ptPlayer->nControllerIndex ); Tutorial::Shown( *ptPlayer, GlobalSNOGet( GLOBALSNO_TUTORIAL_AMIIBO_USAGE ) ); return;
+        }
         if ( bPlaySound )
         {
             UIInventory::PlayItemInventorySound( tACDItem );
@@ -393,7 +394,6 @@ void CACDInventoryRequestUse( ActorCommonData & tACDItem,
         MessageSendToServer( CMSG_TRY_INVENTORY_USE, &tMessage, sizeof( tMessage ), ptPlayer );
     }
 }
-
 
 void CACDInventoryDestroy( ActorCommonData & tACDItem )
 

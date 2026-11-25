@@ -55,7 +55,6 @@ namespace Console { namespace IO { class CPKArchiveReader; struct FileInfo; } }
 
 
 
-
 enum {
     MAX_FILENAME_LENGTH = 128,
     CONSOLE_HOTFIX_PRIORITY = 12,
@@ -75,6 +74,7 @@ namespace nn {
 namespace account { void Initialize(); nn::Result OpenPreselectedUser(UserHandle * pOutHandle); nn::Result GetUserId(Uid * pOut, const UserHandle & handle); void CloseUser(const UserHandle & handle); }
 namespace fs { bool IsSaveDataExisting(const nn::account::Uid & user); nn::Result MountSaveData(const char * name, const nn::account::Uid & user); void Unmount(const char * name); }
 }  // namespace nn
+extern nn::account::UserHandle unk_71019079f0;  // Game.cpp .bss (2.7.7): preselected user handle opened by FileSystemGetLocale
 // BlizzardCore/Include/Blizzard/File.h and Debug (FileAPI.cpp:934).
 namespace Blizzard { namespace Debug { struct ErrorStackRecord; typedef ErrorStackRecord * ErrorStack; } }
 namespace Blizzard { namespace File { void SetLastErrorStack(Blizzard::Debug::ErrorStack err); } }
@@ -1883,7 +1883,7 @@ BOOL SetSNOElement(
 
 
 
-blz::array<int, 10> g_tNX64TextLocales = { { XLOCALE_GERMAN, XLOCALE_ENGLISH_US, XLOCALE_SPANISH_EU, XLOCALE_SPANISH_LATAM, XLOCALE_FRENCH, XLOCALE_ITALIAN, XLOCALE_POLISH, XLOCALE_PORTUGUESE_BRAZIL, XLOCALE_RUSSIAN, XLOCALE_JAPANESE } };
+blz::array<int, 13> g_tNX64TextLocales = { { XLOCALE_GERMAN, XLOCALE_ENGLISH_US, XLOCALE_SPANISH_EU, XLOCALE_SPANISH_LATAM, XLOCALE_FRENCH, XLOCALE_ITALIAN, XLOCALE_POLISH, XLOCALE_PORTUGUESE_BRAZIL, XLOCALE_RUSSIAN, XLOCALE_JAPANESE, XLOCALE_UNK_19, XLOCALE_CHINESE_TAIWAN, XLOCALE_KOREAN } };
 
 
 
@@ -1895,7 +1895,7 @@ blz::array<int, 10> g_tNX64TextLocales = { { XLOCALE_GERMAN, XLOCALE_ENGLISH_US,
 
 
 
-blz::array<int, 11> g_tNX64AudioLocales = { { XLOCALE_GERMAN, XLOCALE_ENGLISH_US, XLOCALE_ENGLISH_EU, XLOCALE_SPANISH_EU, XLOCALE_SPANISH_LATAM, XLOCALE_FRENCH, XLOCALE_ITALIAN, XLOCALE_POLISH, XLOCALE_PORTUGUESE_BRAZIL, XLOCALE_RUSSIAN, XLOCALE_JAPANESE } };
+blz::array<int, 14> g_tNX64AudioLocales = { { XLOCALE_GERMAN, XLOCALE_ENGLISH_US, XLOCALE_ENGLISH_EU, XLOCALE_SPANISH_EU, XLOCALE_SPANISH_LATAM, XLOCALE_FRENCH, XLOCALE_ITALIAN, XLOCALE_POLISH, XLOCALE_PORTUGUESE_BRAZIL, XLOCALE_RUSSIAN, XLOCALE_JAPANESE, XLOCALE_UNK_19, XLOCALE_CHINESE_TAIWAN, XLOCALE_KOREAN } };
 
 
 
@@ -1946,7 +1946,7 @@ void SNOFilesInitialize(LPCSTR szDataPath, const SigmaPlatform eSigmaPlatform, c
 
     {
         XLocale eDefaultLocale = XLOCALE_ENGLISH_US;
-        XLocale eDesiredLocale = eDefaultLocale;
+        XLocale eDesiredLocale = Console::Utilities::GetSystemLanguage();
 
 
 
@@ -1956,16 +1956,16 @@ void SNOFilesInitialize(LPCSTR szDataPath, const SigmaPlatform eSigmaPlatform, c
         if (UsePreselectedUser())
         {
             nn::account::Uid tUserId;
-            nn::account::UserHandle tUserHandle;
+
             char szMountName[4096];
             nn::account::Initialize();
 
 
 
-            nn::Result OpenResult = nn::account::OpenPreselectedUser(&tUserHandle);
 
 
-            nn::Result IdResult = nn::account::GetUserId(&tUserId, tUserHandle);
+
+            nn::Result IdResult = nn::account::GetUserId(&tUserId, unk_71019079f0);
 
 
 
@@ -1993,12 +1993,12 @@ void SNOFilesInitialize(LPCSTR szDataPath, const SigmaPlatform eSigmaPlatform, c
             }
 
 
-            nn::account::CloseUser(tUserHandle);
+
         }
-        else
-        {
-            eDesiredLocale = Console::Utilities::GetSystemLanguage();
-        }
+
+
+
+
 
 
 

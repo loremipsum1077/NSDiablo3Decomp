@@ -359,7 +359,7 @@ SWorldID WorldCommonFindBySNO(SNO snoWorld, BOOL bIgnorePendingDelete);  // X/Co
 #include <float.h>
 typedef int32 ConsumablePotionBuffTypes; BOOL QuestIsGameOver();  // X/Common/Quests/Quests.cpp:2693, X/Common/Player.h:422
 #include "../Common/HirelingSwig.h"
-ACDID PlayerGetPet(ACDID idACDPlayer, int32 nIndex); int32 PlayerGetPetCount(ACDID idACDPlayer); int32 PlayerGetNumPetsOfType(ACDID idACDPlayer, PetType eType); void ServerMessageSendAddPet(const PlayerList & listDestPlayers, const ACDID idACDPet); void SHirelingSetActive(ACDID idACDPlayer, HirelingClass eClass, BOOL bSave); void ActorRefreshHirelingKnownActors(HirelingClass eClass); void PowerAPI_BuffApplyOnPetAddEffects(ACDID idACDSummoner, ACDID idACDPet, PetType ePetType, SNO snoPet); int32 PlayerGetEmptyPetSlot(Player & tPlayer, ACDID idACDPet, PlayerPet ** ptPet); void PlayerPetInit(PlayerPet & tPlayerPet, PetType eType, ActorCommonData & tACDPet, Player & tPlayer); namespace SHero { ActorID CreateActor(uint32 dwPlayerFlags, const WorldPlace & tPlace, const Quaternion & q, Player & tPlayer, const D3::Hero::SavedDefinition & tHeroDefinition, const D3::Account::SavedDefinition & tAccountDefinition, const D3::Items::Mails & tMails, const uint32 dwSaveOptionBits); } void STrickleOnPlayerCreated(Player & tPlayer); ACDID SHirelingCreate(ActorCommonData & tACDPlayer, ActorCommonData & tACDNextTo, const HirelingClass eHirelingClass, BOOL bForceCreate, HirelingType eType); void NPCDismissProxy(ActorCommonData & tACDPlayer, HirelingClass eClass); DataID SACDInventoryAddToDirtyList(const ActorCommonData & tACDItem, ActorInventoryDatabaseAction eAction, InventorySlotType eCameFrom, InventorySlotType eDestination); static void sSetLimitedDurationItemPollTime(ActorCommonData & tACDPlayer);  // X/Common/Player.cpp:2721, 2767, 2672; X/Server/Network/ServerMessageSend.cpp:294; X/Server/SHireling.cpp:891; X/Server/Actors/Actors.cpp:7026; X/Server/Powers/PowerAPI.cpp:6359; lines 3365, 3384; X/Server/SHero.cpp:933; X/Server/Network/STrickle.cpp:288; X/Server/SHireling.cpp:642; X/Server/SNPC.cpp:793; X/Common/ActorInventory.cpp:11891; line 11461
+ACDID PlayerGetPet(ACDID idACDPlayer, int32 nIndex); int32 PlayerGetPetCount(ACDID idACDPlayer); int32 PlayerGetNumPetsOfType(ACDID idACDPlayer, PetType eType); void ServerMessageSendAddPet(const PlayerList & listDestPlayers, const ACDID idACDPet); void SHirelingSetActive(ACDID idACDPlayer, HirelingClass eClass, BOOL bSave); void ActorRefreshHirelingKnownActors(HirelingClass eClass); void PowerAPI_BuffApplyOnPetAddEffects(ACDID idACDSummoner, ACDID idACDPet, PetType ePetType, SNO snoPet); int32 PlayerGetEmptyPetSlot(Player & tPlayer, ACDID idACDPet, PlayerPet ** ptPet); void PlayerPetInit(PlayerPet & tPlayerPet, PetType eType, ActorCommonData & tACDPet, Player & tPlayer); namespace SHero { ActorID CreateActor(uint32 dwPlayerFlags, const uint32 dwPlayerFlags2, const WorldPlace & tPlace, const Quaternion & q, Player & tPlayer, const D3::Hero::SavedDefinition & tHeroDefinition, const D3::Account::SavedDefinition & tAccountDefinition, const D3::Items::Mails & tMails, const uint32 dwSaveOptionBits); } void STrickleOnPlayerCreated(Player & tPlayer); ACDID SHirelingCreate(ActorCommonData & tACDPlayer, ActorCommonData & tACDNextTo, const HirelingClass eHirelingClass, BOOL bForceCreate, HirelingType eType); void NPCDismissProxy(ActorCommonData & tACDPlayer, HirelingClass eClass); DataID SACDInventoryAddToDirtyList(const ActorCommonData & tACDItem, ActorInventoryDatabaseAction eAction, InventorySlotType eCameFrom, InventorySlotType eDestination); static void sSetLimitedDurationItemPollTime(ActorCommonData & tACDPlayer);  // X/Common/Player.cpp:2721, 2767, 2672; X/Server/Network/ServerMessageSend.cpp:294; X/Server/SHireling.cpp:891; X/Server/Actors/Actors.cpp:7026; X/Server/Powers/PowerAPI.cpp:6359; lines 3365, 3384; X/Server/SHero.cpp:933; X/Server/Network/STrickle.cpp:288; X/Server/SHireling.cpp:642; X/Server/SNPC.cpp:793; X/Common/ActorInventory.cpp:11891; line 11461
 int32 PowerActorGetMaxCharges(const ActorCommonData & tACD, SNO snoPower);  // X/Common/Powers/PowersCommon.cpp:4356
 int32 PowerActorGetRechargeTime(const ActorCommonData & tACD, SNO snoPower);  // X/Common/Powers/PowersCommon.cpp:4373
 float PowerGetCoolDownReductionPercent(SNO snoPower, const ActorCommonData & tACD);  // X/Common/Powers/PowersCommon.cpp:4541
@@ -2351,7 +2351,7 @@ BOOL SPlayerFindGoodSpawnLocation(
 
 ACDID PlayerActorCreate(
     Player & tPlayer,
-    const uint32 dwPlayerFlags,
+    const uint32 dwPlayerFlags, const uint32 dwPlayerFlags2,
     const WorldPlace & tPlace,
     const Quaternion & q,
     const BOOL bResetLifeStats,
@@ -2360,7 +2360,7 @@ ACDID PlayerActorCreate(
     const D3::Items::Mails & tMails,
     const uint32 dwSaveOptionBits)
 {
-    SHero::CreateActor(dwPlayerFlags, tPlace, q, tPlayer, tHeroDefinition, tAccountDefinition, tMails, dwSaveOptionBits);
+    SHero::CreateActor(dwPlayerFlags, dwPlayerFlags2, tPlace, q, tPlayer, tHeroDefinition, tAccountDefinition, tMails, dwSaveOptionBits);
 
 
 
@@ -6458,7 +6458,7 @@ void SPlayerAssignToLegendaryPowerSlot(
 
     if (gbidLegendaryItem != GBID_NONE)
     {
-        for (int32 i = 0; i < 3; i++)
+        for (int32 i = 0; i < 4; i++)
         {
             if (tPlayer.tHeroStateData.tSavedData.gbidLegendaryPowers[i] == gbidLegendaryItem)
                 SPlayerRemoveLegendaryPowerInSlot(tPlayer, i);
@@ -12088,7 +12088,7 @@ void SPlayerApplyEquippedLegendaryPowerBuffs(
     if (!ptPlayer)
         return;
 
-    for (int32 i = 0; i < 3; i++)
+    for (int32 i = 0; i < 4; i++)
     {
         GBID gbidLegendary = ptPlayer->tHeroStateData.tSavedData.gbidLegendaryPowers[i];
         if (gbidLegendary == GBID_NONE)
@@ -13035,7 +13035,7 @@ void SPlayerAchievementEarned(
         tPerPlayer.tRecentAchievementsEarned.push_back(achievementId);
         tPerPlayer.uLastAchievementEarnedTime = GameGetServerTime();
         sHandlePlayerAchievementScoreUpdate(ptPlayer, achievementId);
-        sGrantAchievementReward(ptPlayer, achievementId, false);
+        sGrantAchievementReward(ptPlayer, achievementId, sub_71007b7080() && false);  // 2.7.7 calls sub_71007b7080 after reading achievementId and passes false; the source form is a guess
     }
 }
 
@@ -15753,7 +15753,7 @@ void SPlayerLoadout_Equip(
 
 
 
-    for (int32 nSlot = 0; nSlot < 3; nSlot++)
+    for (int32 nSlot = 0; nSlot < 4; nSlot++)
     {
         SPlayerAssignToLegendaryPowerSlot(tPlayer, tLoadout.gbidLegendaryPowers[nSlot], nSlot);
     }

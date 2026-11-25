@@ -16,7 +16,7 @@
 // GlobalSNO.h and UIConsoleUtils.h.
 GBID GlobalGBIDGet(const GlobalGBID eGlobalGBID);
 extern const SymbolicEntry gGemTypeNames[], gCosmeticTypeNames[], gItemLabels[];
-CRefString ItemTypeGetDescription(GBID gbidItemType, ItemQualityLevel eIQL, int32 eAncientRank);
+CRefString ItemTypeGetDescription(GBID gbidItemType, ItemQualityLevel eIQL, int32 eAncientRank, BOOL bSeasonOnly, BOOL bSanctified);  // 2.7.7: 5 args (Items.cpp)
 namespace UIUtils { namespace Console {
 void DisplayPortrait(PlayerClass ePlayerClass, BOOL bIsFemale, int32 nAltLevel, const UIID & idPortrait, GBID gbidPortraitFrame);
 } }
@@ -130,7 +130,7 @@ void sUpdateGemCategoryUI(const UIID & idRoot, const ItemCategory eCategory)
     CRefString sEffects;
     SNO snoStringlistConsoleInventory = GlobalSNOGet(GLOBALSNO_STRINGLIST_CONSOLE_INVENTORY);
     if (eCategory == CATEGORY_UPGRADEABLE_JEWEL) {
-        sGemTypeName = ItemTypeGetDescription(GlobalGBIDGet(GLOBALGBID_ITEMTYPE_UPGRADEABLE_JEWEL), IQL_LEGENDARY, ANCIENT_RANK_NONE);
+        sGemTypeName = ItemTypeGetDescription(GlobalGBIDGet(GLOBALGBID_ITEMTYPE_UPGRADEABLE_JEWEL), IQL_LEGENDARY, ANCIENT_RANK_NONE, FALSE, FALSE);
         sEffects = StringListFetch(snoStringlistConsoleInventory, CRefString().Format("%sEffectsGeneral", SymbolToName(ITL_UPGRADEABLE_JEWEL, gItemLabels)));
     } else {
         sGemTypeName = SymbolToName(GEM_TYPE_LOOKUP[eCategory - CATEGORY_RUBY], gGemTypeNames);

@@ -70,7 +70,7 @@ void SCrafterUnlock(Player & tPlayer, const CrafterType eType);  // line 3114
 
 BOOL ItemPlayerConsumeRecipeReagents(const Player & tPlayer, GBID gbidRecipe);  // X/Common/Items.cpp
 BOOL ItemPlayerConsumeReforgeReagents(ActorCommonData & tACDPlayer, ActorCommonData & tACDItem);  // X/Common/Items.cpp:8411
-ACDID SItemReforge(ActorCommonData & tACDOldItem, Player & tPlayer);  // X/Server/SItems.cpp:979
+ACDID SItemReforge(ActorCommonData & tACDOldItem, Player & tPlayer, BOOL bUnk3, BOOL bUnk4);  // X/Server/SItems.cpp:979 (2.7.7: two new BOOL parameters)
 BOOL SItemApplyDye(ActorCommonData & tACDItem, ActorCommonData & tACDOwner, DyeType eDyeType);  // X/Server/SItems.cpp:1260
 int32 ItemGetStatsDataKey(const ActorCommonData & tACDItem);  // X/Common/Items.cpp:767
 BOOL ItemPlayerChargeTransmogCosts(ActorCommonData & tACDPlayer, const ActorCommonData & tACDItem, GBID gbidTransmog);  // X/Common/Items.cpp

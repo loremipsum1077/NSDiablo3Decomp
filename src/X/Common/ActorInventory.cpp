@@ -2156,7 +2156,7 @@ BOOL ACDInventorySlotIsMultiItemSlot(InventorySlotType eSlot)
     IVector2D size;
 
     ACDInventorySlotGetSize(eSlot, size);
-    if (size.x > 1 || size.y > 1)
+    if (size.x != 1 || size.y != 1)
         return TRUE;
     return FALSE;
 }
@@ -5581,7 +5581,7 @@ SNO ACDInventoryGetPrimaryWeaponSNO(ACDID idACD)
 {
     ACDID idACDItem = ACDInventoryGetPrimaryWeapon(idACD);
     if (idACDItem != ACDID_INVALID)
-        idACD = idACDItem;
+        return ACDGet(idACDItem).snoActor;
     ActorCommonData & tACD = ACDGet(idACD);
     return tACD.snoActor;
 }
@@ -6155,11 +6155,11 @@ static BOOL sIgnoreDeletedGBID(
 BOOL SACDInventoryRestoreItemToLocation(ActorCommonData & tACDRestoreTo, ActorCommonData & tACDItem, ActorLocation & tNewLocation); // ActorInventory.cpp:6672 (raw DWARF has no recovered header declaration).
 BOOL ActorInventorySocketItem(ActorCommonData & tACDItemToSocket, ActorCommonData & tACDItemSocketedInto, const IVector2D & tPoint, BOOL bMarkItemAsDirty); // ActorInventory.cpp:7825 (raw DWARF has no recovered header declaration).
 
-
+// NON_MATCHING: 2736 vs 2628 bytes; the gem-restore loop inlines an ACD lookup (ACDTryGet hash walk) that the target calls out of line, plus register allocation differences.
 static ACDID sRestoreItem(
     ActorCommonData & tACDRestoreTo,
     ACDID idACDPlayer,
-    const D3::Items::SavedItem & tSavedItem,
+    const D3::Items::SavedItem & tSavedItem, BOOL bIsSeasonal,  // 2.7.7: callers pass GameIsSeasonal()
     BOOL bResocketItem)
 {
     InventorySlotType eSlot = ActorInventoryTranslateFromSavedSlot(tSavedItem.item_slot());
@@ -6181,7 +6181,7 @@ static ACDID sRestoreItem(
 
 
 
-    if (GameIsSeasonal() &&
+    if (bIsSeasonal &&
 
         !GameIsUtility() &&
         tSavedItem.generator().season_created() != GameGetCurrentSeason())
@@ -6462,7 +6462,7 @@ static ACDID sRestoreItem(
 
 
 
-            ACDID idGem = sRestoreItem(tACDItem, idACDPlayer, tSavedGem, TRUE);
+            ACDID idGem = sRestoreItem(tACDItem, idACDPlayer, tSavedGem, bIsSeasonal, TRUE);
             if (idGem != ACDID_INVALID)
                 nSockets++;
 
@@ -6547,7 +6547,7 @@ void ACDInventorySavedStateRestore(
     ActorCommonData & tACDPlayer,
     const google::protobuf::RepeatedPtrField<D3::Items::SavedItem> & tSavedItems)
 {
-
+    BOOL bIsSeasonal = GameIsSeasonal();
 
 
 
@@ -6567,7 +6567,7 @@ void ACDInventorySavedStateRestore(
 
 
 
-            ACDID idItem = sRestoreItem(tACDPlayer, tACDPlayer.id, tSavedItem, FALSE);
+            ACDID idItem = sRestoreItem(tACDPlayer, tACDPlayer.id, tSavedItem, bIsSeasonal, FALSE);
             GBID gbidItem = tSavedItem.generator().gb_handle().gbid();
             if (idItem != ACDID_INVALID)
             {
@@ -6726,7 +6726,7 @@ void ACDInventoryItemRestoreSocketsFromGenerator(
     XPooledDataIDList * plistACDs,
     int32 nNetworkNameBase)
 {
-    int nSockets = 0;
+    int nSockets = 0; BOOL bIsSeasonal = GameIsSeasonal();
     for (int i = 0; i < tGenerator.contents_size(); i++)
     {
         const D3::Items::EmbeddedGenerator & tEmbedded = tGenerator.contents(i);
@@ -6751,7 +6751,7 @@ void ACDInventoryItemRestoreSocketsFromGenerator(
 
 
 
-            idGem = sRestoreItem(tACDItem, idACDOwner, tSavedGem, TRUE);
+            idGem = sRestoreItem(tACDItem, idACDOwner, tSavedGem, bIsSeasonal, TRUE);
         }
         else
             continue;
@@ -11467,7 +11467,7 @@ WeaponClass GetWeaponClass(const GBID gbidItemLeft, const GBID gbidItemRight)
 
 
 
-
+extern "C" int32 sub_71004b8900(const ActorCommonData * ptACD, int32 nLevel);  // 2.7.7 only, unnamed (see ItemOwnerMeetsRequirements in Items.cpp)
 
 BOOL ACDInventoryCanUseItem(
     const ActorCommonData & tACDUser,
@@ -11493,7 +11493,7 @@ BOOL ACDInventoryCanUseItem(
 
 
 
-    int32 nRequiredLevel = ItemGetLevelRequirement(gbidItem, &tACDItem, FALSE);
+    int32 nRequiredLevel = ItemGetLevelRequirement(gbidItem, &tACDItem, FALSE); nRequiredLevel = sub_71004b8900(&tACDUser, nRequiredLevel);
 
     int32 nOwnerLevel = tACDUser.AttributesGetInt(ATTRIBUTE_LEVEL);
     if (nOwnerLevel < nRequiredLevel)

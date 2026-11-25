@@ -204,7 +204,7 @@ CRefString sDisplayStringWithMarkupFromOperand(OperandCategoryID eID, uint64 ope
 
 
     case 204:
-        return ItemGetItemQualityDescription((ItemQualityLevel)operand, 0);
+        return ItemGetItemQualityDescription((ItemQualityLevel)operand, 0, FALSE, FALSE);
 
 
 

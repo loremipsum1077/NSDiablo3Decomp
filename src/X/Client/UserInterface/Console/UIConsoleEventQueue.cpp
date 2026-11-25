@@ -295,7 +295,7 @@ ImageHandle GetImageForItem(const ActorCommonData & tACDItem)
         {
             return StringToImageHandle("Console_EquippedInventoryRingSlotRing");
         }
-        else if (ACDInventoryItemAllowedInThisSlotType(gbidItem, 22))
+        else if (ACDInventoryItemAllowedInThisSlotType(gbidItem, SLOT_HIRELING_SPECIAL))
         {
             if (ItemHasLabel(gbidItem, ITL_ENCHANTRESS_SPECIAL))
                 return StringToImageHandle("Console_EquippedInventoryRingSlotWeaponOffHand_Enchantress");

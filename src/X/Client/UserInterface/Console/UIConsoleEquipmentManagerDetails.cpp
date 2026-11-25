@@ -921,7 +921,8 @@ void DetailsSkillsScreen::UpdateKanaisPowersSlotIcon(Player * ptPlayer)
 
     bool bAssigned = ptPlayer->tHeroStateData.tSavedData.gbidLegendaryPowers[0] != -1 ||
                      ptPlayer->tHeroStateData.tSavedData.gbidLegendaryPowers[1] != -1 ||
-                     ptPlayer->tHeroStateData.tSavedData.gbidLegendaryPowers[2] != -1;
+                     ptPlayer->tHeroStateData.tSavedData.gbidLegendaryPowers[2] != -1 ||
+                     ptPlayer->tHeroStateData.tSavedData.gbidLegendaryPowers[3] != -1;
 
     UI_GetWindowFromID(UIWND_EQUIPMENT_MANAGER_CONSOLE_SKILLS_KANAIS_POWERS_RING_ICON).SetActive(TRUE);
     UI_GetWindowFromID(UIWND_EQUIPMENT_MANAGER_CONSOLE_SKILLS_KANAIS_POWERS_RING_ICON_UNASSIGNED).SetActive(!bAssigned);

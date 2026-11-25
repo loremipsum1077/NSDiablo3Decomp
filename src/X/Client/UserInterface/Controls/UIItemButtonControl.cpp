@@ -61,6 +61,9 @@ BOOL ItemIsLegendary(GBID gbid);
 ItemQualityLevel ItemGetDisplayedQualityLevel(const ActorCommonData & tACDItem);
 ItemQualityLevel ItemGetDisplayedQualityLevel(const D3::Items::Generator & tItem);
 BOOL ItemIsUnidentified(const ActorCommonData & tACDItem);
+extern "C" BOOL sub_710050e910(GBID gbidItem);
+extern "C" BOOL sub_710050ea10(const ActorCommonData * ptACD);
+extern "C" BOOL sub_710050ecb0(const ActorCommonData * ptACD);
 ItemQualityLevel ItemDetermineQualityLevel(LPCSTR szDebugStr, GBHandle hGBItem, const GBID * ptGBIDAffixes, const int32 nAffixCount, const int32 nBonusRandomAffixes);
 // X/Client/Definitions/TextureDefinition.h
 void TextureGetFrameRectPixels(IRect2D & rectTexturePixels, const SNO snoTexture, const uint32 dwFrameIndex);
@@ -91,10 +94,10 @@ BOOL ItemIsDrawnAsLargeSlotItem(const GBID gbidItem);
 BOOL ItemIsUpgradeableJewel(const GBID gbidItem);
 // X/Client/UserInterface/Interface/UIInventory.h
 namespace UIInventory {
-BOOL GetItemBkgrndImage(int32 eQuality, ImageTextureFrame & tImageTexFrame, int32 fEquipped, int32 fLarge);
+BOOL GetItemBkgrndImage(int32 eQuality, ImageTextureFrame & tImageTexFrame, int32 fEquipped, int32 fLarge, int32 unk_4, int32 fSeasonOnly, int32 fSanctified, int32 fPrimalized);
 void DrawItemOverlay(const Rect2D & rectItemUIC, int32 eOverlay, float flAlpha, float & flZ, const Rect2D * prectClippingUIC);
 void DrawLegendaryGemRank(int32 nRank, float & flZ, const Rect2D & rectItemUIC, const Rect2D * prectClippingUIC);
-void DrawItemRarityIcon(int32 eQuality, float flAlpha, float & flZ, SNO snoShader, const Rect2D & rectPixels, const Vector2D & vecOffsetPixels, const Rect2D * prectClippingPixels);
+void DrawItemRarityIcon(GBID gbidItem, float flAlpha, float & flZ, SNO snoShader, const Rect2D & rectPixels, const Vector2D & vecOffsetPixels, const Rect2D * prectClippingPixels, BOOL fPrimal);
 }  // namespace UIInventory
 
 // The quality levels SetGBID forces; their enumerator names are not in the DWARF.
@@ -137,6 +140,8 @@ void UIItemButton::sInit(const ItemButtonCreationParams & tParams) {  // line 98
     m_gbid = -1;
     m_idACDItem = ACDID_INVALID;
     m_nStackCount = tParams.nStackCount;
+    unk_4e8 = 0;
+    unk_4ec = 0;
 
     m_dwItemButtonFlags = tParams.fDrawBackground ? (m_dwItemButtonFlags & ~(1 << IBF_NO_BACKGROUND)) : (m_dwItemButtonFlags | (1 << IBF_NO_BACKGROUND));
     m_dwItemButtonFlags = tParams.fDrawSockets ? (m_dwItemButtonFlags & ~(1 << IBF_NO_SOCKETS)) : (m_dwItemButtonFlags | (1 << IBF_NO_SOCKETS));
@@ -161,6 +166,8 @@ void UIItemButton::SetACDID(const ACDID idACD) {  // line 146
     if (ptACD != NULL && ptACD->IsItem()) {
         SetGBID(ptACD->hGB.gbid);
         SetQualityLevel(ItemGetDisplayedQualityLevel(*ptACD));
+        unk_4e8 = sub_710050ea10(ptACD);
+        unk_4ec = sub_710050ecb0(ptACD);
         UIItemOverlay eOverlay = ItemIsUnidentified(*ptACD) ? ITEMOVERLAY_UNIDENTIFIED : ITEMOVERLAY_NONE;
         SetOverlay(eOverlay);
     }
@@ -298,7 +305,8 @@ void UIItemButton::Draw(const uint8 bLayerAlpha, float & flZSlice) {  // line 31
     if (m_eIQL != -1 && !(m_dwItemButtonFlags & (1 << IBF_NO_BACKGROUND))) {
         BOOL fEquipped = (m_dwItemButtonFlags & (1 << IBF_EQUIPPED_BIT)) != 0;
         ImageTextureFrame tImageTexFrameQualityBkgrnd;
-        BOOL fFoundImage = UIInventory::GetItemBkgrndImage(m_eIQL, tImageTexFrameQualityBkgrnd, fEquipped, fLargeItem);
+        BOOL fSeasonOnly = sub_710050e910(m_gbid);
+        BOOL fFoundImage = UIInventory::GetItemBkgrndImage(m_eIQL, tImageTexFrameQualityBkgrnd, fEquipped, fLargeItem, FALSE, fSeasonOnly, unk_4e8, unk_4ec);
         if (fFoundImage) {
             float flLayerZ = UIDC_DIALOG_Z_START - (UIDC_DIALOG_Z_INCREMENT * flZSlice);
             flZSlice += 1.0f;
@@ -387,7 +395,8 @@ void UIItemButton::Draw(const uint8 bLayerAlpha, float & flZSlice) {  // line 31
         float flAlpha = (float)Math::Min(rgbaColor.a, bAlphaCascaded) / 255.0f;
         float flZ = UIDC_DIALOG_Z_START - (UIDC_DIALOG_Z_INCREMENT * flZSlice);
         flZSlice += 1.0f;
-        UIInventory::DrawItemRarityIcon(m_eIQL, flAlpha, flZ, snoShaderToUse, rectWindowPixels, vecOffsetPixels, &rectDrawClippingPixels);
+        if (m_eIQL != -1)
+            UIInventory::DrawItemRarityIcon(m_gbid, flAlpha, flZ, snoShaderToUse, rectWindowPixels, vecOffsetPixels, &rectDrawClippingPixels, unk_4ec);
     }
 }
 

@@ -997,10 +997,10 @@ BOOL GameTagIsValid(
 }
 
 
-int32 GetParagonLevel(const D3::Account::SavedDefinition & tAccount, BOOL bIsHardcore, BOOL bIsSeasonal)
+int32 GetParagonLevel(const D3::Account::SavedDefinition & tAccount, BOOL bIsHardcore, BOOL bIsSeasonal, BOOL bUnk)
 {
     int32 nParagonLevel = 0;
-    D3AccountPartition nPartitionId = GetPartition(bIsHardcore, bIsSeasonal);
+    D3AccountPartition nPartitionId = GetPartition(bIsHardcore, bIsSeasonal, bUnk);
     for (int32 i = 0; i < tAccount.partitions_size(); i++)
     {
         if (tAccount.partitions(i).partition_id() == nPartitionId)
@@ -1018,10 +1018,10 @@ int32 GetParagonLevel(const D3::Account::SavedDefinition & tAccount, BOOL bIsHar
 
 
 
-uint64 GetParagonExperience(const D3::Account::SavedDefinition & tAccount, BOOL bIsHardcore, BOOL bIsSeasonal)
+uint64 GetParagonExperience(const D3::Account::SavedDefinition & tAccount, BOOL bIsHardcore, BOOL bIsSeasonal, BOOL bUnk)
 {
     uint64 nParagonXP = 0;
-    D3AccountPartition nPartitionId = GetPartition(bIsHardcore, bIsSeasonal);
+    D3AccountPartition nPartitionId = GetPartition(bIsHardcore, bIsSeasonal, bUnk);
     for (int32 i = 0; i < tAccount.partitions_size(); i++)
     {
         if (tAccount.partitions(i).partition_id() == nPartitionId)

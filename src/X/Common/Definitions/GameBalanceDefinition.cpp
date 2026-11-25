@@ -883,15 +883,17 @@ TypeDescriptorField("", DT_SERIALIZEDATA, offsetof(ItemSalvageLevelTable, serIte
 TypeDescriptorField(NULL, DT_NULL, sizeof(ItemSalvageLevelTable), NULL, 0), }; ComplexTypeDescriptor TypeDescriptor_ItemSalvageLevelTable("ItemSalvageLevelTable", 0, ItemSalvageLevelTable_Fields, 3, NULL, 0x0, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_ITEM_SALVAGE_LEVEL_TABLE = &TypeDescriptor_ItemSalvageLevelTable;
 
 
-static const TypeDescriptorField ParagonBonus_Fields[11] = {
+static const TypeDescriptorField ParagonBonus_Fields[13] = {
 TypeDescriptorField("", DT_SERIALIZEDATA, offsetof(ParagonBonus, tHeader), NULL, 7340032), VariableArrayTypeDescriptorField("", DT_BYTE, offsetof(ParagonBonus, tHeader.szName), 0x700020, offsetof(ParagonBonus, tHeader) - offsetof(ParagonBonus, tHeader.szName)), TypeDescriptorField("", DT_INT, offsetof(ParagonBonus, tHeader.gbid), NULL, 0), TypeDescriptorField("", DT_INT, offsetof(ParagonBonus, tHeader.dwPad), NULL, 0),
 TypeDescriptorField("", DT_INT, offsetof(ParagonBonus, nPointsMax), NULL, 1),
+TypeDescriptorField("", DT_INT, offsetof(ParagonBonus, unk_1c), NULL, 1),
 FixedArrayTypeDescriptorField("", DT_ATTRIBUTE_SPECIFIER, offsetof(ParagonBonus, ptAttributes), NULL, 1, 4, 0),
+FixedArrayTypeDescriptorField("", DT_ATTRIBUTE_SPECIFIER, offsetof(ParagonBonus, unk_80), NULL, 1, 4, 0),
 TypeDescriptorField("", DT_INT, offsetof(ParagonBonus, nCategory), NULL, 1),
 TypeDescriptorField("", DT_INT, offsetof(ParagonBonus, nIndex), NULL, 1),
 EnumTypeDescriptorField("", offsetof(ParagonBonus, ePlayerClass), (const void *)-1, gPlayerClasses),
 CharArrayTypeDescriptorField("", offsetof(ParagonBonus, szIcon), "", 1, 256, -1),
-TypeDescriptorField(NULL, DT_NULL, sizeof(ParagonBonus), NULL, 0), }; ComplexTypeDescriptor TypeDescriptor_ParagonBonus("ParagonBonus", 0, ParagonBonus_Fields, 11, NULL, 0x0, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_PARAGON_BONUS = &TypeDescriptor_ParagonBonus;
+TypeDescriptorField(NULL, DT_NULL, sizeof(ParagonBonus), NULL, 0), }; ComplexTypeDescriptor TypeDescriptor_ParagonBonus("ParagonBonus", 0, ParagonBonus_Fields, 13, NULL, 0x0, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_PARAGON_BONUS = &TypeDescriptor_ParagonBonus;
 
 static const TypeDescriptorField ParagonBonusesTable_Fields[3] = {
 TypeDescriptorField("", DT_SERIALIZEDATA, offsetof(ParagonBonusesTable, serParagonBonuses), NULL, 0), VariableArrayTypeDescriptorField("", DT_PARAGON_BONUS, offsetof(ParagonBonusesTable, ptParagonBonuses), 0x21, offsetof(ParagonBonusesTable, serParagonBonuses) - offsetof(ParagonBonusesTable, ptParagonBonuses)),

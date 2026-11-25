@@ -260,12 +260,12 @@ static_assert(sizeof(PlayerLoadoutEquipmentUpdateMessage) == 0x40, "PlayerLoadou
 
 
 
-struct PlayerLoadoutSaveMessage {  // size 0x40
+struct PlayerLoadoutSaveMessage {  // size 0x44
     RequiredMessageHeader tHeader;  // 0x00
     int32 nLoadoutIndex;  // 0x08
-    CHAR usName[49];  // 0x0c
+    CHAR usName[53];  // 0x0c (2.7.7: CharArray 0x35 in Player.cpp's descriptor)
 };
-static_assert(sizeof(PlayerLoadoutSaveMessage) == 0x40, "PlayerLoadoutSaveMessage");
+static_assert(sizeof(PlayerLoadoutSaveMessage) == 0x44, "PlayerLoadoutSaveMessage");
 
 struct PlayerLoadoutSetSlotMessage {  // size 0x14
     RequiredMessageHeader tHeader;  // 0x00
@@ -289,11 +289,11 @@ static_assert(sizeof(PlayerLoadoutSetSlotMessage) == 0x14, "PlayerLoadoutSetSlot
 
 
 
-struct StashIconStateMessage {  // size 0x14
+struct StashIconStateMessage {  // size 0x18
     RequiredMessageHeader tHeader;  // 0x00
-    uint8 bStashIcons[12];  // 0x08
+    uint8 bStashIcons[13];  // 0x08
 };
-static_assert(sizeof(StashIconStateMessage) == 0x14, "StashIconStateMessage");
+static_assert(sizeof(StashIconStateMessage) == 0x18, "StashIconStateMessage");
 
 // X/Common/Actors/ActorEffectCommon.h
 struct PlayMusicMessage {  // size 0xc
@@ -859,10 +859,10 @@ BOOL GetGameMessageTypeAndSize(GameMessageType eMessageType, const XTypeDescript
         MESSAGE_CASE(CMSG_HAS_NFP_DEVICE, DT_ANN_DATA_MESSAGE, ANNDataMessage)
         MESSAGE_CASE(CMSG_LOST_NFP_DEVICE, DT_ANN_DATA_MESSAGE, ANNDataMessage)
         MESSAGE_CASE(SMSG_PLAYER_CHEATED_DEATH, DT_PLAYER_INDEX_MESSAGE, PlayerIndexMessage)
-        // 2.7.7: SMSG_UNLOCKABLE_RANDOM_AFFIX (UnlockableRandomAffixMessage), CMSG_DARK_ALCHEMY_ACTIVATE_NODE
-        // (ActivateNodeMessage) go here once their descriptors exist.
+        MESSAGE_CASE(SMSG_UNLOCKABLE_RANDOM_AFFIX, DT_UNLOCKABLE_RANDOM_AFFIX_MESSAGE, UnlockableRandomAffixMessage)
+        MESSAGE_CASE(CMSG_DARK_ALCHEMY_ACTIVATE_NODE, DT_ACTIVATE_NODE_MESSAGE, ActivateNodeMessage)
         MESSAGE_CASE(SMSG_DARK_ALCHEMY_NODE_ACTIVATED, DT_DWORD_DATA_MESSAGE, DWordDataMessage)
-        // 2.7.7: SMSG_DARK_ALCHEMY_INTERACT (GizmoInteractMessage) goes here once its descriptor exists.
+        MESSAGE_CASE(SMSG_DARK_ALCHEMY_INTERACT, DT_GIZMO_INTERACT_MESSAGE, GizmoInteractMessage)
         MESSAGE_CASE(SMSG_CHUNKED, DT_CHUNK_MESSAGE, ChunkMessage)
         MESSAGE_CASE(CMSG_SET_DUNGEON_ACCEPT, DT_SIMPLE_MESSAGE, SimpleMessage)
         MESSAGE_CASE(SMSG_DISPLAY_GAME_CHAT_TEXT, DT_DISPLAY_GAME_TEXT_MESSAGE, DisplayGameTextMessage)

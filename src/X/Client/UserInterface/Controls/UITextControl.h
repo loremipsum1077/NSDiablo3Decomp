@@ -156,17 +156,17 @@ public:
     void SetDisabledColor(const RGBAColor &);
     SNO GetFont() const { return m_snoFont; }  // line 269
     int32 GetFontSize() const {  // line 276; the body is written from its inlined copies (lines 282-285)
-        int32 nFontSize;
-        if (gePerformanceMode == nn::oe::PerformanceMode_Normal)
-            nFontSize = m_nFontSize + m_nFontBoostSize;
-        else
-            nFontSize = m_nFontSize;
-        return nFontSize + gnFontBoost;
+        if (gePerformanceMode == nn::oe::PerformanceMode_Normal || unk_3bc)  // 2.7.7: unk_3bc also applies the boost
+            return m_nFontSize + m_nFontBoostSize + gnFontBoost;
+        return m_nFontSize + gnFontBoost;
     }
     float GetAdvanceScalar() const { return m_flAdvanceScalar; }  // line 297
     void SetFont(const SNO snoFont) { m_snoFont = snoFont; }  // line 304
     void SetFontSize(const int32 nFontSize) { m_nFontSize = nFontSize; }  // line 311
-    void SetFontBoostSize(const int32 nFontBoostSize) { m_nFontBoostSize = nFontBoostSize; }  // line 319
+    void SetFontBoostSize(const int32 nFontBoostSize) {  // line 319; 2.7.7: every inlined copy also clears unk_3bc
+        m_nFontBoostSize = nFontBoostSize;
+        unk_3bc = 0;
+    }
     void SetWordWrap(const BOOL bWrap);
     void SetValidatingHyperlinks(BOOL fFlag);
     void SetHyperlinkAware(BOOL);

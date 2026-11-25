@@ -751,10 +751,10 @@ struct EnchantAffixMessage {  // size 0x10
 
 
 // X/Common/Player.h
-struct PlayerLoadoutSaveMessage {  // size 0x40
+struct PlayerLoadoutSaveMessage {  // size 0x44
     RequiredMessageHeader tHeader;  // 0x00
     int32 nLoadoutIndex;  // 0x08
-    CHAR usName[49];  // 0x0c
+    CHAR usName[53];  // 0x0c
 };
 // X/Common/Networking/GameMessage.h
 

@@ -424,7 +424,7 @@ void OnPlayHero(const UIID &, const int32 nControllerIndex);
 void OnNewHero(const UIID &, const int32 nControllerIndex);
 void OnDeleteHero(const UIID &, const int32 nControllerIndex);
 void OnBack(const UIID &, const int32 nControllerIndex);
-void OnRebirth(const UIID &, const int32 nControllerIndex);
+void OnRebirth(const UIID &, const int32 nControllerIndex, const BOOL bSolo);  // 2.7.7: the UI table uses the extern "C" wrappers sub_710035ae80/ae90
 void OnAcceptModalWarning(const UIID & id, const int32 nControllerIndex);
 void OnCancelModalWarning(const UIID &, const int32);
 } } 

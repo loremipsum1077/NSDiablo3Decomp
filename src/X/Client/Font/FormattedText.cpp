@@ -1107,7 +1107,7 @@ static int32 sCodepointsToUTF8Bytes(LPCSTR szUTF8, const int32 nCodepoints)
 uint32 FormattedText::GetPrevBreak(const uint32 nFormattedIndex, const BreakStyle eBreakStyle) const
 {
 
-    UTBreakIterator tIterator(eBreakStyle);
+    UTBreakIterator tIterator(eBreakStyle, FALSE);
     tIterator.SetText(m_szOriginalText);
 
 
@@ -1142,7 +1142,7 @@ uint32 FormattedText::GetPrevBreak(const uint32 nFormattedIndex, const BreakStyl
 uint32 FormattedText::GetNextBreak(const uint32 nFormattedIndex, const BreakStyle eBreakStyle) const
 {
 
-    UTBreakIterator tIterator(eBreakStyle);
+    UTBreakIterator tIterator(eBreakStyle, FALSE);
     tIterator.SetText(m_szOriginalText);
 
 

@@ -31,6 +31,8 @@
 typedef int32 DamageType; void PowerGetBuffAttributes(int32, Attrib &, Attrib &, Attrib &); float PowerComputeResistanceDamageMitigation(float flResistanceTotal, int32 nAttackerLevel); extern UIID UIWND_SKILLS_CONSOLE_CHARACTER_DETAILS; extern UIID UIWND_SKILLS_CONSOLE_CHARACTER_DETAILS_LIST; extern UIID UIWND_SKILLS_CONSOLE_CHARACTER_BUFF_PANEL; extern UIID UIWND_SKILLS_CONSOLE_CHARACTER_BUFF_PANEL_SCROLL_BOX; extern UIID UIWND_SKILLS_CONSOLE_CHARACTER_DETAIL_SCROLL_BOX; extern UIID UIWND_SKILLS_CONSOLE_CHARACTER_DETAIL_TEXT; extern UIID UIWND_SKILLS_CONSOLE_CHARACTER_BUFF_PANEL_NO_BUFFS_TEXT;  // not adopted yet: PowerGetBuffAttributes (X/Common/Powers/PowersCommon.h), UIIDs.h
 UIConsoleScrollBox & UI_GetConsoleScrollBoxFromID(const UIID & id); UIStackPanel & UI_GetStackPanelFromID(const UIID & id);  /* UI.cpp */ namespace UIUtils { namespace Console { BOOL CanScrollContentInScrollBox(const UIID & idScrollBox); void ScrollContentInScrollBox(const UIID & idScrollBox, const float flDelta); } } namespace UIBuffs { CRefString GetBuffTooltipText(const UIBuffs::SortedBuff & tBuff); CRefString GetBuffName(SNO snoPower, int32 nBuffIndex); }  // UIConsoleUtils.cpp, UIBuffs.cpp
 namespace Console { namespace Screens { typedef int32 GameplayScreens; void OpenToScreen(int32 nScreenSet, int32 nScreen, int32 nControllerIndex, BOOL bUnused); } }  // ConsoleScreenManager.cpp
+bool InputIsSingleJoycon(int32_t nControllerIndex);  // InputNX64.cpp
+extern "C" BOOL sub_7100527370(const ActorCommonData & tACD);  // Player.cpp region: returns AttributesGetInt(ATTRIBUTE_PARAGON_CAP_ENABLED)
 namespace UICharacterDetails {
 namespace Console {
 
@@ -1013,10 +1015,11 @@ void CharacterStatsDataSource::PopulateInfoList(
                 CRefString usStat = CRefString(flStat >= 0.0f ? "+" : "") + UnicodeText::FormatNumber(flStat, TRUE, FNS_PERCENT, 0, 2, XLOCALE_INVALID);
                 float flStatPlus100 = flStat + 1.0f;
                 CRefString usStatPlus100 = UnicodeText::FormatNumber(flStatPlus100, TRUE, FNS_PERCENT, 0, 2, XLOCALE_INVALID);
+                LPCSTR szTip = sub_7100527370(tACD) ? "TipMovementSpeedParagonCap" : "TipMovementSpeed";
 
                 AddStat(StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_HERO_DETAILS), "MovementSpeed"),
                     usStat,
-                    LocalizedSprintf(StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_HERO_DETAILS), "TipMovementSpeed"), usStat.str(), usStatPlus100.str(), NULL));
+                    LocalizedSprintf(StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_HERO_DETAILS), szTip), usStat.str(), usStatPlus100.str(), NULL));
             }
             {
                 float flStat = tACD.AttributesGetFloat(ATTRIBUTE_GOLD_FIND_TOTAL);
@@ -1477,7 +1480,7 @@ void UpdateButtonLegend()
         tActionManager.SetAction(::Console::CONTROLLER_INPUT_LEFT_TRIGGER, ACTION_SCROLL_DETAIL_INFO, sScrollPrompt);
         tActionManager.SetAction(::Console::CONTROLLER_INPUT_RIGHT_TRIGGER, ACTION_SCROLL_DETAIL_INFO, sScrollPrompt);
     }
-    if (UIUtils::Console::CanScrollContentInScrollBox(UIWND_SKILLS_CONSOLE_CHARACTER_BUFF_PANEL_SCROLL_BOX))
+    if (!(sptPlayer != NULL && InputIsSingleJoycon(sptPlayer->nControllerIndex)) && UIUtils::Console::CanScrollContentInScrollBox(UIWND_SKILLS_CONSOLE_CHARACTER_BUFF_PANEL_SCROLL_BOX))
     {
         CRefString sScrollPrompt = StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_CONSOLE_CHARACTER_DETAILS), "ScrollBuffs");
         tActionManager.SetAction(::Console::CONTROLLER_INPUT_RIGHT_STICK, ACTION_SCROLL_BUFFS_LIST, sScrollPrompt);

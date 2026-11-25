@@ -30,10 +30,12 @@ inline CriteriaUpdateRecord::CriteriaUpdateRecord(uint32 achievementSet)
     : unk_0(achievementSet), m_criteria(NULL), m_startTime(0), m_updateTime(0), m_quantity(0), m_flags(0) {}
 struct CriteriaDeleteRecord {  // size 0x10
     CriteriaDeleteRecord();
+    CriteriaDeleteRecord(uint32 achievementSet);
     uint32 unk_0;  // 0x00 (2.7.7; achievement_set)
     const OnlineService::AchievementsEngine::InternalCriteriaDefinition * m_criteria;  // 0x08
 };
 static_assert(sizeof(CriteriaDeleteRecord) == 0x10, "CriteriaDeleteRecord");
 inline CriteriaDeleteRecord::CriteriaDeleteRecord() : unk_0(0), m_criteria(NULL) {}
+inline CriteriaDeleteRecord::CriteriaDeleteRecord(uint32 achievementSet) : unk_0(achievementSet), m_criteria(NULL) {}
 typedef OnlineService::AchievementsEngine::Achievement AchievementUpdateRecord;
 } }

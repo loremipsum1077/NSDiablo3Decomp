@@ -21,6 +21,7 @@
 #include "../../../Common/Definitions/SkillKitDefinition.h"
 #include "../../../Common/GlobalSNO.h"
 #include "../../../Common/HotbarButton.h"
+#include "../../../Common/Player.h"
 #include "../../../Common/SNO/SNOFiles.h"
 #include "../../../Sigma/BlzExt/BlzVectorHelper.h"
 #include "../../../Sigma/DataStructures/XBitArray.h"
@@ -35,25 +36,6 @@
 
 // Declared here because their headers are not adopted yet. Each comment names the file that
 // defines the function or object.
-// X/Common/Player.h:803. Only the members this file reads are declared.
-struct Player {  // size 0xd770
-    int32 nPlayerIndex;  // 0x00
-    ACDID idPlayerACD;  // 0x04
-    uint8 _unadopted0[0x1348 - 0x8];  // 0x08 (invented name: .. tHeroStateData.tSavedData.tActiveSkills)
-    struct {
-        SNO snoSkill;  // 0x00
-        RuneType eRuneType;  // 0x04
-        uint8 _unadopted[0x8];  // 0x08
-    } tActiveSkills[6];  // 0x1348 (tHeroStateData.tSavedData.tActiveSkills)
-    SNO snoTraits[4];  // 0x13a8 (tHeroStateData.tSavedData.snoTraits)
-    GBID gbidLegendaryPowers[3];  // 0x13b8 (tHeroStateData.tSavedData.gbidLegendaryPowers)
-    uint8 _unadopted1[0xc224 - 0x13c4];  // 0x13c4 (invented name: .. nCurrentLevel)
-    int32 nCurrentLevel;  // 0xc224
-    uint8 _unadopted2[0xc6ec - 0xc228];  // 0xc228 (invented name: .. nControllerIndex)
-    int32 nControllerIndex;  // 0xc6ec
-    uint8 _unadopted3[0xd770 - 0xc6f0];  // 0xc6f0
-};
-static_assert(sizeof(Player) == 0xd770, "Player");
 typedef int32 LegendaryPowerSlotType;
 // X/Common/Player.cpp
 extern const int32 cgnActiveSkillSlotLevelReq[6];
@@ -105,7 +87,7 @@ BOOL PowerActorMeetsWeaponRequirement(const ActorCommonData & tACD, AutoPowerDef
 // X/Common/Attributes/FastAttribute.cpp
 FastAttribKey MakeAttribKey(Attrib eAttrib, int32 nParam);
 // X/Common/Items/ItemTypes.cpp
-CRefString ItemTypeGetDescription(GBID gbidItemType, BOOL bPlural, BOOL bUnused);
+CRefString ItemTypeGetDescription(GBID gbidItemType, BOOL bPlural, BOOL bUnused, BOOL bSeasonOnly, BOOL bSanctified);  // 2.7.7: 5 args (Items.cpp)
 // X/Common/GameBalance.cpp
 CRefString GBIDToString(const GBID & gbid);
 // X/Sigma/BitManip.cpp
@@ -263,17 +245,6 @@ uint32 PlayerGetLocalPlayerCount();
 BOOL PlayerIsLocal(const Player * ptPlayer);
 PlayerClass PlayerGetPlayerClass(const Player * ptPlayer);
 GBID PlayerClassToGBID(PlayerClass ePlayerClass);
-// X/Common/Player.h:280
-typedef int32 GameError;
-enum {
-    GAMEERROR_SKILLS_CANT_CHANGE_WHILE_IN_COOLDOWN = 54,
-    GAMEERROR_SKILLS_CANT_CHANGE_WHILE_IN_BOSS_ENCOUNTER = 56,
-};
-struct GameErrorData {  // size 0x8
-    GameErrorData(const GameError eError) : eError(eError), dwVal(0) {}  // line 318
-    GameError eError;  // 0x00
-    uint32 dwVal;  // 0x04
-};
 // X/Client/CPlayer.cpp
 ACDID LocalPlayersACDGetByIndex(int32 nIndex);
 CRefString CPlayerGetIndicatorString(const Player & tPlayer);
@@ -670,7 +641,7 @@ SNO GetSkillForSlot(const Player & tPlayer, const int32 nSlot)  // line 215
     if (nSlot == -1) {
         return -1;
     }
-    return tPlayer.tActiveSkills[nSlot].snoSkill;
+    return tPlayer.tHeroStateData.tSavedData.tActiveSkills[nSlot].snoSkill;
 }
 
 SNO GetTraitForSlot(const Player & tPlayer, const int32 nSlot)  // line 225
@@ -678,7 +649,7 @@ SNO GetTraitForSlot(const Player & tPlayer, const int32 nSlot)  // line 225
     if (nSlot == -1) {
         return -1;
     }
-    return tPlayer.snoTraits[nSlot];
+    return tPlayer.tHeroStateData.tSavedData.snoTraits[nSlot];
 }
 
 PlayerSkillsGlobals::~PlayerSkillsGlobals()  // line 332
@@ -2967,7 +2938,10 @@ void PlayerSkillsGlobals::UpdateKanaisPowersSlotIcon()  // line 4343
 {
     UI_GetWindowFromID(UIWND_SKILLS_CONSOLE_KANAIS_POWERS_RING_ICON).SetUserData((void *)KANAI_SLOT);
     const bool bLocked = GetCraftLevel(3, *ptPlayer) == 0;
-    const bool bAssigned = ptPlayer->gbidLegendaryPowers[0] != -1 || ptPlayer->gbidLegendaryPowers[1] != -1 || ptPlayer->gbidLegendaryPowers[2] != -1;
+    bool bAssigned = false;
+    for (int32 i = 0; i < 4; ++i)
+        if (ptPlayer->tHeroStateData.tSavedData.gbidLegendaryPowers[i] != -1)
+            bAssigned = true;
     UI_GetWindowFromID(UIWND_SKILLS_CONSOLE_KANAIS_POWERS_RING_ICON).SetActive(TRUE);
     UI_GetWindowFromID(UIWND_SKILLS_CONSOLE_KANAIS_POWERS_RING_ICON_LOCKED).SetActive(bLocked);
     UI_GetWindowFromID(UIWND_SKILLS_CONSOLE_KANAIS_POWERS_RING_ICON_UNASSIGNED).SetActive(!bLocked && !bAssigned);
@@ -3175,7 +3149,7 @@ void ShowSkillDescription(const UIID & idText, const SNO snoPower, ActorCommonDa
         sDescription += UISkills::GetSkillDescriptionText(tACDPlayer, snoPower, nSkillLevel, bIsTrait, bIsTrait ? TRUE : bShowDetails);
         const GBID gbidItemTypeRequirement = PowerGeneralTagGetGBID(AutoPowerDefinitionR(snoPower), TAG_POWER_ITEM_TYPE_REQUIREMENT);
         if (gbidItemTypeRequirement == GlobalGBIDGet(GLOBALGBID_ITEMTYPE_SHIELD) || gbidItemTypeRequirement == GlobalGBIDGet(GLOBALGBID_ITEMTYPE_BOWCLASS)) {
-            CRefString sRequirementString = StringListEntryReplace(StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_UI_TOOLTIPS), "RequiresItemType"), "{s1}", ItemTypeGetDescription(gbidItemTypeRequirement, TRUE, FALSE), TRUE);
+            CRefString sRequirementString = StringListEntryReplace(StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_UI_TOOLTIPS), "RequiresItemType"), "{s1}", ItemTypeGetDescription(gbidItemTypeRequirement, TRUE, FALSE, FALSE, FALSE), TRUE);
             const BOOL bIsLocked = !PowerActorMeetsWeaponRequirement(tACDPlayer, AutoPowerDefinitionR(snoPower));
             if (bIsLocked) {
                 Set_Text_Color(sRequirementString, 1);

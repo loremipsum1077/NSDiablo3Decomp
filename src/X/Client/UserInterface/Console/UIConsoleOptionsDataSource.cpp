@@ -31,8 +31,8 @@
 // Declared here because their headers are not adopted yet; each comment names the defining file.
 extern UIID UILIST_CONSOLE_OPTIONS_LIST;  // X/Client/UserInterface/UIIDs.cpp
 extern UIID UITXT_CONSOLE_OPTIONS_TOOLTIP;  // X/Client/UserInterface/UIIDs.cpp
-extern blz::array<int, 10> g_tNX64TextLocales;  // X/Common/SNO/SNOFiles.cpp
-extern blz::array<int, 11> g_tNX64AudioLocales;  // X/Common/SNO/SNOFiles.cpp
+extern blz::array<int, 13> g_tNX64TextLocales;  // X/Common/SNO/SNOFiles.cpp
+extern blz::array<int, 14> g_tNX64AudioLocales;  // X/Common/SNO/SNOFiles.cpp
 CRefString StringListFetch(LPCSTR szLabel);  // X/Common/Definitions/StringListDefinition.cpp
 void CPlayerUpdateServerSidePrefs(Player * ptPlayer);  // X/Client/CPlayer.cpp
 void CPlayerSendPrefsToServer(Player * ptPlayer);  // X/Client/CPlayer.cpp
@@ -533,11 +533,13 @@ int32 ConsoleOptionsSelectorDataSource::GetNumItems() const
     switch (m_eCurrentOptionID)
     {
     case MUSIC_VOLUME: case MASTER_VOLUME: case EFFECTS_VOLUME: case DIALOGUE_VOLUME: case AMBIENT_VOLUME:
-    case AUDIO_LANGUAGE_OVERRIDE:
         return 11;
 
-    case TEXT_LANGUAGE_OVERRIDE:
-        return 10;
+    case TEXT_LANGUAGE_OVERRIDE:  // 2.6.2: 10
+        return 13;
+
+    case AUDIO_LANGUAGE_OVERRIDE:  // 2.6.2: 11
+        return 14;
 
     case REGION_OVERRIDE:
         return 8;
@@ -1248,6 +1250,9 @@ void SetTextForLocale(CRefString & sText, XLocale eLocale)
     case XLOCALE_ITALIAN:
         sText = StringListFetch("GameOptions:Lang_itIT");
         break;
+    case XLOCALE_KOREAN:
+        sText = StringListFetch("GameOptions:Lang_koKR");
+        break;
     case XLOCALE_POLISH:
         sText = StringListFetch("GameOptions:Lang_plPL");
         break;
@@ -1259,6 +1264,12 @@ void SetTextForLocale(CRefString & sText, XLocale eLocale)
         break;
     case XLOCALE_JAPANESE:
         sText = StringListFetch("GameOptions:Lang_jpJP");
+        break;
+    case XLOCALE_CHINESE_TAIWAN:
+        sText = StringListFetch("GameOptions:Lang_zhTW");
+        break;
+    case XLOCALE_UNK_19:
+        sText = StringListFetch("GameOptions:Lang_zhCN");
         break;
     default:
         sText = XLocaleToString(eLocale);

@@ -6774,32 +6774,32 @@ static CRefString sGetStringForError( const GameErrorData & tData )
     case 13:
         {
             GBID gbid = tData.dwVal;
-            if ( gbid == GlobalGBIDGet( (GlobalGBID)68 ) )
-                return StringListFetch( GlobalSNOGet( (GlobalSNO)723 ), "PowerRequiresMeleeWeapon" );
-            if ( gbid == GlobalGBIDGet( (GlobalGBID)70 ) )
-                return StringListFetch( GlobalSNOGet( (GlobalSNO)723 ), "PowerRequiresShield" );
+            if ( gbid == GlobalGBIDGet( GLOBALGBID_ITEMTYPE_MELEE ) )
+                return StringListFetch( GlobalSNOGet( GLOBALSNO_STRINGLIST_GAME_ERRORS ), "PowerRequiresMeleeWeapon" );
+            if ( gbid == GlobalGBIDGet( GLOBALGBID_ITEMTYPE_SHIELD ) )
+                return StringListFetch( GlobalSNOGet( GLOBALSNO_STRINGLIST_GAME_ERRORS ), "PowerRequiresShield" );
         }
         break;
 
-    case 179:
+    case 190:  // 2.6.2: 179
         {
             CRefString sError;
             CRefString sTime;
             CRefString sMsg;
             if ( tData.dwVal > 3600 )
-                sError = LocalizedSprintf( StringListFetch( GlobalSNOGet( (GlobalSNO)741 ), "GeneralHours" ).str(), UnicodeText::FormatNumber( (int32)tData.dwVal / 3600, TRUE, FNS_NORMAL, XLOCALE_INVALID ).str(), NULL );
+                sError = LocalizedSprintf( StringListFetch( GlobalSNOGet( GLOBALSNO_STRINGLIST_BNET_STRINGS ), "GeneralHours" ).str(), UnicodeText::FormatNumber( (int32)tData.dwVal / 3600, TRUE, FNS_NORMAL, XLOCALE_INVALID ).str(), NULL );
             else if ( tData.dwVal > 60 )
-                sError = LocalizedSprintf( StringListFetch( GlobalSNOGet( (GlobalSNO)741 ), "GeneralMinutes" ).str(), UnicodeText::FormatNumber( (int32)tData.dwVal / 60, TRUE, FNS_NORMAL, XLOCALE_INVALID ).str(), NULL );
+                sError = LocalizedSprintf( StringListFetch( GlobalSNOGet( GLOBALSNO_STRINGLIST_BNET_STRINGS ), "GeneralMinutes" ).str(), UnicodeText::FormatNumber( (int32)tData.dwVal / 60, TRUE, FNS_NORMAL, XLOCALE_INVALID ).str(), NULL );
             else
-                sError = LocalizedSprintf( StringListFetch( GlobalSNOGet( (GlobalSNO)741 ), "GeneralSeconds" ).str(), UnicodeText::FormatNumber( (int32)tData.dwVal, TRUE, FNS_NORMAL, XLOCALE_INVALID ).str(), NULL );
+                sError = LocalizedSprintf( StringListFetch( GlobalSNOGet( GLOBALSNO_STRINGLIST_BNET_STRINGS ), "GeneralSeconds" ).str(), UnicodeText::FormatNumber( (int32)tData.dwVal, TRUE, FNS_NORMAL, XLOCALE_INVALID ).str(), NULL );
 
-            sTime = StringListFetch( GlobalSNOGet( (GlobalSNO)723 ), SymbolToName( tData.eError, gGameErrors ) );
+            sTime = StringListFetch( GlobalSNOGet( GLOBALSNO_STRINGLIST_GAME_ERRORS ), SymbolToName( tData.eError, gGameErrors ) );
             sMsg = LocalizedSprintf( sTime.str(), sError.str(), NULL );
             return sMsg;
         }
     }
 
-    return StringListFetch( GlobalSNOGet( (GlobalSNO)723 ), SymbolToName( tData.eError, gGameErrors ) );
+    return StringListFetch( GlobalSNOGet( GLOBALSNO_STRINGLIST_GAME_ERRORS ), SymbolToName( tData.eError, gGameErrors ) );
 }
 
 

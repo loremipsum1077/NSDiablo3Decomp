@@ -289,9 +289,9 @@ uint64 ItemGetCost(const ActorCommonData & tACDItem, const CostType eCostType, c
 float ItemGetDurabilityPercent(const ActorCommonData & tACDItem);  // Items.cpp:8921
 // Item names, colours and descriptions (Items.cpp).
 struct RGBAColor;
-CRefString ItemGetItemQualityDescription(const ItemQualityLevel eIQL, const AncientRank eAncientRank);  // Items.cpp:9770
+CRefString ItemGetItemQualityDescription(const ItemQualityLevel eIQL, const AncientRank eAncientRank, const BOOL bSeasonOnly, const BOOL bSanctified);  // Items.cpp:9770
 CRefString ItemTypeGetDescription(const ActorCommonData & tACDItem);  // Items.cpp:9872
-CRefString ItemTypeGetDescription(const GBID gbidItemType, const ItemQualityLevel eIQL, const AncientRank eAncientRank);  // Items.cpp:9902
+CRefString ItemTypeGetDescription(const GBID gbidItemType, const ItemQualityLevel eIQL, const AncientRank eAncientRank, const BOOL bSeasonOnly, const BOOL bSanctified);  // Items.cpp:9902
 CRefString UIText_IconFromCurrency(CurrencyType eCurrencyType);  // Items.cpp:10372
 CRefString UIText_ValueToGameCurrency(const uint64 uAmount, CurrencyType eCurrencyType);  // Items.cpp:10408
 RGBAColor ItemGetDisplayNameColor(const ItemQualityLevel eIQL);  // Items.cpp:13762

@@ -41,6 +41,7 @@ static const LocaleDef stLocaleDefs[NUM_XLOCALES] = {
     {"plPL", XFourCC("plPL"), TRUE},
     {"ptPT", XFourCC("ptPT"), FALSE},
     {"jpJP", XFourCC("jpJP"), FALSE},
+    {"ztCN", XFourCC("ztCN"), FALSE},
 };
 
 char output8[2048];

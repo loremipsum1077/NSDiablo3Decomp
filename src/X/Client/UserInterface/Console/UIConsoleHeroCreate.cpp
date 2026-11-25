@@ -124,10 +124,10 @@ PlayerClass arDemoClasses[] =
 
 // arStarterEditionClasses (line 125) is not in the binary; the linker dropped it.
 
-enum { HEROCREATE_FLAG_HARDCORE = 0, HEROCREATE_FLAG_FEMALE = 1, HEROCREATE_FLAG_SEASONAL = 2 };
+enum { HEROCREATE_FLAG_HARDCORE = 0, HEROCREATE_FLAG_FEMALE = 1, HEROCREATE_FLAG_SEASONAL = 2, HEROCREATE_FLAG_UNK_3 = 3 };
 enum { HARDCORE_COOLDOWN_MILLISECS = 3000 };
 enum ScreenActions { ACTION_SELECT = 0, ACTION_CONFIRM = 1, ACTION_BACK = 2, ACTION_TOGGLE_GENDER = 3, ACTION_CHANGE_HEROTYPE = 4, ACTION_TOGGLE_GAME_MODE = 5, ACTION_TOGGLE_BOOST_LEVEL = 6 };
-enum UIHeroType { UIHEROTYPE_NORMAL = 0, UIHEROTYPE_HARDCORE = 1, UIHEROTYPE_SEASONAL = 2, UIHEROTYPE_SEASONAL_HARDCORE = 3, UIHEROTYPE_COUNT = 4 };
+enum UIHeroType { UIHEROTYPE_NORMAL = 0, UIHEROTYPE_HARDCORE = 1, UIHEROTYPE_SEASONAL = 2, UIHEROTYPE_SEASONAL_HARDCORE = 3, UIHEROTYPE_UNK_4 = 4, UIHEROTYPE_UNK_5 = 5, UIHEROTYPE_COUNT = 6 };  // 4/5: SetHeroType shows "SoloSeasonalHero" / "SoloHardcoreSeasonalHero" strings
 enum UIGender { UIGENDER_MALE = 0, UIGENDER_FEMALE = 1 };
 
 
@@ -335,6 +335,7 @@ struct HeroCreateData {
     HeroCreateDataSource tHeroCreateDataSource;
     BOOL fCreateHardcore;
     BOOL fCreateSeasonal;
+    BOOL unk_10;  // 0x10; OnAccept sets HEROCREATE_FLAG_UNK_3 from it
     int32 nPlayingClassVideo;
     LightID idInGameHeroLight;
     FrontendDemoHeroAnimationManager tAnimationManager;
@@ -358,6 +359,7 @@ struct HeroCreateData {
     HeroCreateData()
         : fCreateHardcore(FALSE)
         , fCreateSeasonal(FALSE)
+        , unk_10(FALSE)
         , nPlayingClassVideo(-1)
         , idInGameHeroLight(-1)
         , bInputEnabled(TRUE)
@@ -394,14 +396,21 @@ inline void EnableInput(BOOL bEnabled)
 
 
 
-inline void UpdateTitle()
+extern UIID unk_710185f0f8;  // UIGlobals.cpp: "...LayoutRoot.SoloSeasonalHeader"
+extern UIID unk_710185f100;  // UIGlobals.cpp: "...LayoutRoot.SoloHardcoreSeasonalHeader"
+
+// 0x710034cdf0 (sub_710034cdf0 in functions.csv): no longer inlined in 2.7.7.
+void UpdateTitle()
 {
     BOOL bIsHardcore = s_tHeroCreateData.fCreateHardcore;
     BOOL bIsSeasonal = s_tHeroCreateData.fCreateSeasonal;
+    BOOL bUnk10 = s_tHeroCreateData.unk_10;
 
     UI_GetWindowFromID(UIWND_CONSOLE_HEROCREATE_HARDCORE).SetActive(bIsHardcore && !bIsSeasonal);
-    UI_GetWindowFromID(UIWND_CONSOLE_HEROCREATE_SEASONAL).SetActive(bIsSeasonal && !bIsHardcore);
-    UI_GetWindowFromID(UIWND_CONSOLE_HEROCREATE_SEASONAL_HARDCORE).SetActive(bIsHardcore && bIsSeasonal);
+    UI_GetWindowFromID(UIWND_CONSOLE_HEROCREATE_SEASONAL).SetActive(!bIsHardcore && bIsSeasonal && !bUnk10);
+    UI_GetWindowFromID(UIWND_CONSOLE_HEROCREATE_SEASONAL_HARDCORE).SetActive(bIsHardcore && bIsSeasonal && !bUnk10);
+    UI_GetWindowFromID(unk_710185f0f8).SetActive(!bIsHardcore && bIsSeasonal && bUnk10);
+    UI_GetWindowFromID(unk_710185f100).SetActive(bIsHardcore && bIsSeasonal && bUnk10);
 }
 
 
@@ -650,6 +659,8 @@ void OnUpdate(const UIID & id)
     {
         tHeroTypeSelection.GetButtonByValue(UIHEROTYPE_SEASONAL)->SetActive(s_tHeroCreateData.fSeasonAvailable && !bPlayerIsGuest);
         tHeroTypeSelection.GetButtonByValue(UIHEROTYPE_SEASONAL_HARDCORE)->SetActive(s_tHeroCreateData.fSeasonAvailable && !bPlayerIsGuest);
+        tHeroTypeSelection.GetButtonByValue(UIHEROTYPE_UNK_4)->SetActive(s_tHeroCreateData.fSeasonAvailable && !bPlayerIsGuest);
+        tHeroTypeSelection.GetButtonByValue(UIHEROTYPE_UNK_5)->SetActive(s_tHeroCreateData.fSeasonAvailable && !bPlayerIsGuest);
     }
     else
     {
@@ -819,24 +830,42 @@ void SetHeroType(UIHeroType eType)
         tHeroTypeDesc.SetText(StringListFetch("ConsoleHeroCreate:StandardHeroDescription"), FALSE);
         s_tHeroCreateData.fCreateHardcore = FALSE;
         s_tHeroCreateData.fCreateSeasonal = FALSE;
+        s_tHeroCreateData.unk_10 = FALSE;
         break;
     case UIHEROTYPE_HARDCORE:
         tHeroTypeTitle.SetText(StringListFetch("ConsoleHeroCreate:HardcoreHeroTitle"), FALSE);
         tHeroTypeDesc.SetText(StringListFetch("ConsoleHeroCreate:HardcoreHeroDescription"), FALSE);
         s_tHeroCreateData.fCreateHardcore = TRUE;
         s_tHeroCreateData.fCreateSeasonal = FALSE;
+        s_tHeroCreateData.unk_10 = FALSE;
         break;
     case UIHEROTYPE_SEASONAL:
         tHeroTypeTitle.SetText(StringListFetch("ConsoleHeroCreate:SeasonalHeroTitle"), FALSE);
         tHeroTypeDesc.SetText(StringListFetch("ConsoleHeroCreate:SeasonalHeroDescription"), FALSE);
         s_tHeroCreateData.fCreateHardcore = FALSE;
         s_tHeroCreateData.fCreateSeasonal = TRUE;
+        s_tHeroCreateData.unk_10 = FALSE;
         break;
     case UIHEROTYPE_SEASONAL_HARDCORE:
         tHeroTypeTitle.SetText(StringListFetch("ConsoleHeroCreate:HardcoreSeasonalHeroTitle"), FALSE);
         tHeroTypeDesc.SetText(StringListFetch("ConsoleHeroCreate:HardcoreSeasonalHeroDescription"), FALSE);
         s_tHeroCreateData.fCreateHardcore = TRUE;
         s_tHeroCreateData.fCreateSeasonal = TRUE;
+        s_tHeroCreateData.unk_10 = FALSE;
+        break;
+    case UIHEROTYPE_UNK_4:
+        tHeroTypeTitle.SetText(StringListFetch("ConsoleHeroCreate:SoloSeasonalHeroTitle"), FALSE);
+        tHeroTypeDesc.SetText(StringListFetch("ConsoleHeroCreate:SoloSeasonalHeroDescription"), FALSE);
+        s_tHeroCreateData.fCreateHardcore = FALSE;
+        s_tHeroCreateData.fCreateSeasonal = TRUE;
+        s_tHeroCreateData.unk_10 = TRUE;
+        break;
+    case UIHEROTYPE_UNK_5:
+        tHeroTypeTitle.SetText(StringListFetch("ConsoleHeroCreate:SoloHardcoreSeasonalHeroTitle"), FALSE);
+        tHeroTypeDesc.SetText(StringListFetch("ConsoleHeroCreate:SoloHardcoreSeasonalHeroDescription"), FALSE);
+        s_tHeroCreateData.fCreateHardcore = TRUE;
+        s_tHeroCreateData.fCreateSeasonal = TRUE;
+        s_tHeroCreateData.unk_10 = TRUE;
         break;
     }
 
@@ -939,6 +968,7 @@ void OpenForController(int32 nControllerIndex)
         AppGlobals & tAppGlobals = sgtAppGlobals;
         s_tHeroCreateData.fCreateHardcore = (tAppGlobals.dwGameCreateParamFlags & (1 << GAMECREATEPARAM_HARDCORE)) != 0;
         s_tHeroCreateData.fCreateSeasonal = (tAppGlobals.dwGameCreateParamFlags & (1 << GAMECREATEPARAM_SEASON)) != 0;
+        s_tHeroCreateData.unk_10 = (tAppGlobals.dwGameCreateParamFlags & (1 << 20)) != 0;  // game-create param bit 20: no enumerator in Game.h (GAMECREATEPARAM_NUM_BITS is 20)
         nLockedHeroType = s_tHeroCreateData.fCreateHardcore | (s_tHeroCreateData.fCreateSeasonal << 1);
         s_tHeroCreateData.idInGameHeroLight = LightAdd(0, UI_GetDefaultHeroLight(), PRTransform(cgqIdentity, cgwpNull), FALSE, RENDERCONTEXT_HUD_0);
     }
@@ -1441,12 +1471,12 @@ static void FillBlizzconVisualEquipment(D3::Hero::VisualEquipment * visualEquipm
 
     case PLAYER_CLASS_WITCHDOCTOR:
 
-        SetItem(0, "Unique_Helm_Set_16_x1");
+        SetItem(0, "Unique_VoodooMask_102_x1");
         SetItem(1, "Unique_Chest_Set_16_x1");
         SetItem(2, "Unique_Boots_Set_16_x1");
         SetItem(3, "Unique_Gloves_Set_16_x1");
-        SetItem(4, "Unique_Staff_104_x1");
-        // slot 5: the staff is two-handed
+        SetItem(4, "P1_CeremonialDagger_norm_unique_01");
+        SetItem(5, "Unique_Mojo_008_x1");
         SetItem(6, "Unique_Shoulder_Set_16_x1");
         SetItem(7, "Unique_Pants_Set_16_x1");
         break;
@@ -1477,14 +1507,14 @@ static void FillBlizzconVisualEquipment(D3::Hero::VisualEquipment * visualEquipm
 
     case PLAYER_CLASS_NECROMANCER:
 
-        SetItem(0, "P6_Necro_Set_3_Helm");
-        SetItem(1, "P6_Necro_Set_3_Chest");
-        SetItem(2, "P6_Necro_Set_3_Boots");
-        SetItem(3, "P6_Necro_Set_3_Gloves");
-        SetItem(4, "P6_Unique_Scythe1H_02");
-        SetItem(5, "P61_Unique_Phylactery_01");
-        SetItem(6, "P6_Necro_Set_3_Shoulders");
-        SetItem(7, "P6_Necro_Set_3_Pants");
+        SetItem(0, "P6_Necro_Set_1_Helm");
+        SetItem(1, "P6_Necro_Set_1_Chest");
+        SetItem(2, "P6_Necro_Set_1_Boots");
+        SetItem(3, "P6_Necro_Set_1_Gloves");
+        SetItem(4, "P6_Unique_Scythe1H_04");
+        SetItem(5, "P6_Unique_Shield_01");
+        SetItem(6, "P6_Necro_Set_1_Shoulders");
+        SetItem(7, "P6_Necro_Set_1_Pants");
         break;
     }
 
@@ -1560,6 +1590,7 @@ BOOL CreateHero(int32 nControllerIndex, PlayerClass eClass, uint32 uFlags, CRefS
 
 
     uint32 dwPlayerFlags = uFlags & ((1 << HEROCREATE_FLAG_HARDCORE) | (1 << HEROCREATE_FLAG_FEMALE));
+    uint32 dwPlayerFlags2 = (uFlags >> HEROCREATE_FLAG_UNK_3) & 1;
 
     OnlineService::HeroId idHero = ::Console::GamerProfile::GenerateHeroID(nControllerIndex, sString.str());
 
@@ -1567,6 +1598,7 @@ BOOL CreateHero(int32 nControllerIndex, PlayerClass eClass, uint32 uFlags, CRefS
     tDigest.set_hero_name(sString.str(), nStrLen);
     tDigest.set_gbid_class(PlayerClassToGBID(eClass));
     tDigest.set_player_flags(dwPlayerFlags);
+    tDigest.set_player_flags2(dwPlayerFlags2);
     tDigest.set_create_time(Blizzard::Time::ToUnixTime(Blizzard::Time::GetTimestamp()));
 
     if (uFlags & (1 << HEROCREATE_FLAG_SEASONAL))
@@ -1677,14 +1709,14 @@ void OnButton1(const UIID &, const int32 nControllerIndex)
     {
     case UIHEROTYPE_NORMAL:
         OnAccept(GetUIIDNone(), nControllerIndex);
-        return;
+        break;
 
     case UIHEROTYPE_HARDCORE:
         tModalTitle.SetText(StringListFetch("ConsoleHeroCreate:HardcoreModalWarningTitle"), FALSE);
         tModalTitle.SetTextColor(RGBAColor(0x3f, 0x00, 0x00, 0xff));
         tModalDesc.SetText(StringListFetch("ConsoleHeroCreate:HardcoreModalWarningDescription"), FALSE);
         ::Console::Screens::ShowModalDialog(nControllerIndex, UIWND_CONSOLE_HEROCREATE_HARDCORE_WARNING, TRUE, GetUIIDNone());
-        return;
+        break;
 
     case UIHEROTYPE_SEASONAL:
         tModalTitle.SetText(StringListFetch("ConsoleHeroCreate:SeasonalModalWarningTitle"), FALSE);
@@ -1699,14 +1731,28 @@ void OnButton1(const UIID &, const int32 nControllerIndex)
         tModalDesc.SetText(StringListFetch("ConsoleHeroCreate:SeasonalHardcoreModalWarningDescription"), FALSE);
         ::Console::Screens::ShowModalDialog(nControllerIndex, UIWND_CONSOLE_HEROCREATE_HARDCORE_WARNING, TRUE, GetUIIDNone());
         break;
+
+    case UIHEROTYPE_UNK_4:
+        tModalTitle.SetText(StringListFetch("ConsoleHeroCreate:SoloSeasonalModalWarningTitle"), FALSE);
+        tModalTitle.SetTextColor(RGBAColor(0x0a, 0x47, 0x00, 0xff));
+        tModalDesc.SetText(StringListFetch("ConsoleHeroCreate:SoloSeasonalModalWarningDescription"), FALSE);
+        ::Console::Screens::ShowModalDialog(nControllerIndex, UIWND_CONSOLE_HEROCREATE_HARDCORE_WARNING, TRUE, GetUIIDNone());
+        break;
+
+    case UIHEROTYPE_UNK_5:
+        tModalTitle.SetText(StringListFetch("ConsoleHeroCreate:SoloSeasonalHardcoreModalWarningTitle"), FALSE);
+        tModalTitle.SetTextColor(RGBAColor(0x3f, 0x00, 0x00, 0xff));
+        tModalDesc.SetText(StringListFetch("ConsoleHeroCreate:SoloSeasonalHardcoreModalWarningDescription"), FALSE);
+        ::Console::Screens::ShowModalDialog(nControllerIndex, UIWND_CONSOLE_HEROCREATE_HARDCORE_WARNING, TRUE, GetUIIDNone());
+        break;
     }
 
-    if ((eHeroType == UIHEROTYPE_SEASONAL || eHeroType == UIHEROTYPE_SEASONAL_HARDCORE) && !bRequestSeasonConfirmation)
+    if ((eHeroType == UIHEROTYPE_SEASONAL || eHeroType == UIHEROTYPE_SEASONAL_HARDCORE || eHeroType == UIHEROTYPE_UNK_4 || eHeroType == UIHEROTYPE_UNK_5) && !bRequestSeasonConfirmation)
     {
         // ask the server whether the season is still running before the hero is made
+        bRequestSeasonConfirmation = TRUE;
         uCachedSeasonAtConfirmation = 0;
         bSeasonConfirmedAvailable = FALSE;
-        bRequestSeasonConfirmation = TRUE;
         ::Console::Online::IsSeasonInProgress(nControllerIndex, OnlineService::internal::function_bind_0_1<void, BOOL, &sSeasonConfirmationCallback>());
     }
 }
@@ -1741,6 +1787,10 @@ void OnAccept(const UIID &, const int32 nControllerIndex)
     if (s_tHeroCreateData.fCreateSeasonal)
     {
         uHeroCreateFlags |= (1 << HEROCREATE_FLAG_SEASONAL);
+    }
+    if (s_tHeroCreateData.unk_10)
+    {
+        uHeroCreateFlags |= (1 << HEROCREATE_FLAG_UNK_3);
     }
 
     if (s_tHeroCreateData.fCreateSeasonal && !bSeasonConfirmedAvailable)
@@ -1887,15 +1937,12 @@ inline void ChangeHeroType(int32 nDirection)
 {
     UIRadioButtonGroup & tHeroTypeSelection = UI_GetRadioButtonGroupFromID(UIRADIO_CONSOLE_HEROCREATE_HERO_TYPE);
     int32 nSelectedValue = tHeroTypeSelection.GetSelectedValue();
-    if (nDirection < 0 ? nSelectedValue != UIHEROTYPE_NORMAL : nSelectedValue != UIHEROTYPE_SEASONAL_HARDCORE)
+    int32 nMaxValue = (!s_tHeroCreateData.fSeasonAvailable || bPlayerIsGuest) ? UIHEROTYPE_HARDCORE : UIHEROTYPE_UNK_5;
+    if (nDirection < 0 ? nSelectedValue != UIHEROTYPE_NORMAL : nSelectedValue != nMaxValue)
     {
-        if (nDirection < 0 || nSelectedValue != UIHEROTYPE_HARDCORE ||
-            (s_tHeroCreateData.fSeasonAvailable && !bPlayerIsGuest))
-        {
-            UIHeroType eNewType = (UIHeroType)(nSelectedValue + nDirection);
-            SetHeroType(eNewType);
-            SoundManager::PlaySound(GlobalSNOGet(GLOBALSNO_SOUND_GENERIC_FOCUS_SWITCH), cgtPSODefaults);
-        }
+        UIHeroType eNewType = (UIHeroType)(nSelectedValue + nDirection);
+        SetHeroType(eNewType);
+        SoundManager::PlaySound(GlobalSNOGet(GLOBALSNO_SOUND_GENERIC_FOCUS_SWITCH), cgtPSODefaults);
     }
 }
 
@@ -1991,21 +2038,14 @@ void OnLStick(const UIID & id, const int32 nControllerIndex)
         return;
 
     ::Console::AnalogStickInputFilter::Rule::ID idRule = s_tHeroCreateData.m_tStickInputFilter.HandleInput(::Console::ControllerUtils::GetLStickPosition(nControllerIndex, FALSE), FALSE);
-    UIGender eGender;  // invented local; the DWARF records only idRule
-    if (idRule == ::Console::RULE_STICK_LEFT)
+    if (idRule == ::Console::RULE_STICK_RIGHT)
     {
-        eGender = UIGENDER_MALE;
+        ChangeGender(UIGENDER_FEMALE);
     }
-    else if (idRule == ::Console::RULE_STICK_RIGHT)
+    else if (idRule == ::Console::RULE_STICK_LEFT)
     {
-        eGender = UIGENDER_FEMALE;
+        ChangeGender(UIGENDER_MALE);
     }
-    else
-    {
-        return;
-    }
-
-    ChangeGender(eGender);
 }
 
 

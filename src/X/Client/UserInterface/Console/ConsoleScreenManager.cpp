@@ -218,7 +218,8 @@ struct ModalDialogInfo {  // size 0x20
 
 
 
-struct ConsoleScreenManagerData {  // size 0xfe8
+#include "../../../../Contrib/Contrib/blz/include/blz/algo_seq_const.h"
+struct ConsoleScreenManagerData {  // size 0x1020
 
     ConsoleScreenManagerData()
     : m_ptCurrentScreenSet( NULL )
@@ -236,12 +237,13 @@ struct ConsoleScreenManagerData {  // size 0xfe8
     ConsoleModalNotificationManager m_tModalManager;  // 0xad0
     ConsoleToastManager m_tToastManager;  // 0xb40
     FanfareManager m_tFanfareManager;  // 0xd18
-    XGrowableList<ModalDialogInfo, const ModalDialogInfo &> m_listModalDialogInfoStack;  // 0xef0
-    XGrowableList<ScreenHistoryNode, const ScreenHistoryNode &> m_listScreenStack;  // 0xf48
-    LogoffCountDownData m_atLogoffCountDownData[4];  // 0xfa0
-    ModalNotificationId m_idLeaveGameDialog;  // 0xfe0
+    XGrowableList<ModalDialogInfo, const ModalDialogInfo &> m_listModalDialogInfoStack;  // 0xf10
+    XGrowableList<ScreenHistoryNode, const ScreenHistoryNode &> m_listScreenStack;  // 0xf68
+    LogoffCountDownData m_atLogoffCountDownData[4];  // 0xfc0
+    ModalNotificationId m_idLeaveGameDialog;  // 0x1000
+    blz::vector<int32, blz::allocator<int32> > unk_1008;  // 0x1008 (2.7.7: used by sub_710016a990..sub_710016ab00)
 };
-static_assert(sizeof(ConsoleScreenManagerData) == 0xfe8, "ConsoleScreenManagerData");
+static_assert(sizeof(ConsoleScreenManagerData) == 0x1020, "ConsoleScreenManagerData");
 
 ConsoleScreenManagerData * gptScreenManagerData;
 
@@ -1320,6 +1322,32 @@ int32 Console::Screens::GetCurrentControllerIndex()
         return gptScreenManagerData->m_ptCurrentScreenSet->GetControllerIndex();
     }
     return -1;
+}
+
+// 2.7.7: accessors of ConsoleScreenManagerData::unk_1008 (names not known).
+extern "C" void sub_710016a990(int32 n)
+{
+    gptScreenManagerData->unk_1008.push_back(n);
+}
+
+extern "C" BOOL sub_710016aa70()
+{
+    return !gptScreenManagerData->unk_1008.empty();
+}
+
+extern "C" BOOL sub_710016aa90(int32 n)
+{
+    return blz::find(gptScreenManagerData->unk_1008.begin(), gptScreenManagerData->unk_1008.end(), n) != gptScreenManagerData->unk_1008.end();
+}
+
+extern "C" size_t sub_710016aae0()
+{
+    return gptScreenManagerData->unk_1008.size();
+}
+
+extern "C" void sub_710016ab00()
+{
+    gptScreenManagerData->unk_1008.clear();
 }
 
 

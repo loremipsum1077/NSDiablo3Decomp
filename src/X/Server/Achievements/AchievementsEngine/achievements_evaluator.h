@@ -59,7 +59,7 @@ public:
         FAIL_EVENT = 2,
     };
 private:
-    void CheckEventMap(OnlineService::AchievementsEngine::EventKey key, const OnlineService::AchievementsEngine::PartitionedCriteriaEventMap & eventMap, uint64 quantity, uint64 updateTimeSeconds, const OnlineService::AchievementsEngine::CheckEventCallback & cb);
+    void CheckEventMap(OnlineService::AchievementsEngine::EventKey key, const OnlineService::AchievementsEngine::PartitionedCriteriaEventMap & eventMap, uint64 quantity, uint64 updateTimeSeconds, int32 nUnk, const OnlineService::AchievementsEngine::CheckEventCallback & cb);
     void CheckEventMap(OnlineService::AchievementsEngine::EventKey key, const OnlineService::AchievementsEngine::CriteriaEventMap & eventMap, uint64 quantity, uint64 updateTimeSeconds, const OnlineService::AchievementsEngine::CheckEventCallback & cb);
     bool EvaluateModifiers(const OnlineService::AchievementsEngine::InternalCriteriaDefinition *, const OnlineService::CriteriaEvent & event, const OnlineService::AchievementsEngine::CheckEventCallback & cb);
     bool ShouldProcessCriteria(const OnlineService::AchievementsEngine::CriteriaUpdateRecord & criteriaUpdate, const OnlineService::AchievementsEngine::InternalCriteriaDefinition * criteria, const OnlineService::AchievementsEngine::InternalAchievementDefinition * achievement) const;

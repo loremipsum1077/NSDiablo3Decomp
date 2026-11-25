@@ -1,6 +1,7 @@
 // Original file: X/Client/UserInterface/Console/UIConsoleEULA.cpp
 #include "../../../Common/SNO/SNOName.h"
 #include "../../../Common/WorldPlace.h"
+#include "../../Console/Online.h"
 #include "ConsoleScreenManager.h"
 #include "ControllerActions.h"
 #include "../Controls/UIConsoleListboxControl.h"
@@ -141,6 +142,7 @@ void OpenForController( int32 nControllerIndex )
 {
     ::Console::Screens::ShowModalDialog( nControllerIndex, UIWND_CONSOLE_EULA, TRUE, GetUIIDNone() );
     sgtEULAData.bConnected = FALSE;
+    sgtEULAData.bConnected = ::Console::Online::IsPhysicalNetworkConnected();
 
     ::Console::Screens::GetActionManager().ClearAllActions();
 

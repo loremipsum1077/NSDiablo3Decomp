@@ -36,6 +36,8 @@ enum ItemUseResult {
 };
 
 SNO ItemGetUsePower(const GBID gbidItem);  // Items.cpp:2434
+BOOL SItemUpgradeJewel(ActorCommonData & tACDItem, int32 nUpgradeRanks, ActorCommonData & tACDOwner);  // X/Server/Crafting/SItemCrafting.h
+extern "C" BOOL sub_71007e07f0(ActorCommonData & tACDTarget, ActorCommonData & tACDUser, ActorCommonData & tACDItem);  // 2.7.7 only, unnamed (0x71007e07f0, SItems.cpp range after SItemUpgradeJewel); called by ItemUse for use type 72
 ItemUseResult ItemUse(const PowerID idPower, const ACDID idACDUser, const ACDID idACDItemToUse, const Target * ptTarget);  // Power_ItemUse.cpp:1836
 void sSummonMonsterForShrineOrScrollOfCallingGuts(ActorCommonData & tACDPlayer);  // Power_ItemUse.cpp:1098
 void SACDInventoryEvaluateItemDyeAchievements(Achievement::EvaluationData * ptEvaluationData);  // ActorInventory.cpp:12580
@@ -1832,7 +1834,9 @@ static ItemUseResult sUseHoradricReagent(
 
     return ITEM_USE_RESULT_CONSUMED;
 }
-// NON_MATCHING: 15084 vs 15088 bytes. The Horadric reagent loop hoists a shared constant 1 at +0x38d4. The original loads it separately in each branch. Tested negative guards, act-switch return placement and explicit BOOL comparisons.
+// NON_MATCHING: 2.7.7 logic (use types 71 and 72) reproduced; ours 15248 vs original 15260 bytes. Register allocation differs (the 0x360 ACD stride
+// lives in x27, original x28, so one ACDGet result is spilled), and the Horadric reagent loop hoists a shared constant 1 that the original loads in
+// each branch. Tested negative guards, act-switch return placement and explicit BOOL comparisons.
 ItemUseResult ItemUse(
     const PowerID idPower,
     const ACDID idACDUser,
@@ -1974,6 +1978,27 @@ ItemUseResult ItemUse(
     case ITEM_USE_HORADRIC_REAGENT:
         eResult = sUseHoradricReagent(idACDUser, tACDItemToUse);
         break;
+
+    case (ItemUseType)71:  // 2.7.7 use type 71 (no enumerator in Items.h yet): upgrade the targeted jewel by one rank
+    {
+        ActorCommonData & tACDTarget = ACDGet(ptTarget->idACDTarget);
+        if (SItemUpgradeJewel(tACDTarget, 1, ACDGet(idACDUser)))
+        {
+            eResult = ITEM_USE_RESULT_CONSUMED;
+        }
+        break;
+    }
+
+    case (ItemUseType)72:  // 2.7.7 use type 72 (no enumerator in Items.h yet)
+    {
+        ActorCommonData & tACDTarget = ACDGet(ptTarget->idACDTarget);
+        ActorCommonData & tACDUser = ACDGet(idACDUser);
+        if (sub_71007e07f0(tACDTarget, tACDUser, ACDGet(tACDItemToUse.id)))
+        {
+            eResult = ITEM_USE_RESULT_CONSUMED;
+        }
+        break;
+    }
 
 
 

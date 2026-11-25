@@ -50,6 +50,7 @@
 #include <limits.h>
 #include "../Common/Definitions/BossEncounterDefinition.h"
 #include "../Common/Powers/PowerAPISwig.h"
+#include "../Common/Networking/Network.h"
 int32 WorldGetDungeonFinderLevel(const SNO snoWorld);  // X/Common/World.cpp:828
 void SWorldRunDungeonFinderEngine();
 void SWorldRemovePlayersAndFlagForDeletion(SWorldID idSWorld);
@@ -118,7 +119,6 @@ ACDID SWorldGetPortalDestinationACD(const SWorldID idSWorld, const uint32 uEntra
 static XVarScope s_scopeSWorld("SWorld", NULL);
 XVarUint32 s_varMaxLiveWorlds(s_scopeSWorld, "MaxLiveWorlds", 256);
 XVarUint32 s_varActorThresholdForDeletingWorlds(s_scopeSWorld, "ActorThresholdForDeletingWorlds", 10304);
-
 
 static BOOL sfWorldPreloadingSuspended;
 struct WorldCreateData {  // size 0x1c
@@ -1488,7 +1488,7 @@ uint32 PVPGetDuelingEntranceGUID(const Player & tPlayer, SWorldID idSWorld, BOOL
 uint32 PVPGetPlayerEntranceGUID(const Player & tPlayer, SWorldID idSWorld);  // X/Server/PVP.cpp:917
 BOOL SGameStatsUsedCheats();  // X/Server/SGameStats.cpp:1808
 BOOL SPlayerFindGoodSpawnLocation(const WorldPlace & placeStart, WorldPlace & placeResult, float flSearchRadius);  // X/Server/SPlayer.cpp:2289
-ACDID PlayerActorCreate(Player & tPlayer, const uint32 dwPlayerFlags, const WorldPlace & tPlace, const Quaternion & q, const BOOL bResetLifeStats, const D3::Hero::SavedDefinition & tHeroDefinition, const D3::Account::SavedDefinition & tAccountDefinition, const D3::Items::Mails & tMails, const uint32 dwSaveOptionBits);  // X/Server/SPlayer.cpp:2352
+ACDID PlayerActorCreate(Player & tPlayer, const uint32 dwPlayerFlags, const uint32 dwPlayerFlags2, const WorldPlace & tPlace, const Quaternion & q, const BOOL bResetLifeStats, const D3::Hero::SavedDefinition & tHeroDefinition, const D3::Account::SavedDefinition & tAccountDefinition, const D3::Items::Mails & tMails, const uint32 dwSaveOptionBits);  // X/Server/SPlayer.cpp:2352
 void ActorPowersInterruptPrimary(ActorID idActor, BOOL bIgnoreContactFrame);  // X/Server/Actors/ActorPowers.cpp:392
 
 
@@ -1640,7 +1640,7 @@ ACDID SWorldPlayerEnter(
     {
         idACDEnteredPlayer = PlayerActorCreate(
             *ptPlayerToUse,
-            ptPlayerToUse->tHeroStateData.uPlayerFlags,
+            ptPlayerToUse->tHeroStateData.uPlayerFlags, ptPlayerToUse->tHeroStateData.uPlayerFlags2,
             placeEntrance,
             qEntrance,
             TRUE,
@@ -3281,12 +3281,17 @@ void sDeleteGreedRealm(TimerID, DataID idOwner, void *)
 {
     SWorldRemovePlayersAndFlagForDeletion(WorldCommonFindBySNO(GlobalSNOGet(GLOBALSNO_WORLD_GREED_REALM), TRUE));
     SWorldRemovePlayersAndFlagForDeletion(WorldCommonFindBySNO(GlobalSNOGet(GLOBALSNO_WORLD_GREED_REALM_BOSS), TRUE));
+    SWorldRemovePlayersAndFlagForDeletion(WorldCommonFindBySNO(GlobalSNOGet(GLOBALSNO_UNK_686), TRUE));
+    SWorldRemovePlayersAndFlagForDeletion(WorldCommonFindBySNO(GlobalSNOGet(GLOBALSNO_UNK_687), TRUE));
 
     ACDID idACDPortal = (ACDID)idOwner;
     ActorFlagForDeletion((ActorID)ACDGetOwner(idACDPortal));
 
     SGameGlobals & tSGameGlobals = SGameGlobalsGet();
     POS pos = tSGameGlobals.listCompletedBossEncounters.Find(GlobalSNOGet(GLOBALSNO_BOSS_ENCOUNTER_GREED));
+    if (pos)
+        tSGameGlobals.listCompletedBossEncounters.RemoveAt(pos);
+    pos = tSGameGlobals.listCompletedBossEncounters.Find(GlobalSNOGet(GLOBALSNO_UNK_2009));
     if (pos)
         tSGameGlobals.listCompletedBossEncounters.RemoveAt(pos);
 }
@@ -4076,4 +4081,13 @@ void SWorldRemovePlayersAndFlagForDeletion(SWorldID idSWorld)
     LevelAreaWorldFlagForDeletion(idSWorld, GameGetServerTime() + 1);
     SWorldRemoveAllHirelings(idSWorld);
     Minimap::RemoveAllForWorld(idSWorld);
+
+
+    for (Player * ptPlayer = PlayerGetFirstAll(); ptPlayer; ptPlayer = PlayerGetNextAll(ptPlayer))
+    {
+        if (ptPlayer->idGameConnection != GAMECONNECTIONID_INVALID)
+        {
+            ACDGet(ptPlayer->idPlayerACD).RestorePermanentPowers();
+        }
+    }
 }

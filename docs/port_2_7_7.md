@@ -77,7 +77,7 @@ the 2.6.2 build does.
 - `tools/check` then promoted every `M` that matches. All-7.1.0 build: 20,222 O. Mixed
   build: 22,632 O. Mixed build with the mapping repairs below: 23,427 O. After the first
   shared-cause fixes and the GlobalSNO renumbering: 23,786 O. After the protobuf
-  regeneration: 24,292 O. After the first struct-layout fixes (branch `structs/2.7.7`: ActorCommonData, HeroInfo/UserRuntime, HUD): 25,790 O. After the SWIG enum renumbering: 26,584 O. After struct round 2 (Player, definition arrays, inventory slots, float classification): 27,257 O. After the position-based mapping repairs: 28,208 O. After phase D round 1 (Astra): 28,321 O. After phase D wave 1 (see "Phase D wave 1" below): 29,849 O. After phase D wave 2: **30,273 O**, 2,746 M, 1,791 U, 2,191 L, 4 W (of 37,005 functions).
+  regeneration: 24,292 O. After the first struct-layout fixes (branch `structs/2.7.7`: ActorCommonData, HeroInfo/UserRuntime, HUD): 25,790 O. After the SWIG enum renumbering: 26,584 O. After struct round 2 (Player, definition arrays, inventory slots, float classification): 27,257 O. After the position-based mapping repairs: 28,208 O. After phase D round 1 (Astra): 28,321 O. After phase D wave 1 (see "Phase D wave 1" below): 29,849 O. After phase D wave 2: 30,273 O. After phase D wave 3: **30,861 O**, 2,408 M, 1,541 U, 2,191 L, 4 W (of 37,005 functions).
 
 ### Mapping repairs (look-alike functions)
 
@@ -317,10 +317,50 @@ The two rows the checker flagged after wave 1 (`_GLOBAL__sub_I_UIFunctions.cpp`,
   powers panel class, LobbyService without linked accounts (TITLE_VERSION 277).
 - **Tools:** `tools/game_lua_tables.py --version` (locates the unnamed 2.7.7 SWIG tables);
   `tools/bootstrap_game_data.py` has per-version tables and `versions["2.7.7"]` hashes in
-  `config/local_game_data.json`. Do not re-run bootstrap for 2.7.7 yet: its sno_calls and
-  gbid_rows inputs still come from 2.6.2.
+  `config/local_game_data.json`. (Wave 3 made sno_calls and gbid_rows version-aware too.)
 - About 15 functions gained `// NON_MATCHING:` comments: the 2.7.7 logic is in place and
   only codegen differs.
+
+## Phase D wave 3
+
+Ten agents by file, plus an integration pass (reports in the git-ignored
+`build/agents/*.md`). Inputs included a read-only recon by Astra (`build/recon/`: shifted
+field offsets, changed constants and missing data symbols between 2.6.2 and 2.7.7, each
+with instruction addresses in both binaries); agents confirmed each lead against the
+disassembly. Result: 30,273 -> **30,861 O**. One row left `O`: 0x25f770 was mislabelled
+(it is `IsHighestAchievementUnearnedInSeries`; the four UIAchievementsUtil series helpers
+were relabelled from their call structure).
+
+- **Protobuf names, not the generator:** the generated bindings were already right. The
+  2.6.2 -> 2.7.7 name mapping had shifted wherever 2.7.7 added messages. `tools/bootstrap_protobuf.py
+  --names` proves names from each message's default-instance vtable (5,526 functions) and
+  wrote 399 corrections (+283 `function_files.csv` owners). Test: `tools/test_bootstrap_protobuf.py`.
+- **NVN:** the 18 new proc typedefs/pointers were added to the SDK's `nvn_Cpp.h` (the user
+  approved SDK header edits), and `nvn_entry_points.inc` is generated for 2.7.7 from the
+  loader's own operands (516 entries); `nvnLoadCPPProcs` matches.
+- **Game code:** solo/seasonal heroes (new hero types, `player_flags2`, solo checks in hero
+  select, party validation and game join), 4 legendary-power slots, 10 loadouts, 13 stash
+  tabs, the new message descriptors and byteswap cases, achievement evaluator partition
+  filtering and the 0x390-byte static-data block holding two AchievementsStaticData,
+  leaderboard keys, item quality/type descriptions with primal/sanctified/season-only
+  suffixes, UTBreakIterator's second argument, ParagonBonus 0x1f0, FanfareManager 0x1f8,
+  ConsoleScreenManagerData 0x1020.
+- **Data:** 46 data symbol rows added or fixed, each proven by references. The
+  `s_varMaxProjectileImpactCount` row had been wrong since the port (0x7101a42854, which
+  overlaps BaseResolver's globals); Powers' static init puts it at 0x7101a429f8, after
+  `s_varMaxAreaEffectTargetCount` at 0x7101a42940.
+- **Checker:** `check_data_symbol_ex` requires a reference to the exact start of a known
+  data symbol, but 2.7.7 folds field offsets of globals into the ADRP/ADD pair (sound globals,
+  preferences, bindings: about 60 functions). `tools/patches/0012-viking-data-symbol-interior-offset.patch`
+  compares the offset inside the symbol instead. It is not installed in `tools/check` yet
+  (installing a new checker binary is the user's decision). Until it is, the full check
+  reports `Prefs::GetUIActionFromInput` as "marked as matching but does not match": both
+  binaries reference `cgtDefaultBindings + 0x220`; only the checker rejects it.
+- About 30 functions gained or updated `// NON_MATCHING:` comments.
+- Not done: the UIInventoryConsole add-sockets rework (about 40 new functions), Kanai's
+  powers class bodies, SGameGlobals 0x22c8 (three new arrays), NephalemRiftState 0xd0,
+  GizmoOperate's new gizmo types, `sub_71004b8900` (needs its own file, unassigned range
+  0x4b8080..0x4b9958; its matching body is in `build/agents/integrator.md`).
 
 ## Accepted limits (same as 2.6.2)
 
@@ -331,9 +371,8 @@ The port keeps the 2.6.2 policy for code that cannot or should not match:
   `L` functions as 2.6.2. Sixteen small FMOD stubs had lost their names in the relinked
   FMOD block, and 7 more `L` rows carried drifted names (Sample::set* names on codec
   callbacks); wave 2 renamed all 23 from tail-call targets and vtable slots.
-- **NVN entry points:** 2.7.7's `nvnLoadCPPProcs` loads 516 procs, not 498. The 18 new
-  `<name>Func` typedefs are missing from the SDK's `nvn_Cpp.h`, which is not edited, so
-  that function stays non-matching.
+- **NVN entry points:** 2.7.7's `nvnLoadCPPProcs` loads 516 procs, not 498. Wave 3 added
+  the 18 new typedefs to the SDK's `nvn_Cpp.h` (only additions, in loader order).
 - **Best effort:** when the 2.7.7 logic is reproduced but codegen still differs (register
   allocation, scheduling, block placement), that version stays in the source with
   `// NON_MATCHING: <what differs>` directly above it (`docs/decomp_workflow.md` step 4).

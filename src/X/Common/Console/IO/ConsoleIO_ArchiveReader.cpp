@@ -12,6 +12,9 @@
 #include "../../../Sigma/Memory/SigmaMemory.h"
 #include "../../../Sigma/UnicodeText.h"
 #include "ConsoleIO.h"
+#include "../../Sno/SNOFiles.h"
+
+extern int32 unk_71010aba28;  // ConsoleIO.cpp: SNO group being opened, -1 otherwise
 
 namespace Console {
 namespace IO {
@@ -643,6 +646,8 @@ BOOL CPKArchiveReader::GetFileInfo(int32 nFileIndex, Console::IO::FileInfo & inf
     return TRUE;
 }
 
+// NON_MATCHING: block layout and register allocation of the first inlined sBinarySearch (target hoists the -1 above the
+// count check and places the not-found return after the loop); logic (FONT_SNO check on unk_71010aba28) matches 2.7.7
 int32 CPKArchiveReader::GetFileIndex(uint64 dwFileHash) const
 {
     uint64 dwLocaleOverrideHash = GetTextLocaleOverrideHash(dwFileHash);
@@ -650,7 +655,7 @@ int32 CPKArchiveReader::GetFileIndex(uint64 dwFileHash) const
     if (nIndex != -1)
         return nIndex;
 
-    if (UnicodeText::GetStringDisplayLocale() != UnicodeText::GetCurrentLocale())
+    if (unk_71010aba28 != FONT_SNO && UnicodeText::GetStringDisplayLocale() != UnicodeText::GetCurrentLocale())
     {
         uint64 dwLocaleOverrideHash = GetLocaleOverrideHash(dwFileHash);
         nIndex = GetFileIndexInternal(dwLocaleOverrideHash);
@@ -979,12 +984,12 @@ static void sReadBits(uint8 * pSourceBuffer, int32 nBitIndex, int32 nBitCount, u
         int32 nBitOffset = nBitIndex & 7;
         int32 nByteOffset = nBitIndex >> 3;
         int32 nValidBits = 8 - nBitOffset;
-        nShift = pSourceBuffer[nByteOffset] & ((1 << nValidBits) - 1);
+        uint8 dwByte = pSourceBuffer[nByteOffset] & ((1 << nValidBits) - 1);
         if (nBitCount < nValidBits)
         {
-            nShift >>= nValidBits - nBitCount;
+            dwByte >>= nValidBits - nBitCount;
         }
-        dwUncompressedValue |= (uint8)nShift;
+        dwUncompressedValue |= dwByte;
         nBitIndex += nValidBits;
         nBitCount -= nValidBits;
     }
@@ -1001,12 +1006,12 @@ static void sReadBits(uint8 * pSourceBuffer, int32 nBitIndex, int32 nBitCount, u
         int32 nBitOffset = nBitIndex & 7;
         int32 nByteOffset = nBitIndex >> 3;
         int32 nValidBits = 8 - nBitOffset;
-        nShift = pSourceBuffer[nByteOffset] & ((1 << nValidBits) - 1);
+        uint8 dwByte = pSourceBuffer[nByteOffset] & ((1 << nValidBits) - 1);
         if (nBitCount < nValidBits)
         {
-            nShift >>= nValidBits - nBitCount;
+            dwByte >>= nValidBits - nBitCount;
         }
-        dwUncompressedValue |= (uint8)nShift;
+        dwUncompressedValue |= dwByte;
         nBitIndex += nValidBits;
         nBitCount -= nValidBits;
     }

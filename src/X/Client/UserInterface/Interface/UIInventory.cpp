@@ -118,7 +118,7 @@ ACDID FindBestItemToUse(GBID gbidItem);
 BOOL IsMagicColor(const ItemQualityLevel eIQL);
 BOOL IsRareColor(const ItemQualityLevel eIQL);
 BOOL IsLegendaryColor(const ItemQualityLevel eIQL);
-BOOL GetItemBkgrndImage(const ItemQualityLevel eIQL, ImageTextureFrame & tImageTexFrame, const BOOL fEquipped, const BOOL fLargeItem);
+BOOL GetItemBkgrndImage(const ItemQualityLevel eIQL, ImageTextureFrame & tImageTexFrame, const BOOL fEquipped, const BOOL fLargeItem, const int32 nAncientRank, const BOOL fSeasonOnly, const BOOL fSanctified, const BOOL fPrimalized);
 }
 uint32 ItemGetCooldownTimeToApply(const ActorCommonData & tACDItem); // Items.cpp:2488
 uint32 ItemGetTradeTimeLeft(const ActorCommonData & tACDItem); // Items.cpp:10344
@@ -132,7 +132,7 @@ void UIFunction_GetMouse(Vector2D & vecMousePos); // UIFunctions.cpp:3238
 
 
 enum CrafterQuickMoveResult { CQMR_UNHANDLED = 0, CQMR_DO_NOTHING = 1, CQMR_IDENTIFY = 2, CQMR_ENCHANT = 3, CQMR_REFORGE = 4, CQMR_TRANSMOG = 5, CQMR_REMOVE_GEM = 6, CQMR_REPAIR = 7, CQMR_TRANSMUTE = 8, CQMR_DYE_ITEM = 9 };
-namespace UIInventory { void DrawItemRarityIcon(ItemQualityLevel, float, float &, SNO, const Rect2D &, const Vector2D &, const Rect2D *); void DrawLegendaryGemRank(int32, float &, const Rect2D &, const Rect2D *); } // UIInventoryCommon.cpp:533,592
+namespace UIInventory { void DrawItemRarityIcon(GBID, float, float &, SNO, const Rect2D &, const Vector2D &, const Rect2D *, BOOL); void DrawLegendaryGemRank(int32, float &, const Rect2D &, const Rect2D *); } // UIInventoryCommon.cpp:533,592
 struct BackpackTimers { int32 nNumTimers; UIID * pidTimers; };
 struct UIMap { UIID arSlotId[4]; InventorySlotType eSlot; IVector2D pt; InventoryControlType eInventoryControlType; };
 
@@ -3040,7 +3040,7 @@ static void sGetHighlightColor(
 
 
 
-BOOL UIInventory::GetItemBkgrndImage(const ItemQualityLevel eIQL, ImageTextureFrame & tImageTexFrame, const BOOL fEquipped, const BOOL fLargeItem)
+BOOL UIInventory::GetItemBkgrndImage(const ItemQualityLevel eIQL, ImageTextureFrame & tImageTexFrame, const BOOL fEquipped, const BOOL fLargeItem, const int32 nAncientRank, const BOOL fSeasonOnly, const BOOL fSanctified, const BOOL fPrimalized)
 {
 
 
@@ -3067,6 +3067,13 @@ BOOL UIInventory::GetItemBkgrndImage(const ItemQualityLevel eIQL, ImageTextureFr
     else
 
         sLabel += "Common";
+
+    if (fPrimalized)
+        sLabel += "_Primalized";
+    else if (fSanctified)
+        sLabel += "_Sanctified";
+    else if (fSeasonOnly)
+        sLabel += "_SeasonOnly";
 
     ImageCollectionGetImageInfo(sLabel, tImageTexFrame);
 
@@ -3112,6 +3119,10 @@ BOOL UIInventory::GetItemBkgrndImage(const ItemQualityLevel eIQL, ImageTextureFr
 
 
 
+extern "C" BOOL sub_7100505c00(const ActorCommonData & tACDItem);
+extern "C" BOOL sub_7100505c90(const ActorCommonData & tACDItem);
+extern "C" BOOL sub_710050ece0(const ActorCommonData & tACDItem);
+
 static void sDrawItemBackground(
     const ActorCommonData & tACDItem,
     const Rect2D & rectSlotPixels,
@@ -3120,9 +3131,13 @@ static void sDrawItemBackground(
     float & flZ)
 {
     BOOL fLargeItem = ItemIsDrawnAsLargeSlotItem(tACDItem.hGB.gbid);
+    int32 nAncientRank = ItemGetAncientRank(tACDItem);
+    BOOL fSeasonOnly = sub_7100505c00(tACDItem);
+    BOOL fSanctified = sub_7100505c90(tACDItem);
+    BOOL fPrimalized = sub_710050ece0(tACDItem);
 
     ImageTextureFrame tImageTexFrameBkgrnd;
-    BOOL fFoundImage = UIInventory::GetItemBkgrndImage(ItemGetDisplayedQualityLevel(tACDItem), tImageTexFrameBkgrnd, fEquipped, fLargeItem);
+    BOOL fFoundImage = UIInventory::GetItemBkgrndImage(ItemGetDisplayedQualityLevel(tACDItem), tImageTexFrameBkgrnd, fEquipped, fLargeItem, nAncientRank, fSeasonOnly, fSanctified, fPrimalized);
 
 
     SpriteDrawDeferred(tImageTexFrameBkgrnd, cgtImageTextureFrameNull, GlobalSNOGet(GLOBALSNO_SHADER_SPRITE_TRANSPARENT), rectSlotPixels, rgbaColor, crgbaBlack,
@@ -3394,9 +3409,8 @@ void UIInventory::SlotDrawItemInSlot(
 
     if (Prefs::GetGameplayPrefs().GetItemRarityIcons())
     {
-        ItemQualityLevel eIQL = ItemGetDisplayedQualityLevel(tACDItem);
         Vector2D vecOffsetPixels(-3.0f, -3.0f);
-        DrawItemRarityIcon(eIQL, 1.0f, flZ, GlobalSNOGet(GLOBALSNO_SHADER_SPRITE_TRANSPARENT), rectSlotPixels, vecOffsetPixels, NULL);
+        DrawItemRarityIcon(tACDItem.hGB.gbid, 1.0f, flZ, GlobalSNOGet(GLOBALSNO_SHADER_SPRITE_TRANSPARENT), rectSlotPixels, vecOffsetPixels, NULL, sub_710050ece0(tACDItem));
     }
 
 

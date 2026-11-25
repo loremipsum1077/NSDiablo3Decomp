@@ -1107,6 +1107,8 @@ static BOOL sPayloadIsUnavoidable(const PowerAPIAttackPayload & tPayload)
 
 
 // PowerAPI.cpp:1896
+extern "C" uint32 sub_71007b75d0();  // 2.7.7 only, unnamed, defined in SGame.cpp
+
 static void sSendHealthCostAchievementEvent(ActorCommonData * ptACDPlayer, Power * ptPower, int32 nNumberOfHeals)
 {
     Player * ptPlayer = PlayerGetByACD(ptACDPlayer->id);
@@ -1117,7 +1119,7 @@ static void sSendHealthCostAchievementEvent(ActorCommonData * ptACDPlayer, Power
         if (tEvaluationData.GetPlayer())
         {
             tEvaluationData.SetPower(ptPower);
-            tEvaluationData.EvaluateEvent(tEvaluationData.GetPlayer(), Achievement::ACH_EVENT_SPEND_HEALTH, nNumberOfHeals, (uint32)sub_71007b5e70());
+            tEvaluationData.EvaluateEvent(tEvaluationData.GetPlayer(), Achievement::ACH_EVENT_SPEND_HEALTH, nNumberOfHeals, sub_71007b75d0(), (uint32)sub_71007b5e70());
         }
     }
 }
@@ -1284,11 +1286,11 @@ static void sApplyMiscDamageAbsorb(
     float flClassDamageReductionPercent = 0.0f;
     if (GameTypeIsPvP() || tACDTarget.IsDueling())
     {
-        flClassDamageReductionPercent = tACDTarget.AttributesGetFloat(FastAttribKey(-0xae4));
+        flClassDamageReductionPercent = tACDTarget.AttributesGetFloat(FastAttribKey(ATTRIBUTE_CLASS_DAMAGE_REDUCTION_PERCENT_PVP));
     }
     else
     {
-        flClassDamageReductionPercent = tACDTarget.AttributesGetFloat(FastAttribKey(-0xf9d));
+        flClassDamageReductionPercent = tACDTarget.AttributesGetFloat(FastAttribKey(ATTRIBUTE_CLASS_DAMAGE_REDUCTION_PERCENT));
     }
 
     if (flClassDamageReductionPercent > EPSILON)

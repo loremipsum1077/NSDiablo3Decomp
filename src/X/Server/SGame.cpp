@@ -2200,6 +2200,24 @@ static CRefString sUpdateFunctionItemToString(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 static void sServerProcessUpdate(UpdateFunctionItem & tUpdateItem)
 {
     SGameGlobals & tSGameGlobals = SGameGlobalsGet();
@@ -2606,24 +2624,6 @@ static void sHandlePlayerClanIdUpdate(
         ptPlayer->uGuildId = uClanId;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -4968,7 +4968,7 @@ void SGamePlayerJoin(
         }
 
 
-        for (int32 i = 0; i < LPST_NUM_TYPES; ++i)
+        for (int32 i = 0; i < 4; ++i)
         {
             GBID gbidLegendary = tNewPlayer.tHeroStateData.tSavedData.gbidLegendaryPowers[i];
             if (gbidLegendary != GBID_NONE && !ItemPlayerCanAssignLegendaryPower(tNewPlayer, gbidLegendary, i))
@@ -5832,7 +5832,8 @@ BOOL SGameValidateJoinRequest(
 BOOL ReplayPlayerJoin(const OnlineService::PlayerResolveData & tResolvedPlayer); void SQuestsGetCurrent(SNO & snoQuest, int32 & nStepUID); GameConnectionID ServerClientConnect(ServerSocketID idServerSocket, int32 nControllerIndex, int32 nConsolePartyIndex); int32 ServerGetPlayerIndexFromGameConnectionID(GameConnectionID idGameConnection, int32 nControllerIndex);  // X/Server/Replay.cpp:1925, Quests/SQuests.cpp:3469, Network/Server.cpp:562, :2134
 void SGamePlayerJoin(Player & tNewPlayer, const OnlineService::PlayerResolveData & tResolvedPlayer, XLocale eLocale, SWorldID idSWorld); uint32 XServerSocketSetMsgPermissions(ServerSocketID idServerSocket, uint32 dwNewPermissionsMask); BOOL ACDWarpToACD(ActorCommonData & tACDToWarp, const ActorCommonData & tACDTarget, const PlayerWarpReason eReason, float flMinWarpRadius); PlayerAvengerData * GetPlayerAvengerData(Player * ptPlayer, AvengerSource eAvengerSource);  // X/Server/SGame.cpp:4637, Network/XServerSocket.cpp:1367, AI/ActorAI.cpp:1802, X/Common/Player.cpp:1634
 void SItemCrafting_InitSavedData(Player &);  // X/Server/Crafting/SItemCrafting.cpp:3010
-SNO SGameGetStartWorld();  // :7569
+SNO SGameGetStartWorld();  /* :7569 */  bool sub_71007b7080();  // 0x71007b7080, defined below
+// NON_MATCHING: 2 of 518 instructions: the original tests the player cap as cmp #5/b.hs, ours as cmp #4/b.hi.
 BOOL SGameJoinPendingPlayer(const OnlineService::HeroId uHeroId)
 
 {
@@ -5846,7 +5847,6 @@ BOOL SGameJoinPendingPlayer(const OnlineService::HeroId uHeroId)
         SGameBootPendingPlayer(uHeroId, QUIT_REASON_JOIN_FAILED, NULL, SERVERSOCKETID_INVALID);
         return FALSE;
     }
-
 
     if (GameIsNetworked() &&
         !ReplayIsReplayGame())
@@ -5863,7 +5863,7 @@ BOOL SGameJoinPendingPlayer(const OnlineService::HeroId uHeroId)
     if (eGameType == GT_DIABLO3)
     {
         uint32 uNumPlayers = PlayersGetCount();
-        if (uNumPlayers >= 5)
+        if (uNumPlayers >= 5 || ((SGameManager::GameGet().tStartParams.dwCreationFlags & (1 << 20)) && uNumPlayers != 0))
         {
             SGameBootPendingPlayer(uHeroId, QUIT_REASON_JOIN_FAILED, NULL, tResolvedPlayer.idServerSocket);
             return FALSE;
@@ -6178,11 +6178,11 @@ RNG & SGameGetRNG()
     return tSGameGlobals.rng;
 }
 
-
-
-
-
-
+// 0x71007b75d0 (unnamed, 2.7.7): 32-bit twin of sub_71007b5e70 (GAMECREATEPARAM_SEASON bit | (creation bit 20 << 1)).
+extern "C" uint32 sub_71007b75d0()
+{
+    return ((SGameManager::GameGet().tStartParams.dwCreationFlags >> GAMECREATEPARAM_SEASON) & 1) | ((SGameManager::GameGet().tStartParams.dwCreationFlags >> 19) & 2);
+}
 
 
 
@@ -7945,15 +7945,15 @@ void SGameFinishGameEnd()
 
 
 
-    POS pos = listDestPlayers.GetHeadPosition();
-    while (pos)
-    {
-        Player * ptPlayer = listDestPlayers.GetNext(pos);
-        if (ptPlayer)
-        {
-            SPlayerUnlockAdventureMode(*ptPlayer);
-        }
-    }
+    // 2.7.7: no SPlayerUnlockAdventureMode loop here (the target only builds the list).
+
+
+
+
+
+
+
+
 
 
 

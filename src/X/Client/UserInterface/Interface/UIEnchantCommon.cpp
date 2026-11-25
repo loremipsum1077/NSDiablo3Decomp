@@ -116,7 +116,7 @@ void EnumItemAffixes(
 
 
     ItemAffixFastAttribMap arAffixSpecificAttributes(16, NULL);
-    ACDID idACDNewItem = CItemGenerate((ACDNetworkName)0x2038, tGenerator, &arAffixSpecificAttributes);
+    ACDID idACDNewItem = CItemGenerate((ACDNetworkName)0x2e38, tGenerator, &arAffixSpecificAttributes);
     ActorCommonData * ptACDNewItem = ACDTryToGet(idACDNewItem);
     if (ptACDNewItem != NULL)
     {
@@ -257,7 +257,7 @@ void EnumReplacementItemAffixes(
 
 
         ItemAffixFastAttribMap arAffixSpecificAttributes(16, NULL);
-        ACDID idACDNewItem = CItemGenerate((ACDNetworkName)0x2038, tGenerator, &arAffixSpecificAttributes);
+        ACDID idACDNewItem = CItemGenerate((ACDNetworkName)0x2e38, tGenerator, &arAffixSpecificAttributes);
         ACDDelete(idACDNewItem, FALSE);
 
         CRefString sStringPrefix(CRefString().Format("%s ", pszBulletPrefix));

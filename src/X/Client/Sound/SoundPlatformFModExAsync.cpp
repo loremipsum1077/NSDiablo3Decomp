@@ -32,7 +32,7 @@ AsyncAudio::AsyncAudio()
     m_delayedSettings.SetHashTableSize_Tracked(256);
 }
 
-
+// NON_MATCHING: the two FMOD_OPENSTATE stack slots (the loop's and the inlined sReleaseFModSound's, sp+0x18/0x1c) are swapped
 AsyncAudio::~AsyncAudio()
 {
 

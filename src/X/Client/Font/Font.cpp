@@ -125,7 +125,7 @@ static inline BOOL sGetIconImage( const ImageHandle hImage, const ImageCollectio
     if ( !fSuccess )
         return FALSE;
 
-    if ( AppDrawFlagIsSet( 105 ) && tImageTexFrame.snoTexture == GlobalSNOGet( (GlobalSNO)640 ) )
+    if ( AppDrawFlagIsSet( 105 ) && tImageTexFrame.snoTexture == GlobalSNOGet( GLOBALSNO_TEXTURE_FONTICONS_CONSOLE ) )
         return FALSE;
 
     return Prefetch::AddToQueue( SNOName( TEXTURE_SNO, tImageTexFrame.snoTexture ), 2 );

@@ -772,9 +772,9 @@ typedef nn::Bit32 Message;
 
 
 // X/Common/Player.h
-struct StashIconStateMessage {  // size 0x14
+struct StashIconStateMessage {  // size 0x18
     RequiredMessageHeader tHeader;  // 0x00
-    uint8 bStashIcons[12];  // 0x08
+    uint8 bStashIcons[13];  // 0x08
 };
 // X/Common/Networking/GameMessage.h
 

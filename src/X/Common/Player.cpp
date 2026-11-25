@@ -116,7 +116,7 @@ extern const XTypeDescriptor * DT_PLAYER_SAVED_DATA;  // X/Common/Definitions/He
 extern const XTypeDescriptor * DT_QUEST_REWARD_HISTORY_ENTRY;
 CursorMgr & PlayerGetCursorMgr();
 struct PlayerLoadoutEquipmentUpdateMessage { RequiredMessageHeader tHeader; int32 nLoadoutIndex; int32 nEquipmentIndex; LoadoutItemData tNewItem; };  static_assert(sizeof(PlayerLoadoutEquipmentUpdateMessage) == 0x40, "PlayerLoadoutEquipmentUpdateMessage");
-struct PlayerLoadoutSaveMessage { RequiredMessageHeader tHeader; int32 nLoadoutIndex; CHAR usName[49]; };  static_assert(sizeof(PlayerLoadoutSaveMessage) == 0x40, "PlayerLoadoutSaveMessage");
+struct PlayerLoadoutSaveMessage { RequiredMessageHeader tHeader; int32 nLoadoutIndex; CHAR usName[53]; };  static_assert(sizeof(PlayerLoadoutSaveMessage) == 0x44, "PlayerLoadoutSaveMessage");
 struct PlayerLoadoutSetSlotMessage { RequiredMessageHeader tHeader; int32 nLoadoutIndex; InventorySlotType eSlot; ACDNetworkName annItem; };  static_assert(sizeof(PlayerLoadoutSetSlotMessage) == 0x14, "PlayerLoadoutSetSlotMessage");
 // Declaration placement inferred; signature from DWARF Tutorials.cpp:181.
 namespace Tutorial { BOOL PlayerHasSeen(const Player & tPlayer, const SNO snoTutorial); }
@@ -294,7 +294,7 @@ ComplexTypeDescriptor TypeDescriptor_PlayerLoadoutEquipmentUpdateMessage("Player
 static const TypeDescriptorField PlayerLoadoutSaveMessage_Fields[4] = {
     TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(PlayerLoadoutSaveMessage, tHeader), NULL, 1),
     TypeDescriptorField("", DT_INT, offsetof(PlayerLoadoutSaveMessage, nLoadoutIndex), NULL, 1),
-    CharArrayTypeDescriptorField("", offsetof(PlayerLoadoutSaveMessage, usName), "", 1, 0x31, -1),
+    CharArrayTypeDescriptorField("", offsetof(PlayerLoadoutSaveMessage, usName), "", 1, 0x35, -1),
     TypeDescriptorField(NULL, DT_NULL, sizeof(PlayerLoadoutSaveMessage), NULL, 0),
 };
 ComplexTypeDescriptor TypeDescriptor_PlayerLoadoutSaveMessage("PlayerLoadoutSaveMessage", 0, PlayerLoadoutSaveMessage_Fields, 4, NULL, 0x80, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_PLAYER_LOADOUT_SAVE_MESSAGE = &TypeDescriptor_PlayerLoadoutSaveMessage;
@@ -4185,7 +4185,8 @@ BOOL PlayerCanChangeLoadoutSkillsAndTraits(
 
 
 
-
+extern "C" BOOL sub_7100506d10(const Player & tPlayer, GBID gbidItem, LegendaryPowerSlotType eSlotType);  // Items.cpp, 2.7.7 only (unnamed)
+// NON_MATCHING: 2 of 101 instructions: the original sign-extends nLoadoutIndex (sxtw) before the first madd, ours folds it into smaddl.
 BOOL PlayerCanChangeLoadoutEquipment(const Player & tPlayer, int32 nLoadoutIndex)
 {
     ActorCommonData * ptACDPlayer = ACDTryToGet(tPlayer.idPlayerACD);
@@ -4193,7 +4194,17 @@ BOOL PlayerCanChangeLoadoutEquipment(const Player & tPlayer, int32 nLoadoutIndex
     {
         return FALSE;
     }
-
+    if (nLoadoutIndex < 0 || nLoadoutIndex >= 10)
+    {
+        return TRUE;
+    }
+    for (int32 i = 0; i < 4; i++)
+    {
+        if (!sub_7100506d10(tPlayer, tPlayer.tLoadouts[nLoadoutIndex].gbidLegendaryPowers[i], (LegendaryPowerSlotType)i))
+        {
+            return FALSE;
+        }
+    }
     return TRUE;
 }
 

@@ -575,15 +575,16 @@ struct OpenWorldModeChangeMessage {  // size 0x14
 };
 static_assert(sizeof(OpenWorldModeChangeMessage) == 0x14, "OpenWorldModeChangeMessage");
 
-struct SalvageResultsMessage {  // size 0x34
+struct SalvageResultsMessage {  // size 0x38
     RequiredMessageHeader tHeader;  // 0x00
     GBID gbidOriginalItem;  // 0x08
     int32 eIQLOriginalItem;  // 0x0c (ItemQualityLevel)
     GBID gbidMaterials[4];  // 0x10
     int32 nMaterialsCounts[4];  // 0x20
     int32 nMaterialsResults;  // 0x30
+    BOOL unk_34;  // 0x34 (2.7.7; bounded 0..1 in the descriptor)
 };
-static_assert(sizeof(SalvageResultsMessage) == 0x34, "SalvageResultsMessage");
+static_assert(sizeof(SalvageResultsMessage) == 0x38, "SalvageResultsMessage");
 
 // ---- The rest of the original GameMessage.h, generated from the DWARF (was GameMessageFull.h) ----
 
@@ -778,6 +779,11 @@ extern const XTypeDescriptor * DT_JEWEL_UPGRADE_RESULTS_MESSAGE;
 extern const XTypeDescriptor * DT_DUNGEON_FINDER_CLOSING_MESSAGE;
 extern const XTypeDescriptor * DT_UBER_BOSSS_CLOSING_MESSAGE;
 extern const XTypeDescriptor * DT_WARNING_COUNTDOWN_NOTIFICATION_MESSAGE;
+extern const XTypeDescriptor * DT_UNLOCKABLE_RANDOM_AFFIX_PROPERTIES;  // X/Common/Items.cpp
+extern const XTypeDescriptor * DT_UNLOCKABLE_RANDOM_AFFIX_MESSAGE;  // X/Common/ActorCommonData.cpp
+extern const XTypeDescriptor * DT_ACTIVATE_NODE_MESSAGE;
+extern const XTypeDescriptor * DT_DECTIVATE_NODE_MESSAGE;
+extern const XTypeDescriptor * DT_GIZMO_INTERACT_MESSAGE;
 extern const XTypeDescriptor * DT_BLIZZCON_END_SCREEN_MESSAGE;
 extern const XTypeDescriptor * DT_HORADRIC_QUEST_CURSED_REALM_RESULTS_MESSAGE;
 extern const XTypeDescriptor * DT_SET_DUNGEON_DIALOG_MESSAGE;
@@ -2262,7 +2268,25 @@ struct WarningCountdownNotificationMessage {  // size 0x10c
 };
 static_assert(sizeof(WarningCountdownNotificationMessage) == 0x10c, "WarningCountdownNotificationMessage");
 
-// 2.7.7 dark-alchemy messages; descriptors are built in the static init sub_71004b4c50 (a TU not in the source tree yet).
+// 2.7.7 (SMSG_UNLOCKABLE_RANDOM_AFFIX). UnlockableRandomAffixProperties' descriptor is built in
+// Items.cpp's static init after RareItemName; UnlockableRandomAffixMessage's in ActorCommonData.cpp's
+// after RareItemNameMessage.
+struct UnlockableRandomAffixProperties {  // size 0x8
+    int32 unk_00;  // 0x00
+    int32 unk_04;  // 0x04 (bounded 0..1)
+};
+static_assert(sizeof(UnlockableRandomAffixProperties) == 0x8, "UnlockableRandomAffixProperties");
+
+struct UnlockableRandomAffixMessage {  // size 0x18
+    RequiredMessageHeader tHeader;  // 0x00
+    int32 unk_08;  // 0x08
+    GBID unk_0c;  // 0x0c
+    UnlockableRandomAffixProperties unk_10;  // 0x10
+};
+static_assert(sizeof(UnlockableRandomAffixMessage) == 0x18, "UnlockableRandomAffixMessage");
+
+// 2.7.7 dark-alchemy messages; descriptors are built in the static init sub_71004b4c50 (a TU not in the source tree yet;
+// they are defined in GameMessage.cpp until that TU exists).
 struct ActivateNodeMessage {  // size 0x10
     RequiredMessageHeader tHeader;  // 0x00
     int32 unk_08;  // 0x08

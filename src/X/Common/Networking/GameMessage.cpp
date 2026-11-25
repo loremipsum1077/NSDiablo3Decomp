@@ -18,7 +18,7 @@ extern const XTypeDescriptor * DT_GBHANDLE;  // X/Common/Definitions/GameBalance
 // The field names are "" in the binary unless shown.
 
 static const TypeDescriptorField RequiredMessageHeader_Fields[3] = {
-    BoundedTypeDescriptorField("", DT_INT, 4, NULL, NULL, (const void *)0x249),
+    BoundedTypeDescriptorField("", DT_INT, 4, NULL, NULL, (const void *)0x253),
     TypeDescriptorField("", DT_BYTE, 2, NULL, 1),
     TypeDescriptorField(NULL, DT_NULL, 8, NULL, 0),
 };
@@ -1286,16 +1286,17 @@ static const TypeDescriptorField DebugActorTooltipMessage_Fields[4] = {
 ComplexTypeDescriptor TypeDescriptor_DebugActorTooltipMessage("DebugActorTooltipMessage", 0, DebugActorTooltipMessage_Fields, 4, NULL, 0x80, NULL, NULL, NULL, NULL);
 const XTypeDescriptor * DT_DISPLAY_ACTOR_DEBUG_TOOLTIP = &TypeDescriptor_DebugActorTooltipMessage;
 
-static const TypeDescriptorField SalvageResultsMessage_Fields[7] = {
+static const TypeDescriptorField SalvageResultsMessage_Fields[8] = {
     TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(SalvageResultsMessage, tHeader), NULL, 1),
     FilterTypeDescriptorField("", DT_GBID, offsetof(SalvageResultsMessage, gbidOriginalItem), "", 2, 0, -1),
     BoundedTypeDescriptorField("", DT_INT, offsetof(SalvageResultsMessage, eIQLOriginalItem), NULL, (const void *)-1, (const void *)0xb),
     FilteredFixedArrayTypeDescriptorField("", DT_GBID, offsetof(SalvageResultsMessage, gbidMaterials), "", 0, 4, 2, 0),
     FixedArrayTypeDescriptorField("", DT_INT, offsetof(SalvageResultsMessage, nMaterialsCounts), NULL, 1, 4, 0),
     TypeDescriptorField("", DT_INT, offsetof(SalvageResultsMessage, nMaterialsResults), NULL, 1),
+    BoundedTypeDescriptorField("", DT_INT, offsetof(SalvageResultsMessage, unk_34), NULL, NULL, (const void *)0x1),
     TypeDescriptorField(NULL, DT_NULL, sizeof(SalvageResultsMessage), NULL, 0),
 };
-ComplexTypeDescriptor TypeDescriptor_SalvageResultsMessage("SalvageResultsMessage", 0, SalvageResultsMessage_Fields, 7, NULL, 0x80, NULL, NULL, NULL, NULL);
+ComplexTypeDescriptor TypeDescriptor_SalvageResultsMessage("SalvageResultsMessage", 0, SalvageResultsMessage_Fields, 8, NULL, 0x80, NULL, NULL, NULL, NULL);
 const XTypeDescriptor * DT_SALVAGE_RESULTS_MESSAGE = &TypeDescriptor_SalvageResultsMessage;
 
 static const TypeDescriptorField TrySalvageAllMessage_Fields[3] = {
@@ -1649,11 +1650,41 @@ static const TypeDescriptorField PlayerGiftMessage_Fields[6] = {
 ComplexTypeDescriptor TypeDescriptor_PlayerGiftMessage("PlayerGiftMessage", 0, PlayerGiftMessage_Fields, 6, NULL, 0x80, NULL, NULL, NULL, NULL);
 const XTypeDescriptor * DT_PLAYER_GIFT_MESSAGE = &TypeDescriptor_PlayerGiftMessage;
 
+// 2.7.7 dark-alchemy message descriptors. In 2.7.7 they are built, in this order, by the static
+// init sub_71004b4c50 of a translation unit that is not in the source tree yet (0x4b2140..0x4b7340);
+// they live here until that file exists.
+static const TypeDescriptorField ActivateNodeMessage_Fields[4] = {
+    TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(ActivateNodeMessage, tHeader), NULL, 1),
+    TypeDescriptorField("", DT_INT, offsetof(ActivateNodeMessage, unk_08), NULL, 1),
+    TypeDescriptorField("", DT_INT, offsetof(ActivateNodeMessage, unk_0c), NULL, 1),
+    TypeDescriptorField(NULL, DT_NULL, sizeof(ActivateNodeMessage), NULL, 0),
+};
+ComplexTypeDescriptor TypeDescriptor_ActivateNodeMessage("ActivateNodeMessage", 0, ActivateNodeMessage_Fields, 4, NULL, 0x80, NULL, NULL, NULL, NULL);
+const XTypeDescriptor * DT_ACTIVATE_NODE_MESSAGE = &TypeDescriptor_ActivateNodeMessage;
+
+static const TypeDescriptorField DectivateNodeMessage_Fields[3] = {
+    TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(DectivateNodeMessage, tHeader), NULL, 1),
+    TypeDescriptorField("", DT_INT, offsetof(DectivateNodeMessage, unk_08), NULL, 1),
+    TypeDescriptorField(NULL, DT_NULL, sizeof(DectivateNodeMessage), NULL, 0),
+};
+ComplexTypeDescriptor TypeDescriptor_DectivateNodeMessage("DectivateNodeMessage", 0, DectivateNodeMessage_Fields, 3, NULL, 0x80, NULL, NULL, NULL, NULL);
+const XTypeDescriptor * DT_DECTIVATE_NODE_MESSAGE = &TypeDescriptor_DectivateNodeMessage;
+
+static const TypeDescriptorField GizmoInteractMessage_Fields[4] = {
+    TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(GizmoInteractMessage, tHeader), NULL, 1),
+    TypeDescriptorField("", DT_INT, offsetof(GizmoInteractMessage, unk_08), NULL, 1),
+    TypeDescriptorField("", DT_INT, offsetof(GizmoInteractMessage, unk_0c), NULL, 1),
+    TypeDescriptorField(NULL, DT_NULL, sizeof(GizmoInteractMessage), NULL, 0),
+};
+ComplexTypeDescriptor TypeDescriptor_GizmoInteractMessage("GizmoInteractMessage", 0, GizmoInteractMessage_Fields, 4, NULL, 0x80, NULL, NULL, NULL, NULL);
+const XTypeDescriptor * DT_GIZMO_INTERACT_MESSAGE = &TypeDescriptor_GizmoInteractMessage;
+
 
 #include "../Game.h"
 #include "../Player.h"
 #include "../../Server/PlayerList.h"
 #include "../../Sigma/RefString.h"
+#include "../../../Contrib/Contrib/blz/include/blz/vector.h"
 #include "../../../Contrib/Contrib/BlizzardProtoBuf/2.6.0/src/src/google/protobuf/message_lite.h"
 
 BOOL GetGameMessageTypeAndSize(GameMessageType eMessageType, const XTypeDescriptor *& pTypeDescriptor, uint32 & dwSize, const char *& pszMessageLabel);  // ByteswapMessage.cpp:74
@@ -1803,8 +1834,7 @@ void MessageSendToClient(const PlayerList & listDestinations, GameMessageType eT
         if (!MessageIsMultiCast(eType))
         {
             BOOL bWasSentToConsole = FALSE;
-            POS posPlayer2 = listDestinations.GetHeadPosition();
-            while (posPlayer2 && !bWasSentToConsole)
+            for (POS posPlayer2 = listDestinations.GetHeadPosition(); posPlayer2 && !bWasSentToConsole; )
             {
                 Player * ptPlayer2 = listDestinations.GetNext(posPlayer2);
                 if (ptPlayer == ptPlayer2)
@@ -1822,11 +1852,51 @@ void MessageSendToClient(const PlayerList & listDestinations, GameMessageType eT
 
 uint32 ComposeProtocolBufferMessage(const google::protobuf::MessageLite & tMessage, GameMessageType eType, uint8 * pMessageBuffer, uint32 uBufferSize);
 
+// NON_MATCHING: register allocation only (eType in w21 vs w20, remaining size in x21 vs x20, buffer pointer in x22)
 void MessageSendToClient(const PlayerList & listDestinations, GameMessageType eType, const google::protobuf::MessageLite & tMessage)
 {
+    // 2.7.7: a message too big for one buffer is composed in a heap buffer and sent as SMSG_CHUNKED pieces.
+    uint32 uTotalSize;
+    {
+        const XTypeDescriptor * pTypeDescriptor = NULL;
+        uint32 dwSize = 0;
+        const char * pszLabel = NULL;
+        GetGameMessageTypeAndSize(eType, pTypeDescriptor, dwSize, pszLabel);
+        uTotalSize = dwSize + tMessage.ByteSize();
+    }
+
     uint8 auBlobMessage[32768];
-    uint32 uTotalMessageSize = ComposeProtocolBufferMessage(tMessage, eType, auBlobMessage, sizeof(auBlobMessage));
-    MessageSendToClient(listDestinations, eType, auBlobMessage, uTotalMessageSize);
+    if (uTotalSize > sizeof(auBlobMessage))
+    {
+        blz::vector<uint8> vMessage;
+        vMessage.resize(uTotalSize);
+        ComposeProtocolBufferMessage(tMessage, eType, vMessage.data(), uTotalSize);
+
+        GenericBlobMessage tBlobHeader = {};
+        SigmaMemoryCopy(&tBlobHeader, vMessage.data(), sizeof(GenericBlobMessage));
+        tBlobHeader.tHeader.eType = eType;
+        SigmaMemoryCopy(vMessage.data(), &tBlobHeader, sizeof(GenericBlobMessage));
+
+        const uint8 * pData = vMessage.data();
+        size_t uRemaining = uTotalSize;
+        while (uRemaining > 0)
+        {
+            size_t uChunkSize = uRemaining < 0x7f28 ? uRemaining : 0x7f28;
+            ChunkMessage tChunkMessage = {};
+            tChunkMessage.unk_08 = (uint32)uChunkSize;
+            tChunkMessage.unk_0c = uRemaining <= 0x7f28;
+            SigmaMemoryCopy(auBlobMessage, &tChunkMessage, sizeof(ChunkMessage));
+            SigmaMemoryCopy(auBlobMessage + sizeof(ChunkMessage), pData, uChunkSize);
+            MessageSendToClient(listDestinations, SMSG_CHUNKED, auBlobMessage, (uint32)uChunkSize + sizeof(ChunkMessage));
+            pData += uChunkSize;
+            uRemaining -= uChunkSize;
+        }
+    }
+    else
+    {
+        uint32 uTotalMessageSize = ComposeProtocolBufferMessage(tMessage, eType, auBlobMessage, sizeof(auBlobMessage));
+        MessageSendToClient(listDestinations, eType, auBlobMessage, uTotalMessageSize);
+    }
 }
 
 uint32 ComposeProtocolBufferMessage(const google::protobuf::MessageLite & tMessage, GameMessageType eType, uint8 * pMessageBuffer, uint32 uBufferSize)

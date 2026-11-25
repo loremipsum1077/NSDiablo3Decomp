@@ -28,14 +28,14 @@
 // X/Common/FileIO/FileIO.h:36. FileIO.h is not in src yet; only the members this file calls are
 #include "../FileIO/FileIO.h"
 namespace FileIO {
-
-
-
-
-
-
-
 }  // namespace FileIO
+// 2.7.7: m_pStaticDataFile points at one AchievementsStaticData per achievement set (new 0x390; ctor 0x46bce0
+// runs at +0 and +0x1c8 with the same content handle, the destructor runs at +0x1c8 then +0). Type name unknown.
+struct Unk390StaticDataSets {
+    Unk390StaticDataSets(const blz::string & contentHandleHash) : unk_0(contentHandleHash), unk_1c8(contentHandleHash) {}
+    OnlineService::AchievementsEngine::AchievementsStaticData unk_0;  // 0x000
+    OnlineService::AchievementsEngine::AchievementsStaticData unk_1c8;  // 0x1c8
+};
 
 ImageHandle StringToImageHandle(LPCSTR pszName);  // X/Client/ImageCollection.cpp
 
@@ -67,8 +67,8 @@ inline const char * FindAchievementAttribute(const google::protobuf::RepeatedPtr
     return NULL;
 }
 // Original line 76.
-Achievements::Achievements() : m_CacheInvalidatedEvent(NULL), m_AchievementUpdateEvent(NULL), m_CriteriaUpdateEvent(NULL), m_AchievementsStatusEvent(NULL), m_AchievementStaticDataUpdatedEvent(NULL), m_bStaticDataLoaded(false), m_pStaticDataFile(new AchievementsEngine::AchievementsStaticData("")), m_pOldStaticDataFile(NULL), m_bEnabled(true) {}
-Achievements::~Achievements() { delete m_pStaticDataFile; delete m_pOldStaticDataFile; }
+Achievements::Achievements() : m_CacheInvalidatedEvent(NULL), m_AchievementUpdateEvent(NULL), m_CriteriaUpdateEvent(NULL), m_AchievementsStatusEvent(NULL), m_AchievementStaticDataUpdatedEvent(NULL), m_bStaticDataLoaded(false), m_pStaticDataFile(&(new Unk390StaticDataSets(""))->unk_0), m_pOldStaticDataFile(NULL), m_bEnabled(true) {}
+Achievements::~Achievements() { delete reinterpret_cast<Unk390StaticDataSets *>(m_pStaticDataFile); delete reinterpret_cast<Unk390StaticDataSets *>(m_pOldStaticDataFile); }
 bool Achievements::IsInitialized() { return true; }
 bool Achievements::IsStaticDataLoaded() { return m_bStaticDataLoaded; }
 void Achievements::RegisterSyncedVars() {
@@ -304,7 +304,7 @@ bool Achievements::InsertReward(AchievementsEngine::AchievementsStaticData * sta
     ptNewReward->m_parentAchievements.push_back(achievementIt->second);
     return true;
 }
-// NON_MATCHING: 1324 vs 1304 bytes. Re-laid on DWARF lines 813-947 (`if (CreateItemRewardCurrency(...))`, `(CurrencyType) atoi`
+// NON_MATCHING: ours 1248 vs 1228 bytes in 2.7.7. Re-laid on DWARF lines 813-947 (`if (CreateItemRewardCurrency(...))`, `(CurrencyType) atoi`
 // read from columns 891:21 / 893:40). Remaining: the RewardDefinition ctor's m_hIcon/m_currency 64-bit store is sunk into
 // `stp x23, x8, [sp, #0x38]` (with m_pszNameKey) in the original; ours stores it right after the first call in each
 // transmog/cosmetic/item branch. 945:9 is one row in the original (likely a macro; ours is an if/else).
@@ -501,6 +501,7 @@ void Achievements::CreateBannerColorSetReward(AchievementsEngine::AchievementsSt
     {
         RewardDefinition tReward;
         tReward.m_id = ptBannerColorSet->idReward;
+        tReward.m_type = 0;  // 2.7.7 stores 0 again after the constructor (0x72b38c stp w9, wzr)
         tReward.m_flags = uRewardFlags;
         tReward.m_pszNameKey = pszSnoName;
         tReward.m_hIcon = ptBannerColorSet->hIcon;
@@ -583,14 +584,14 @@ bool Achievements::LoadAchievementsDataRaw(const uint8 * pData, size_t dwDataSiz
     bool success = false;
     if (achievementFile.ParseFromArray(pData, dwDataSize))
     {
-        AchievementsEngine::AchievementsStaticData * staticData = new AchievementsEngine::AchievementsStaticData(contentHandleHash);
-        staticData->ParseFromPb(achievementFile);
-        LoadAchievementsRewards(staticData, achievementFile);
-        PostprocessStaticData(staticData);
-        ProcessSeasonJourneyObjectives(staticData);
-        delete m_pOldStaticDataFile;
+        Unk390StaticDataSets * staticData = new Unk390StaticDataSets(contentHandleHash);
+        staticData->unk_0.ParseFromPb(achievementFile); LoadAchievementsRewards(&staticData->unk_0, achievementFile); PostprocessStaticData(&staticData->unk_0); ProcessSeasonJourneyObjectives(&staticData->unk_0);
+        staticData->unk_1c8.ParseFromPb(achievementFile); LoadAchievementsRewards(&staticData->unk_1c8, achievementFile); PostprocessStaticData(&staticData->unk_1c8); ProcessSeasonJourneyObjectives(&staticData->unk_1c8);
+
+
+        delete reinterpret_cast<Unk390StaticDataSets *>(m_pOldStaticDataFile);
         m_pOldStaticDataFile = m_pStaticDataFile;
-        m_pStaticDataFile = staticData;
+        m_pStaticDataFile = &staticData->unk_0;
         m_bStaticDataLoaded = true;
         success = true;
     }
@@ -642,11 +643,11 @@ void Achievements::PostprocessStaticData(AchievementsEngine::AchievementsStaticD
     for (AchievementsEngine::AchievementMap::const_iterator it = staticData->GetAchievementMap().begin(); it != staticData->GetAchievementMap().end(); it++)
     {
         AchievementsEngine::InternalAchievementDefinition * ptDefinition = it->second;
-        if (ptDefinition->m_supersedes)
+        const AchievementsEngine::InternalCategoryDefinition * ptCategory = staticData->GetCategoryDefinition(ptDefinition->m_parentCategoryId);
+        while (ptCategory->m_parentCategoryId)
+            ptCategory = staticData->GetCategoryDefinition(ptCategory->m_parentCategoryId);
+        if (it->second->m_supersedes)
         {
-            const AchievementsEngine::InternalCategoryDefinition * ptCategory = staticData->GetCategoryDefinition(ptDefinition->m_parentCategoryId);
-            while (ptCategory->m_parentCategoryId)
-                ptCategory = staticData->GetCategoryDefinition(ptCategory->m_parentCategoryId);
             if (ptCategory->m_flags & (1u << CATEGORY_FLAG_SEASON_JOURNEY))
             {
                 for (int32 i = 0; i <= staticData->GetSeasonCycleLength(); ++i)
@@ -716,10 +717,12 @@ AchievementsInterface::~AchievementsInterface() {}
 ErrorCode AchievementsInterface::EvaluateEvent(const GameAccountHandle & gameAccount, uint32 eventId, uint64 quantity, Timestamp timestamp, uint32 uUnkFlags, const ModifierCallback & cb) { return EvaluateEvent(gameAccount, eventId, 0, quantity, timestamp, uUnkFlags, cb); }
 ErrorCode AchievementsInterface::EvaluateEvent(const GameAccountHandle & gameAccount, uint32 eventId, uint64 comparand, uint64 quantity, Timestamp timestamp, uint32 uUnkFlags, const ModifierCallback & cb) { return 0; }
 void AchievementsInterface::ConvertAchievementRecord(const AchievementsEngine::Achievement & bnetRecord, AchievementRecord & osRecord) {
+    osRecord.unk_0 = bnetRecord.unk_0;
     osRecord.m_achievementId = bnetRecord.m_achievementId;
     osRecord.m_timestampEarned = Blizzard::Time::FromUnixTime64(bnetRecord.m_completion);
 }
 void AchievementsInterface::ConvertCriteriaRecord(const AchievementsEngine::Criteria & bnetRecord, CriteriaRecord & osRecord) {
+    osRecord.unk_0 = bnetRecord.unk_0;
     osRecord.m_criteriaId = bnetRecord.m_criteriaId;
     osRecord.m_quantity = bnetRecord.m_baseQuantity + bnetRecord.m_deltaQuantity;
     osRecord.m_timestampStarted = Blizzard::Time::FromUnixTime64(bnetRecord.m_startTime);

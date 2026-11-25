@@ -194,9 +194,12 @@
         "account_attribs.inc": "6c7bb983b6f962f52a8abb365446e8d017f486c39ef6449af8c87d74957dcaa9",
         "account_wide_attribs.inc": "ae6890ac94c5f87a50a6b1fa5b71db4a75fd6b0b94993b9f141152533b5cc5ba",
         "actor_particles.inc": "bbc69d598fa437b70a93240b2775b1dab1878b055b5b56d3a158b267ee5aa7ab",
+        "gbid_rows.inc": "f899153bdb1d5c516aa96d3ddd4ea52da01d5e16e844a30dceb2095730d794ac",
         "hero_attribs.inc": "44011ec469967b4036cdea563475df4ed4810c3cf9bae95e4e2e4769c9d433b6",
         "lua_tables.inc": "6a18d71e9e98986a9d736f42efae10a2328987842511150eed4ef4235fad1739",
-        "partition_attribs.inc": "51a393fcc60377c6a366eec8d08be2f5b4fe0b90f5fe311ea166c978e19deb21"
+        "nvn_entry_points.inc": "5e5fb0345fe8da3e878a1b0a61aef4b37ccca4826c5a6251b6506b154fb8d85a",
+        "partition_attribs.inc": "51a393fcc60377c6a366eec8d08be2f5b4fe0b90f5fe311ea166c978e19deb21",
+        "sno_calls.inc": "3569bd4565161127f034de7766256c4bd89eebb32fc70496f6c1151d9d90864c"
       },
       "lua_evidence_sha256": "b35f4627f616b151a9e9c0b931950c524b15bce820a57883d566fbd0b2f0d732"
     }

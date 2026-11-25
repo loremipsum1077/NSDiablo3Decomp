@@ -1382,8 +1382,8 @@ void OnStartGameErrorAccepted(const UIID &)
 {
     sgtMainMenuGlobals.idStartGameDialog = INVALID_MODAL_NOTIFICATION_ID;
 }
-
-
+extern "C" bool sub_71001bfef0();  // OnlineActions.cpp (2.7.7, unnamed; the caller tests bit 0, so it returns bool): a party member's hero is solo-seasonal
+// NON_MATCHING: only the missing `orr w1, wzr, #0x1`: 2.7.7 PartySwitchPreferredOnlineState takes (eState, BOOL bForce=TRUE here); Online.h/.cpp still have the 1-arg form.
 
 void OnStartOrContinue(BOOL bFromEvent, BOOL bSkipSignInAccepted)
 {
@@ -1393,15 +1393,16 @@ void OnStartOrContinue(BOOL bFromEvent, BOOL bSkipSignInAccepted)
 
     if (::Console::Online::PartyIsInParty())
     {
+        ::Console::Online::GameParams tGameParams;
+        ::Console::Online::PartyGetGameParams(tGameParams);
         ::Console::UIOnlineActions::GameStartValidationError eReason = ::Console::UIOnlineActions::ValidateGameCanStart();
-
         if (::Console::Screens::GetModalNotificationManager().IsNotificationShowing())
             eReason = ::Console::UIOnlineActions::GAME_START_ERROR_BUSY;
 
         if (!bSkipSignInAccepted)
         {
-            ::Console::Online::GameParams tGameParams;
-            if (::Console::Online::PartyGetGameParams(tGameParams) &&
+
+            if (
                 tGameParams.m_bIsSeasonal &&
                 !sVerifyAllLocalPlayersSignedInOnline(nProfileUserIdx))
             {
@@ -1419,6 +1420,13 @@ void OnStartOrContinue(BOOL bFromEvent, BOOL bSkipSignInAccepted)
 
         if (eReason == ::Console::UIOnlineActions::GAME_START_OK)
         {
+            // 2.7.7: a solo seasonal hero in a non-Challenge-Rift party game takes the party offline. The target
+            // passes a second argument (TRUE, force) to PartySwitchPreferredOnlineState; see the NON_MATCHING note.
+            if (tGameParams.m_eGameType != GT_CHALLENGE_RIFTS && sub_71001bfef0())
+            {
+                ::Console::Online::PartySwitchPreferredOnlineState(::Console::Online::PARTY_OFFLINE);
+                ::Console::Online::PartySwitchOnlineState(::Console::Online::PARTY_OFFLINE);
+            }
             int32 nMaxLocalHeroLevel = GetMaxLocalHeroLevel();
             CGameGlobals & tCGameGlobals = CGameGlobalsGet();
             LoadingScreenData & tLSD = tCGameGlobals.tLoadingScreenData;
@@ -1471,13 +1479,6 @@ void OnStartOrContinue(BOOL bFromEvent, BOOL bSkipSignInAccepted)
         }
     }
 }
-
-
-
-
-
-
-
 
 
 

@@ -37,9 +37,10 @@ extern UIID UTEXT_CONSOLE_PROFILE_SUMMARY_BARBARIAN_INACTIVE, UTEXT_CONSOLE_PROF
 void UI_SetPrimaryUIController(int32 nPrimaryController);  // X/Client/UserInterface/UI.cpp
 namespace Console { namespace Screens { void ShowModalDialog(int32 nControllerIndex, const UIID & idDialog, BOOL bUnused, const UIID & idLightboxOverride); } }  // ConsoleScreenManager.cpp
 namespace Console { namespace UIOnlineActions { bool IsActiveSeason(uint32 uSeason, const D3::Account::Digest & tAccountDigest); } }  // OnlineActions.cpp
+extern "C" BOOL sub_710072e0b0(uint32 uSeasonCreated, uint32 uFlags);  // OnlineService
 namespace UIUtils { namespace Console {  // UIConsoleUtils.cpp:1000, 1021, 1043
-int32 GetParagonLevel(const D3::Account::SavedDefinition & tAccount, BOOL bIsHardcore, BOOL bIsSeasonal);
-uint64 GetParagonExperience(const D3::Account::SavedDefinition & tAccount, BOOL bIsHardcore, BOOL bIsSeasonal);
+int32 GetParagonLevel(const D3::Account::SavedDefinition & tAccount, BOOL bIsHardcore, BOOL bIsSeasonal, BOOL bUnk);
+uint64 GetParagonExperience(const D3::Account::SavedDefinition & tAccount, BOOL bIsHardcore, BOOL bIsSeasonal, BOOL bUnk);
 void DisplayPortrait(PlayerClass eClass, BOOL bFemale, int32 nAltLevel, const UIID & idPortrait, GBID gbidPortrait);
 } }
 
@@ -187,8 +188,9 @@ void DisplayInfo(int32 nControllerIndex)
 
     BOOL bHardcore = tHero.digest().player_flags() & 1;
     BOOL bSeasonal = ::Console::UIOnlineActions::IsActiveSeason(tHero.digest().season_created(), tAccount.digest());
-    int32 nParagonLevel = UIUtils::Console::GetParagonLevel(tAccount, bHardcore, bSeasonal);
-    uint64 nParagonXP = UIUtils::Console::GetParagonExperience(tAccount, bHardcore, bSeasonal);
+    BOOL bUnk = sub_710072e0b0(tHero.digest().season_created(), tHero.digest().player_flags2());
+    int32 nParagonLevel = UIUtils::Console::GetParagonLevel(tAccount, bHardcore, bSeasonal, bUnk);
+    uint64 nParagonXP = UIUtils::Console::GetParagonExperience(tAccount, bHardcore, bSeasonal, bUnk);
     uint64 nParagonNeededXP = GetNextParagonLevelXPNeeded(nParagonLevel);
     nParagonXP = Math::Min(nParagonXP, nParagonNeededXP);
     float flParagonPercentage = (float)(nParagonNeededXP - nParagonXP) / (float)nParagonNeededXP * 100.0f;

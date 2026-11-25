@@ -32,7 +32,7 @@
 #include "../../../Common/UserInterface/UITextControl.h"
 #include "../../../Sigma/RefString.h"
 // Declared here because their headers are not adopted yet.
-struct StashIconStateMessage { RequiredMessageHeader tHeader; uint8 bStashIcons[12]; };  // size 0x14; X/Common/Networking/GameMessage.h
+struct StashIconStateMessage { RequiredMessageHeader tHeader; uint8 bStashIcons[13]; };  // size 0x18 (2.7.7); X/Common/Networking/GameMessage.h
 
 void MessageSendToServer(GameMessageType eType, void * pMessage, uint32 dwMessageSize, const Player * ptPlayer);  // CGameMessage.cpp
 void ACDInventoryGetSlotPageSize(const InventorySlotType eSlot, IVector2D & tSize); int32 ACDInventoryGetNumUnlockedStashTabs(ActorCommonData & tACDPlayer); int32 ACDInventoryGetMaxStashSlots(ActorCommonData & tACDPlayer); int32 ACDInventoryStashTabsBuyableWithGold(ActorCommonData & tACDPlayer); int32 ACDInventoryGetStashUpgradeCost(ActorCommonData & tACDPlayer);  // ActorInventory.cpp
@@ -559,7 +559,7 @@ void UIStash::Update()
     {
         int32 nPage = Math::Max(nSlotCount - 1, 0) / nSlotsPerPage;
 
-        sgptStashVariables->nLastStashPage = nPage >= MAX_VISIBLE_TABS;
+        sgptStashVariables->nLastStashPage = nPage / MAX_VISIBLE_TABS;
 
 
 
@@ -592,7 +592,7 @@ void UIStash::Update()
 
     int32 nPage = tStashPageRadioButtonGroup.GetSelectedValue();
 
-    for (int32 i = 0; i < 12; i++)
+    for (int32 i = 0; i < 13; i++)
     {
         int32 nTab = i % MAX_VISIBLE_TABS;
         UIRadioButton * ptButton = tRadioButtonGroup.GetButtonByValue(nTab);
@@ -643,7 +643,7 @@ void UIStash::Update()
 
             if (nNumTabs <= MAX_VISIBLE_TABS)
             {
-                sCost = StringListFetch(GlobalSNOGet(1884), "BuyStashTabFromStore");
+                sCost = StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_PLATINUM_GENERAL), "BuyStashTabFromStore");
                 sgptStashVariables->bCanBuyMoreTabs = TRUE;
             }
         }
@@ -673,7 +673,7 @@ void UIStash::Update()
 
             if (ACDInventoryStashTabsBuyableWithGold(*ptACDPlayer) > 0)
             {
-                sCost = StringListFetch(GlobalSNOGet(736), "BuyTab");
+                sCost = StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_STASH), "BuyTab");
 
                 int32 nUpgradeCost = ACDInventoryGetStashUpgradeCost(*ptACDPlayer);
                 CurrencyType eCurrencyType = 0;

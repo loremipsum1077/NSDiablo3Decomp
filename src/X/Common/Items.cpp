@@ -308,8 +308,8 @@ static void sAddAttributesForAffix(ActorCommonData & tACDItem, GBID gbidAffix, B
 typedef blz::map<int, int, blz::less<int>, blz::allocator<blz::pair<const int, int> > > DyeTypeToGBIDMap;  // Items.cpp:28
 
 // RareItemName is declared in Items.h.
-
-
+// 2.7.7: UnlockableRandomAffixProperties (built right after RareItemName, 0x7100510c70) is declared in Networking/GameMessage.h.
+#include "Networking/GameMessage.h"
 
 
 
@@ -323,7 +323,7 @@ static const TypeDescriptorField RareItemName_Fields[] = {
     TypeDescriptorField("", DT_INT, offsetof(RareItemName, nAffixStringListIndex), NULL, 1),
     TypeDescriptorField("", DT_INT, offsetof(RareItemName, nItemStringListIndex), NULL, 1),
     TypeDescriptorField(NULL, DT_NULL, sizeof(RareItemName), NULL, 0), }; ComplexTypeDescriptor TypeDescriptor_RareItemName("RareItemName", 0, RareItemName_Fields, 5, NULL, 0x80, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_RARE_ITEM_NAME = &TypeDescriptor_RareItemName;
-
+static const TypeDescriptorField UnlockableRandomAffixProperties_Fields[] = { TypeDescriptorField("", DT_INT, offsetof(UnlockableRandomAffixProperties, unk_00), NULL, 1), BoundedTypeDescriptorField("", DT_INT, offsetof(UnlockableRandomAffixProperties, unk_04), NULL, NULL, (const void *)1), TypeDescriptorField(NULL, DT_NULL, sizeof(UnlockableRandomAffixProperties), NULL, 0), }; ComplexTypeDescriptor TypeDescriptor_UnlockableRandomAffixProperties("UnlockableRandomAffixProperties", 0, UnlockableRandomAffixProperties_Fields, 3, NULL, 0x80, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_UNLOCKABLE_RANDOM_AFFIX_PROPERTIES = &TypeDescriptor_UnlockableRandomAffixProperties;
 // line 112
 static const TypeDescriptorField EnchantAffixChoice_Fields[] = {
     TypeDescriptorField("", DT_GBID, offsetof(EnchantAffixChoice, gbidAffix), NULL, 1),
@@ -2124,7 +2124,7 @@ BOOL ItemUsableByHireling(const GBID gbidItem, const HirelingClass eHirelingClas
 
 
 
-
+extern "C" int32 sub_71004b8900(const ActorCommonData * ptACD, int32 nLevel);  // 2.7.7 only, unnamed: returns 1 (no level requirement) when a buff/attribute flag is set on ptACD, else nLevel
 BOOL ItemOwnerMeetsRequirements(const ActorCommonData & tACDItem, const ActorCommonData & tACDOwner, GameError * pOutError)
 {
     if (pOutError)
@@ -2166,11 +2166,11 @@ BOOL ItemOwnerMeetsRequirements(const ActorCommonData & tACDItem, const ActorCom
     if (fOwnerIsHireling || ePlayerClass != PLAYER_CLASS_NONE)
     {
         int32 nOwnerLevel = tACDOwner.AttributesGetInt(ATTRIBUTE_LEVEL);
-        int32 nRequiredLevel = ItemGetLevelRequirement(tACDItem.hGB.gbid, &tACDItem, FALSE);
+        int32 nRequiredLevel = ItemGetLevelRequirement(tACDItem.hGB.gbid, &tACDItem, FALSE); if (!fOwnerIsHireling) nRequiredLevel = sub_71004b8900(&tACDOwner, nRequiredLevel);
         if (nOwnerLevel < nRequiredLevel)
         {
             if (pOutError)
-                *pOutError = fOwnerIsHireling ? GAMEERROR_IARESULT_HIRELING_DOESNT_MEET_ITEM_LEVEL : GAMEERROR_IARESULT_PLAYER_DOESNT_MEET_ITEM_LEVEL;
+                { if (fOwnerIsHireling) *pOutError = GAMEERROR_IARESULT_HIRELING_DOESNT_MEET_ITEM_LEVEL; else *pOutError = GAMEERROR_IARESULT_PLAYER_DOESNT_MEET_ITEM_LEVEL; }
             return FALSE;
         }
     }
@@ -2528,12 +2528,12 @@ BOOL ItemUseIsTargettedInInventory(ItemUseType eItemUseType)
     case ITEM_USE_DYE_REUSABLE:
     case ITEM_USE_ENCHANT_SCROLL:
     case ITEM_USE_ADD_SOCKETS:
+    case 71: case 72:  // 2.7.7 ItemUseType values past ITEM_USE_HORADRIC_REAGENT (no names recovered)
         return TRUE;
     default:
         return FALSE;
     }
 }
-
 
 
 
@@ -9920,61 +9920,55 @@ BOOL ItemIsGemConversionReagent(GBID gbidItem)
 
 
 
-CRefString ItemGetItemQualityDescription(const ItemQualityLevel eIQL, const AncientRank eAncientRank)
+CRefString ItemGetItemQualityDescription(const ItemQualityLevel eIQL, const AncientRank eAncientRank, const BOOL bSeasonOnly, const BOOL bSanctified)
 {
     SNO snoStringListItemQuality = GlobalSNOGet(GLOBALSNO_STRINGLIST_ITEM_QUALITY);
-    CRefString sItemQuality;
+    if (bSanctified)
+        return StringListFetch(snoStringListItemQuality, "Sanctified");
+    if (bSeasonOnly)
+    {
+        if (eAncientRank == ANCIENT_RANK_ANCIENT)
+            return StringListFetch(snoStringListItemQuality, "AncientSeasonOnly");
+        return StringListFetch(snoStringListItemQuality, "SeasonOnly");
+    }
     switch (eIQL)
     {
+    case IQL_INVALID:
+        if (eAncientRank == ANCIENT_RANK_ANCIENT)
+            return StringListFetch(snoStringListItemQuality, "Ancient");
+        else if (eAncientRank == ANCIENT_RANK_PRIMAL_ANCIENT)
+            return StringListFetch(snoStringListItemQuality, "PrimalAncient");
+        break;
     case IQL_INFERIOR:
-        sItemQuality = StringListFetch(snoStringListItemQuality, "Inferior");
-        break;
+        return StringListFetch(snoStringListItemQuality, "Inferior");
     case IQL_SUPERIOR:
-        sItemQuality = StringListFetch(snoStringListItemQuality, "Superior");
-        break;
+        return StringListFetch(snoStringListItemQuality, "Superior");
     case IQL_MAGIC_1_AFFIX:
     case IQL_MAGIC_2_AFFIX:
     case IQL_MAGIC_3_AFFIX:
     case IQL_SPECIAL:
-        sItemQuality = StringListFetch(snoStringListItemQuality, "Magic");
-        break;
+        return StringListFetch(snoStringListItemQuality, "Magic");
+    case IQL_LEGENDARY:
+        if (eAncientRank == ANCIENT_RANK_ANCIENT)
+            return StringListFetch(snoStringListItemQuality, "AncientLegendary");
+        else if (eAncientRank == ANCIENT_RANK_PRIMAL_ANCIENT)
+            return StringListFetch(snoStringListItemQuality, "PrimalAncientLegendary");
+        else
+            return StringListFetch(snoStringListItemQuality, "Legendary");
+    case IQL_DISPLAY_AS_SET_ITEM:
+        if (eAncientRank == ANCIENT_RANK_ANCIENT)
+            return StringListFetch(snoStringListItemQuality, "AncientSet");
+        else if (eAncientRank == ANCIENT_RANK_PRIMAL_ANCIENT)
+            return StringListFetch(snoStringListItemQuality, "PrimalAncientSet");
+        else
+            return StringListFetch(snoStringListItemQuality, "Set");
     default:
         if (eIQL >= IQL_RARE_AFFIX_START && eIQL <= IQL_RARE_AFFIX_END)
-            sItemQuality = StringListFetch(snoStringListItemQuality, "Rare");
-        else if (eIQL == IQL_LEGENDARY)
-        {
-            if (eAncientRank == ANCIENT_RANK_ANCIENT)
-                sItemQuality = StringListFetch(snoStringListItemQuality, "AncientLegendary");
-            else if (eAncientRank == ANCIENT_RANK_PRIMAL_ANCIENT)
-                sItemQuality = StringListFetch(snoStringListItemQuality, "PrimalAncientLegendary");
-            else
-                sItemQuality = StringListFetch(snoStringListItemQuality, "Legendary");
-        }
-        else if (eIQL == IQL_DISPLAY_AS_SET_ITEM)
-        {
-            if (eAncientRank == ANCIENT_RANK_ANCIENT)
-                sItemQuality = StringListFetch(snoStringListItemQuality, "AncientSet");
-            else if (eAncientRank == ANCIENT_RANK_PRIMAL_ANCIENT)
-                sItemQuality = StringListFetch(snoStringListItemQuality, "PrimalAncientSet");
-            else
-                sItemQuality = StringListFetch(snoStringListItemQuality, "Set");
-        }
+            return StringListFetch(snoStringListItemQuality, "Rare");
         break;
     }
-    return sItemQuality;
+    return "";
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -9987,13 +9981,6 @@ CRefString sGetItemTypeString(GBID gbidItemType)
         return sItemType;
     return "";
 }
-
-
-
-
-
-
-
 
 static CRefString sBuildItemTypeDescription(CRefString & sItemQuality, CRefString & sItemType)
 {
@@ -10010,17 +9997,10 @@ static CRefString sBuildItemTypeDescription(CRefString & sItemQuality, CRefStrin
     return LanguageRules::BuildItemName(sItemQuality, sItemTypeName, "", INC_ITEM_TYPE, FALSE);
 }
 
-
-
-
-
-
-
-
-
-
-
-
+// 2.7.7 helpers (unnamed): the item definition's ITEM_ETHEREAL_BIT ("SeasonOnly" quality text) and the
+// ITEM_WAS_SANCTIFIED attribute ("Sanctified" quality text); both are inlined into ItemTypeGetDescription.
+extern "C" BOOL sub_7100505c00(const ActorCommonData & tACDItem);
+extern "C" BOOL sub_7100505c90(const ActorCommonData & tACDItem);
 
 CRefString ItemTypeGetDescription(const ActorCommonData & tACDItem)
 {
@@ -10036,30 +10016,50 @@ CRefString ItemTypeGetDescription(const ActorCommonData & tACDItem)
     {
         ItemQualityLevel eIQL = ItemGetDisplayedQualityLevel(tACDItem);
         AncientRank eAncientRank = ItemIsUnidentified(tACDItem) ? ANCIENT_RANK_NONE : ItemGetAncientRank(tACDItem);
-        return ItemTypeGetDescription(hGBItemType.gbid, eIQL, eAncientRank);
+        return ItemTypeGetDescription(hGBItemType.gbid, eIQL, eAncientRank, sub_7100505c00(tACDItem), sub_7100505c90(tACDItem));
     }
 }
 
+extern "C" BOOL sub_7100505c00(const ActorCommonData & tACDItem)
+{
+    if (tACDItem.hGB.eType != GB_ITEMS)
+        return FALSE;
+    ScopedItemDefinitionLockR ptItem(tACDItem.hGB.gbid);
+    if (ptItem == NULL)
+        return FALSE;
+    return (ptItem->dwFlags >> ITEM_ETHEREAL_BIT) & 1;
+}
 
+extern "C" BOOL sub_7100505c90(const ActorCommonData & tACDItem)
+{
+    return tACDItem.AttributesGetInt(ATTRIBUTE_ITEM_WAS_SANCTIFIED) != 0;
+}
 
-
-
-
-
-
-
-
-
-
-
-CRefString ItemTypeGetDescription(const GBID gbidItemType, const ItemQualityLevel eIQL, const AncientRank eAncientRank)
+CRefString ItemTypeGetDescription(const GBID gbidItemType, const ItemQualityLevel eIQL, const AncientRank eAncientRank, const BOOL bSeasonOnly, const BOOL bSanctified)
 {
     CRefString sItemType = sGetItemTypeString(gbidItemType);
     if (!sItemType.Length())
         return "";
-    CRefString sItemQuality = ItemGetItemQualityDescription(eIQL, eAncientRank);
+    CRefString sItemQuality = ItemGetItemQualityDescription(eIQL, eAncientRank, bSeasonOnly, bSanctified);
     return sBuildItemTypeDescription(sItemQuality, sItemType);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -10987,6 +10987,32 @@ BOOL ItemPlayerHasExtractedLegendaryPowerOrLinkedPower(const Player & tPlayer, G
 
 
 
+// 2.7.7 only, unnamed: the slot test split out of ItemPlayerCanAssignLegendaryPower (PlayerCanChangeLoadoutEquipment and PlayerSendHeroStateLoadoutToClient call it for slots 0-3; slot 3 is the fourth Kanai's Cube slot).
+// NON_MATCHING: 2.7.7 logic; the switch compares slot 3, 2, 1 where the original compares 1, 2, 3, so the case-3 block is placed differently (126 vs 128 insns).
+extern "C" BOOL sub_7100506d10(const Player & tPlayer, GBID gbidItem, LegendaryPowerSlotType eSlotType)
+{
+    if (gbidItem == GBID_NONE)
+        return TRUE;
+    ActorCommonData * ptACDPlayer = ACDTryToGet(tPlayer.idPlayerACD);
+    if (ptACDPlayer && ptACDPlayer->AttributesGetInt(ATTRIBUTE_KANAI_POWERS))
+        return TRUE;
+    switch (eSlotType)
+    {
+    case LPST_ARMOR:
+        if (ItemHasLabel(gbidItem, ITL_WEAPON) || ItemHasLabel(gbidItem, ITL_OFFHAND))
+            return FALSE;
+        return ItemHasLabel(gbidItem, ITL_ARMOR) != 0;
+    case LPST_JEWELRY:
+        if (ItemHasLabel(gbidItem, ITL_WEAPON) || ItemHasLabel(gbidItem, ITL_OFFHAND) || ItemHasLabel(gbidItem, ITL_ARMOR))
+            return FALSE;
+        return ItemHasLabel(gbidItem, ITL_JEWELRY) != 0;
+    case 3:  // 2.7.7 slot past LPST_JEWELRY (no name recovered)
+        return ptACDPlayer && ptACDPlayer->AttributesGetInt(ATTRIBUTE_FOURTH_KANAIS_CUBE_SLOT) != 0;
+    default:
+        return ItemHasLabel(gbidItem, ITL_WEAPON) || ItemHasLabel(gbidItem, ITL_OFFHAND);
+    }
+}
+
 BOOL ItemPlayerCanAssignLegendaryPower(const Player & tPlayer, GBID gbidItem, LegendaryPowerSlotType eSlotType)
 {
     if (!ItemCanExtractLegendaryPower(gbidItem))
@@ -10998,34 +11024,8 @@ BOOL ItemPlayerCanAssignLegendaryPower(const Player & tPlayer, GBID gbidItem, Le
     PlayerClass eClassRestriction = PowerGetClassRestriction(AutoPowerDefinitionR(snoPower));
     if (eClassRestriction != PLAYER_CLASS_NONE && ePlayerClass != eClassRestriction)
         return FALSE;
-    switch (eSlotType)
-    {
-    case LPST_WEAPON:
-        if (!ItemHasLabel(gbidItem, ITL_WEAPON) && !ItemHasLabel(gbidItem, ITL_OFFHAND))
-            return FALSE;
-        break;
-    case LPST_ARMOR:
-        if (!ItemHasLabel(gbidItem, ITL_ARMOR))
-            return FALSE;
-        break;
-    case LPST_JEWELRY:
-        if (!ItemHasLabel(gbidItem, ITL_JEWELRY))
-            return FALSE;
-        break;
-    }
-    return TRUE;
+    return sub_7100506d10(tPlayer, gbidItem, eSlotType) != 0;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -11209,9 +11209,9 @@ uint32 ItemGetRequiredAugmentJewelRankBySlot(LegendaryPowerSlotType eSlot)
 
 void ItemUpdateLegacyItem(D3::Items::Generator & tGenerator)
 {
-    if (tGenerator.gb_handle().game_balance_type() == GB_ITEMS)
+    const D3::GameBalance::Handle & tGBHandle = tGenerator.gb_handle(); if (tGBHandle.game_balance_type() == GB_ITEMS)
     {
-        GBID gbidItem = tGenerator.gb_handle().gbid();
+        GBID gbidItem = tGBHandle.gbid();
         if (GBIDExists(gbidItem, GB_LEGACY_ITEM_CONVERSIONS))
         {
             ScopedLegacyItemConversionLockR pdefLegacyItemConversion(gbidItem);
@@ -14007,7 +14007,7 @@ extern "C" BOOL sub_710050ea10(const ActorCommonData * ptACD)
     return ptACD->AttributesGetInt(ATTRIBUTE_ITEM_WAS_SANCTIFIED) != 0;
 }
 
-// NON_MATCHING: the cyan bit-31 color is the 2.7.7 global RGBAColor at 0x7100ed3648 ({0,255,225,255}, between crgbaUIOrange and crgbaDisabled), loaded through the GOT; RGBAColor.cpp does not define it yet, so it is built inline here.
+// 2.7.7: the cyan bit-31 (ethereal) color is the RGBAColor global at 0x7100ed3648.
 RGBAColor ItemGetDisplayNameColor(const ActorCommonData & tACD)
 {
     if (ItemIsGold(tACD))
@@ -14018,7 +14018,7 @@ RGBAColor ItemGetDisplayNameColor(const ActorCommonData & tACD)
     if (ItemIsQuest(tACD))
         return FontGetColorForFontSpecifier(FONTCOLOR_QUEST, FALSE);
     if (sub_710050e880(&tACD))
-        return RGBAColor(0, 255, 225, 255);
+        return unk_7100ed3648;
     if (sub_71004f71e0(tACD))
         return RGBAColor(254, 24, 0, 255);
     if (sub_710050ea10(&tACD))

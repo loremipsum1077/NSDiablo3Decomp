@@ -415,10 +415,10 @@ BOOL sgfAppActivated = FALSE;
 static blz::vector<uint32> s_arSafeTicksPerSec;
 
 
-
 BOOL sgbRunServerIdleThread = FALSE;
 Blizzard::Thread::Thread sgtServerIdleThread = NULL;
 Blizzard::Lock::RMutex sgtServerIdleMutex;
+nn::account::UserHandle unk_71019079f0;  // 2.7.7: preselected user handle, opened by FileSystemGetLocale and kept open (SNOFiles.cpp uses it)
 
 
 
@@ -989,6 +989,12 @@ BOOL _GameServerCodeEnter(const SGameID idSGame)
 
 
 
+
+
+
+
+
+
     if (idSGame == -1)
         return FALSE;
 
@@ -1097,7 +1103,7 @@ BOOL GameServerCodeCanEnter()
 
 
     uint32 uGameCount = SGameManager::GetGameCount();
-    return uGameCount == 1;
+    return uGameCount != 0;
 }
 
 
@@ -1507,7 +1513,7 @@ void ProcessFallbackLanguage(XLocale & eXLocale, const blz::vector<int, blz::all
 
 // line 1508: XLocale FileSystemGetLocale()  [0x71004319e0]
 // NON_MATCHING: only the inlined vector<int>::push_back grow path differs (original `cmp x8,x26; csel x8,x26,x8,lo`
-// reusing the hoisted size+1; ours `csinc x8,x8,x24,hs` plus a `b`/`mov` register shuffle, +8 bytes, 1236 vs 1228).
+// reusing the hoisted size+1; ours `csinc x8,x8,x24,hs` plus a `b`/`mov` register shuffle, +8 bytes, 980 vs 972).
 // The shape is fixed inside blz/vector.h (reserve(m_capacity+1) gets nuw on the 63-bit field, so GVN-PRE's copy of
 // ++m_size is not hoisted with it); every other instruction matches.
 // o02: on DWARF lines 1508-1699 (#line); the 8-indent of rows 1621-1669 (cols 20/13) puts everything after the first
@@ -1637,11 +1643,11 @@ XLocale FileSystemGetLocale()
             nn::account::Initialize();
 
             nn::account::Uid tUserId;
-            nn::account::UserHandle tUserHandle;
-            nn::Result OpenResult = nn::account::OpenPreselectedUser(&tUserHandle);
+
+            nn::Result OpenResult = nn::account::OpenPreselectedUser(&unk_71019079f0);
 
 
-            nn::Result IdResult = nn::account::GetUserId(&tUserId, tUserHandle);
+            nn::Result IdResult = nn::account::GetUserId(&tUserId, unk_71019079f0);
 
 
 
@@ -1670,7 +1676,7 @@ XLocale FileSystemGetLocale()
             }
 
 
-            nn::account::CloseUser(tUserHandle);
+            // 2.7.7: the handle stays open in unk_71019079f0 (no CloseUser).
         }
 
 
@@ -2925,7 +2931,7 @@ SNO GetSNOWorldFromGameType(GameType eGameType)
     }
 
 
-    DisplayInternalError(NULL, "", 2789, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+    DisplayInternalError(NULL, "", 2801, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
 }
 
 // line 2836: void GameStartConsoleClient(uint32 idGameConnection, BOOL bIsHost, GameType eGameType, const uint32 dwGameCreateParamFlags, BOOL bResumeFromSave, Act eAct, Act ePreferredAdventureAct, SNO snoQuest, int32 nStepUID, int32 nHandicap, uint32 uEntranceGUIDOverride, int32 nFreeKeyLevel, uint64 * pArrayTieredRiftHeroForFreeKey)  [0x71004335a0]
@@ -3234,6 +3240,18 @@ void GamelessGameGlobalsDispose()
 
 
 
+// CPU boost toggle (UtilitiesNX64.cpp, 0x71000b3c50).
+extern "C" void sub_71000b3c50(bool bBoost);
+
+
+
+
+
+
+
+
+
+
 void GameStartGame(const GameParams & tParams)
 {
 
@@ -3409,7 +3427,7 @@ void GameStartGame(const GameParams & tParams)
     float fTime = tAppGlobals.tStartTimeStopwatch.Check();
 
 
-
+    sub_71000b3c50(FALSE);
     ShellEnableSaveOnQuit(TRUE);
 
 }
@@ -3758,14 +3776,14 @@ int32 GameGetMonsterLevel()
     int32 nLevel = GameGetActiveGameCommonData().tGameSyncedData.nMonsterLevel;
 
 
-    const int32 nMinLevel = CmdLineGetParams()->tBitArray.Get(CMDLINE_BLIZZCON_BIT) ? 60 : 1;
+    if (CmdLineGetParams()->tBitArray.Get(CMDLINE_BLIZZCON_BIT))
+    {
+        return Math::Max(nLevel, 60);
+    }
 
 
 
-
-
-
-    return Math::Max(nLevel, nMinLevel);
+    return Math::Max(nLevel, 1);
 }
 
 
@@ -3785,9 +3803,9 @@ BOOL GameUsesMonsterDensityModifiers()
 {
     const int32 MIN_MONSTER_LEVEL = 24;
 
-
-
-    return GameGetMonsterLevel() >= MIN_MONSTER_LEVEL;
+    if (GameGetMonsterLevel() < MIN_MONSTER_LEVEL)
+        return FALSE;
+    return TRUE;
 }
 
 

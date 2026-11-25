@@ -881,7 +881,7 @@ static BOOL sTransmuteExecuteAction(
 
 
         ConsoleScopedOverrideRNG overrideRNG(ptACDLegendaryItem->AttributesGetInt(ATTRIBUTE_SEED), 666, RNGOutOfScopeCallback());
-        ACDID idACDNewItem = SItemReforge(*ptACDLegendaryItem, tPlayer);
+        ACDID idACDNewItem = SItemReforge(*ptACDLegendaryItem, tPlayer, FALSE, FALSE);
 
         tResultsMessage.annItem = ANNFromACD(idACDNewItem);
 
@@ -1251,7 +1251,7 @@ static BOOL sTransmuteExecuteAction(
 
 
         ptACDItemToUpgrade->AttributesSetInt(ATTRIBUTE_ITEM_LEGENDARY_ITEM_LEVEL_OVERRIDE, nPlayerLevel);
-        ACDID idNewItem = SItemReforge(*ptACDItemToUpgrade, tPlayer);
+        ACDID idNewItem = SItemReforge(*ptACDItemToUpgrade, tPlayer, FALSE, FALSE);
 
 
         if (idNewItem == ACDID_INVALID)
@@ -1921,7 +1921,7 @@ void SItemCrafting_TryTransmute(
         tMessage.gbidFakeItem = GBID_NONE;
         tMessage.uFakeItemStackCount = 0;
 
-        GameError eFailureError;
+        GameError eFailureError = GAMEERROR_TRANSMUTE_FAILED;
 
         if (sTransmuteExecuteAction(tMessage, eFailureError, pdefTransmuteRecipe->eAction, aridACDItems, nItemsCount, tTransmuteInventoryFinal, tPlayer, pdefTransmuteRecipe->tIngredients))
         {
@@ -2539,7 +2539,7 @@ void SItemCrafting_Reforge(ACDID idACDItem, Player & tPlayer)
 
 
 
-    ACDID idACDReforgedItem = SItemReforge(*ptACDItem, tPlayer);
+    ACDID idACDReforgedItem = SItemReforge(*ptACDItem, tPlayer, FALSE, FALSE);
     if (idACDReforgedItem == ACDID_INVALID)
         return;
     ANNDataMessage tMessage;

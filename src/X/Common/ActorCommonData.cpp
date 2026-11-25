@@ -161,7 +161,7 @@ static const TypeDescriptorField RareItemNameMessage_Fields[4] = {
     TypeDescriptorField("", DT_INT, offsetof(RareItemNameMessage, ann), NULL, (1 << TDF_XML_SERIALIZATION)),
     TypeDescriptorField("", DT_RARE_ITEM_NAME, offsetof(RareItemNameMessage, tRareItemName), NULL, (1 << TDF_XML_SERIALIZATION)),
     TypeDescriptorField(NULL, DT_NULL, sizeof(RareItemNameMessage), NULL, 0), }; ComplexTypeDescriptor TypeDescriptor_RareItemNameMessage("RareItemNameMessage", 0, RareItemNameMessage_Fields, 4, NULL, (1 << TD_IS_COMPLEX_TYPE), NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_RARE_ITEM_NAME_MESSAGE = &TypeDescriptor_RareItemNameMessage;
-
+static const TypeDescriptorField UnlockableRandomAffixMessage_Fields[5] = { TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(UnlockableRandomAffixMessage, tHeader), NULL, (1 << TDF_XML_SERIALIZATION)), TypeDescriptorField("", DT_INT, offsetof(UnlockableRandomAffixMessage, unk_08), NULL, (1 << TDF_XML_SERIALIZATION)), TypeDescriptorField("", DT_GBID, offsetof(UnlockableRandomAffixMessage, unk_0c), NULL, (1 << TDF_XML_SERIALIZATION)), TypeDescriptorField("", DT_UNLOCKABLE_RANDOM_AFFIX_PROPERTIES, offsetof(UnlockableRandomAffixMessage, unk_10), NULL, (1 << TDF_XML_SERIALIZATION)), TypeDescriptorField(NULL, DT_NULL, sizeof(UnlockableRandomAffixMessage), NULL, 0), }; ComplexTypeDescriptor TypeDescriptor_UnlockableRandomAffixMessage("UnlockableRandomAffixMessage", 0, UnlockableRandomAffixMessage_Fields, 5, NULL, (1 << TD_IS_COMPLEX_TYPE), NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_UNLOCKABLE_RANDOM_AFFIX_MESSAGE = &TypeDescriptor_UnlockableRandomAffixMessage;
 static const TypeDescriptorField ACDCollFlagsMessage_Fields[4] = {
     TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(ACDCollFlagsMessage, tHeader), NULL, (1 << TDF_XML_SERIALIZATION)),
     TypeDescriptorField("", DT_DATAID, offsetof(ACDCollFlagsMessage, ann), NULL, (1 << TDF_XML_SERIALIZATION)),
@@ -437,15 +437,11 @@ const ACDIDListPooled * ACDPack::GetMemberList()
 int32 ACDPack::GetTotalACDCount(BOOL bIncludeDyingACDs)
 {
 
-    if (!GameActiveGameCommonDataIsServer() ||
-        bIncludeDyingACDs)
+    if (!GameActiveGameCommonDataIsServer())
     {
-
-
-
         return listACDs.Count() + nDeactivatedCount;
     }
-    else
+    if (!bIncludeDyingACDs)
     {
         int32 nCount = 0;
         POS pos = listACDs.GetHeadPosition();
@@ -461,19 +457,11 @@ int32 ACDPack::GetTotalACDCount(BOOL bIncludeDyingACDs)
                 nCount++;
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
         return nCount + nDeactivatedCount;
+    }
+    else
+    {
+        return listACDs.Count() + nDeactivatedCount;
     }
 }
 void ACDPackDelete(ACDPack & tACDPack)  // not `inline`: linker-removed out-of-line copy (low_pc 0, 0xd4) in the DWARF
@@ -763,14 +751,6 @@ void ActorCommonData::Initialize(
     {
         idPassiveAttribGroup = FastAttribGroupCreate(FAT_SIMPLE, -1);
         FastAttribMerge(idFastAttrib, idPassiveAttribGroup);
-
-        if (GameActiveGameCommonDataIsServer() && ACDIsPlayer((ACDID)idOwner))
-        {
-            for (int32 i = SLOT_PLAYER_BODYSLOT_START; i < SLOT_PLAYER_BODYSLOT_END; ++i)
-            {
-                AttributesSetInt(MakeAttribKey(ATTRIBUTE_SLOT_UNEQUIPPED_TIME, i), GameGetServerTime());
-            }
-        }
     }
     else
     {
@@ -809,6 +789,25 @@ void ActorCommonData::Initialize(
     }
     else
     {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         DisplayInternalError(NULL, "", __LINE__, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
@@ -995,7 +994,7 @@ ActorMovement * ActorCommonData::GetActorMovement()
 
 
 
-// NON_MATCHING: ours keeps TChainedDataArray<ActorCommonData>::ElementDeleteByID out of line (the original inlines it and ~ActorCommonData here); the inliner deferral of ~ActorCommonData depends on list-destructor call sites in functions of this file that are not written yet
+// NON_MATCHING: 1/652 insns: the SGAME_SIMULATING test near the end loads SGameGlobals::dwFlags (+0x198) as a word (ldr w8) in the original; ours narrows it to ldrb. Same size and logic.
 void ACDDelete(
     const ACDID idACD,
     BOOL bWorldDeleted)
@@ -3266,7 +3265,7 @@ BOOL ActorCommonData::SpendResource(float flAmountToSpend, BOOL bIgnoreMinimumRe
     {
 
 
-        flAmountToSpend = Math::Max(bIgnoreMinimumResourceCost ? 0.0f : 1.0f, flAmountToSpend);
+        flAmountToSpend = bIgnoreMinimumResourceCost ? Math::Max(0.0f, flAmountToSpend) : Math::Max(1.0f, flAmountToSpend);
     }
 
 
@@ -3562,6 +3561,10 @@ void ActorCommonData::RestorePermanentPowers()
 }
 
 
+extern "C" void sub_71004b71b0(const ActorCommonData & tACD, blz::vector<SNO> & arPowers);  // 2.7.7 only, unnamed (0x71004b71b0, dark alchemy range): for each bit set in ATTRIBUTE_DARK_ALCHEMY_UNLOCKED_NODES (29 bits) appends the SNO from a 29-entry table at 0x7101901218
+
+// NON_MATCHING: 2.7.7 logic reproduced (4 legendary power slots, dark alchemy passives); ours 4088 vs original 4068 bytes: in the dual-wield copy of the
+// unswitched trait loop ours tail-duplicates the PowerAffectedByDualWield result test (cbnz w24 + loop latch, 5 insns) into the AutoPowerDefinitionR unlock-skip path.
 void ActorCommonData::ApplyAllPassives(
     BOOL bApplyOnlyDualWieldPassives)
 {
@@ -3653,7 +3656,7 @@ void ActorCommonData::ApplyAllPassives(
     Player * ptPlayer = PlayerGetByACD(id);
     if (ptPlayer)
     {
-        for (int32 i = 0; i < 3; i++)
+        for (int32 i = 0; i < 4; i++)
         {
             GBID gbidLegendary = ptPlayer->tHeroStateData.tSavedData.gbidLegendaryPowers[i];
             if (gbidLegendary != GBID_NONE)
@@ -3762,6 +3765,16 @@ void ActorCommonData::ApplyAllPassives(
 
 
     SPlayerApplyPerkBuffs(*this);
+
+    if (AttributesGetInt(FastAttribKey(ATTRIBUTE_DARK_ALCHEMY_POWERS_UNLOCKED)))
+    {
+        blz::vector<SNO> arUnlockedPowers;
+        sub_71004b71b0(*this, arUnlockedPowers);
+        for (SNO snoPower : arUnlockedPowers)
+        {
+            listPassiveSNOs.AddTail_Tracked(snoPower);
+        }
+    }
 
     SPlayerApplyParagonBuff(*this);
 
@@ -4508,7 +4521,7 @@ void ACDIterateRadius(const WorldDistance & wdRadius, const ACDID idACDSource, A
 
             if (pfnIterateRadius(wdRadius, idACDSource, idACD, pData) == ACD_ITERATE_STOP)
             {
-                break;
+                return;
             }
         }
     }
@@ -6128,7 +6141,7 @@ BOOL ActorCommonData::CanAffordCurrencyCost(int64 nCost, CurrencyType eCurrencyT
 
 
 
-// NON_MATCHING: vector<Player *> append loop caches capacity and strength-reduces growth differently; 3196 vs 3204 bytes, stack frame 0x250 vs 0x240.
+// NON_MATCHING: vector<Player *> append loop caches capacity and strength-reduces growth differently; ours 3100 vs original 3128 bytes, stack frame ours 0x220 vs original 0x230, plus register allocation.
 void ACDHandleNecromancerCorpseSpawn(
     const ActorCommonData & tACDVictim)
 {
@@ -9343,7 +9356,7 @@ BOOL ACDIsLootRunBoss(const ActorCommonData & tACD)
 
     for (int32 i = 0; i < nCount; i++)
     {
-        if (ptEncounterDef->arSpawnOptions[i].snoSpawn == tACD.snoActor)
+        if (tACD.snoActor == ptEncounterDef->arSpawnOptions[i].snoSpawn)
         {
             return TRUE;
         }

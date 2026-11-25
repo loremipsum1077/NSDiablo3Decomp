@@ -707,14 +707,14 @@ static void sDisplayHirelingMural(
     CRefString sLabel;
     switch (eClass)
     {
+    case HC_ENCHANTRESS:
+        sLabel = "UI:Follower_Base_Enchantress";
+        break;
     case HC_TEMPLAR:
-        sLabel = "UI:FollowerBaseMural_Templar";
+        sLabel = "UI:Follower_Base_Templar";
         break;
     case HC_SCOUNDREL:
-        sLabel = "UI:FollowerBaseMural_Scoundrel";
-        break;
-    case HC_ENCHANTRESS:
-        sLabel = "UI:FollowerBaseMural_Enchantress";
+        sLabel = "UI:Follower_Base_Scoundrel";
         break;
     }
 
@@ -865,6 +865,8 @@ static SNO sGetPowerFromButton(
 {
     // Inference: null-hireling return path; Tooltip (DWARF 1062->1063) has no line for a caller guard, and the original inlines this helper, so it was not noreturn before inlining.
     if (!ptACDHireling) return INVALID_SNO;
+
+
 
 
 

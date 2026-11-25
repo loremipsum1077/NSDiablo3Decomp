@@ -50,7 +50,7 @@ typedef OnlineService::Callback<void (SignInResult)> SignInCallback; typedef Onl
 namespace Console { namespace Online { BOOL IsSeasonsInitialized(); void ClearOutstandingInvite(); void PartyCreate(int32 nControllerIndex, GameParams & tGameParams, BOOL bOfflineOnly); } }
 namespace Console { namespace Online { void PartyJoin(PartyConnectionInfo & tPartyInfo, JoinType eJoinType, PartyJoinCallback pfnCallback); BOOL GetInviteConnectionInfo(PartyConnectionInfo & tPartyInfo, BOOL & bIsInvite); } }
 namespace Console { namespace Online { BOOL PartyIsFull(); BOOL PartyIsGamePaused(); uint32 GetSecondsUntilSeasonEnd(); void PartyAddPlayer(int32 nControllerIndex, PartyAddPlayerCallback pfnCallback); uint32 PartyGetLocalMemberCount(); void PartySwitchOnlineState(PartyOnlineState eState); } }
-namespace Console { namespace GamerProfile { void SignOut(int32 nUserIdx); uint32 GetNumAvailableHeroes(int32 nUserIdx);  OnlinePlayPrivilege GetOnlinePlayPrivilege(int32 nUserIdx); } }
+namespace Console { namespace GamerProfile { void SignOut(int32 nUserIdx); uint32 GetNumAvailableHeroes(int32 nUserIdx);  OnlinePlayPrivilege GetOnlinePlayPrivilege(int32 nUserIdx); nn::account::Uid GetUserId(int32 nUserIndex); } }  // GetUserId: GamerProfileNX64.cpp:734
 namespace Console { namespace Screens { enum { MAIN_MENU_SCREEN_SET = 20 }; BOOL OpenToScreen(const ScreenSets eScreenSet, const int32 idScreen, int32 nControllerOpening, BOOL fSkipTransition); } }
 namespace Console { namespace DLCManager { uint32 GetLicenses(); } }  // DLCManager.cpp:385
 namespace Console { namespace UISaveIcon { void ForceDraw(const Vector2D * pvPos); } }  // UISaveIcon.cpp
@@ -490,14 +490,15 @@ void SetGameParamsForHero(
     tParams.m_nLevel = tHero.digest().level();
     tParams.m_bIsHardcore = tHero.digest().player_flags() & (1 << PLAYERFLAG_HARDCORE);
     tParams.m_bIsSeasonal = IsActiveSeason(tHero.digest().season_created(), tAccount.digest());
+    tParams.unk_14 = tParams.m_bIsSeasonal ? (tHero.digest().player_flags2() & 1) : 0;
     tParams.m_uSeason = tParams.m_bIsSeasonal ? tHero.digest().season_created() : 0;
     tParams.m_tWeeklyChallengeConfig.Clear();
     tParams.m_tWeeklyChallengeData.Clear();
 
-    BOOL bAdventureUnlocked = !IsAdventureModeLocked(tAccount.digest(), tParams.m_bIsHardcore, tParams.m_bIsSeasonal) ||
-        !UIGameSettings::Console::IsQuestFilteringEnabled();
 
-    if (tHero.console_data().has_last_played_adventure_mode_act() && bAdventureUnlocked)
+    // 2.7.7: the adventure-mode-locked / quest-filtering condition is gone.
+
+    if (tHero.console_data().has_last_played_adventure_mode_act())
     {
         tParams.m_ePreferredAdventureAct = tHero.console_data().last_played_adventure_mode_act();
         tParams.m_eAct = ACT_OPEN_WORLD;
@@ -1135,6 +1136,8 @@ inline void OnCancelLocalPlayerSignedIn(int32 nControllerIndex, const UIID &)
 
 
 
+// NON_MATCHING: block placement only; the "SignInLANProfileRequiredError" block is placed after the
+// switch-warning notification instead of before it.
 void OnCompleteLocalPlayerSignedIn(
     int32 nControllerIndex,
     BOOL bForceChooseHero,
@@ -1298,29 +1301,24 @@ void OnCompleteLocalPlayerSignedIn(
         {
             s_tOnlineActionsData.bLocalPlayerJoinInProgress = TRUE;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            NotificationCreationParams tParams;
-            tParams.nControllerIndex = nControllerIndex;
-            tParams.uszMessage = StringListFetch("ConsoleErrors:SignInSwitchWarningNX64");
-            tParams.tCallbacks.pfnOnClickOkButton = OnlineService::internal::function_binder_4<void, int32, BOOL, Online::PartyOnlineState, const UIID &>::bind<&OnConfirmOnlineModeSwitch>(nControllerIndex, bForceChooseHero, eBestOnlineState);
-            tParams.tCallbacks.pfnOnClickCancelButton = OnlineService::internal::function_binder_2<void, int32, const UIID &>::bind<&OnCancelLocalPlayerSignedIn>(nControllerIndex);
-            Screens::GetModalNotificationManager().SetOkCancelNotification(tParams);
+            // 2.7.7: a premium-blocked user with a valid user id gets the upsell instead of the switch warning.
+            nn::account::Uid tUserId = GamerProfile::GetUserId(nControllerIndex);
+            if (ePrivilege == GamerProfile::ONLINE_PLAY_BLOCKED_REQUIRES_PREMIUM && (tUserId._data[1] != 0 || tUserId._data[0] != 0))
+            {
+                Utilities::ShowNX64Upsell(
+                    nControllerIndex,
+                    OnlineService::internal::function_binder_3<void, int32, BOOL, const UIID &>::bind<&OnCompleteLocalPlayerSignedIn>(nControllerIndex, bForceChooseHero, GetUIIDNone()),
+                    OnlineService::internal::function_binder_2<void, int32, const UIID &>::bind<&OnCancelLocalPlayerSignedIn>(nControllerIndex, GetUIIDNone()));
+            }
+            else
+            {
+                NotificationCreationParams tParams;
+                tParams.nControllerIndex = nControllerIndex;
+                tParams.uszMessage = StringListFetch("ConsoleErrors:SignInSwitchWarningNX64");
+                tParams.tCallbacks.pfnOnClickOkButton = OnlineService::internal::function_binder_4<void, int32, BOOL, Online::PartyOnlineState, const UIID &>::bind<&OnConfirmOnlineModeSwitch>(nControllerIndex, bForceChooseHero, eBestOnlineState);
+                tParams.tCallbacks.pfnOnClickCancelButton = OnlineService::internal::function_binder_2<void, int32, const UIID &>::bind<&OnCancelLocalPlayerSignedIn>(nControllerIndex);
+                Screens::GetModalNotificationManager().SetOkCancelNotification(tParams);
+            }
         }
         return;
     }
@@ -1559,20 +1557,20 @@ BOOL CanLocalPlayerJoin(
 
 BOOL IsDifficultyLocked(const D3::Account::Digest & tAccountDigest, int32 nLevel, BOOL bIsHardcore, int32 nDifficulty)
 {
+    // 2.7.7: the per-difficulty account-flag checks are gone.
     uint32 nHighestHeroRiftLevel = 0;
-    if (!PlayerCanPlayHandicap(nLevel, nHighestHeroRiftLevel, nDifficulty, false))
-        return TRUE;
-
-    if (nDifficulty == 3)
-    {
-        return (tAccountDigest.flags() & (bIsHardcore ? 0x80 : 0x10)) == 0;
-    }
-    else if (nDifficulty >= 4)
-    {
-        return (tAccountDigest.flags() & (bIsHardcore ? 0x100 : 0x20)) == 0;
-    }
-    return FALSE;
+    return !PlayerCanPlayHandicap(nLevel, nHighestHeroRiftLevel, nDifficulty, false);
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1684,7 +1682,26 @@ HeroValidationError ValidateHeroForPartyMember(const Online::PartyMember & tPart
     }
 
     Online::GameParams tGameParams;
-    if (!Online::PartyGetGameParams(tGameParams) || tGameParams.m_eGameType == 6)
+    if (!Online::PartyGetGameParams(tGameParams))
+    {
+        return HERO_VALIDATION_OK;
+    }
+
+    // 2.7.7: new first check (player_flags2 bit 0 hero created in the current season).
+    if (tGameParams.unk_14)
+    {
+        if (tPartyMember.idPlayer)
+            return HERO_VALIDATION_UNK_10;
+    }
+    else if (tPartyMember.idPlayer && (tHeroDigest.player_flags2() & 1) &&
+             OnlineService::GetSeasonState() <= OnlineService::SEASON_STATE_ACTIVE && OnlineService::GetSeasonNum() != 0)
+    {
+        uint32 uSeason = OnlineService::GetSeasonState() <= OnlineService::SEASON_STATE_ACTIVE ? OnlineService::GetSeasonNum() : 0;
+        if (uSeason == tHeroDigest.season_created())
+            return HERO_VALIDATION_UNK_10;
+    }
+
+    if (tGameParams.m_eGameType == 6)
     {
         return HERO_VALIDATION_OK;
     }
@@ -1788,6 +1805,8 @@ HeroValidationError ValidateHeroForPartyMember(const Online::PartyMember & tPart
 
 
 
+// NON_MATCHING: the CONTENT_NOT_READY_YET case's last GameParams destructor call is tail-merged with the
+// CHALLENGE_RIFT_ENDED case's (one bl short).
 CRefString GetGameStartErrorMessage(
     GameStartValidationError eReason,
     BOOL bForHost,
@@ -2079,6 +2098,32 @@ CRefString GetGameStartErrorMessage(
             }
             break;
         }
+    case GAME_START_ERROR_UNK_16:
+        {
+            if (bForHost)
+            {
+                if (bForMatchmaking)
+                {
+                    sMessage = StringListFetch("ConsoleErrors:MatchmakeFailureSolo");
+                }
+                else
+                {
+                    sMessage = StringListFetch("ConsoleErrors:LocalGameStartFailureSolo");
+                }
+            }
+            else
+            {
+                if (bGameInProgress)
+                {
+                    sMessage = StringListFetch("ConsoleErrors:GameEnterInProgressFailureSolo");
+                }
+                else
+                {
+                    sMessage = StringListFetch("ConsoleErrors:GameStartingSolo");
+                }
+            }
+            break;
+        }
 
     case GAME_START_ERROR_CONTENT_NOT_READY_YET:
         {
@@ -2143,7 +2188,8 @@ CRefString GetHeroValidationErrorMessage(HeroValidationError eValidationError, B
         szMessage = bDetail ? "ConsoleErrors:HeroValidationSeasonsNotReadyDetail" : "ConsoleErrors:HeroValidationSeasonsNotReady";
         break;
     case HERO_VALIDATION_MISSING_NECROMANCER_LICENSE:
-        szMessage = bDetail ? "ConsoleErrors:HeroValidationMissingNecromancerDLCDetail" : "ConsoleErrors:HeroValidationMissingNecromancerDLC";
+    case HERO_VALIDATION_UNK_10:
+        szMessage = bDetail ? "ConsoleErrors:HeroValidationSoloHeroMustBeSoloDetail" : "ConsoleErrors:HeroValidationSoloHeroMustBeSolo";
         break;
     }
 
@@ -2180,12 +2226,38 @@ CRefString GetHeroValidationErrorMessage(HeroValidationError eValidationError, B
 
 
 
+// 2.7.7: new function between GetHeroValidationErrorMessage and ValidateGameCanStart, called from
+// UIMainMenu::Console::OnStartOrContinue (0x710035ef18): TRUE if a party member's hero has player_flags2
+// bit 0 set and was created in the current season.
+// NON_MATCHING: loop registers swapped (x19/x21), player_flags2 loaded as a byte instead of a word, and the
+// empty-party branch goes to a separate return block.
+extern "C" BOOL sub_71001bfef0()
+{
+    Online::PartyMember arPartyMembers[4];
+    int32 nNumPartyMembers = Online::PartyGetMembers(arPartyMembers, 1, FALSE);
+    BOOL bResult = FALSE;
+    for (const Online::PartyMember * ptMember = arPartyMembers; ptMember != arPartyMembers + nNumPartyMembers; ++ptMember)
+    {
+        if (ptMember->tHeroDigest &&
+            OnlineService::GetSeasonState() <= OnlineService::SEASON_STATE_ACTIVE && OnlineService::GetSeasonNum() != 0 &&
+            (OnlineService::GetSeasonState() <= OnlineService::SEASON_STATE_ACTIVE ? OnlineService::GetSeasonNum() : 0) == ptMember->tHeroDigest->season_created() &&
+            (ptMember->tHeroDigest->player_flags2() & 1) != 0)
+        {
+            bResult = TRUE;
+            break;
+        }
+    }
+    return bResult;
+}
 }  // namespace UIOnlineActions
 }  // namespace Console
 namespace UIGameSettings { namespace Console { BOOL IsQuestFilteringEnabled(); BOOL IsVisible(); } } namespace UIGamesList { namespace Console { BOOL IsVisible(); } } namespace UIBannerCustomization { namespace Console { BOOL IsVisible(); } }
 namespace UIAchievements { namespace Console { BOOL IsVisible(); } } namespace UIProfileSummary { namespace Console { BOOL IsVisible(); } } namespace UIHallOfFallenHeroes { namespace Console { BOOL IsVisible(); } }
 namespace Console {
 namespace UIOnlineActions {
+// NON_MATCHING: 2.7.7 is at 0x71001c0130 (functions.csv maps this name to 0x71001bfef0, which is the new
+// sub_71001bfef0). Differences: the bSoloHero update is evaluated before the season comparison, and the
+// challenge-rift-ended tail block is placed earlier.
 GameStartValidationError ValidateGameCanStart()
 {
     Online::GameParams tGameParams;
@@ -2211,45 +2283,66 @@ GameStartValidationError ValidateGameCanStart()
 
 
 
-    Online::PartyMember arPartyMembers[4];
-    uint32 nNumPartyMembers = Online::PartyGetMembers(arPartyMembers, 1, TRUE);
-    HeroValidationError eWorstValidationError = HERO_VALIDATION_OK;
-    for (uint32 i = 0; i < nNumPartyMembers; ++i)
+    // 2.7.7: the party is validated only outside challenge rifts, a member without a hero digest is
+    // GAME_START_ERROR_UNKNOWN, and a party of 2+ with a current-season solo hero is GAME_START_ERROR_UNK_16.
+    if (tGameParams.m_eGameType != 6)
     {
+        uint32 nNumPartyMembers;
+        HeroValidationError eWorstValidationError = HERO_VALIDATION_OK;
+        bool bSoloHero = false;
+        BOOL bHaveDigests = TRUE;
+        {
+            Online::PartyMember arPartyMembers[4];
+            nNumPartyMembers = Online::PartyGetMembers(arPartyMembers, 1, FALSE);
+            for (uint32 i = 0; i < nNumPartyMembers; ++i)
+            {
+                if (!arPartyMembers[i].tHeroDigest)
+                {
+                    bHaveDigests = FALSE;
+                    break;
+                }
 
-        const D3::Account::SavedDefinition & tAccount = GamerProfile::GetAccount(arPartyMembers[i].nControllerIndex);
-        const D3::Hero::SavedDefinition & tHero = GamerProfile::GetHero(arPartyMembers[i].nControllerIndex);
+                const D3::Hero::Digest & tHeroDigest = *arPartyMembers[i].tHeroDigest;
+                bool bCurrentSeason = OnlineService::GetSeasonState() <= OnlineService::SEASON_STATE_ACTIVE && OnlineService::GetSeasonNum() != 0 &&
+                    (OnlineService::GetSeasonState() <= OnlineService::SEASON_STATE_ACTIVE ? OnlineService::GetSeasonNum() : 0) == tHeroDigest.season_created();
+                bSoloHero = bSoloHero || (bCurrentSeason && (tHeroDigest.player_flags2() & 1));
 
-        HeroValidationError eResult = ValidateHeroForPartyMember(arPartyMembers[i]);
+                HeroValidationError eResult = ValidateHeroForPartyMember(arPartyMembers[i]);
 
-        if (eResult > eWorstValidationError)
-            eWorstValidationError = eResult;
-    }
+                if (eResult > eWorstValidationError)
+                    eWorstValidationError = eResult;
+            }
+        }
 
+        if (!bHaveDigests)
+            return GAME_START_ERROR_UNKNOWN;
 
+        if (nNumPartyMembers >= 2 && bSoloHero)
+            return GAME_START_ERROR_UNK_16;
 
-    switch (eWorstValidationError)
-    {
-    case HERO_VALIDATION_DIFFICULTY_LOCKED:
-        return GAME_START_ERROR_HERO_DIFFICULTY_LOCKED;
-    case HERO_VALIDATION_DEAD:
-        return GAME_START_ERROR_HERO_DEAD;
-    case HERO_VALIDATION_MUST_BE_HARDCORE:
-        return GAME_START_ERROR_HERO_MUST_BE_HARDCORE;
-    case HERO_VALIDATION_MUST_NOT_BE_HARDCORE:
-        return GAME_START_ERROR_HERO_MUST_NOT_BE_HARDCORE;
-    case HERO_VALIDATION_MUST_BE_SEASONAL:
-        return GAME_START_ERROR_HERO_MUST_BE_SEASONAL;
-    case HERO_VALIDATION_MUST_NOT_BE_SEASONAL:
-        return GAME_START_ERROR_HERO_MUST_NOT_BE_SEASONAL;
-    case HERO_VALIDATION_SEASON_OVER:
-        return GAME_START_ERROR_HERO_SEASON_OVER;
-    case HERO_VALIDATION_SEASONS_NOT_READY:
-        return GAME_START_ERROR_HERO_SEASONS_NOT_READY;
-    case HERO_VALIDATION_MISSING_NECROMANCER_LICENSE:
-        return GAME_START_ERROR_MISSING_NECROMANCER_LICENSE;
-    default:
-        break;
+        switch (eWorstValidationError)
+        {
+        case HERO_VALIDATION_DIFFICULTY_LOCKED:
+            return GAME_START_ERROR_HERO_DIFFICULTY_LOCKED;
+        case HERO_VALIDATION_DEAD:
+            return GAME_START_ERROR_HERO_DEAD;
+        case HERO_VALIDATION_MUST_BE_HARDCORE:
+            return GAME_START_ERROR_HERO_MUST_BE_HARDCORE;
+        case HERO_VALIDATION_MUST_NOT_BE_HARDCORE:
+            return GAME_START_ERROR_HERO_MUST_NOT_BE_HARDCORE;
+        case HERO_VALIDATION_MUST_BE_SEASONAL:
+            return GAME_START_ERROR_HERO_MUST_BE_SEASONAL;
+        case HERO_VALIDATION_MUST_NOT_BE_SEASONAL:
+            return GAME_START_ERROR_HERO_MUST_NOT_BE_SEASONAL;
+        case HERO_VALIDATION_SEASON_OVER:
+            return GAME_START_ERROR_HERO_SEASON_OVER;
+        case HERO_VALIDATION_SEASONS_NOT_READY:
+            return GAME_START_ERROR_HERO_SEASONS_NOT_READY;
+        case HERO_VALIDATION_MISSING_NECROMANCER_LICENSE:
+            return GAME_START_ERROR_MISSING_NECROMANCER_LICENSE;
+        default:
+            break;
+        }
     }
 
 

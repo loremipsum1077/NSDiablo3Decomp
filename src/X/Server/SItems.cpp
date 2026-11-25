@@ -37,7 +37,7 @@
 typedef int32 FlippyID; void FlippyDestroy(FlippyID idFlippy); void ACDInventoryRemoveToLimbo(const ACDID idACDContainer, ActorCommonData & tACDItem, BOOL bRemoveFromKnownList); BOOL ItemRemoveSocketedItemAttributes(ActorCommonData & tACDItemToSocket, const ActorCommonData & tACDItemSocketedInto); ACDID ActorInventoryGetUltimateOwner(const ActorCommonData * ptACDItem); uint32 ItemGetTradeTimeLeft(const ActorCommonData & tACDItem);
 BOOL ItemIsGlyph(const ActorCommonData & tACDItem); void ItemSetBindingLevel(ActorCommonData & tACD, const ItemBindingLevel eBindingType); void ItemSetBoundToACD(ActorCommonData & tACD, const ACDID idACDOwner); uint32 TimerGetTime(const TimerID idTimer); void ItemGeneratorPopulateFromACDID(const ActorCommonData & tACDItem, D3::Items::Generator & tGenerator, BOOL bSetRestoredBit); void VisualInventoryResetSlot(const ACDID idACD, const InventorySlotType eInventorySlot);
 ItemQualityLevel ItemDetermineQualityLevel(LPCSTR szDebugStr, LootSpecifier & tSpecifier, const int32 nInherentAffixes); ACDID SItemPlayerReplace(ActorCommonData & tACDOldItem, D3::Items::Generator & tNewItemGenerator, Player & tPlayer, BOOL bResocketGems); void SItemRegisterTradingTimer(ActorCommonData & tACDItem, uint32 uUpdateTicks); void sGlyphAutoPickup(TimerID, DataID idOwner, void *); ItemQualityLevel ItemDetermineQualityLevel(LPCSTR szDebugStr, GBHandle hGBItem, const GBID * ptGBIDAffixes, const int32 nAffixCount, const int32 nBonusRandomAffixes);
-void ACDGetItemEffectTypeAndLevel(const ActorCommonData & tACD, ItemEffectType & eItemEffectType, int32 & nEffectLevel, const BOOL bWantOverrides, const BOOL bForTooltip); void VisualInventorySetItemInSlot(const ACDID idACD, const VisualInventorySlot eSlot, const GBID gbidItem, const DyeType eDyeType, const ItemEffectType eItemEffectType, const int32 nEffectLevel, const BOOL bItemIsBrokenOrDisabled);
+void ACDGetItemEffectTypeAndLevel(const ActorCommonData & tACD, ItemEffectType & eItemEffectType, int32 & nEffectLevel, const BOOL bWantOverrides, const BOOL bForTooltip); void VisualInventorySetItemInSlot(const ACDID idACD, const VisualInventorySlot eSlot, const GBID gbidItem, const DyeType eDyeType, const ItemEffectType eItemEffectType, const int32 nEffectLevel, const BOOL bItemIsBrokenOrDisabled); extern "C" uint32 sub_71007b75d0();  // 2.7.7 only, unnamed, defined in SGame.cpp
 BOOL ItemIsBroken(const ActorCommonData & tACDItem); BOOL ItemCanExtractLegendaryPower(GBID gbidItem); BOOL ItemPlayerHasExtractedLegendaryPower(const Player & tPlayer, GBID gbidItem); void ACDsIntersectSphere(const WorldPlace & tPlace, const WorldDistance wdRadius, const ACDID idACDIgnore, XPooledDataIDList & listACDs, uint32 dwSphereTreeFlags);
 void ItemsAddItemAffixGBID(ActorCommonData & tACD, GBID gbidAffix, uint32 dwFlags, ItemQualityLevel eIQL, BOOL bIsReplacementAffix, ItemAffixFastAttribMap * arAffixSpecificAttributes); void ItemAddBaseAttributesForItem(ActorCommonData & tACDItem, GBHandle hGBItem, BOOL bIsCrafted, BOOL bSimulateOnly, BOOL bAddJewelUpgrades);
 
@@ -976,7 +976,7 @@ ACDID SItemPlayerReplace(
 
 
 
-ACDID SItemReforge(ActorCommonData & tACDOldItem, Player & tPlayer)
+ACDID SItemReforge(ActorCommonData & tACDOldItem, Player & tPlayer, BOOL bUnk3, BOOL bUnk4)  // 2.7.7: two new BOOL parameters
 {
     ActorCommonData * ptACDPlayer = ACDTryToGet(tPlayer.idPlayerACD);
     if (!ptACDPlayer)
@@ -1016,8 +1016,8 @@ ACDID SItemReforge(ActorCommonData & tACDOldItem, Player & tPlayer)
     tSpecifier.nLegendaryItemLevel = nLegendaryItemLevelOverride;
     tSpecifier.fAutoIdentify = TRUE;
     tSpecifier.fAccountBound = TRUE;
-    tSpecifier.tLooteeParams.bForceCrafterAncientLegendaryChance = TRUE;
-    LootRollForAncientLegendary(tSpecifier, tPlayer.idPlayerACD);
+    tSpecifier.tLooteeParams.bForceCrafterAncientLegendaryChance = TRUE; tSpecifier.unk_e0 = bUnk3;
+    if (bUnk4) tSpecifier.eAncientRank = ANCIENT_RANK_PRIMAL_ANCIENT; else LootRollForAncientLegendary(tSpecifier, tPlayer.idPlayerACD);
 
     PlayerClass ePlayerClass = PlayerGetPlayerClass(ptACDPlayer);
     tSpecifier.FillInTargetedClass(ePlayerClass, NULL, TRUE);
@@ -1574,7 +1574,7 @@ BOOL SItemPlayerExtractLegendaryPower(Player & tPlayer, GBID gbidItem, GameError
 
         Achievement::EvaluationData tEvaluationData;
         tEvaluationData.SetPlayer(&tPlayer);
-        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_PLAYER_EXTRACTED_POWER, 1, (uint32)sub_71007b5e70());
+        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_PLAYER_EXTRACTED_POWER, 1, sub_71007b75d0(), (uint32)sub_71007b5e70());
     }
 
     return TRUE;

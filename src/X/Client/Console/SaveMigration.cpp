@@ -1686,9 +1686,9 @@ bool PerformSeasonMigration(int32 nUserIdx)
     for (D3::Account::AccountPartition & tPartition : *tAccountDefinition.mutable_partitions())
     {
         D3AccountPartition idPartition = (D3AccountPartition)tPartition.partition_id();
-        if (idPartition == ACCOUNT_PARTITION_SEASON_NORMAL || idPartition == ACCOUNT_PARTITION_SEASON_HARDCORE)
+        if (idPartition >= ACCOUNT_PARTITION_SEASON_NORMAL && idPartition <= ACCOUNT_PARTITION_UNK_5)
         {
-            D3AccountPartition idNonSeasonalPartition = GetPartition(idPartition == ACCOUNT_PARTITION_HARDCORE || idPartition == ACCOUNT_PARTITION_SEASON_HARDCORE, FALSE);
+            D3AccountPartition idNonSeasonalPartition = GetPartition(idPartition == ACCOUNT_PARTITION_HARDCORE || idPartition == ACCOUNT_PARTITION_SEASON_HARDCORE || idPartition == ACCOUNT_PARTITION_UNK_5, FALSE);
             D3::Account::AccountPartition * ptNonSeasonalPartition = NULL;
             for (D3::Account::AccountPartition & tNonSeasonalPartition : *tAccountDefinition.mutable_partitions())
             {
@@ -1865,7 +1865,7 @@ void MigrateSavedItemsToSeasonRolloverCache(const D3::Items::ItemList & tItemLis
 
 
 
-void RebirthHero(int32 nUserIdx, uint32 uRebirthIntoSeason)
+void RebirthHero(int32 nUserIdx, uint32 uRebirthIntoSeason, BOOL bUnk)
 {
     if (!GamerProfile::IsAccountLoaded(nUserIdx))
         return;
@@ -1887,7 +1887,7 @@ void RebirthHero(int32 nUserIdx, uint32 uRebirthIntoSeason)
 
 
 
-    D3::Account::AccountPartition * ptPartition = tAccount.mutable_partitions((dwPlayerFlags & (1 << PLAYERFLAG_HARDCORE)) ? ACCOUNT_PARTITION_HARDCORE : ACCOUNT_PARTITION_NORMAL);
+    D3::Account::AccountPartition * ptPartition = (dwPlayerFlags & (1 << PLAYERFLAG_HARDCORE)) ? tAccount.mutable_partitions(ACCOUNT_PARTITION_HARDCORE) : tAccount.mutable_partitions(ACCOUNT_PARTITION_NORMAL);
 
 
 
@@ -1900,6 +1900,7 @@ void RebirthHero(int32 nUserIdx, uint32 uRebirthIntoSeason)
 
 
     dwPlayerFlags = tHero.digest().player_flags() & ((1 << PLAYERFLAG_HARDCORE) | (1 << PLAYERFLAG_FEMALE));
+    uint32 dwPlayerFlags2 = bUnk ? 1 : 0;
 
 
     D3::Hero::Digest & tDigest = *tRebirthedHeroDefinition.mutable_digest();
@@ -1907,6 +1908,7 @@ void RebirthHero(int32 nUserIdx, uint32 uRebirthIntoSeason)
     tDigest.set_hero_name(tHero.digest().hero_name());
     tDigest.set_gbid_class(tHero.digest().gbid_class());
     tDigest.set_player_flags(dwPlayerFlags);
+    tDigest.set_player_flags2(dwPlayerFlags2);
     tDigest.set_create_time(tHero.digest().create_time());
     tDigest.set_season_created(uRebirthIntoSeason);
 

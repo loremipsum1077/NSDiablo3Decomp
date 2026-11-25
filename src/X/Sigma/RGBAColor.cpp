@@ -17,6 +17,7 @@ const RGBAColor crgbaGold = {199, 179, 119, 255};
 const RGBAColor crgbaUIGold = {205, 157, 81, 255};
 const RGBAColor crgbaBlack = {0, 0, 0, 255};
 const RGBAColor crgbaUIOrange = {255, 105, 30, 255};
+const RGBAColor unk_7100ed3648 = {0, 255, 225, 255};  // 2.7.7: used by ItemGetDisplayNameColor
 const RGBAColor crgbaDisabled = {102, 102, 102, 136};
 
 const RGBAColorValue crgbavalNull = {0.0f, 0.0f, 0.0f, 0.0f};

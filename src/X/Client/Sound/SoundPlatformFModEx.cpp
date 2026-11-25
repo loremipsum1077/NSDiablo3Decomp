@@ -2285,19 +2285,19 @@ void sReleaseFModSound(
 {
 
 
-
-
-
-    if (!fForceRelease)
+    FMOD_OPENSTATE eOpenState;
+    if (FMOD_Sound_GetOpenState(ptFModSound, &eOpenState, NULL, NULL, NULL) == FMOD_OK)
     {
-        FMOD_OPENSTATE eOpenState;
-        if (FMOD_Sound_GetOpenState(ptFModSound, &eOpenState, NULL, NULL, NULL) == FMOD_OK)
+        if (eOpenState != FMOD_OPENSTATE_READY && eOpenState != FMOD_OPENSTATE_ERROR)
         {
-            if (eOpenState != FMOD_OPENSTATE_READY && eOpenState != FMOD_OPENSTATE_ERROR)
+            if (!fForceRelease)
             {
                 sptAsyncAudio->ReleaseFModSound(ptFModSound);
                 return;
             }
+            // 2.7.7 calls this when a game is active and drops the result.
+            if (CGameIsValid())
+                CGameLoadingScreenIsEnabled();
         }
     }
 
@@ -6078,7 +6078,7 @@ FMOD_SOUND_FORMAT sGetFModSoundFormat(
 
 
 
-// NON_MATCHING: 1380 vs 1452 bytes; our compiler tail-merges the two "sPath = CRefString(szHeader) + sPath; pbData = sPath.str();" sequences (6196, 6220) because FMOD_CREATESTREAM (6207) is ORed before the 6209 branch instead of being duplicated after it as in the original; rest follows the original
+// NON_MATCHING: 1476 vs 1460 bytes; block order and the stream-mode branches now follow the original, but our compiler sinks the FMOD_CREATESAMPLE select below sGetFileParameters and computes the "fIsFSB && !fPending" test with cset/and instead of two branches
 static FMOD_SOUND * sCreateFModSound(
     const SNO snoSoundBank,
     const uint32 nSampleIndex,
@@ -6166,7 +6166,23 @@ static FMOD_SOUND * sCreateFModSound(
         tSoundExInfo.numchannels = dwChannels;
     }
 
-    if (eStreamMode == 0)
+    if (eStreamMode != 0)
+    {
+        if (eStreamMode == 1)
+        {
+            if (!sGetFileParameters(tSoundExInfo, snoSoundBank, nSampleIndex, tSoundSample.dwSampleSize, sPath))
+            {
+                return NULL;
+            }
+            char szHeader[3] = " :";
+            szHeader[0] = '2';
+            tSoundExInfo.nonblockthreadid = 1;
+            sPath = CRefString(szHeader) + sPath;
+            pbData = sPath.str();
+        }
+        fmodMode |= FMOD_CREATESTREAM;
+    }
+    else
     {
         if (tSoundSample.GetCompression() == SOUNDCOMPRESSION_NONE)
         {
@@ -6197,31 +6213,15 @@ static FMOD_SOUND * sCreateFModSound(
 
         pbData = sPath.str();
     }
-    else
-    {
 
 
 
 
 
-        fmodMode |= FMOD_CREATESTREAM;
-
-        if (eStreamMode == 1)
-        {
-            if (!sGetFileParameters(tSoundExInfo, snoSoundBank, nSampleIndex, tSoundSample.dwSampleSize, sPath))
-            {
-                return NULL;
-            }
 
 
-            char szHeader[3] = " :";
-            szHeader[0] = '2';
-            tSoundExInfo.nonblockthreadid = 1;
-            sPath = CRefString(szHeader) + sPath;
 
-            pbData = sPath.str();
-        }
-    }
+
 
     if (!fSuppressTracing && CGameGetDebugSoundMode() == DSM_FULL)
     {

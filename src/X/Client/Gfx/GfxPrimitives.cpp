@@ -2161,8 +2161,8 @@ void GfxTriOverlaysDraw( const RenderLayer eRenderLayer ) {
             continue;
         }
 
-        uint32 dwVertsRemaining = ( tBatch.nEnd - tBatch.nStart ) * 3;
         int32 nIndex = tBatch.nStart * 3;
+        uint32 dwVertsRemaining = ( tBatch.nEnd - tBatch.nStart ) * 3;
         while ( dwVertsRemaining ) {
             GfxWorldMatrixSet( cgm4x4Identity );
 

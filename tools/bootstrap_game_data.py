@@ -4,6 +4,10 @@
   python3 tools/bootstrap_game_data.py GAME_DIR                 # 2.6.2: everything, from the .nss
   python3 tools/bootstrap_game_data.py --raw-tables 2.7.7       # later version: RAW_TABLES only
   python3 tools/bootstrap_game_data.py --raw-tables 2.7.7 --check
+
+For a later version (--version, default tools/config.toml) the 2.6.2 includes are generated and
+verified first; the version then replaces the includes it changed (RAW_TABLES, lua_tables.inc,
+nvn_entry_points.inc, sno_calls.inc, gbid_rows.inc), each verified against manifest["versions"][version].
 """
 import argparse
 import hashlib
@@ -113,14 +117,47 @@ def binding_paths(manifest):
             yield BINDINGS / f"{name}.pb.{ext}", row[ext + "_sha256"]
 
 
-def nvn_entry_points(image):
-    # The loader's 498 NUL-terminated procedure names are consecutive in .rodata.
-    names = image.read_vaddr(0xd6bfe7, 15002).split(b"\0")
-    if len(names) != 499 or names[-1] or any(
-        not re.fullmatch(rb"nvn[A-Z][A-Za-z0-9]*", name) for name in names[:-1]
-    ):
+# nvn::nvnLoadCPPProcs in data/<version>/main.elf: (start, end, number of procedures). Each
+# procedure is loaded as `adrp x1, name; add x1, x1, :lo12:name; ...; blr x19`, in header order.
+NVN_LOADERS = {
+    "2.7.7": (0xe25f0, 0xe5e7c, 516),
+}
+
+
+def nvn_loader_names(image, version):
+    """Procedure names in the order nvnLoadCPPProcs loads them, from its x1 operands."""
+    start, end, count = NVN_LOADERS[version]
+    code = image.read_vaddr(start, end - start)
+    if len(code) != end - start:
+        raise ValueError(f"{version} NVN loader at {start:#x} is outside the image")
+    names, page = [], None
+    for pc in range(start, end, 4):
+        insn = struct.unpack_from("<I", code, pc - start)[0]
+        if insn & 0x9f00001f == 0x90000001:  # adrp x1
+            imm = ((insn >> 5) & 0x7ffff) << 2 | (insn >> 29) & 3
+            page = (pc & ~0xfff) + ((imm - (1 << 21) if imm & (1 << 20) else imm) << 12)
+        elif insn & 0xffc003ff == 0x91000021 and page is not None:  # add x1, x1, #imm12
+            address = page + ((insn >> 10) & 0xfff)
+            raw = image.read_vaddr(address, 256)
+            names.append(raw[:raw.index(0)])
+            page = None
+    if len(names) != count:
+        raise ValueError(f"{version} NVN loader names {len(names)} procedures, expected {count}")
+    return names
+
+
+def nvn_entry_points(image, version="2.6.2"):
+    if version == "2.6.2":
+        # The loader's 498 NUL-terminated procedure names are consecutive in .rodata.
+        names = image.read_vaddr(0xd6bfe7, 15002).split(b"\0")
+        if len(names) != 499 or names[-1]:
+            raise ValueError("unexpected NVN procedure-name table")
+        names = names[:-1]
+    else:
+        names = nvn_loader_names(image, version)
+    if any(not re.fullmatch(rb"nvn[A-Z][A-Za-z0-9]*", name) for name in names):
         raise ValueError("unexpected NVN procedure-name table")
-    return "".join(f"NVN_ENTRY({name[3:].decode('ascii')})\n" for name in names[:-1])
+    return "".join(f"NVN_ENTRY({name[3:].decode('ascii')})\n" for name in names)
 
 
 def gameplay_tables(image, relocations):
@@ -207,13 +244,58 @@ def write_raw_tables(version, check=False):
     return 1 if check and stale else 0
 
 
-def version_tables(image, version):
-    """The includes a later version replaces, from data/<version>/main.elf: the Lua tables and RAW_TABLES.
+def version_sno_tables(template, version):
+    """sno_calls.inc and gbid_rows.inc for a version that ships no .nss (tools/game_sno_calls.py).
+
+    template is the 2.6.2 sno_calls.inc text (its sLookupSNO lines are reused where the call is
+    unchanged); the calls and the GBID table are decoded from data/<version>/main.elf and named
+    with the enumerators the current headers give those values."""
+    import game_sno_calls as calls
+    import global_sno_map as gsm
+
+    header = gsm.HEADER.read_text()
+    sno_names = calls.enum_names(header, r"GLOBALSNO_(?!FLAG_)\w+")
+    gbid_names = calls.enum_names(header, r"GLOBALGBID_\w+")
+    groups = calls.enum_names((ROOT / "src/X/Common/SNO/SNOFiles.h").read_text(), r"(?!SNOENTRY_)[A-Z0-9_]+_SNO")
+    old_lines = [line for line in template.split("\n") if "sLookupSNO(" in line]
+    text, _, _ = calls.sno_calls(calls.extras_normalized(gsm.lookup_calls("2.6.2")), old_lines,
+                                 calls.extras_normalized(gsm.lookup_calls(version)), sno_names, groups)
+    return {"sno_calls.inc": text, "gbid_rows.inc": calls.gbid_rows(gsm.gbid_rows(version), gbid_names)}
+
+
+def version_tables(image, version, sno_template=None):
+    """The includes a later version replaces, from data/<version>/main.elf: the Lua tables and RAW_TABLES,
+    plus sno_calls.inc / gbid_rows.inc when the 2.6.2 sno_calls.inc text is given as sno_template.
 
     Returns ({include name: text}, Lua evidence JSON)."""
     tables = raw_tables(image, version)
     tables["lua_tables.inc"], evidence = generate_lua_tables(LuaTableImage(ROOT, image, version))
+    if version in NVN_LOADERS:
+        tables["nvn_entry_points.inc"] = nvn_entry_points(image, version)
+    if sno_template is not None:
+        tables.update(version_sno_tables(sno_template, version))
     return tables, evidence
+
+
+def expected_includes(manifest, version):
+    """{include name: sha256} a checkout of version should hold: the 2.6.2 pins, with the includes
+    that version replaces taken from manifest["versions"][version]."""
+    pins = dict(manifest["includes"])
+    if version != "2.6.2":
+        pins.update(manifest["versions"][version]["includes"])
+    return pins
+
+
+def check_inventory(tables, expected, label):
+    """Refuse a version whose generated includes differ from its manifest entry; name the digests
+    of the includes the manifest does not pin yet so they can be reviewed and added."""
+    if tables.keys() == expected["includes"].keys():
+        return
+    unpinned = sorted(tables.keys() - expected["includes"].keys())
+    absent = sorted(expected["includes"].keys() - tables.keys())
+    detail = "; ".join([f"not pinned: {name} {digest(tables[name].encode())}" for name in unpinned]
+                       + [f"pinned but not generated: {name}" for name in absent])
+    raise ValueError(f"{label} include inventory differs from manifest ({detail})")
 
 
 def verify(tables, evidence, expected, label):
@@ -265,9 +347,9 @@ def bootstrap(args):
     version = args.version or VERSION
     if version != "2.6.2":
         expected = manifest["versions"][version]
-        later, evidence = version_tables(Elf(ROOT / "data" / version / "main.elf"), version)
-        if later.keys() != expected["includes"].keys():
-            raise ValueError(f"{version} include inventory differs from manifest")
+        later, evidence = version_tables(Elf(ROOT / "data" / version / "main.elf"), version,
+                                         sno_template=tables["sno_calls.inc"])
+        check_inventory(later, expected, version)
         verify(later, evidence, expected, version)
         tables.update(later)
 

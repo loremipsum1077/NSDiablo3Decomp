@@ -25,7 +25,7 @@ HirelingClass HirelingGetClass(const ActorCommonData & tACDHireling);  // X/Comm
 BOOL ExperiencePlayersCloseEnough(const ActorCommonData & tACDVictim, ACDID idACDOtherPlayer);  // X/Common/ExperienceCommon.cpp:50
 
 #include "Achievements/AchievementModifierEvaluationLogic.h"
-uint32 sub_71007b75d0();  // 2.7.7 only, unnamed; returns two game-flag bits (quantity of ACH_EVENT_PLAYER_DIED)
+extern "C" uint32 sub_71007b75d0();  // 2.7.7 only, unnamed (SGame.cpp); returns two game-flag bits (quantity of ACH_EVENT_PLAYER_DIED)
 namespace Achievement {
 typedef int32 EventID;
 

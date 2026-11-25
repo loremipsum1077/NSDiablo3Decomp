@@ -603,13 +603,10 @@ void PopupLeaderboardError(::Console::Online::LeaderboardResult eResult)
     }
 }
 
+// NON_MATCHING: 2.7.7 calls EnableInspectMode (0x710018bf10) out of line; here its FALSE path is inlined (180 vs 28 bytes)
 void ReturnFromInspect()
 {
-    UI_SetControllerFocus(GetCurrentList().GetID());
-    sgtUILeaderboardData.eUINavigationState = UISTATE_FILTERS_NAVIGATION;
-    sgtUILeaderboardData.bInspectEnabled = FALSE;
-    UI_GetWindowFromID(UIWND_CONSOLE_LEADERBOARDS_FILTERS_WRAPPER).SetActive(TRUE);
-    GetCurrentList().SetActive(TRUE);
+    EnableInspectMode(FALSE);
     UpdateControllerActions(FALSE);
 }
 
@@ -1007,8 +1004,8 @@ int32 GetCategoryIndexForElementUIID(const UIID & id, CurrentTab eTab)
 
 }
 
-void UpdatePlayerScore();
-int32 MakeGameKey(CurrentTab eScopeKey, int32 nLeaderboardIndex, BOOL bHardcore); // Declaration only; defined at DWARF line 2993 below.
+void UpdatePlayerScore(BOOL bUnk);
+int32 MakeGameKey(CurrentTab eScopeKey, int32 nLeaderboardIndex, BOOL bHardcore, BOOL bUnk); // Declaration only; defined at DWARF line 2993 below.
 inline CRefString GetConquestLeaderboardName(int32 nIndex)
 {
     if ((size_t)nIndex < sgtUILeaderboardData.arConquestAchievementIds.size())
@@ -1051,11 +1048,13 @@ void IconSelectionChanged(const ::Console::RingWrapper & tRingWrapper, const UII
             ::Console::Screens::GetActionManager().SetActionsDirtyFlag(TRUE);
         }
     }
-    UpdatePlayerScore();
+    UpdatePlayerScore(TRUE);
     SoundManager::PlaySound(GlobalSNOGet((GlobalSNO)0x3b9), cgtPSODefaults);
 }
 
-BOOL CreateLeaderboardKeyForSelection(LeaderboardKeyAndPartition & tKey, CurrentTab eCurrentTab, int32 nIndex, BOOL bHardcore, BOOL bPreviousResults); // DWARF owner:3503.
+BOOL CreateLeaderboardKeyForSelection(LeaderboardKeyAndPartition & tKey, CurrentTab eCurrentTab, int32 nIndex, BOOL bHardcore, BOOL bUnk, BOOL bPreviousResults); // DWARF owner:3503.
+// 2.7.7: Greater Rifts leaderboard key builder (0x71001918d0); the last argument is the previous-results flag.
+extern "C" BOOL sub_71001918d0(LeaderboardKeyAndPartition & tKey, int32 nIndex, BOOL bHardcore, BOOL bUnk, BOOL bPreviousResults);
 
 
 
@@ -1320,8 +1319,9 @@ void EnableInspectMode(
         UI_SetControllerFocus(GetUIIDNone());
 
         BOOL bHardcore = sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS && sgtUILeaderboardData.bHardcoreGreaterRifts;
+        BOOL bUnk = sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS && sgtUILeaderboardData.unk_b8;
         LeaderboardKeyAndPartition tKey;
-        if (!CreateLeaderboardKeyForSelection(tKey, sgtUILeaderboardData.eCurrentTab, sgtUILeaderboardData.nSelectedCategory, bHardcore, FALSE))
+        if (!CreateLeaderboardKeyForSelection(tKey, sgtUILeaderboardData.eCurrentTab, sgtUILeaderboardData.nSelectedCategory, bHardcore, bUnk, FALSE))
         {
             return;
         }
@@ -1355,12 +1355,23 @@ void EnableInspectMode(
     GetCurrentList().SetActive(!bEnable);
 }
 #line 1339 "X/Client/UserInterface/Console/UIConsoleLeaderboards.cpp"
-BOOL GetPlayerScoreForCurrentLeaderboard(D3::Leaderboard::Score & tScore, BOOL bPreviousSeason)
+// 2.7.7: per-category value used in the Greater Rifts key (reads +0x15c of an entry in a lazily
+// built map at 0x71017e5bf0).
+extern "C" int32 sub_7100191eb0(int32 nCategory);
+// 2.7.7: Greater Rifts game key (scope 1) with the extra field at bit 25.
+extern "C" int32 sub_7100191ef0(int32 nLeaderboardIndex, int32 nUnk, BOOL bHardcore, BOOL bUnk);
+// 2.7.7 (0x710018ed90): third parameter; the Greater Rifts key now carries a per-category value
+// from sub_7100191eb0 unless bUnk is set, and every key carries unk_b8.
+BOOL GetPlayerScoreForCurrentLeaderboard(D3::Leaderboard::Score & tScore, BOOL bPreviousSeason, BOOL bUnk)
 {
     const CurrentTab eCurrentTab = sgtUILeaderboardData.eCurrentTab;
     int32 nCategory = sgtUILeaderboardData.nSelectedCategory;
     BOOL bHardcore = eCurrentTab == CURRENT_TAB_GREATER_RIFTS && sgtUILeaderboardData.bHardcoreGreaterRifts;
-    int32 nGameKey = MakeGameKey(eCurrentTab, nCategory, bHardcore);
+    int32 nGameKey;
+    if (eCurrentTab == CURRENT_TAB_GREATER_RIFTS)
+        nGameKey = sub_7100191ef0(nCategory, bUnk ? 0 : sub_7100191eb0(nCategory), bHardcore, sgtUILeaderboardData.unk_b8);
+    else
+        nGameKey = MakeGameKey(eCurrentTab, nCategory, bHardcore, sgtUILeaderboardData.unk_b8);
     if (bPreviousSeason)
     {
         blz::map<int, D3::Leaderboard::Score>::iterator iter = sgtUILeaderboardData.mapPlayerScoresPreviousSeason.find(nGameKey);
@@ -1492,11 +1503,12 @@ void IssueAdditionalLeaderboardRequest(
 
 
     BOOL bHardcore = sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS && sgtUILeaderboardData.bHardcoreGreaterRifts;
+    BOOL bUnk = sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS && sgtUILeaderboardData.unk_b8;
     LeaderboardKeyAndPartition tKey;
 
     BOOL bLastWeeksResults = sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_SEASON_CHALLENGE && sgtUILeaderboardData.nSelectedCategory > 0 && sgtUILeaderboardData.bLastWeeklyChallenge;
 
-    if (!CreateLeaderboardKeyForSelection(tKey, sgtUILeaderboardData.eCurrentTab, sgtUILeaderboardData.nSelectedCategory, bHardcore, bLastWeeksResults))
+    if (!CreateLeaderboardKeyForSelection(tKey, sgtUILeaderboardData.eCurrentTab, sgtUILeaderboardData.nSelectedCategory, bHardcore, bUnk, bLastWeeksResults))
         return;
 
 
@@ -1644,7 +1656,7 @@ int32 GetPlayerRankForLeaderboard(
 {
     BOOL bPrevious = sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_SEASON_CHALLENGE && sgtUILeaderboardData.nSelectedCategory != 0 && sgtUILeaderboardData.bLastWeeklyChallenge;
     D3::Leaderboard::Score tScore;
-    if (GetPlayerScoreForCurrentLeaderboard(tScore, bPrevious))
+    if (GetPlayerScoreForCurrentLeaderboard(tScore, bPrevious, FALSE))
     {
         return tScore.score_band();
     }
@@ -1759,11 +1771,12 @@ void IssueLeaderboardRequest()
 
 
     BOOL bHardcore = sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS && sgtUILeaderboardData.bHardcoreGreaterRifts;
+    BOOL bUnk = sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS && sgtUILeaderboardData.unk_b8;
     BOOL bPrevious = sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_SEASON_CHALLENGE && sgtUILeaderboardData.nSelectedCategory != 0 && sgtUILeaderboardData.bLastWeeklyChallenge;
 
     LeaderboardKeyAndPartition tKey;
 
-    if (!CreateLeaderboardKeyForSelection(tKey, sgtUILeaderboardData.eCurrentTab, sgtUILeaderboardData.nSelectedCategory, bHardcore, bPrevious))
+    if (!CreateLeaderboardKeyForSelection(tKey, sgtUILeaderboardData.eCurrentTab, sgtUILeaderboardData.nSelectedCategory, bHardcore, bUnk, bPrevious))
         return;
 
 
@@ -1922,7 +1935,7 @@ void OpenForController(
 
     sgtUILeaderboardData.mapPlayerScoresPreviousSeason.clear();
 
-    UpdatePlayerScore();
+    UpdatePlayerScore(FALSE);
 
     UIID idFriendsTitle = UIIDCreateFromParent(UIWND_CONSOLE_LEADERBOARDS_FILTER_FRIENDS, ".LayoutRoot.Filter.FilterTitle");
     UIID idGlobalPositionTitle = UIIDCreateFromParent(UIWND_CONSOLE_LEADERBOARDS_FILTER_GLOBAL_POSITION, ".LayoutRoot.Filter.FilterTitle");
@@ -2095,7 +2108,7 @@ void sPlayerPositionCallback(
             }
         }
 
-        UpdatePlayerScore();
+        UpdatePlayerScore(FALSE);
     }
 }
 } }
@@ -2377,7 +2390,7 @@ void IssuePlayerPositionRequest()
         sgtUILeaderboardData.mapPlayerScores.clear();
 
         // Inference: the key-success guard is optimized away for this constant tab/index.
-        if (CreateLeaderboardKeyForSelection(tKey, CURRENT_TAB_SEASON_CHALLENGE, 0, FALSE, FALSE))
+        if (CreateLeaderboardKeyForSelection(tKey, CURRENT_TAB_SEASON_CHALLENGE, 0, FALSE, FALSE, FALSE))
         {
             idLeaderboards.push_back(tKey);
         }
@@ -2385,7 +2398,7 @@ void IssuePlayerPositionRequest()
         // Inference: zero-based loops and key-success guards reconstruct the original inline tree and branches.
         for (int32 n = 0; n < sgtUILeaderboardData.arConquestAchievementIds.size(); ++n)
         {
-            if (CreateLeaderboardKeyForSelection(tKey, CURRENT_TAB_CONQUESTS, n, FALSE, FALSE))
+            if (CreateLeaderboardKeyForSelection(tKey, CURRENT_TAB_CONQUESTS, n, FALSE, FALSE, FALSE))
             {
                 idLeaderboards.push_back(tKey);
             }
@@ -2396,7 +2409,12 @@ void IssuePlayerPositionRequest()
         {
             for (int32 n = 0; n < MAX_GREATER_RIFT_LEADERBOARDS; ++n)
             {
-                if (CreateLeaderboardKeyForSelection(tKey, CURRENT_TAB_GREATER_RIFTS, n, h, FALSE))
+                // NON_MATCHING: 2.7.7 builds softcore/hardcore x unk keys through sub_71001918d0; IssuePlayerPositionRequest is 4452 vs 4192 bytes (rest of the function not yet ported)
+                if (sub_71001918d0(tKey, n, h, FALSE, FALSE))
+                {
+                    idLeaderboards.push_back(tKey);
+                }
+                if (sub_71001918d0(tKey, n, h, TRUE, FALSE))
                 {
                     idLeaderboards.push_back(tKey);
                 }
@@ -2406,7 +2424,7 @@ void IssuePlayerPositionRequest()
         // Inference: weekly indices 1 through 4 follow the unrolled original key-generation sequence.
         for (int32 n = FIRST_WEEKLY_CHALLENGE_INDEX; n <= MAX_WEEKLY_CHALLENGE_LEADERBOARDS; ++n)
         {
-            if (CreateLeaderboardKeyForSelection(tKey, CURRENT_TAB_SEASON_CHALLENGE, n, FALSE, FALSE))
+            if (CreateLeaderboardKeyForSelection(tKey, CURRENT_TAB_SEASON_CHALLENGE, n, FALSE, FALSE, FALSE))
             {
                 idLeaderboards.push_back(tKey);
             }
@@ -2425,7 +2443,7 @@ void IssuePlayerPositionRequest()
         sgtUILeaderboardData.mapPlayerScoresPreviousSeason.clear();
 
         // Inference: the mirrored request uses previous-results TRUE in the original inline arguments.
-        if (CreateLeaderboardKeyForSelection(tKey, CURRENT_TAB_SEASON_CHALLENGE, 0, FALSE, TRUE))
+        if (CreateLeaderboardKeyForSelection(tKey, CURRENT_TAB_SEASON_CHALLENGE, 0, FALSE, FALSE, TRUE))
         {
             idLeaderboards.push_back(tKey);
         }
@@ -2433,7 +2451,7 @@ void IssuePlayerPositionRequest()
         // Inference: the previous-season loop uses the same zero-based conquest range.
         for (int32 n = 0; n < sgtUILeaderboardData.arConquestAchievementIds.size(); ++n)
         {
-            if (CreateLeaderboardKeyForSelection(tKey, CURRENT_TAB_CONQUESTS, n, FALSE, TRUE))
+            if (CreateLeaderboardKeyForSelection(tKey, CURRENT_TAB_CONQUESTS, n, FALSE, FALSE, TRUE))
             {
                 idLeaderboards.push_back(tKey);
             }
@@ -2444,7 +2462,11 @@ void IssuePlayerPositionRequest()
         {
             for (int32 n = 0; n < MAX_GREATER_RIFT_LEADERBOARDS; ++n)
             {
-                if (CreateLeaderboardKeyForSelection(tKey, CURRENT_TAB_GREATER_RIFTS, n, h, TRUE))
+                if (sub_71001918d0(tKey, n, h, FALSE, TRUE))
+                {
+                    idLeaderboards.push_back(tKey);
+                }
+                if (sub_71001918d0(tKey, n, h, TRUE, TRUE))
                 {
                     idLeaderboards.push_back(tKey);
                 }
@@ -2454,7 +2476,7 @@ void IssuePlayerPositionRequest()
         // Inference: previous weekly requests retain indices 1 through 4.
         for (int32 n = FIRST_WEEKLY_CHALLENGE_INDEX; n <= MAX_WEEKLY_CHALLENGE_LEADERBOARDS; ++n)
         {
-            if (CreateLeaderboardKeyForSelection(tKey, CURRENT_TAB_SEASON_CHALLENGE, n, FALSE, TRUE))
+            if (CreateLeaderboardKeyForSelection(tKey, CURRENT_TAB_SEASON_CHALLENGE, n, FALSE, FALSE, TRUE))
             {
                 idLeaderboards.push_back(tKey);
             }
@@ -2509,6 +2531,7 @@ BOOL CreateLeaderboardKeyForSelection(
     CurrentTab eCurrentTab,
     int32 nIndex,
     BOOL bHardcore,
+    BOOL bUnk,
     BOOL bPreviousResults)
 {
 
@@ -2546,19 +2569,8 @@ BOOL CreateLeaderboardKeyForSelection(
         break;
     }
     case CURRENT_TAB_GREATER_RIFTS:
-        tKey.m_partition = OnlineService::GetSeasonNum();
-        // Inference: original condition selects hardcore scope4 versus softcore5.
-        tKey.m_scope = bHardcore ? LP_SEASONAL_HARDCORE : LP_SEASONAL_SOFTCORE;
-
-
-
-
-
-
-
-        // Inference: original zero identifier exits FALSE; the explicit getter is authenticated at this call line.
-        tKey.m_id = GetGreaterRiftLeaderboardIdFromIndex(nIndex);
-        if (tKey.m_id == 0)
+        // 2.7.7: delegated to the Greater Rifts key builder; the previous-results decrement stays below.
+        if (!sub_71001918d0(tKey, nIndex, bHardcore, bUnk, FALSE))
         {
             return FALSE;
         }
@@ -2581,12 +2593,15 @@ BOOL CreateLeaderboardKeyForSelection(
 namespace UILeaderboards { namespace Console {
 #line 2992 "X/Client/UserInterface/Console/UIConsoleLeaderboards.cpp"
 // Body not directly checkable: original copy linker-removed(DIE032e030b), required by real conversion. Inference: original packing shifts scope16/index8 and ORs the hardcore flag.
+// 2.7.7 key layout (inlined copies in 0x710018ed90 and ConvertLeaderboardAndScopeToGameKey):
+// scope << 17 | index << 9 | hardcore << 1 | unk.
 int32 MakeGameKey(
     CurrentTab eScopeKey,
     int32 nLeaderboardIndex,
-    BOOL bHardcore)
+    BOOL bHardcore,
+    BOOL bUnk)
 {
-    return (eScopeKey << 16) | (nLeaderboardIndex << 8) | bHardcore;
+    return (eScopeKey << 17) | (nLeaderboardIndex << 9) | ((bHardcore != FALSE) << 1) | (bUnk != FALSE);
 }
 #line 3460 "X/Client/UserInterface/Console/UIConsoleLeaderboards.cpp"
 // Body not directly checkable: original copy linker-removed(DIE032e10d4), needed by real conversion. Inference: scan ten original rift keys from index0 and return -1 if absent.
@@ -2668,7 +2683,7 @@ int32 ConvertLeaderboardAndScopeToGameKey(
         return -1;
     }
     // Inference: DWARF local is int32 while the helper accepts CurrentTab; value comes only from the original enumerators above.
-    return MakeGameKey(static_cast<CurrentTab>(nScopeKey), nLeaderboardKey, bHardcore);
+    return MakeGameKey(static_cast<CurrentTab>(nScopeKey), nLeaderboardKey, bHardcore, FALSE);
 }
 } }
 
@@ -2787,7 +2802,7 @@ void LeaderboardDataSource::UpdateItemUI(
 
     D3::Leaderboard::Score tScoreToUse;
     BOOL bPrevious = GetCurrentTab() == CURRENT_TAB_SEASON_CHALLENGE && GetSelectedCategory() != 0 && UsePreviousWeek();
-    if (bShowPlayerHere && GetPlayerScoreForCurrentLeaderboard(tScoreToUse, bPrevious))
+    if (bShowPlayerHere && GetPlayerScoreForCurrentLeaderboard(tScoreToUse, bPrevious, FALSE))
     {
         nRank = tScoreToUse.score_band();
     }
@@ -2884,13 +2899,13 @@ extern UIID UITEXT_CONSOLE_LEADERBOARDS_LAST_SEASON_TEXT3;
 namespace UILeaderboards {
 namespace Console {
 #line 2618 "X/Client/UserInterface/Console/UIConsoleLeaderboards.cpp"
-void UpdatePlayerScore()
+void UpdatePlayerScore(BOOL bUnk)
 
 {
     const CurrentTab eCurrentTab = sgtUILeaderboardData.eCurrentTab;
 
     D3::Leaderboard::Score tScore;
-    if (GetPlayerScoreForCurrentLeaderboard(tScore, TRUE))
+    if (GetPlayerScoreForCurrentLeaderboard(tScore, TRUE, bUnk))
     {
         switch (eCurrentTab)
         {

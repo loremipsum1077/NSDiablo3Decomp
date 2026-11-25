@@ -106,7 +106,10 @@ static void sSetupResultsNewItem(ActorCommonData * ptACDItem); static void sSetu
 #include "../../Font/Font.h"
 #include "../../../Sigma/MemoryPools.h"
 ItemQualityLevel ItemGetDisplayedQualityLevel(const ActorCommonData & tACD);  // X/Common/Items.cpp:2208
-namespace UIInventory { BOOL GetItemBkgrndImage(const ItemQualityLevel eIQL, ImageTextureFrame & tImageTexFrame, const BOOL fEquipped, const BOOL fLargeItem); }  // X/Client/UserInterface/Interface/UIInventory.cpp:3043
+namespace UIInventory { BOOL GetItemBkgrndImage(const ItemQualityLevel eIQL, ImageTextureFrame & tImageTexFrame, const BOOL fEquipped, const BOOL fLargeItem, const int32 nAncientRank, const BOOL fSeasonOnly, const BOOL fSanctified, const BOOL fPrimalized); }
+extern "C" BOOL sub_710050e880(const ActorCommonData * ptACD);
+extern "C" BOOL sub_710050ea10(const ActorCommonData * ptACD);
+extern "C" BOOL sub_710050ecb0(const ActorCommonData * ptACD);  // X/Client/UserInterface/Interface/UIInventory.cpp:3043
 void ACDInventoryGetItemDrawInfo(const ActorCommonData & tACDItem, ImageTextureFrame & tImageTexFrame, const ItemDrawType eDrawType);  // X/Client/CActorInventory.cpp:58
 namespace UIInventory { void DrawItemSockets(ActorCommonData & tACD, XPooledDataIDList & listSocketedACDs, const PlayerClass eClassToDisplay, const BOOL fIsMale, const Rect2D & rectItemImage, const BOOL fEquipped, const float flAlpha, float & flZ); }  // X/Client/UserInterface/Interface/UIInventory.cpp:2417
 extern UIID UIWND_KANAIS_CUBE_GRID;  // X/Client/UserInterface/UIGlobals.cpp:1186
@@ -2449,7 +2452,7 @@ void UITransmute::DrawGrid(
 
 
             ImageTextureFrame tImageTexFrameBkgrnd;
-            if (UIInventory::GetItemBkgrndImage(eIQL, tImageTexFrameBkgrnd, FALSE, bLargeItem))
+            if (UIInventory::GetItemBkgrndImage(eIQL, tImageTexFrameBkgrnd, FALSE, bLargeItem, 0, sub_710050e880(ptACDItem), sub_710050ea10(ptACDItem), sub_710050ecb0(ptACDItem)))
             {
                 SpriteDrawDeferred(tImageTexFrameBkgrnd, cgtImageTextureFrameNull, snoShader,
                     tRectItemSlotPixels, crgbaWhite, crgbaBlack, flItemZ, 1.0f, NULL, RENDERLAYER_INVALID, FALSE);

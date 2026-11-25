@@ -1655,10 +1655,10 @@ static void sBrainComponentTargetInitialize(ActorID idActor)
     tTarget.listTargets.Initialize(&ptGlobals->poolTargetInfo);
     tTarget.listFriendlies.Initialize(&ptGlobals->poolTargetInfo);
     tTarget.dwLastTimeWithEnemyTarget = 0;
-    tTarget.bHasAttackerSlotReserved = FALSE;
-    tTarget.dwNextTargetScanTime = 0;
     tTarget.idTarget = ACTORID_INVALID;
     tTarget.bIncrementedAttackerCount = FALSE;
+    tTarget.bHasAttackerSlotReserved = FALSE;
+    tTarget.dwNextTargetScanTime = 0;
     ActorCommonData & tACD = ACDGet(ACDFindByActor(idActor));
     if (tACD.GetGizmoType() == ACTORGIZMO_SPAWNER) {
         ScopedActorDefinitionLockR pdefActor(tACD.GetActorSNO());
@@ -6640,6 +6640,7 @@ void sNPCClearConversationIcons(
 
 
 
+extern "C" BOOL sub_71004b8d40(const ActorCommonData & tACD);  // 2.7.7 only, unnamed (0x71004b8d40, dark alchemy range): checks a buff (SNO at 0x710190121c) and ATTRIBUTE_DARK_ALCHEMY_UNLOCKED_NODES bit 1, then the players local to tACD; TRUE keeps rest XP on death
 void BrainAPIDoDeath(
     ActorID idDeadActor,
     ActorID idKillerActor,
@@ -6878,7 +6879,7 @@ void BrainAPIDoDeath(
         SPlayerIncreaseKillCounter(idACDKiller, idACDVictim, ptDamage);
     }
 
-    if (!tACDVictim.IsDueling())
+    if (!tACDVictim.IsDueling() && !sub_71004b8d40(tACDVictim))
     {
         tACDVictim.SetRestExperience(0);
     }

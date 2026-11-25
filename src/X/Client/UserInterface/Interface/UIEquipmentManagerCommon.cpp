@@ -28,7 +28,7 @@
 #include "../../CPlayer.h"
 #include "../../../Common/Items.h"
 // Declared here because their headers are not adopted yet.
-struct PlayerLoadoutSaveMessage { RequiredMessageHeader tHeader; int32 nLoadoutIndex; CHAR usName[49]; };  /* size 0x40; X/Common/Networking/GameMessage.h */  /* X/Common/Networking/GameMessage.h */ void MessageSendToServer(GameMessageType eType, void * pMessage, uint32 dwMessageSize, const Player * ptPlayer);  /* CGameMessage.cpp */ namespace UIGame { void DisplayError(const GameErrorData & tData, BOOL fDisplayBnetError, const Player * ptPlayer); }  // UIGame.cpp
+struct PlayerLoadoutSaveMessage { RequiredMessageHeader tHeader; int32 nLoadoutIndex; CHAR usName[53]; };  /* size 0x44 (2.7.7); X/Common/Networking/GameMessage.h */  /* X/Common/Networking/GameMessage.h */ void MessageSendToServer(GameMessageType eType, void * pMessage, uint32 dwMessageSize, const Player * ptPlayer);  /* CGameMessage.cpp */ namespace UIGame { void DisplayError(const GameErrorData & tData, BOOL fDisplayBnetError, const Player * ptPlayer); }  // UIGame.cpp
 BOOL PlayerCanChangeLoadout(const Player & tPlayer, int32 nLoadoutIndex, GameError * peGameError); BOOL PlayerLoadoutSocketablesMatch(GBID gbidItem1, GBID gbidItem2); BOOL PlayerLoadoutItemIsInValidInventorySlot(const ActorCommonData & tACDItem, ACDID idACDPlayer);  /* Player.cpp */ CRefString LocalizedSprintf(LPCSTR szFormat, ...); void PlayerLoadoutGetDesiredSocketables(GBIDArray & arGBIDSocketables, const Player & tPlayer, int32 nLoadoutIndex); void PlayerLoadoutFindSocketables(XPooledDataIDList & listACDIDSocketables, const ActorCommonData & tACDPlayer, const GBIDArray * arGBIDSocketables);  /* Player.cpp */ extern const InventorySlotType cgarPlayerLoadoutSocketableSlotsOrder[9];  /* Player.cpp:173 */ DataIDMemoryPool * MemoryPoolsGetDATAIDListPool();  /* X/Sigma/MemoryPools.cpp */ typedef blz::unordered_map<ACDID, int, blz::hash<ACDID>, blz::equal_to<ACDID>, blz::allocator<blz::pair<const ACDID, int> > > ConsumedSocketablesMap;  // name invented
 SNO GetFrontendCharacterSNO(PlayerClass eClass, BOOL fIsFemale);  /* X/Client/Battlenet/UI/Util/UIUtil.cpp */ PlayerClass PlayerGetPlayerClass(const Player * ptPlayer); BOOL PlayerIsMale(const Player & tPlayer);  /* Player.cpp */ LightID LightAdd(const uint32 dwFlags, const SNO sno, const PRTransform & transform, const int32 nPriorityBoost, const RenderContext eContext);  // X/Client/Lights.cpp:1104
 RActorID UI_CreateHeroUIRActor(const SNO snoActor, const SNO snoIrradianceTex, const VisualEquipment & tVisualEquipment, const VisualInventoryType eVIT, const PlayerClass ePlayerClass, const BOOL fFemale, const PRTransform & transform, const RenderContext eContext, const uint32 dwAnimTag, const float flScale, int32 nUnused);  // X/Client/UserInterface/UI.cpp:3324
@@ -39,10 +39,12 @@ bool LoadoutCanFindItem(ACDID idACDItem); void AssignLoadoutItemSocketables(ACDI
 void EquipLoadoutInternal(const Player * ptPlayer); void SaveLoadoutInternal(BOOL bSuccessful, CRefString sInput, Player * ptPlayer); void RenameLoadoutInternal(BOOL bSuccessful, CRefString sInput, Player * ptPlayer); BOOL LoadoutGetLoadoutEquipError(const Player & tPlayer, int32 nLoadoutIndex, CRefString & sError, BOOL bDetailedError); BOOL LoadoutCanEquipItemInSlot(const Player & tPlayer, int32 nLoadoutIndex, InventorySlotType eSlot); void PromptForLoadoutName(const Player & tPlayer, CRefString sDialogTitle, CRefString sMessage, UITextInputPrompt::DialogCallback pfnCallback);
 void ShowErrorMsg(const Player * ptPlayer, CRefString sMessage);  /* UIConsoleEquipmentManager.cpp */ void UpdateLoadoutPreview(const Player & tPlayer, const LoadoutSavedData & tLoadout, UIRActor & tRActor, bool bShowWaypoint);
 }
-struct EquipmentManagerCommonGlobals {  // size 0x8; UIEquipmentManagerCommon.h
+struct EquipmentManagerCommonGlobals {  // size 0x10 (2.7.7: sub_7100242020 allocates 0x10); UIEquipmentManagerCommon.h
     void Initialize();
     ACDID idACDInteractNPC;  // 0x00
     int32 nSelectedLoadout;  // 0x04
+    int32 unk_8;  // 0x08 (2.7.7: GetSelectedLoadout returns nSelectedLoadout + unk_8 * 10)
+    int32 unk_c;  // 0x0c (2.7.7: sub_71002420a0 stores the clamped selection at 0xc + unk_8 * 4)
 };
 
 EquipmentManagerCommonGlobals * cgptEquipmentManagerGlobals = NULL;
@@ -337,7 +339,7 @@ void UIEquipmentManager::DisposeForGame()
 int32 UIEquipmentManager::GetSelectedLoadout()
 
 {
-    return cgptEquipmentManagerGlobals->nSelectedLoadout;
+    return cgptEquipmentManagerGlobals->nSelectedLoadout + cgptEquipmentManagerGlobals->unk_8 * 10;
 }
 
 
@@ -347,7 +349,7 @@ void UIEquipmentManager::SetSelectedLoadout(int32 nSelectedLoadout)
 
 
 {
-    cgptEquipmentManagerGlobals->nSelectedLoadout = Math::Pin(nSelectedLoadout, 0, 4);
+    cgptEquipmentManagerGlobals->nSelectedLoadout = Math::Pin(nSelectedLoadout, 0, 9);
 
 
 
@@ -547,7 +549,7 @@ BOOL UIEquipmentManager::LoadoutGetLoadoutEquipError(const Player & tPlayer,
         return FALSE;
     }
 
-    nLoadoutIndex = Math::Pin(nLoadoutIndex, 0, 4);
+    nLoadoutIndex = Math::Pin(nLoadoutIndex, 0, 9);
     const LoadoutSavedData & tLoadout = tPlayer.tLoadouts[nLoadoutIndex];
     if (tLoadout.bEmpty)
     {
@@ -670,7 +672,7 @@ BOOL UIEquipmentManager::LoadoutCanEquipItemInSlot(const Player & tPlayer,
     }
 
 
-    nLoadoutIndex = Math::Pin(nLoadoutIndex, 0, 4);
+    nLoadoutIndex = Math::Pin(nLoadoutIndex, 0, 9);
     const LoadoutSavedData & tLoadout = tPlayer.tLoadouts[nLoadoutIndex];
     if (!tLoadout.bEmpty)
     {
@@ -949,5 +951,5 @@ void UIEquipmentManager::PromptForLoadoutName(const Player & tPlayer,
         sLoadoutName = LocalizedSprintf(StringListFetch("Hero:EquipmentManager_DefaultGearSetName"), CRefString().Format("%d", nSelectedLoadout + 1), NULL);
     }
 
-    UITextInputPrompt::Show(sDialogTitle.str(), sMessage.str(), sLoadoutName.str(), pfnCallback, TRUE, 12, nControllerIndex);
+    UITextInputPrompt::Show(sDialogTitle.str(), sMessage.str(), sLoadoutName.str(), pfnCallback, TRUE, 13, nControllerIndex);
 }

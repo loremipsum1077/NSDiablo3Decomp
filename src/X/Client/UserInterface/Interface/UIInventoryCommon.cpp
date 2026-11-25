@@ -345,7 +345,7 @@ void QuickMoveToEmptySlot(const ActorCommonData & tACD, ActorCommonData & tACDIt
 static BOOL sIsTwoHandedSlot(InventorySlotType eSlot)
 
 {
-    return eSlot == 3 || eSlot == 4 || eSlot == 20 || eSlot == 21;
+    return eSlot == SLOT_PLAYER_RIGHT_HAND || eSlot == SLOT_PLAYER_LEFT_HAND || eSlot == SLOT_HIRELING_RIGHT_HAND || eSlot == SLOT_HIRELING_LEFT_HAND;
 }
 
 namespace UIInventory {
@@ -530,27 +530,30 @@ CRefString GetDPSString(float flDPS)
 }
 
 
-void DrawItemRarityIcon(ItemQualityLevel eIQL, float flAlpha, float & flZ, SNO snoShader, const Rect2D & rectDestPixels, const Vector2D & vecOffsetPixels, const Rect2D * prectDrawClippingPixels)
+extern "C" BOOL sub_710050e910(GBID gbidItem);
+
+void DrawItemRarityIcon(GBID gbidItem, float flAlpha, float & flZ, SNO snoShader, const Rect2D & rectDestPixels, const Vector2D & vecOffsetPixels, const Rect2D * prectDrawClippingPixels, BOOL fPrimal)
 {
-
-
-
-
-
-
-
     float flBaseResScale = UIGetBaseResolutionScaleFrac();
     float flIconScale = flBaseResScale * 0.4f;
     Vector2D vecScaledOffsetPixels = vecOffsetPixels * flBaseResScale;
 
     SNO snoIcon = SNO_NONE;
-    if (eIQL == IQL_LEGENDARY)
+    if (fPrimal)
     {
-        snoIcon = GlobalSNOGet(GLOBALSNO_TEXTURE_MARKER_LEGENDARY_PING);
+        snoIcon = GlobalSNOGet(GLOBALSNO_UNK_1349);
     }
-    else if (eIQL == IQL_DISPLAY_AS_SET_ITEM)
+    else if (sub_710050e910(gbidItem))
+    {
+        snoIcon = GlobalSNOGet(GLOBALSNO_UNK_1352);
+    }
+    else if (ItemIsSetItem(gbidItem))
     {
         snoIcon = GlobalSNOGet(GLOBALSNO_TEXTURE_MARKER_SET_ITEM_PING);
+    }
+    else if (ItemIsLegendary(gbidItem))
+    {
+        snoIcon = GlobalSNOGet(GLOBALSNO_TEXTURE_MARKER_LEGENDARY_PING);
     }
 
 

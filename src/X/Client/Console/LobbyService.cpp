@@ -2267,51 +2267,51 @@ void LobbyServiceInternal::LookupUserAccounts(OnlineUserId * pidUsers, uint32 uN
 
 
 
-class GetLinkedAccountsTask : public LobbyTask
-{
-public:
-    GetLinkedAccountsTask(LobbyService * ptLobbyService, bdOnlineUserID idOnlineUser, LinkedAccountsSearchCallback pfnCallback)
-        : LobbyTask(ptLobbyService)
-        // (2282-2284)
+// 2.7.7: GetLinkedAccountsTask is gone (the linked-accounts feature was removed).
 
 
 
-        , m_idAccount(idOnlineUser)
-        , m_pfnCallback(pfnCallback)
-    {
-    }
-
-    virtual void Start()
-    {
-        m_ptRemoteTask = m_ptLobbyService->GetLobbyService()->getLinkedAccounts()->getLinkedAccounts(&m_idAccount, &m_tResults, 1);
-    }
 
 
-    virtual void OnComplete()
-    {
-        m_pfnCallback(LINKED_ACCOUNTS_SUCCESS, m_tResults);
-    }
 
 
-    virtual void OnFailed()
-    {
-        // (2305)
-        if (!m_ptLobbyService->IsConnected())
-        {
-            m_pfnCallback(LINKED_ACCOUNTS_FAILED_NOT_CONNECTED, m_tResults);
-        }
-        else
-        {
-            m_pfnCallback(LINKED_ACCOUNTS_FAILED, m_tResults);
-        }
-    }
 
-    bdUserAccountID m_idAccount;
 
-    LinkedAccountsSearchCallback m_pfnCallback;
 
-    bdLinkedAccountsResult m_tResults;
-};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4543,20 +4543,20 @@ BOOL AreSeasonalGlobalLeaderboardsEnabled()
 
 
 
-void LinkedAccountsSearch(int32 nUserIndex, LinkedAccountsSearchCallback pfnCallback)
-{
-    ScopedNetworkThreadLock tLock;
+// 2.7.7: LinkedAccountsSearch is gone with LobbyService::GetLinkedAccounts.
 
-    // (4598)
-    // 2.7.7: LobbyService::GetLinkedAccounts (vtable slot 28) is gone and so is this function; ImportSave calls
-    // StorageFindUserFile directly. Kept only until SaveMigration.cpp stops calling it.
-    LobbyService * ptLobbyService = LobbyService::Get(nUserIndex);
-    ::new GetLinkedAccountsTask(ptLobbyService, ptLobbyService->GetOnlineUserID(),
-        [pfnCallback](LinkedAccountsResult eResult, const bdLinkedAccountsResult & tResult)
-        {
-            QueueNetworkEventForMainThread(OnlineService::internal::method_binder_2<void, OnlineService::internal::callback_base<2, LinkedAccountsSearchCallback>, const LinkedAccountsResult &, const bdLinkedAccountsResult &>::bind<&OnlineService::internal::callback_base<2, LinkedAccountsSearchCallback>::execute>(pfnCallback, eResult, tResult));
-        });
-}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

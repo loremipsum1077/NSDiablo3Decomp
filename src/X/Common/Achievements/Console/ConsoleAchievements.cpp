@@ -477,6 +477,7 @@ bool ServerAchievementsInterface::CancelSubscription(const OnlineService::GameAc
     if (it != m_tAchievementRecordsMap.end()) {
         blz::shared_ptr<PlayerAchievementsRecord> & ptPlayerAchievementsRecord = it->second;
         ptPlayerAchievementsRecord->m_tAchievementsEvaluator.UnregisterListener(ptPlayerAchievementsRecord);
+        ptPlayerAchievementsRecord->unk_178.UnregisterListener(ptPlayerAchievementsRecord);
         m_tAchievementRecordsMap.erase(it);
         bFound = true;
     }
@@ -484,7 +485,6 @@ bool ServerAchievementsInterface::CancelSubscription(const OnlineService::GameAc
         cb(OnlineService::ERROR_GLOBAL_SUCCESS);
     return bFound;
 }
-
 
 
 
@@ -811,10 +811,10 @@ bool ClientAchievementsInterface::FindAwardedAchievements(int32 nUserIndex, blz:
         return false;
     OnlineService::AchievementsEngine::ProgressData & tProgress = snapshotIt->second;
     for (size_t i = 0, end = tProgress.GetAchievementCount(); i < end; ++i)
-        ConvertAchievementRecord(tProgress.GetAchievement(i), list.push_back());
+    {   const OnlineService::AchievementsEngine::Achievement & tAchievement = tProgress.GetAchievement(i);
+        ConvertAchievementRecord(tAchievement, list.emplace_back(tAchievement.unk_0)); }
     return true;
 }
-
 
 
 

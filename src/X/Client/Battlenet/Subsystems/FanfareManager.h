@@ -10,6 +10,7 @@
 #include "../../../Common/Leaderboard.h"
 #include "../../../Sigma/DataStructures/XGrowableList.h"
 #include "../../../Sigma/RefString.h"
+#include "../../../../Contrib/Contrib/blz/include/blz/unordered_map.h"
 
 struct PlatinumAchievementAwardedMessage;
 namespace OnlineService { typedef uint64 AchievementId; }  // OnlineService/Achievements.h
@@ -17,7 +18,7 @@ struct ConsoleScreenManagerData;
 
 typedef int32 EffectGroupID;
 
-class FanfareManager : public ToastManagerBase {  // size 0x1d8
+class FanfareManager : public ToastManagerBase {  // size 0x1f8
 public:
     void SendFanfare(OnlineService::AchievementId idAchievement, int32 nRank, const PlatinumAchievementAwardedMessage * ptMessage);
     void SendFanfare(LeaderboardIds, LeaderboardScope, int32);
@@ -68,8 +69,11 @@ private:
     FanfareManager();
     virtual ~FanfareManager();  // vtable slot 0
     static void SetUpToastStoryboards(FanfareManager::FanfareToast &, BOOL, BOOL, BOOL);
+    // 2.7.7: ctor stores {8, NULL, 0, 1.0f} at 0x1d8..0x1f0 and the dtors free the chains;
+    // sub_71001635d0 hashes a uint64 key (fmix64) into it and edits a uint32 bitmask value.
+    blz::unordered_map<unsigned long, uint32> unk_1d8;  // 0x1d8
 };
-static_assert(sizeof(FanfareManager) == 0x1d8, "FanfareManager");
+static_assert(sizeof(FanfareManager) == 0x1f8, "FanfareManager");
 
 
 // Functions defined in this file (bodies are not in the DWARF):

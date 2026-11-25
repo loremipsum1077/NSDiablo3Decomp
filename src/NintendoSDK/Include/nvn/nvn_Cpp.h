@@ -34,6 +34,11 @@ class BufferBuilder;
 class Program;
 class VertexAttribState;
 struct ShaderData;
+// Parameter types of procs that 2.7.7 loads and 2.6.2 did not (see the 2.7.7 block below);
+// declared only, as nothing calls those procs.
+struct ShaderDataExt;
+struct QueuePriority;
+struct SampleShadingMode;
 class Texture;
 class TextureBuilder;
 class TextureView;
@@ -440,6 +445,8 @@ static_assert(sizeof(ShaderData) == 0x10, "ShaderData");
 typedef NVNboolean (*ProgramInitializeFunc)(nvn::Program *, nvn::Device *);
 typedef void (*ProgramFinalizeFunc)(nvn::Program *);
 typedef NVNboolean (*ProgramSetShadersFunc)(nvn::Program *, int, const nvn::ShaderData *);
+typedef NVNboolean (*ProgramSetShadersExtFunc)(nvn::Program *, int, const nvn::ShaderDataExt *);
+typedef void (*ProgramSetSampleShadingFunc)(nvn::Program *, nvn::SampleShadingMode);
 typedef void (*MemoryPoolBuilderSetDeviceFunc)(nvn::MemoryPoolBuilder *, nvn::Device *);
 typedef void (*MemoryPoolBuilderSetDefaultsFunc)(nvn::MemoryPoolBuilder *);
 typedef void (*MemoryPoolBuilderSetStorageFunc)(nvn::MemoryPoolBuilder *, void *, size_t);
@@ -522,6 +529,8 @@ extern nvn::CommandBufferResetCounterFunc pfncpp_nvnCommandBufferResetCounter;
 extern nvn::ProgramInitializeFunc pfncpp_nvnProgramInitialize;
 extern nvn::ProgramFinalizeFunc pfncpp_nvnProgramFinalize;
 extern nvn::ProgramSetShadersFunc pfncpp_nvnProgramSetShaders;
+extern nvn::ProgramSetShadersExtFunc pfncpp_nvnProgramSetShadersExt;
+extern nvn::ProgramSetSampleShadingFunc pfncpp_nvnProgramSetSampleShading;
 extern nvn::MemoryPoolBuilderSetDeviceFunc pfncpp_nvnMemoryPoolBuilderSetDevice;
 extern nvn::MemoryPoolBuilderSetDefaultsFunc pfncpp_nvnMemoryPoolBuilderSetDefaults;
 extern nvn::MemoryPoolBuilderSetStorageFunc pfncpp_nvnMemoryPoolBuilderSetStorage;
@@ -1321,6 +1330,10 @@ static_assert(sizeof(TextureView) == 0x28, "TextureView");
 // (build/dwarf/headers/NintendoSDK/Include/NVN/nvn_Cpp.h) by build/try/agentB_nvnprocs.py. The enum
 // wrappers' members are declared as the DWARF lists them, without bodies; give one a body when a
 // file first uses it.
+// 2.7.7 loads 516 procs, 18 more than 2.6.2 (nvnLoadCPPProcs at 0x71000e25f0). Their names and
+// order come from the proc-name strings that loader passes to getProc; each is declared after the
+// proc the loader reads before it. The 2.6.2 DWARF has no types for them, so their signatures follow
+// the NVN SDK API (the loader only casts the returned pointer, so they do not affect codegen).
 typedef uint64_t ImageHandle;
 typedef uint64_t TextureAddress;
 class DeviceBuilder;
@@ -1645,6 +1658,8 @@ typedef void (*QueueBuilderSetControlMemorySizeFunc)(nvn::QueueBuilder *, size_t
 typedef size_t (*QueueBuilderGetQueueMemorySizeFunc)(const nvn::QueueBuilder *);
 typedef void (*QueueBuilderSetQueueMemoryFunc)(nvn::QueueBuilder *, void *, size_t);
 typedef void (*QueueBuilderSetCommandFlushThresholdFunc)(nvn::QueueBuilder *, size_t);
+typedef void (*QueueBuilderSetQueuePriorityFunc)(nvn::QueueBuilder *, nvn::QueuePriority);
+typedef nvn::QueuePriority (*QueueBuilderGetQueuePriorityFunc)(const nvn::QueueBuilder *);
 typedef const nvn::Device *(*QueueBuilderGetDeviceFunc)(const nvn::QueueBuilder *);
 typedef int (*QueueBuilderGetFlagsFunc)(const nvn::QueueBuilder *);
 typedef NVNboolean (*QueueBuilderGetCommandMemorySizeFunc)(const nvn::QueueBuilder *, int *);
@@ -1681,11 +1696,13 @@ typedef void (*WindowBuilderSetDefaultsFunc)(nvn::WindowBuilder *);
 typedef void (*WindowBuilderSetNativeWindowFunc)(nvn::WindowBuilder *, NVNnativeWindow);
 typedef void (*WindowBuilderSetTexturesFunc)(nvn::WindowBuilder *, int, nvn::Texture *const *);
 typedef void (*WindowBuilderSetPresentIntervalFunc)(nvn::WindowBuilder *, int);
+typedef void (*WindowBuilderSetNumActiveTexturesFunc)(nvn::WindowBuilder *, int);
 typedef const nvn::Device *(*WindowBuilderGetDeviceFunc)(const nvn::WindowBuilder *);
 typedef int (*WindowBuilderGetNumTexturesFunc)(const nvn::WindowBuilder *);
 typedef const nvn::Texture *(*WindowBuilderGetTextureFunc)(const nvn::WindowBuilder *, int);
 typedef NVNnativeWindow (*WindowBuilderGetNativeWindowFunc)(const nvn::WindowBuilder *);
 typedef int (*WindowBuilderGetPresentIntervalFunc)(const nvn::WindowBuilder *);
+typedef int (*WindowBuilderGetNumActiveTexturesFunc)(const nvn::WindowBuilder *);
 typedef NVNboolean (*WindowInitializeFunc)(nvn::Window *, const nvn::WindowBuilder *);
 typedef void (*WindowFinalizeFunc)(nvn::Window *);
 typedef void (*WindowSetDebugLabelFunc)(nvn::Window *, const char *);
@@ -1714,6 +1731,9 @@ typedef NVNnativeWindow (*WindowGetNativeWindowFunc)(const nvn::Window *);
 typedef int (*WindowGetPresentIntervalFunc)(const nvn::Window *);
 typedef void (*WindowSetPresentIntervalFunc)(nvn::Window *, int);
 typedef void (*WindowGetCropFunc)(const nvn::Window *, nvn::Rectangle *);
+typedef void (*WindowSetNumActiveTexturesFunc)(nvn::Window *, int);
+typedef int (*WindowGetNumActiveTexturesFunc)(const nvn::Window *);
+typedef int (*WindowGetNumTexturesFunc)(const nvn::Window *);
 typedef void (*ProgramSetDebugLabelFunc)(nvn::Program *, const char *);
 typedef const nvn::Device *(*MemoryPoolBuilderGetDeviceFunc)(const nvn::MemoryPoolBuilder *);
 typedef void *(*MemoryPoolBuilderGetMemoryFunc)(const nvn::MemoryPoolBuilder *);
@@ -1840,6 +1860,7 @@ typedef uint32_t (*TextureBuilderGetGLTextureNameFunc)(const nvn::TextureBuilder
 typedef size_t (*TextureBuilderGetZCullStorageSizeFunc)(const nvn::TextureBuilder *);
 typedef nvn::MemoryPool *(*TextureBuilderGetMemoryPoolFunc)(const nvn::TextureBuilder *);
 typedef ptrdiff_t (*TextureBuilderGetMemoryOffsetFunc)(const nvn::TextureBuilder *);
+typedef NVNstorageClass (*TextureBuilderGetRawStorageClassFunc)(const nvn::TextureBuilder *);
 typedef void (*TextureViewSetLevelsFunc)(nvn::TextureView *, int, int);
 typedef void (*TextureViewSetFormatFunc)(nvn::TextureView *, nvn::Format::Enum);
 typedef void (*TextureViewSetSwizzleFunc)(nvn::TextureView *, nvn::TextureSwizzle::Enum, nvn::TextureSwizzle::Enum, nvn::TextureSwizzle::Enum, nvn::TextureSwizzle::Enum);
@@ -1877,6 +1898,7 @@ typedef ptrdiff_t (*TextureGetMemoryOffsetFunc)(const nvn::Texture *);
 typedef int (*TextureGetStorageSizeFunc)(const nvn::Texture *);
 typedef NVNboolean (*TextureCompareFunc)(const nvn::Texture *, const nvn::Texture *);
 typedef uint64_t (*TextureGetDebugIDFunc)(const nvn::Texture *);
+typedef NVNstorageClass (*TextureGetRawStorageClassFunc)(const nvn::Texture *);
 typedef void (*SamplerBuilderSetLodClampFunc)(nvn::SamplerBuilder *, float, float);
 struct CompareMode {  // size 0x4
     enum Enum {
@@ -2193,6 +2215,7 @@ typedef void (*CommandBufferFinalizeFunc)(nvn::CommandBuffer *);
 typedef void (*CommandBufferSetDebugLabelFunc)(nvn::CommandBuffer *, const char *);
 typedef void (*CommandBufferSetMemoryCallbackFunc)(nvn::CommandBuffer *, nvn::CommandBufferMemoryCallbackFunc);
 typedef void (*CommandBufferSetMemoryCallbackDataFunc)(nvn::CommandBuffer *, void *);
+typedef void (*CommandBufferSetCommandMemoryCallbackEnabledFunc)(nvn::CommandBuffer *, NVNboolean);
 typedef void (*CommandBufferAddCommandMemoryFunc)(nvn::CommandBuffer *, const nvn::MemoryPool *, ptrdiff_t, size_t);
 typedef void (*CommandBufferAddControlMemoryFunc)(nvn::CommandBuffer *, void *, size_t);
 typedef size_t (*CommandBufferGetCommandMemorySizeFunc)(const nvn::CommandBuffer *);
@@ -2434,13 +2457,19 @@ static_assert(sizeof(SyncWaitResult) == 0x4, "SyncWaitResult");
 
 typedef nvn::SyncWaitResult::Enum (*SyncWaitFunc)(const nvn::Sync *, uint64_t);
 typedef NVNboolean (*QueueWaitSyncFunc)(nvn::Queue *, const nvn::Sync *);
+typedef NVNboolean (*SyncInitializeFromFencedGLSyncFunc)(nvn::Sync *, nvn::Device *, const void *, nvn::SyncWaitResult *);
+typedef nvn::SyncWaitResult::Enum (*SyncCreateGLSyncFunc)(const nvn::Sync *, uint64_t *);
 typedef void (*EventBuilderSetDefaultsFunc)(nvn::EventBuilder *);
 typedef void (*EventBuilderSetStorageFunc)(nvn::EventBuilder *, const nvn::MemoryPool *, int64_t);
 typedef const nvn::MemoryPool *(*EventBuilderGetStorageFunc)(const nvn::EventBuilder *, int64_t *);
+typedef const nvn::MemoryPool *(*EventBuilderGetMemoryPoolFunc)(const nvn::EventBuilder *);
+typedef int64_t (*EventBuilderGetMemoryOffsetFunc)(const nvn::EventBuilder *);
 typedef NVNboolean (*EventInitializeFunc)(nvn::Event *, const nvn::EventBuilder *);
 typedef void (*EventFinalizeFunc)(nvn::Event *);
 typedef uint32_t (*EventGetValueFunc)(const nvn::Event *);
 typedef void (*EventSignalFunc)(nvn::Event *, nvn::EventSignalMode::Enum, uint32_t);
+typedef const nvn::MemoryPool *(*EventGetMemoryPoolFunc)(const nvn::Event *);
+typedef int64_t (*EventGetMemoryOffsetFunc)(const nvn::Event *);
 struct EventWaitMode {  // size 0x4
     enum Enum {
         EQUAL = 0,
@@ -2503,6 +2532,8 @@ extern nvn::QueueBuilderSetControlMemorySizeFunc pfncpp_nvnQueueBuilderSetContro
 extern nvn::QueueBuilderGetQueueMemorySizeFunc pfncpp_nvnQueueBuilderGetQueueMemorySize;
 extern nvn::QueueBuilderSetQueueMemoryFunc pfncpp_nvnQueueBuilderSetQueueMemory;
 extern nvn::QueueBuilderSetCommandFlushThresholdFunc pfncpp_nvnQueueBuilderSetCommandFlushThreshold;
+extern nvn::QueueBuilderSetQueuePriorityFunc pfncpp_nvnQueueBuilderSetQueuePriority;
+extern nvn::QueueBuilderGetQueuePriorityFunc pfncpp_nvnQueueBuilderGetQueuePriority;
 extern nvn::QueueBuilderGetDeviceFunc pfncpp_nvnQueueBuilderGetDevice;
 extern nvn::QueueBuilderGetFlagsFunc pfncpp_nvnQueueBuilderGetFlags;
 extern nvn::QueueBuilderGetCommandMemorySizeFunc pfncpp_nvnQueueBuilderGetCommandMemorySize;
@@ -2521,11 +2552,13 @@ extern nvn::WindowBuilderSetDefaultsFunc pfncpp_nvnWindowBuilderSetDefaults;
 extern nvn::WindowBuilderSetNativeWindowFunc pfncpp_nvnWindowBuilderSetNativeWindow;
 extern nvn::WindowBuilderSetTexturesFunc pfncpp_nvnWindowBuilderSetTextures;
 extern nvn::WindowBuilderSetPresentIntervalFunc pfncpp_nvnWindowBuilderSetPresentInterval;
+extern nvn::WindowBuilderSetNumActiveTexturesFunc pfncpp_nvnWindowBuilderSetNumActiveTextures;
 extern nvn::WindowBuilderGetDeviceFunc pfncpp_nvnWindowBuilderGetDevice;
 extern nvn::WindowBuilderGetNumTexturesFunc pfncpp_nvnWindowBuilderGetNumTextures;
 extern nvn::WindowBuilderGetTextureFunc pfncpp_nvnWindowBuilderGetTexture;
 extern nvn::WindowBuilderGetNativeWindowFunc pfncpp_nvnWindowBuilderGetNativeWindow;
 extern nvn::WindowBuilderGetPresentIntervalFunc pfncpp_nvnWindowBuilderGetPresentInterval;
+extern nvn::WindowBuilderGetNumActiveTexturesFunc pfncpp_nvnWindowBuilderGetNumActiveTextures;
 extern nvn::WindowInitializeFunc pfncpp_nvnWindowInitialize;
 extern nvn::WindowFinalizeFunc pfncpp_nvnWindowFinalize;
 extern nvn::WindowSetDebugLabelFunc pfncpp_nvnWindowSetDebugLabel;
@@ -2534,6 +2567,9 @@ extern nvn::WindowGetNativeWindowFunc pfncpp_nvnWindowGetNativeWindow;
 extern nvn::WindowGetPresentIntervalFunc pfncpp_nvnWindowGetPresentInterval;
 extern nvn::WindowSetPresentIntervalFunc pfncpp_nvnWindowSetPresentInterval;
 extern nvn::WindowGetCropFunc pfncpp_nvnWindowGetCrop;
+extern nvn::WindowSetNumActiveTexturesFunc pfncpp_nvnWindowSetNumActiveTextures;
+extern nvn::WindowGetNumActiveTexturesFunc pfncpp_nvnWindowGetNumActiveTextures;
+extern nvn::WindowGetNumTexturesFunc pfncpp_nvnWindowGetNumTextures;
 extern nvn::ProgramSetDebugLabelFunc pfncpp_nvnProgramSetDebugLabel;
 extern nvn::MemoryPoolBuilderGetDeviceFunc pfncpp_nvnMemoryPoolBuilderGetDevice;
 extern nvn::MemoryPoolBuilderGetMemoryFunc pfncpp_nvnMemoryPoolBuilderGetMemory;
@@ -2613,6 +2649,7 @@ extern nvn::TextureBuilderGetGLTextureNameFunc pfncpp_nvnTextureBuilderGetGLText
 extern nvn::TextureBuilderGetZCullStorageSizeFunc pfncpp_nvnTextureBuilderGetZCullStorageSize;
 extern nvn::TextureBuilderGetMemoryPoolFunc pfncpp_nvnTextureBuilderGetMemoryPool;
 extern nvn::TextureBuilderGetMemoryOffsetFunc pfncpp_nvnTextureBuilderGetMemoryOffset;
+extern nvn::TextureBuilderGetRawStorageClassFunc pfncpp_nvnTextureBuilderGetRawStorageClass;
 extern nvn::TextureViewSetLevelsFunc pfncpp_nvnTextureViewSetLevels;
 extern nvn::TextureViewSetFormatFunc pfncpp_nvnTextureViewSetFormat;
 extern nvn::TextureViewSetSwizzleFunc pfncpp_nvnTextureViewSetSwizzle;
@@ -2650,6 +2687,7 @@ extern nvn::TextureGetMemoryOffsetFunc pfncpp_nvnTextureGetMemoryOffset;
 extern nvn::TextureGetStorageSizeFunc pfncpp_nvnTextureGetStorageSize;
 extern nvn::TextureCompareFunc pfncpp_nvnTextureCompare;
 extern nvn::TextureGetDebugIDFunc pfncpp_nvnTextureGetDebugID;
+extern nvn::TextureGetRawStorageClassFunc pfncpp_nvnTextureGetRawStorageClass;
 extern nvn::SamplerBuilderSetLodClampFunc pfncpp_nvnSamplerBuilderSetLodClamp;
 extern nvn::SamplerBuilderSetCompareFunc pfncpp_nvnSamplerBuilderSetCompare;
 extern nvn::SamplerBuilderSetBorderColorFunc pfncpp_nvnSamplerBuilderSetBorderColor;
@@ -2747,6 +2785,7 @@ extern nvn::CommandBufferFinalizeFunc pfncpp_nvnCommandBufferFinalize;
 extern nvn::CommandBufferSetDebugLabelFunc pfncpp_nvnCommandBufferSetDebugLabel;
 extern nvn::CommandBufferSetMemoryCallbackFunc pfncpp_nvnCommandBufferSetMemoryCallback;
 extern nvn::CommandBufferSetMemoryCallbackDataFunc pfncpp_nvnCommandBufferSetMemoryCallbackData;
+extern nvn::CommandBufferSetCommandMemoryCallbackEnabledFunc pfncpp_nvnCommandBufferSetCommandMemoryCallbackEnabled;
 extern nvn::CommandBufferAddCommandMemoryFunc pfncpp_nvnCommandBufferAddCommandMemory;
 extern nvn::CommandBufferAddControlMemoryFunc pfncpp_nvnCommandBufferAddControlMemory;
 extern nvn::CommandBufferGetCommandMemorySizeFunc pfncpp_nvnCommandBufferGetCommandMemorySize;
@@ -2864,13 +2903,19 @@ extern nvn::SyncSetDebugLabelFunc pfncpp_nvnSyncSetDebugLabel;
 extern nvn::QueueFenceSyncFunc pfncpp_nvnQueueFenceSync;
 extern nvn::SyncWaitFunc pfncpp_nvnSyncWait;
 extern nvn::QueueWaitSyncFunc pfncpp_nvnQueueWaitSync;
+extern nvn::SyncInitializeFromFencedGLSyncFunc pfncpp_nvnSyncInitializeFromFencedGLSync;
+extern nvn::SyncCreateGLSyncFunc pfncpp_nvnSyncCreateGLSync;
 extern nvn::EventBuilderSetDefaultsFunc pfncpp_nvnEventBuilderSetDefaults;
 extern nvn::EventBuilderSetStorageFunc pfncpp_nvnEventBuilderSetStorage;
 extern nvn::EventBuilderGetStorageFunc pfncpp_nvnEventBuilderGetStorage;
+extern nvn::EventBuilderGetMemoryPoolFunc pfncpp_nvnEventBuilderGetMemoryPool;
+extern nvn::EventBuilderGetMemoryOffsetFunc pfncpp_nvnEventBuilderGetMemoryOffset;
 extern nvn::EventInitializeFunc pfncpp_nvnEventInitialize;
 extern nvn::EventFinalizeFunc pfncpp_nvnEventFinalize;
 extern nvn::EventGetValueFunc pfncpp_nvnEventGetValue;
 extern nvn::EventSignalFunc pfncpp_nvnEventSignal;
+extern nvn::EventGetMemoryPoolFunc pfncpp_nvnEventGetMemoryPool;
+extern nvn::EventGetMemoryOffsetFunc pfncpp_nvnEventGetMemoryOffset;
 extern nvn::CommandBufferWaitEventFunc pfncpp_nvnCommandBufferWaitEvent;
 
 

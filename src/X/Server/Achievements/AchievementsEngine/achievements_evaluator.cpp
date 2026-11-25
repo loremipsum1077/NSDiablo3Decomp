@@ -48,15 +48,15 @@ bool AchievementsEvaluator::CheckEvent(CriteriaEventId eventId, CriteriaComparan
     EventKey genericKey(eventId, 0, false);
     EventKey specificKey(eventId, eventComparand, true);
     m_currentEventType = FAIL_EVENT;
-    CheckEventMap(genericKey, m_staticData->GetFailEvents(), quantity, updateTimeSeconds, cb);
-    CheckEventMap(specificKey, m_staticData->GetFailEvents(), quantity, updateTimeSeconds, cb);
+    CheckEventMap(genericKey, m_staticData->GetFailEvents(), quantity, updateTimeSeconds, nUnk, cb);
+    CheckEventMap(specificKey, m_staticData->GetFailEvents(), quantity, updateTimeSeconds, nUnk, cb);
     m_currentEventType = START_EVENT;
-    CheckEventMap(genericKey, m_staticData->GetStartEvents(), quantity, updateTimeSeconds, cb);
-    CheckEventMap(specificKey, m_staticData->GetStartEvents(), quantity, updateTimeSeconds, cb);
+    CheckEventMap(genericKey, m_staticData->GetStartEvents(), quantity, updateTimeSeconds, nUnk, cb);
+    CheckEventMap(specificKey, m_staticData->GetStartEvents(), quantity, updateTimeSeconds, nUnk, cb);
     if (quantity != 0) {
         m_currentEventType = ADVANCE_EVENT;
-        CheckEventMap(genericKey, m_staticData->GetAdvanceEvents(), quantity, updateTimeSeconds, cb);
-        CheckEventMap(specificKey, m_staticData->GetAdvanceEvents(), quantity, updateTimeSeconds, cb);
+        CheckEventMap(genericKey, m_staticData->GetAdvanceEvents(), quantity, updateTimeSeconds, nUnk, cb);
+        CheckEventMap(specificKey, m_staticData->GetAdvanceEvents(), quantity, updateTimeSeconds, nUnk, cb);
     }
     return m_checkEventHadSideEffects;
 }
@@ -85,9 +85,9 @@ bool AchievementsEvaluator::CheckEvent(CriteriaEventId eventId, CriteriaComparan
 
 
 
-inline void AchievementsEvaluator::CheckEventMap(EventKey key, const PartitionedCriteriaEventMap & eventMap, uint64 quantity, uint64 updateTimeSeconds, const CheckEventCallback & cb) {
+inline void AchievementsEvaluator::CheckEventMap(EventKey key, const PartitionedCriteriaEventMap & eventMap, uint64 quantity, uint64 updateTimeSeconds, int32 nUnk, const CheckEventCallback & cb) {
     for (uint32 partition = 0; (1u << partition) <= m_activePartitionsMask; ++partition) {
-        if (!(m_activePartitionsMask & (1u << partition)))
+        if (!(nUnk & (1u << partition)) || !(m_activePartitionsMask & (1u << partition)))
             continue;
         if (partition >= eventMap.size())
             break;
@@ -139,7 +139,7 @@ void AchievementsEvaluator::CheckEventMap(EventKey key, const CriteriaEventMap &
             continue;
         }
         if (!cb || EvaluateModifiers(criteria, *event, cb)) {
-            CriteriaUpdateRecord criteriaUpdate;
+            CriteriaUpdateRecord criteriaUpdate(unk_0);
             criteriaUpdate.m_criteria = criteria;
             criteriaUpdate.m_updateTime = updateTimeSeconds;
             criteriaUpdate.m_quantity = quantity;
@@ -313,7 +313,7 @@ ErrorCode AchievementsEvaluator::UpdateCriteria(const CriteriaUpdateRecord & cri
     Criteria * trackedCriteria = NULL;
     m_snapshot->FindCriteria(unk_0, criteria->m_id, trackedCriteria);
     if (fromDB) {
-        DisplayInternalError(NULL, "", 329, ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 338, ERROR_INTERNAL_FATAL);
         ExitProgram(ERROR_INTERNAL_FATAL);
     }
     if (trackedCriteria) {
@@ -432,7 +432,7 @@ inline void AchievementsEvaluator::DeleteTrackedCriteria(CriteriaId id, const In
 
 void AchievementsEvaluator::FreeTrackedCriteria(const InternalCriteriaDefinition * criteria) {
     if (m_snapshot->FreeCriteria(unk_0, criteria->m_id)) {
-        CriteriaDeleteRecord tDeleteRecord;
+        CriteriaDeleteRecord tDeleteRecord(unk_0);
         tDeleteRecord.m_criteria = criteria;
         InformListeners(tDeleteRecord);
 
@@ -456,7 +456,7 @@ void AchievementsEvaluator::StartCriteria(const CriteriaUpdateRecord & criteriaU
     Criteria * trackedCriteria = NULL;
     m_snapshot->FindCriteria(unk_0, criteria->m_id, trackedCriteria);
     if (fromDB) {
-        DisplayInternalError(NULL, "", 469, ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 478, ERROR_INTERNAL_FATAL);
         ExitProgram(ERROR_INTERNAL_FATAL);
     }
     if (!trackedCriteria) {
@@ -473,7 +473,7 @@ void AchievementsEvaluator::StartCriteria(const CriteriaUpdateRecord & criteriaU
     trackedCriteria->m_deltaQuantity = 0;
     trackedCriteria->m_updateTime = criteriaUpdate.m_updateTime;
     MarkDirty(trackedCriteria, criteria);
-    CriteriaUpdateRecord newUpdate;
+    CriteriaUpdateRecord newUpdate(unk_0);
     newUpdate.m_flags = TRACKED_CRITERIA_FLAG_STARTED;
     newUpdate.m_criteria = criteria;
     newUpdate.m_startTime = trackedCriteria->m_startTime;
@@ -587,7 +587,7 @@ void AchievementsEvaluator::FailCriteria(
     if (fromDB)
     {
 
-        DisplayInternalError(NULL, "", __LINE__, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 599, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 
 
@@ -807,13 +807,13 @@ void AchievementsEvaluator::UpdateCriteriaQuantity(const CriteriaUpdateRecord & 
     trackedCriteria->m_flags &= ~TRACKED_CRITERIA_FLAG_FAILED;
     trackedCriteria->m_updateTime = criteriaUpdate.m_updateTime;
     if (fromDB) {
-        DisplayInternalError(NULL, "", 856, ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 865, ERROR_INTERNAL_FATAL);
         ExitProgram(ERROR_INTERNAL_FATAL);
     }
     BOOL preIncrementSatisfied = HasSatisfiedCriteria(trackedCriteria, criteria);
     trackedCriteria->m_deltaQuantity += criteriaUpdate.m_quantity;
     MarkDirty(trackedCriteria, criteria);
-    CriteriaUpdateRecord newUpdate;
+    CriteriaUpdateRecord newUpdate(unk_0);
     newUpdate.m_criteria = criteria;
     newUpdate.m_startTime = trackedCriteria->m_startTime;
     newUpdate.m_quantity = GetCriteriaQuantity(trackedCriteria);
@@ -1229,7 +1229,7 @@ void AchievementsEvaluator::FlushAchievements()
         m_dirtyAchievements.clear();
     }
 }
-// NON_MATCHING: 944 vs 932; empty-map path duplicates the clear()/free tail and begin() scan block is laid out later
+// NON_MATCHING: ours 972 vs 960 bytes; empty-map path duplicates the clear()/free tail and begin() scan block is laid out later
 void AchievementsEvaluator::FlushCriteria()
 {
     const CriteriaMap & criteriaMap = m_staticData->GetCriteriaMap();
@@ -1243,7 +1243,7 @@ void AchievementsEvaluator::FlushCriteria()
 
         if (m_stateListener)
         {  // Original row 1249:80 puts the addition after m_deltaQuantity.
-            CriteriaUpdateRecord criteriaUpdateRecord;
+            CriteriaUpdateRecord criteriaUpdateRecord(unk_0);
             criteriaUpdateRecord.m_criteria = criteriaMap.at(trackedCriteria->m_criteriaId);
             criteriaUpdateRecord.m_flags = trackedCriteria->m_flags;
             criteriaUpdateRecord.m_quantity = trackedCriteria->m_deltaQuantity +

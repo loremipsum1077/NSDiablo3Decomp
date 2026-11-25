@@ -169,7 +169,7 @@ void LootModifyBeforeSpawning(LootSpecifierArray & arLootSpecifiersToSpawn, cons
 int32 LootGetAffixFrequencyWeight(const AffixTableEntry * ptAffix, const LootSpecifier * ptSpecifier);
 static BOOL sAffixExcludedFromAffixes(GBID gbidAffix, LootSpecifier & tSpecifier);
 int32 ItemAffixGetNumSockets(GBID gbidItem, GBID gbidAffix);  // X/Common/Items.cpp:2474
-GBID sGetGoldGBIDFromAmount(uint32 nGoldAmount);  // out of line in 2.7.7 (0x7100894820)
+static GBID sGetGoldGBIDFromAmount(uint32 nGoldAmount);  // out of line in 2.7.7 (0x7100894820)
 SNO LootMonsterGetTreasureClass(const ActorCommonData & tACDMonster, const ACDID idACDLooter, const MonsterRarity eRarity);
 BOOL LootMonsterSupportsFirstKillTreasureClass(SNO snoMonster);
 void LootDropCatchupLoot(ActorCommonData & tACDVictim, Player * ptPlayer, uint32 dwGameEventNumber);
@@ -4236,35 +4236,35 @@ static GBID sGetItemBasedOnItem(GBID gbidBaseItem, int32 nLooteeMLvl, uint32 dwI
 
 
 
-// sGetGoldGBIDFromAmount (unnamed in the 2.7.7 functions.csv)
-GBID sGetGoldGBIDFromAmount(uint32 nGoldAmount)
+// sGetGoldGBIDFromAmount (0x7100894820): emitted among the deferred statics after LootPickGem, so static
+static GBID sGetGoldGBIDFromAmount(uint32 nGoldAmount)
 {
-    GlobalGBID eGlobalGBID;
     if (nGoldAmount > 2000)
     {
-        eGlobalGBID = GLOBALGBID_ITEM_GOLD5;
+        return GlobalGBIDGet(GLOBALGBID_ITEM_GOLD5);
     }
     else if (nGoldAmount > 500)
     {
-        eGlobalGBID = GLOBALGBID_ITEM_GOLD4;
+        return GlobalGBIDGet(GLOBALGBID_ITEM_GOLD4);
     }
     else if (nGoldAmount > 100)
     {
-        eGlobalGBID = GLOBALGBID_ITEM_GOLD3;
+        return GlobalGBIDGet(GLOBALGBID_ITEM_GOLD3);
     }
     else if (nGoldAmount > 10)
     {
-        eGlobalGBID = GLOBALGBID_ITEM_GOLD2;
+        return GlobalGBIDGet(GLOBALGBID_ITEM_GOLD2);
     }
     else if (nGoldAmount > 0)
     {
-        eGlobalGBID = GLOBALGBID_ITEM_GOLD1;
+        return GlobalGBIDGet(GLOBALGBID_ITEM_GOLD1);
     }
     else
     {
         DisplayInternalError(NULL, "", 4451, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
-    return GlobalGBIDGet(eGlobalGBID);
+
+
 }
 
 
@@ -4355,7 +4355,7 @@ ACDID LootQuickCreateItem(const GBHandle & hGB, const BOOL fAutoIdentify)
 
 
 
-// NON_MATCHING: 2.7.7 logic is in (unlockable_random_affix_properties from unk_a0, jewel_rank from sub_710050e990). 2764 vs 2652: we inline sGetGoldGBIDFromAmount (the original calls it, sub_7100894820, 7 call sites); with it out of line only register choices differ (x9/x10 in the sChooseFromItemWeightArray tail, x20/x22 in the map loop).
+// NON_MATCHING: 2 of 663 insns: register choice x9/x10 for the ptItems base in the inlined ItemsChooseLevelAppropriateItemFromBaseItem / sChooseFromItemWeightArray tail.
 ACDID LootCreateItem(
     LootSpecifier & tSpecifier,
     const WorldPlace & tPlace,
@@ -4572,7 +4572,7 @@ ACDID LootCreateItem(
     }
 
     if (!ItemHasLabel(tSpecifier.hGBItem.gbid, ITL_GOLD) &&
-        tSpecifier.nNumAffixes == 0)
+        tSpecifier.nNumAffixes == 0 && tSpecifier.unk_a0.empty())
     {
         LootDetermineInherentAffixes(tSpecifier);
         LootDetermineRandomAffixes(tSpecifier);
@@ -4588,11 +4588,11 @@ ACDID LootCreateItem(
     }
     for (blz::unordered_map<int, int>::iterator it = tSpecifier.unk_a0.begin(); it != tSpecifier.unk_a0.end(); ++it)
     {
+        int32 nAffix = it->first; int32 nUnlockRank = it->second;
         D3::Items::UnlockableRandomAffixProperties * ptProperties = tGenerator.add_unlockable_random_affix_properties();
-        ptProperties->set_affix(it->first);
-        ptProperties->set_unlock_rank(it->second);
+        ptProperties->set_affix(nAffix);
+        ptProperties->set_unlock_rank(nUnlockRank);
     }
-
 
 
     if (ItemHasLabel(tSpecifier.hGBItem.gbid, ITL_JUNK))
@@ -6637,7 +6637,7 @@ void LootGenerateGift(
 
 
 
-// NON_MATCHING: 13 of 451 insns: in the sSetupLootSpecifierForGold copy inlined at line 6298 (sConvertTrashItemsToGold) the GBHandle address / nCost registers are swapped (x24/x25) and the nGoldAmount store is scheduled after the snoActorForFlippy store; the other three inlined copies match. Tried flRoll compare order; helper on DWARF lines 3642-3651 (no change). Register choice only.
+// NON_MATCHING: 8 of 414 insns: in the sSetupLootSpecifierForGold copy inlined at line 6298 (sConvertTrashItemsToGold) the GBHandle address / nCost registers are swapped (x24/x25) and the nGoldAmount store is scheduled after the snoActorForFlippy store; the other inlined copies match. Tried flRoll compare order; helper on DWARF lines 3642-3651 (no change). Register choice only.
 void LootModifyBeforeSpawning(
     LootSpecifierArray & arLootSpecifiersToSpawn,
     const ActorCommonData & tACDLootee,

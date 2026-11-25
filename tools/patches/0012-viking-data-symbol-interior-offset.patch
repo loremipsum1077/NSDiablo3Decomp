@@ -1,0 +1,16 @@
+diff --git a/viking/src/checks.rs b/viking/src/checks.rs
+index c7029cd..d0969a7 100644
+--- a/viking/src/checks.rs
++++ b/viking/src/checks.rs
+@@ -862,7 +862,10 @@ impl<'a, 'functions, 'orig_elf, 'decomp_elf>
+         symbol: &DataSymbol,
+     ) -> Option<MismatchCause> {
+         let decomp_symbol = self.decomp_symtab.get(symbol.name.as_str())?;
+-        let expected = decomp_symbol.st_value;
++        // A reference into the middle of a known data symbol (e.g. a field of a global
++        // struct folded into the ADRP/ADD pair) must point at the same offset inside the
++        // decomp symbol. orig_addr is within [symbol.addr, symbol.addr + symbol.size).
++        let expected = decomp_symbol.st_value + (orig_addr - symbol.addr);
+ 
+         if decomp_addr == expected {
+             None

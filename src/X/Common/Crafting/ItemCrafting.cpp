@@ -387,7 +387,7 @@ void CrafterSavedData::ImportNoLogs(const D3::ItemCrafting::CrafterSavedData & t
 
 
 
-// NON_MATCHING: 848 vs 944 bytes; silent/non-silent branches collapse because existing CrafterTransmogData::ImportInternal ignores bSilent; retained original wrapper calls without artificial flag use.
+// NON_MATCHING: 1096 vs 1172 bytes; silent/non-silent branches collapse because existing CrafterTransmogData::ImportInternal ignores bSilent; retained original wrapper calls without artificial flag use.
 void CrafterSavedData::ImportInternal(
     const D3::ItemCrafting::CrafterSavedData & tData,
     const D3::Account::SavedDefinition * ptAccountData,
@@ -878,9 +878,9 @@ BOOL ItemCrafting_TransmuteIsValidIngredientInput(
             return TRUE;
         return FALSE;
     }
-
-
-
+    if (tIngredient.unk_0c != -1 && tIngredient.unk_0c > ItemGetAncientRank(*tInput.ptACDItem))  // 2.7.7: minimum ancient rank
+        return FALSE;
+    if (tIngredient.unk_10 != -1 && tIngredient.unk_10 != ItemGetAncientRank(*tInput.ptACDItem)) return FALSE;  // 2.7.7: exact ancient rank
     GBID gbidItem = tInput.ptACDItem->hGB.gbid;
 
     switch (tIngredient.eType)
@@ -936,7 +936,7 @@ BOOL ItemCrafting_TransmuteIsValidIngredientInput(
 
 
     case TRIT_UPGRADED_GEM_OF_EASE:
-        if (gbidItem == GlobalGBIDGet(GLOBALGBID_ITEM_GEM_OF_EASE))
+        if (gbidItem == GlobalGBIDGet(GLOBALGBID_ITEM_GEM_OF_EASE) || gbidItem == GlobalGBIDGet(GLOBALGBID_UNK_30))
         {
             const GameBalanceDefinition * pdefGB;
             ItemDefinition * ptItemDef = (ItemDefinition *)GBLockR(tInput.ptACDItem->hGB, pdefGB, TRUE);
@@ -1031,12 +1031,12 @@ BOOL ItemCrafting_TransmuteIsValidIngredientInput(
             gbidItem == GlobalGBIDGet(GLOBALGBID_ITEM_BLACKROCK_LEDGER_6))
             return TRUE;
         break;
+    case 19:  // 2.7.7 TransmuteRecipeIngredientType past TRIT_BLACKROCK_PAGE (17 and 18 reject; no names recovered)
+        if (gbidItem == GlobalGBIDGet(GLOBALGBID_UNK_65) && GameGetActiveGameCommonData().tGameSyncedData.nMonsterLevel == 70) return TRUE;
+        break;
     }
-
-
     // Inferred shared rejection return from original out-of-range and failed ingredient branches.
     return FALSE;
-
 
 }
 
@@ -1103,7 +1103,7 @@ BOOL ItemCrafting_TransmuteEvaluate(
                             // Inferred match flag and exit from the original shared success branch.
                             bGBIDMatches = TRUE; break;
                         }
-                        else if (ptInput->ptACDItem && ptInput->ptACDItem->hGB.gbid == arIngredients[j].nTypeValue)
+                        else if (ptInput->ptACDItem && ptInput->ptACDItem->hGB.gbid == arIngredients[j].nTypeValue && (arIngredients[j].unk_0c == -1 || arIngredients[j].unk_0c <= ItemGetAncientRank(*ptInput->ptACDItem)) && (arIngredients[j].unk_10 == -1 || arIngredients[j].unk_10 == ItemGetAncientRank(*ptInput->ptACDItem)))
                         {
                             // Inferred match flag and exit from the original shared success branch.
                             bGBIDMatches = TRUE; break;
