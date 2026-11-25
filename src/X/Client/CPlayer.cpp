@@ -1438,7 +1438,7 @@ BOOL CPlayerIsValid(const Player * ptPlayer)
 
 
 
-
+// NON_MATCHING: same 2.7.7 logic (stop at the first trickle entry owned by the player); the trickle-list loop allocates x8/x9 the other way round
 BOOL CPlayerIsEngagedWithRare(const Player * ptPlayer)
 {
 
@@ -1456,14 +1456,14 @@ BOOL CPlayerIsEngagedWithRare(const Player * ptPlayer)
     else
     {
         ClientTrickleList & listTrickle = CTrickleGetList();
-
-        for (POS posTrickle = listTrickle.GetHeadPosition(); posTrickle; )
+        BOOL bFound = FALSE;
+        for (POS posTrickle = listTrickle.GetHeadPosition(); posTrickle && !bFound; )
         {
             const ClientTrickleEntry & tTrickleEntry = listTrickle.GetNext(posTrickle);
             if (tTrickleEntry.nPlayerIndexOwner == ptPlayer->nPlayerIndex)
             {
                 uEngagedTime = tTrickleEntry.uEngagedWithRareTime;
-                break;
+                bFound = TRUE;
             }
         }
     }
@@ -1473,7 +1473,7 @@ BOOL CPlayerIsEngagedWithRare(const Player * ptPlayer)
 
 
 
-
+// NON_MATCHING: same 2.7.7 logic (stop at the first trickle entry owned by the player); the trickle-list loop allocates x8/x9 the other way round
 BOOL CPlayerIsEngagedWithTreasureGoblin(const Player * ptPlayer)
 {
 
@@ -1491,14 +1491,14 @@ BOOL CPlayerIsEngagedWithTreasureGoblin(const Player * ptPlayer)
     else
     {
         ClientTrickleList & listTrickle = CTrickleGetList();
-
-        for (POS posTrickle = listTrickle.GetHeadPosition(); posTrickle; )
+        BOOL bFound = FALSE;
+        for (POS posTrickle = listTrickle.GetHeadPosition(); posTrickle && !bFound; )
         {
             const ClientTrickleEntry & tTrickleEntry = listTrickle.GetNext(posTrickle);
             if (tTrickleEntry.nPlayerIndexOwner == ptPlayer->nPlayerIndex)
             {
                 uEngagedTime = tTrickleEntry.uEngagedWithGoblinTime;
-                break;
+                bFound = TRUE;
             }
         }
     }

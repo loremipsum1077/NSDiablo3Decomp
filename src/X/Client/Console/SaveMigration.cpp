@@ -82,7 +82,7 @@ struct SeasonMigrationData {  // AccountMigration.h:68
 };
 BOOL SeasonMigratePartition(SeasonMigrationData & tData);
 } }
-namespace Console { namespace Online { BOOL IsSeasonsInitialized(); Blizzard::Time::Timestamp GetNetworkTimestamp(); void LinkedAccountsSearch(int32 nUserIndex, LinkedAccountsSearchCallback pfnCallback);
+namespace Console { namespace Online { BOOL IsSeasonsInitialized(); Blizzard::Time::Timestamp GetNetworkTimestamp();
 void StorageFindUserFile(int32 nUserIndex, const char * szContext, const char * szFilename, StorageFindUserFileCallback pfnCallback, bdUserAccountID tOwner);
 void StorageGetUserFile(int32 nUserIndex, const char * szContext, const bdContextUserStorageFileInfo & tFileInfo, StorageGetFileCallback pfnCallback); } }
 namespace Console { namespace GamerProfile { enum ImportSaveResult { IMPORT_SAVE_FAILED, IMPORT_SAVE_FAILED_NO_STORAGE, IMPORT_SAVE_FAILED_CORRUPT, IMPORT_SAVE_SUCCESS }; typedef OnlineService::Callback<void (ImportSaveResult)> ImportSaveCallback; void ImportSave(int32 nUserIdx, D3::Console::MigrationData * ptMigrationData, BOOL bDestructive, ImportSaveCallback pfnCallback); } }
@@ -92,7 +92,7 @@ namespace Console {
 namespace SaveMigration {
 enum Status { SAVE_MIGRATION_STATUS_LOADING, SAVE_MIGRATION_STATUS_UPLOADING, SAVE_MIGRATION_STATUS_DOWNLOADING, SAVE_MIGRATION_STATUS_SAVING, SAVE_MIGRATION_STATUS_FINISHED };
 void SaveMigrationUpdateStatus(int32 nUserIndex, Status eStatus);
-void sOnLinkedAccountsRetrieved(int32 nUserIndex, SaveMigrationCallback pfnCallback, Online::LinkedAccountsResult eResult, const bdLinkedAccountsResult & tResult);
+
 bool PerformSeasonMigration(int32 nUserIdx);
 void sCleanupExpiredSeasonalRolloverAndChallengeItems(D3::Account::SavedDefinition & tAccountDefinition);
 void MigrateSavedItemsToSeasonRolloverCache(const D3::Items::ItemList & tItems, D3::Account::AccountPartition & tDestinationPartition);
@@ -110,8 +110,8 @@ void sOnDownloadFileComplete(int32 nUserIndex, SaveMigrationCallback pfnCallback
 void sOnCrossBrandConfirmation(int32 nUserIndex, SaveMigrationCallback pfnCallback, D3::Console::MigrationData * ptMigrationData, BOOL bConfirmed, const UIID &);
 void sOnImportConfirmation(int32 nUserIndex, SaveMigrationCallback pfnCallback, D3::Console::MigrationData * ptMigrationData, BOOL bConfirmed, const UIID &);
 
-const char * BD_CROSS_PLATFORM_IMPORT_LINKED_ACCOUNT_TYPE = "x360";
-const char * BD_CROSS_PLATFORM_IMPORT_FILE_ACCOUNT_TYPE = "xbl";
+
+
 const char * STORAGE_CONTEXT = "diablo3";
 const char * STORAGE_FILENAME = "savemigration";
 
@@ -372,53 +372,53 @@ void ImportSave(int32 nUserIndex, SaveMigrationCallback pfnCallback)
     SaveMigrationUpdateStatus(nUserIndex, SAVE_MIGRATION_STATUS_DOWNLOADING);
     s_bInProgress = TRUE;
 
-    Online::LinkedAccountsSearch(nUserIndex, OnlineService::internal::function_binder_4<void, int32, SaveMigrationCallback, Online::LinkedAccountsResult, const bdLinkedAccountsResult &>::bind<&sOnLinkedAccountsRetrieved>(nUserIndex, pfnCallback));
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void sOnLinkedAccountsRetrieved(int32 nUserIndex, SaveMigrationCallback pfnCallback, Online::LinkedAccountsResult eResult, const bdLinkedAccountsResult & tResult)
-{
     s_tNewestFile = bdContextUserStorageFileInfo();
-
-    // Look for a save uploaded from a linked account on another platform first.
-    if (s_bCrossPlatformSaveMigrationEnabled)
-    {
-        for (uint32 i = 0; i < tResult.m_numLinkedAccounts; ++i)
-        {
-            bdUserAccountID tUser = tResult.m_linkedAccountsResult[i];
-            if (strcmp(tUser.m_accountType, BD_CROSS_PLATFORM_IMPORT_LINKED_ACCOUNT_TYPE) == 0)
-            {
-                tUser = bdUserAccountID(tUser.m_userID, BD_CROSS_PLATFORM_IMPORT_FILE_ACCOUNT_TYPE);
-                ++s_nFindFilesInProgress;
-                Online::StorageFindUserFile(nUserIndex, STORAGE_CONTEXT, STORAGE_FILENAME, OnlineService::internal::function_binder_4<void, int32, SaveMigrationCallback, Online::StorageResult, const bdContextUserStorageFileInfo &>::bind<&sOnFindFile>(nUserIndex, pfnCallback), tUser);
-                break;
-            }
-        }
-    }
-
     ++s_nFindFilesInProgress;
     Online::StorageFindUserFile(nUserIndex, STORAGE_CONTEXT, STORAGE_FILENAME, OnlineService::internal::function_binder_4<void, int32, SaveMigrationCallback, Online::StorageResult, const bdContextUserStorageFileInfo &>::bind<&sOnFindFile>(nUserIndex, pfnCallback), bdUserAccountID());
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1408,7 +1408,7 @@ void _Migrate_243_to_250a(D3::Console::MigrationData & tMigrationData)
     for (D3::Account::AccountPartition & tPartition : *tMigrationData.mutable_account()->mutable_partitions())
     {
         D3AccountPartition idPartition = (D3AccountPartition)tPartition.partition_id();
-        if (idPartition == ACCOUNT_PARTITION_SEASON_NORMAL || idPartition == ACCOUNT_PARTITION_SEASON_HARDCORE)
+        if (idPartition >= ACCOUNT_PARTITION_SEASON_NORMAL && idPartition <= ACCOUNT_PARTITION_UNK_5)
         {
             tPartition.CopyFrom(tCleanDefinition.partitions(0));
             tPartition.set_partition_id(idPartition);

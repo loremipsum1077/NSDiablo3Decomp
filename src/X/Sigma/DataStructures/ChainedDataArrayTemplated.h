@@ -399,10 +399,11 @@ void TChainedDataArray<TYPE, TYPEID>::ElementDelete(TYPE* lpElement, BOOL bDestr
 
 
 
-                if (wHighestUsedIndex != DATA_INDEX_INVALID) {
+                // 2.7.7: the inner test is on wIndex and the loop test on wHighestUsedIndex (PowerDelete, sActorDelete).
+                if (wIndex != DATA_INDEX_INVALID) {
                     lpElement = ElementGetFromBaseIndex(wIndex);
                 }
-            } while (wIndex != DATA_INDEX_INVALID && lpElement->id == DATAID_INVALID);
+            } while (wHighestUsedIndex != DATA_INDEX_INVALID && lpElement->id == DATAID_INVALID);
         }
 
         dwTotalCount--;

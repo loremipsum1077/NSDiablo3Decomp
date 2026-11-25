@@ -40,6 +40,15 @@ static const TypeDescriptorField GenericBlobMessage_Fields[3] = {
 ComplexTypeDescriptor TypeDescriptor_GenericBlobMessage("GenericBlobMessage", 0, GenericBlobMessage_Fields, 3, NULL, 0x80, NULL, NULL, NULL, NULL);
 const XTypeDescriptor * DT_GENERIC_BLOB_MESSAGE = &TypeDescriptor_GenericBlobMessage;
 
+static const TypeDescriptorField ChunkMessage_Fields[4] = {
+    TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(ChunkMessage, tHeader), NULL, 1),
+    TypeDescriptorField("", DT_INT, offsetof(ChunkMessage, unk_08), NULL, 1),
+    BoundedTypeDescriptorField("", DT_INT, offsetof(ChunkMessage, unk_0c), NULL, NULL, (const void *)0x1),
+    TypeDescriptorField(NULL, DT_NULL, sizeof(ChunkMessage), NULL, 0),
+};
+ComplexTypeDescriptor TypeDescriptor_ChunkMessage("ChunkMessage", 0, ChunkMessage_Fields, 4, NULL, 0x80, NULL, NULL, NULL, NULL);
+const XTypeDescriptor * DT_CHUNK_MESSAGE = &TypeDescriptor_ChunkMessage;
+
 static const TypeDescriptorField BoolDataMessage_Fields[3] = {
     TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(BoolDataMessage, tHeader), NULL, 1),
     BoundedTypeDescriptorField("", DT_INT, offsetof(BoolDataMessage, bVal), NULL, NULL, (const void *)0x1),
@@ -88,6 +97,16 @@ static const TypeDescriptorField PlayerDWordDataMessage_Fields[4] = {
 };
 ComplexTypeDescriptor TypeDescriptor_PlayerDWordDataMessage("PlayerDWordDataMessage", 0, PlayerDWordDataMessage_Fields, 4, NULL, 0x80, NULL, NULL, NULL, NULL);
 const XTypeDescriptor * DT_PLAYER_DWORD_DATA_MESSAGE = &TypeDescriptor_PlayerDWordDataMessage;
+
+static const TypeDescriptorField PlayerDWord2DataMessage_Fields[5] = {
+    TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(PlayerDWord2DataMessage, tHeader), NULL, 1),
+    TypeDescriptorField("", DT_INT, offsetof(PlayerDWord2DataMessage, unk_08), NULL, 1),
+    TypeDescriptorField("", DT_INT, offsetof(PlayerDWord2DataMessage, unk_0c), NULL, 1),
+    TypeDescriptorField("", DT_INT, offsetof(PlayerDWord2DataMessage, unk_10), NULL, 1),
+    TypeDescriptorField(NULL, DT_NULL, sizeof(PlayerDWord2DataMessage), NULL, 0),
+};
+ComplexTypeDescriptor TypeDescriptor_PlayerDWord2DataMessage("PlayerDWord2DataMessage", 0, PlayerDWord2DataMessage_Fields, 5, NULL, 0x80, NULL, NULL, NULL, NULL);
+const XTypeDescriptor * DT_PLAYER_DWORD2_DATA_MESSAGE = &TypeDescriptor_PlayerDWord2DataMessage;
 
 static const TypeDescriptorField IntDataMessage_Fields[3] = {
     TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(IntDataMessage, tHeader), NULL, 1),
@@ -751,7 +770,7 @@ static const TypeDescriptorField ACDChangeGBHandleMessage_Fields[4] = {
 ComplexTypeDescriptor TypeDescriptor_ACDChangeGBHandleMessage("ACDChangeGBHandleMessage", 0, ACDChangeGBHandleMessage_Fields, 4, NULL, 0x80, NULL, NULL, NULL, NULL);
 const XTypeDescriptor * DT_ACD_CHANGE_GBHANDLE_MESSAGE = &TypeDescriptor_ACDChangeGBHandleMessage;
 
-static const TypeDescriptorField TrickleMessage_Fields[25] = {
+static const TypeDescriptorField TrickleMessage_Fields[26] = {
     TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(TrickleMessage, tHeader), NULL, 1),
     TypeDescriptorField("", DT_INT, offsetof(TrickleMessage, ann), NULL, 1),
     TypeDescriptorField("", DT_SNO, offsetof(TrickleMessage, snoActor), NULL, 1),
@@ -776,9 +795,10 @@ static const TypeDescriptorField TrickleMessage_Fields[25] = {
     OptionalBoundedTypeDescriptorField("", DT_INT, offsetof(TrickleMessage, bBrawling), NULL, NULL, (const void *)0x1),
     OptionalBoundedTypeDescriptorField("", DT_INT, offsetof(TrickleMessage, bInUberFight), NULL, NULL, (const void *)0x1),
     OptionalTypeDescriptorField("", DT_INT, offsetof(TrickleMessage, gbidPortraitFrame), NULL, 1),
+    OptionalBoundedTypeDescriptorField("", DT_INT, offsetof(TrickleMessage, unk_b4), NULL, NULL, (const void *)0x1),
     TypeDescriptorField(NULL, DT_NULL, sizeof(TrickleMessage), NULL, 0),
 };
-ComplexTypeDescriptor TypeDescriptor_TrickleMessage("TrickleMessage", 0, TrickleMessage_Fields, 25, NULL, 0x80, NULL, NULL, NULL, NULL);
+ComplexTypeDescriptor TypeDescriptor_TrickleMessage("TrickleMessage", 0, TrickleMessage_Fields, 26, NULL, 0x80, NULL, NULL, NULL, NULL);
 const XTypeDescriptor * DT_TRICKLE_MESSAGE = &TypeDescriptor_TrickleMessage;
 
 static const TypeDescriptorField PlayerIntValMessage_Fields[4] = {
@@ -1136,6 +1156,15 @@ static const TypeDescriptorField EncounterInviteStateMessage_Fields[5] = {
 ComplexTypeDescriptor TypeDescriptor_EncounterInviteStateMessage("EncounterInviteStateMessage", 0, EncounterInviteStateMessage_Fields, 5, NULL, 0x80, NULL, NULL, NULL, NULL);
 const XTypeDescriptor * DT_BOSS_ENCOUNTER_INVITE_MESSAGE = &TypeDescriptor_EncounterInviteStateMessage;
 
+static const TypeDescriptorField RiftStartAcceptedMessage_Fields[4] = {
+    TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(RiftStartAcceptedMessage, tHeader), NULL, 1),
+    TypeDescriptorField("", DT_INT, offsetof(RiftStartAcceptedMessage, unk_08), NULL, 1),
+    BoundedTypeDescriptorField("", DT_INT, offsetof(RiftStartAcceptedMessage, unk_0c), NULL, NULL, (const void *)0x1),
+    TypeDescriptorField(NULL, DT_NULL, sizeof(RiftStartAcceptedMessage), NULL, 0),
+};
+ComplexTypeDescriptor TypeDescriptor_RiftStartAcceptedMessage("RiftStartAcceptedMessage", 0, RiftStartAcceptedMessage_Fields, 4, NULL, 0x80, NULL, NULL, NULL, NULL);
+const XTypeDescriptor * DT_RIFT_START_ACCEPTED_MESSAGE = &TypeDescriptor_RiftStartAcceptedMessage;
+
 static const TypeDescriptorField RiftJoinMessage_Fields[6] = {
     TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(RiftJoinMessage, tHeader), NULL, 1),
     TypeDescriptorField("", DT_INT, offsetof(RiftJoinMessage, nPlayerIndex), NULL, 1),
@@ -1483,6 +1512,24 @@ static const TypeDescriptorField DungeonFinderClosingMessage_Fields[4] = {
 };
 ComplexTypeDescriptor TypeDescriptor_DungeonFinderClosingMessage("DungeonFinderClosingMessage", 0, DungeonFinderClosingMessage_Fields, 4, NULL, 0x80, NULL, NULL, NULL, NULL);
 const XTypeDescriptor * DT_DUNGEON_FINDER_CLOSING_MESSAGE = &TypeDescriptor_DungeonFinderClosingMessage;
+
+static const TypeDescriptorField UberBosssClosingMessage_Fields[4] = {
+    TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(UberBosssClosingMessage, tHeader), NULL, 1),
+    TypeDescriptorField("", DT_INT, offsetof(UberBosssClosingMessage, unk_08), NULL, 1),
+    TypeDescriptorField("", DT_INT, offsetof(UberBosssClosingMessage, unk_0c), NULL, 1),
+    TypeDescriptorField(NULL, DT_NULL, sizeof(UberBosssClosingMessage), NULL, 0),
+};
+ComplexTypeDescriptor TypeDescriptor_UberBosssClosingMessage("UberBosssClosingMessage", 0, UberBosssClosingMessage_Fields, 4, NULL, 0x80, NULL, NULL, NULL, NULL);
+const XTypeDescriptor * DT_UBER_BOSSS_CLOSING_MESSAGE = &TypeDescriptor_UberBosssClosingMessage;
+
+static const TypeDescriptorField WarningCountdownNotificationMessage_Fields[4] = {
+    TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(WarningCountdownNotificationMessage, tHeader), NULL, 1),
+    TypeDescriptorField("", DT_INT, offsetof(WarningCountdownNotificationMessage, unk_08), NULL, 1),
+    CharArrayTypeDescriptorField("", offsetof(WarningCountdownNotificationMessage, unk_0c), "", 1, sizeof(WarningCountdownNotificationMessage::unk_0c), -1),
+    TypeDescriptorField(NULL, DT_NULL, sizeof(WarningCountdownNotificationMessage), NULL, 0),
+};
+ComplexTypeDescriptor TypeDescriptor_WarningCountdownNotificationMessage("WarningCountdownNotificationMessage", 0, WarningCountdownNotificationMessage_Fields, 4, NULL, 0x80, NULL, NULL, NULL, NULL);
+const XTypeDescriptor * DT_WARNING_COUNTDOWN_NOTIFICATION_MESSAGE = &TypeDescriptor_WarningCountdownNotificationMessage;
 
 static const TypeDescriptorField BlizzconEndScreenMessage_Fields[4] = {
     TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(BlizzconEndScreenMessage, tHeader), NULL, 1),

@@ -305,13 +305,14 @@ public:
     int32 m_nFontSize;  // 0x3b0
     int32 m_nFontSizeFallback;  // 0x3b4
     BOOL m_nFontBoostSize;  // 0x3b8
-    float m_flAdvanceScalar;  // 0x3bc
-    float m_wrapLineScalar;  // 0x3c0
-    uint32 m_uTCFlags;  // 0x3c4
-    int32 m_nLinesBeforeTruncation;  // 0x3c8
-    Rect2D m_rectTextPaddingUIC;  // 0x3cc
-    int32 m_nControllerIndexOverride;  // 0x3dc
-    int32 m_nControllerType;  // 0x3e0
+    uint8 unk_3bc;  // 0x3bc (2.7.7: sInit clears it with strb after m_nFontBoostSize)
+    float m_flAdvanceScalar;  // 0x3c0
+    float m_wrapLineScalar;  // 0x3c4
+    uint32 m_uTCFlags;  // 0x3c8
+    int32 m_nLinesBeforeTruncation;  // 0x3cc
+    Rect2D m_rectTextPaddingUIC;  // 0x3d0
+    int32 m_nControllerIndexOverride;  // 0x3e0
+    int32 m_nControllerType;  // 0x3e4
     void sApplyFormattingForCurrentDimensions();
     void sTruncateIfNecessary();
     void sGetLineOfText(LPCSTR uszLineStart, const int32 nBulletIndentCount, int32 & nBytes, float & flCurrentLineWidthUIC);

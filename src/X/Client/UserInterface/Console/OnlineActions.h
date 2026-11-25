@@ -22,6 +22,7 @@ enum {
     HERO_VALIDATION_SEASON_OVER = 7,
     HERO_VALIDATION_SEASONS_NOT_READY = 8,
     HERO_VALIDATION_MISSING_NECROMANCER_LICENSE = 9,
+    HERO_VALIDATION_UNK_10 = 10,  // 2.7.7: returned first by ValidateHeroForPartyMember (solo-hero check); message "ConsoleErrors:HeroValidationSoloHeroMustBeSolo[Detail]"
 };
 
 typedef int32 HeroValidationError;

@@ -297,7 +297,8 @@ struct SGameGlobals {  // size 0x2278
     mapPendingCCMessages tMapPendingCCMessages;  // 0x2098
     uint64 tAchievementTime;  // 0x2118 (OnlineService::Timestamp)
     ACDID idGreedPortal;  // 0x2120
-    uint32 unk_2124;  /* 0x2124 */  uint32 unk_2128;  /* 0x2128 */  uint32 unk_212c;  /* 0x212c */  uint32 unk_2130;  /* 0x2130 */  uint32 unk_2134;  // 0x2134 (2.7.7: 0x14 new bytes; flBlizzconRiftTier1RewardDropChance is stored at 0x2138 by SGameInitializeGame)
+    uint32 unk_2124;  // 0x2124 (2.7.7: 0x14 new bytes up to 0x2138; flBlizzconRiftTier1RewardDropChance is stored at 0x2138 by SGameInitializeGame)
+    ACDID unk_2128[4];  // 0x2128 (2.7.7: GizmoOperate stores an ACDID at the index sub_71007d4b90 returns; sub_71007d4840 and UberBossClosingTriggered read it; 4 = room before 0x2138)
     float flBlizzconRiftTier1RewardDropChance;  // 0x2138
     float flBlizzconRiftTier2RewardDropChance;  // 0x213c
     UpdateData tCommunityBuffsUpdateData;  // 0x2140
@@ -312,6 +313,8 @@ static_assert(sizeof(SGameGlobals) == 0x2278, "SGameGlobals");
 static_assert(__builtin_offsetof(SGameGlobals, dwActivatedWaypoints) == 0x139c, "SGameGlobals::dwActivatedWaypoints");
 static_assert(__builtin_offsetof(SGameGlobals, uDatabaseSerializeToken) == 0x13c8, "SGameGlobals::uDatabaseSerializeToken");
 static_assert(__builtin_offsetof(SGameGlobals, nLogHistoryCurrentIndex) == 0x1780, "SGameGlobals::nLogHistoryCurrentIndex");
+static_assert(__builtin_offsetof(SGameGlobals, unk_2128) == 0x2128, "SGameGlobals::unk_2128");
+static_assert(__builtin_offsetof(SGameGlobals, flBlizzconRiftTier1RewardDropChance) == 0x2138, "SGameGlobals::flBlizzconRiftTier1RewardDropChance");
 
 BOOL SGameIsValid();  // SGame.cpp:4187
 SGameGlobals & SGameGlobalsGet();  // SGame.cpp:4196

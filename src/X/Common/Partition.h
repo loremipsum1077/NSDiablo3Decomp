@@ -11,15 +11,21 @@ enum D3AccountPartition {
     ACCOUNT_PARTITION_HARDCORE = 1,
     ACCOUNT_PARTITION_SEASON_NORMAL = 2,
     ACCOUNT_PARTITION_SEASON_HARDCORE = 3,
-    ACCOUNT_PARTITION_COUNT = 4,
+    ACCOUNT_PARTITION_UNK_4 = 4,  // 2.7.7: seasonal partition selected by GetPartition's third BOOL (non-hardcore)
+    ACCOUNT_PARTITION_UNK_5 = 5,  // 2.7.7: same, hardcore
+    ACCOUNT_PARTITION_COUNT = 6,
     ACCOUNT_PARTITION_FIRST = 0,
 };
 
 // line 64. Body not in the DWARF; reconstructed from its inlined copies (PresenceManager.cpp UpdateUser).
-inline D3AccountPartition GetPartition(BOOL isHardcore, BOOL isSeasonal)
+// 2.7.7 adds a third BOOL (UIUtils GetParagonLevel/GetParagonExperience pass it in w3): when it and
+// isSeasonal are set the result is 5/4. Callers that do not have it yet pass FALSE through the default.
+inline D3AccountPartition GetPartition(BOOL isHardcore, BOOL isSeasonal, BOOL bUnk = FALSE)
 {
     if (isSeasonal)
     {
+        if (bUnk)
+            return isHardcore ? ACCOUNT_PARTITION_UNK_5 : ACCOUNT_PARTITION_UNK_4;
         return isHardcore ? ACCOUNT_PARTITION_SEASON_HARDCORE : ACCOUNT_PARTITION_SEASON_NORMAL;
     }
     return isHardcore ? ACCOUNT_PARTITION_HARDCORE : ACCOUNT_PARTITION_NORMAL;
@@ -29,7 +35,7 @@ inline D3AccountPartition GetPartition(BOOL isHardcore, BOOL isSeasonal)
 //   line    24  bool IsPartitionNormal(D3AccountPartition p)  [inlined into 1 functions]
 //   line    29  bool IsPartitionHardcore(D3AccountPartition p)  [inlined into 2 functions]
 //   line    59  bool IsPartitionSeasonal(D3AccountPartition p)  [inlined into 3 functions]
-//   line    64  D3AccountPartition GetPartition(BOOL isHardcore, BOOL isSeasonal)  [inlined into 10 functions]
+//   line    64  D3AccountPartition GetPartition(BOOL isHardcore, BOOL isSeasonal, BOOL)  [inlined into 10 functions]
 
 // line 24. Body not in the DWARF; moved from its owner-local copy in AccountMigration.cpp
 // (Migrate_113_114 inlines it from Partition.h:24).

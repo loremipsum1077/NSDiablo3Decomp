@@ -187,5 +187,18 @@
     "nvn_entry_points.inc": "27cd2838f7e9fa1ad2bf5f98beaa8f4e019bcddaea7a9485f829601dd22aba8f",
     "issuer_mapping.inc": "29c644a448adfefd56afb2e2ce0fbf8c1059732f41f54db4a5a3bc36b31d9929"
   },
-  "lua_evidence_sha256": "8663b7ca842eac1e2fcbc9b1e32960fda21a9d2a405ff6170e005f7509ff2687"
+  "lua_evidence_sha256": "8663b7ca842eac1e2fcbc9b1e32960fda21a9d2a405ff6170e005f7509ff2687",
+  "versions": {
+    "2.7.7": {
+      "includes": {
+        "account_attribs.inc": "6c7bb983b6f962f52a8abb365446e8d017f486c39ef6449af8c87d74957dcaa9",
+        "account_wide_attribs.inc": "ae6890ac94c5f87a50a6b1fa5b71db4a75fd6b0b94993b9f141152533b5cc5ba",
+        "actor_particles.inc": "bbc69d598fa437b70a93240b2775b1dab1878b055b5b56d3a158b267ee5aa7ab",
+        "hero_attribs.inc": "44011ec469967b4036cdea563475df4ed4810c3cf9bae95e4e2e4769c9d433b6",
+        "lua_tables.inc": "6a18d71e9e98986a9d736f42efae10a2328987842511150eed4ef4235fad1739",
+        "partition_attribs.inc": "51a393fcc60377c6a366eec8d08be2f5b4fe0b90f5fe311ea166c978e19deb21"
+      },
+      "lua_evidence_sha256": "b35f4627f616b151a9e9c0b931950c524b15bce820a57883d566fbd0b2f0d732"
+    }
+  }
 }

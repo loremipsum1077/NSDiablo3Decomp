@@ -355,6 +355,8 @@ extern "C" void sub_7100775990(const D3::Leaderboard::PostScore & post, const Pl
     MessageSendToClient(listDestPlayers, SMSG_RIFT_POST_SCORE, tCompressed);
 }
 
+// NON_MATCHING: 2.7.7 logic (sub_7100775990 send, second post); the target keeps a 0x10-byte larger frame,
+// spills the whole hero flags word, stores the inverse of our class flag and merges the category tail.
 void SLeaderboard::PostRiftTime(
     int riftLevel,
     int millisecondsElapsed,

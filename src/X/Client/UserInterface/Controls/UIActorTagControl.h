@@ -24,8 +24,8 @@ public:
     void SetOffset(const float x, const float y) { m_offset.Set(x, y); }  // line 73
 private:
     void sInit();
-    ACDID m_idACD;  // 0x3e4
-    uint32 m_dwExpirationTime;  // 0x3e8
-    Vector2D m_offset;  // 0x3ec
+    ACDID m_idACD;  // 0x3e8
+    uint32 m_dwExpirationTime;  // 0x3ec
+    Vector2D m_offset;  // 0x3f0
 };
 static_assert(sizeof(UIActorTag) == 0x3f8, "UIActorTag");

@@ -471,6 +471,24 @@ private:
 };
 static_assert(sizeof(DetailsInvScreen) == 0x3d0, "DetailsInvScreen");
 
+// 2.7.7 Kanai's powers panel (unnamed 0x30-byte class; same definition as in UISkillsConsole.cpp).
+// sub_710019b630 (this, parent UIID) builds the four owned 0xd8-byte children (sub_710019aec0);
+// the inline destructor frees them in reverse order.
+struct Unk19aec0 { uint8 unk_00[0xd8]; };
+struct Unk19b630 {  // size 0x30
+    ~Unk19b630()
+    {
+        delete unk_00[3];
+        delete unk_00[2];
+        delete unk_00[1];
+        delete unk_00[0];
+    }
+    Unk19aec0 * unk_00[4];  // 0x00
+    uint64 unk_20;  // 0x20
+    UIID unk_28;  // 0x28
+};
+static_assert(sizeof(Unk19b630) == 0x30, "Unk19b630");
+
 class DetailsSkillsScreen {  // size 0xc8
     enum ButtonActions {
         ACTION_BACK = 0,
@@ -510,11 +528,10 @@ public:
     ::Console::RingWrapper m_tRingUI;  // 0x00
     ::Console::AnalogStickInputFilter m_tRingStickInputFilter;  // 0x68
     BOOL m_fCurrentlyOpening;  // 0x90
-    // 2.7.7: a 0x30-byte object of an unnamed class (four heap sub-views, then the parent UIID),
-    // built by sub_710019b630 for UIWND_EQUIPMENT_MANAGER_CONSOLE_SKILLS_KANAIS_POWERS
-    // (EquipmentManagerDetails InitializeForGame 0x71001a5f40; UISkills::Console::InitializeForGame
-    // builds another for UIWND_SKILLS_CONSOLE_KANAIS_POWERS).
-    uint64 unk_98[6];  // 0x98
+    // 2.7.7: Kanai's powers panel, built by sub_710019b630 for
+    // UIWND_EQUIPMENT_MANAGER_CONSOLE_SKILLS_KANAIS_POWERS (EquipmentManagerDetails
+    // InitializeForGame 0x71001a5f40; UISkills::Console::InitializeForGame builds another).
+    Unk19b630 unk_98;  // 0x98
 private:
     BOOL CanScrollDetails();
     void ResetDetailScrollPosition(const UIID & idScrollBox);
@@ -778,7 +795,7 @@ extern "C" void sub_710019b630(void * pThis, const UIID & idParent);
 inline DetailsSkillsScreen::DetailsSkillsScreen()
     : m_fCurrentlyOpening(FALSE)
 {
-    sub_710019b630(unk_98, UIWND_EQUIPMENT_MANAGER_CONSOLE_SKILLS_KANAIS_POWERS);
+    sub_710019b630(&unk_98, UIWND_EQUIPMENT_MANAGER_CONSOLE_SKILLS_KANAIS_POWERS);
     m_tRingStickInputFilter.AddRule(::Console::AnalogStickInputFilter::Rule::CatchAllRule);
 }
 

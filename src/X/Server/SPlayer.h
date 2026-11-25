@@ -129,17 +129,18 @@ struct SPlayerConsumables {  // size 0x18
     blz::vector<SPlayerConsumable, blz::allocator<SPlayerConsumable> > arConsumables;  // 0x00
 };
 
+struct DeliveredAchievementRewardEntry { uint64 achievement_id; /* 0x00 */ int32 set_id; /* 0x08 */ };  // size 0x10 (invented type name: 2.7.7 has no DWARF; field names from D3::Account::DeliveredAchievementReward)
 struct DeliveredRewardsSavedData {  // size 0x30
     void Export(D3::Account::DeliveredRewards & tDeliveredRewardsSavedData);
     void Import(const D3::Account::DeliveredRewards & tDeliveredRewardsSavedData);
-    void AddAchievementReward(uint64 achievement, Player * ptPlayer);
+    void AddAchievementReward(uint64 achievement, int32 set_id, Player * ptPlayer);  // 2.7.7: set_id (DeliveredAchievementReward field 2)
     void UndeliverAchievementReward(uint64 achievement);
-    bool ContainsAchievement(uint64 achievement);
+    bool ContainsAchievement(uint64 achievement, int32 set_id);
     void Clear();
     enum {
         MAX_RECENT_ACHIEVEMENTS = 25,
     };
-    blz::vector<unsigned long, blz::allocator<unsigned long> > tAchievementRewards;  // 0x00
+    blz::vector<DeliveredAchievementRewardEntry, blz::allocator<DeliveredAchievementRewardEntry> > tAchievementRewards;  // 0x00
     blz::vector<unsigned long, blz::allocator<unsigned long> > tLegacyAchievementsToDeliver;  // 0x18
 };
 

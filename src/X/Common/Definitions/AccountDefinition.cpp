@@ -99,7 +99,7 @@ void AccountGroupDef::GetDefaultData(void * ptDefaultDef) const
 }
 
 // line 261. Rows read from the original image (0x7100e53ed4, 0x7100e53f7c, 0x7100e53fcc).
-static const SavedAttribDef cgarAccountSaveAttribsDefs[21] = {
+static const SavedAttribDef cgarAccountSaveAttribsDefs[23] = {
 #include "../generated-game-data/account_attribs.inc"
 #line 124
 };
@@ -111,7 +111,7 @@ static const SavedAttribDef cgarAccountSaveAttribsDefs_AccountWide[10] = {
 };
 
 // line 303
-static const SavedAttribDef cgarAccountSaveAttribsDefs_PartitionOnly[11] = {
+static const SavedAttribDef cgarAccountSaveAttribsDefs_PartitionOnly[13] = {
 #include "../generated-game-data/partition_attribs.inc"
 #line 153
 };
@@ -178,7 +178,7 @@ void AccountDefinition_DigestToDefaults(D3::Account::Digest & tDigest)
 {
     tDigest.set_version(gptGroupDefAccount->GetCurrentVersion(SIGMAPLATFORM_UNKNOWN));
 
-    uint32 dwFlags = 0x294;  // the flag enumerators (bits 2, 4, 7 and 9) are not recovered
+    uint32 dwFlags = 0;  // 2.7.7 stores 0 (2.6.2: 0x294, bits 2, 4, 7 and 9)
 
     tDigest.set_flags(dwFlags);
 
@@ -373,7 +373,7 @@ void AccountDefinition_ToDefaults_ForConsoleClient(D3::Account::SavedDefinition 
     tBasePartition.set_partition_id(0);
 
 
-    for (uint32 i = 1; i < 4; i++)
+    for (uint32 i = 1; i < 6; i++)  // ACCOUNT_PARTITION_COUNT (Partition.h); 2.6.2 had 4
     {
         D3::Account::AccountPartition * ptPartition = tDefinition.add_partitions();
         *ptPartition = tBasePartition;

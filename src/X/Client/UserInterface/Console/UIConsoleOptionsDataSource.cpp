@@ -41,6 +41,7 @@ namespace Console { namespace GamerProfile { void SavePrefs(); } }  // X/Client/
 void UI_SetPrimaryUIController(int32 nPrimaryController);  // X/Client/UserInterface/UI.cpp
 namespace UIControllerLayout { namespace Console { void SetOnCloseFunction(UIFunctionPtr pfnOnClose); void OpenForController(int32 nControllerIndex); } }  // UIConsoleControllerLayout.cpp
 namespace UIBattlenetLink { void SetOnCloseFunction(UIFunctionPtr pfnOnClose); void OpenForController(int32 nControllerIndex, BOOL bInFirstTimeFlow); }  // UIConsoleBattlenetLink.cpp
+namespace Console { namespace WebBrowser { BOOL NavigateTo(const CRefString & sUri, int32 nControllerIndex); } }  // X/Client/Console/WebBrowserNX64.cpp
 namespace UIOptions { namespace Console { void OnBack(const UIID & id, int32 nControllerIndex); } }  // UIConsoleOptions.cpp
 namespace UISafeZoneSettings { void SetOnCloseFunction(UIFunctionPtr pfnOnClose); void Open(const int32 nControllerIndex); }  // UIConsoleSafeZoneSettings.cpp
 namespace UIGammaAdjust { namespace Console { void SetOnCloseFunction(const UIFunctionPtr pfnOnClose); void OpenForController(int32 nControllerIndex, BOOL bInFirstTimeFlow); } }  // UIConsoleGammaAdjust.cpp
@@ -843,6 +844,12 @@ void OnAcceptSubMenuSelector(const Selection & tSelection)
 
     switch (tSelection.m_eOptionID)
     {
+    case OPTIONID_UNK_5: {
+        CRefString sUri = StringListFetch("ConsoleUI:DoNotSellInformationLink");
+        ::Console::WebBrowser::NavigateTo(sUri, UI_GetPrimaryUIController());
+        tListData.m_eCurrentMenu = SUB_MENU_SELECTOR;
+        break;
+    }
     case GAMEPLAY_TAB:
         tListData.m_ptActiveList = &tListData.m_tGameplay;
         tListData.m_eCurrentMenu = GAMEPLAY;
@@ -875,7 +882,7 @@ void OnAcceptSubMenuSelector(const Selection & tSelection)
 
 
     SoundManager::PlaySound(GlobalSNOGet(GLOBALSNO_SOUND_PANEL_GENERIC_OPEN), cgtPSODefaults);
-    if (tSelection.m_eOptionID != CONTROLS && tSelection.m_eOptionID != BATTLENET_TAB)
+    if (tSelection.m_eOptionID != CONTROLS && tSelection.m_eOptionID != BATTLENET_TAB && tSelection.m_eOptionID != OPTIONID_UNK_5)
     {
         UIConsoleListBox & tList = UI_GetConsoleListBoxFromID(tListData.m_idList);
         tListData.m_selectorData.m_nCurrentListItemIndex = 0;

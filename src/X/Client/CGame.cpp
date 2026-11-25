@@ -6787,9 +6787,9 @@ void CGameGlobals::Init() {
 
     snoLevelAreaSavePoint = -1;
     snoLevelAreaHearthPortal = -1;
+    unk_100 = -1;
     bHearthPortalIsTieredRift = FALSE;
     snoLevelAreaReturnPoint = -1;
-
     flDungeonFinderProgress = 0.0f;
     nDungeonFinderSeed = 0;
     nDungeonFinderParticipatingPlayerCount = 0;

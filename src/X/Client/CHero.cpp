@@ -2661,7 +2661,7 @@ void CHero::Synchronize(
         OnlineService::Achievements& tAchievements = *sgtAppGlobals.ptAchievements;
         Console::ClientAchievementsInterface* ptAchievementsInterface = sgtAppGlobals.ptAchievementsInterface;
 
-        OnlineService::AchievementId idSeasonJourneyRank = tAchievements.GetHighestEarnedSeasonJourneyAchievement(nCurrentSeason,
+        OnlineService::AchievementId idSeasonJourneyRank = tAchievements.GetHighestEarnedSeasonJourneyAchievement(sub_71004c8e20() != 0, nCurrentSeason,
 
             Console::ClientAchievementsInterface::UserIndexToGameAccount(nControllerIndex), ptAchievementsInterface);
 

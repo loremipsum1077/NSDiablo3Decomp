@@ -152,8 +152,8 @@ void WhatsNewSeasonData::Init()
     m_ptAchievements = sgtAppGlobals.ptAchievements;
     m_idItemsList.clear();
     m_idCosmeticsList.clear();
-    m_ptAchievements->GetAllRewardsOfTypes(1 << OnlineService::REWARD_TYPE_ITEM, m_idItemsList, m_nSeasonNum);
-    m_ptAchievements->GetAllRewardsOfTypes(1 << OnlineService::REWARD_TYPE_COSMETIC, m_idCosmeticsList, m_nSeasonNum);
+    m_ptAchievements->GetAllRewardsOfTypes(1 << OnlineService::REWARD_TYPE_ITEM, m_idItemsList, m_nSeasonNum, false);
+    m_ptAchievements->GetAllRewardsOfTypes(1 << OnlineService::REWARD_TYPE_COSMETIC, m_idCosmeticsList, m_nSeasonNum, true);
     m_tVisualEquipment.Init();
 }
 
@@ -860,12 +860,12 @@ void PopulateCriteriaElement(
         {
 
 
-            if (!ptAchievementsInterface->FindCriteriaRecord(sgtWhatsNewSeasonData.idPlayer, idCriteria, tCritRecord))
+            if (!ptAchievementsInterface->FindCriteriaRecord(sgtWhatsNewSeasonData.idPlayer, sub_71000b4be0(), idCriteria, tCritRecord))
             {
                 if (ptAchievementDef->m_nMinRequiredCriteria == 0)
                 {
                     OnlineService::AchievementRecord tRecord;
-                    fEarned = ptAchievementsInterface->FindAwardedAchievement(sgtWhatsNewSeasonData.idPlayer, ptCritDef->m_parentAchievementId, tRecord);
+                    fEarned = ptAchievementsInterface->FindAwardedAchievement(sgtWhatsNewSeasonData.idPlayer, sub_71000b4be0(), ptCritDef->m_parentAchievementId, tRecord);
                 }
             }
             else
@@ -984,7 +984,7 @@ void sUpdateConquestDetails(
     OnlineService::AchievementRecord tRecord;
     CRefString sEarnedText;
     OnlineService::AchievementsInterface * ptAchievementsInterface = sgtAppGlobals.ptAchievementsInterface;
-    if (ptAchievementsInterface && ptAchievementsInterface->FindAwardedAchievement(sgtWhatsNewSeasonData.idPlayer, idAchievement, tRecord))
+    if (ptAchievementsInterface && ptAchievementsInterface->FindAwardedAchievement(sgtWhatsNewSeasonData.idPlayer, sub_71000b4be0(), idAchievement, tRecord))
     {
         sEarnedText = LocalizedSprintf(
             StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_BNET_TOOLTIPS), "AchievementTooltipEarned").str(),
@@ -1014,7 +1014,7 @@ void sUpdateConquestDetails(
     OnlineService::CriteriaQuantity nEarned = 0, nTotal = 0;
     uint32 dwFlags = GetCriteriaFlags(*ptDefinition);
 
-    OnlineService::AchievementStatus eStatus = OnlineService::GetAchievementStatus(::Console::ClientAchievementsInterface::UserIndexToGameAccount(sgtWhatsNewSeasonData.m_nControllerIndex), idAchievement, &nEarned, &nTotal);
+    OnlineService::AchievementStatus eStatus = OnlineService::GetAchievementStatus(::Console::ClientAchievementsInterface::UserIndexToGameAccount(sgtWhatsNewSeasonData.m_nControllerIndex), idAchievement, sub_71000b4be0(), &nEarned, &nTotal);
 
 
     UI_GetWindowFromID(UIWND_CONSOLE_WHATS_NEW_SEASON_CONQUEST_PROGRESS).SetActive(dwFlags & (1 << PROGRESS_BAR));

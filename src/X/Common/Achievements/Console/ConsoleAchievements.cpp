@@ -11,13 +11,13 @@
 #include "../../../../Contrib/Contrib/blz/include/blz/algo_seq_const.h"
 #include "../../Protobuf/GameMessage.pb.h"
 #include "../../../Client/Console/GamerProfile.h"
-
+extern "C" void sub_7100468fe0(const OnlineService::AchievementsEngine::AchievementsStaticData *, D3::Achievements::Snapshot *);
 namespace Console {
 
 // ConsoleAchievementsShared.cpp (no header in this checkout).
 namespace AchievementsShared {
-void SendAchievementAwardedMessage(const OnlineService::GameAccountHandle & gameAccount, const OnlineService::AchievementId * aidAchievements, size_t uNumAchievements);
-void SendAchievementCriteriaUpdate(const OnlineService::GameAccountHandle & gameAccount, const OnlineService::AchievementsEngine::CriteriaUpdateRecord * ptUpdates, size_t uNumUpdates);
+void SendAchievementAwardedMessage(const OnlineService::GameAccountHandle & gameAccount, uint32 uUnk, const blz::pair<uint32, unsigned long> * ptAchievements, size_t uNumAchievements);
+void SendAchievementCriteriaUpdate(const OnlineService::GameAccountHandle & gameAccount, uint32 uUnk, const OnlineService::AchievementsEngine::CriteriaUpdateRecord * ptUpdates, size_t uNumUpdates);
 }
 
 static const uint32 TICKS_BETWEEN_FLUSHES = 300;  // line 40
@@ -160,8 +160,8 @@ void Achievements::DestroyAchievementsInterface(OnlineService::AchievementsInter
 
 inline ServerAchievementsInterface::PlayerAchievementsRecord::PlayerAchievementsRecord(const OnlineService::AchievementsEngine::AchievementsStaticData * ptStaticData, const OnlineService::GameAccountHandle & gameAccount, uint32 partitionMask)
     : OnlineService::AchievementsEngine::Listener(gameAccount)
-    , m_tAchievementsEvaluator(ptStaticData, &m_snapshot, partitionMask)
-    , m_dwTimeLastFlush(0) {
+    , m_tAchievementsEvaluator(0, ptStaticData, &m_snapshot, partitionMask)
+    , unk_178(1, ptStaticData + 1, &m_snapshot, partitionMask), m_dwTimeLastFlush(0) {
 }
 
 
@@ -174,7 +174,7 @@ inline ServerAchievementsInterface::PlayerAchievementsRecord::PlayerAchievements
 void ServerAchievementsInterface::PlayerAchievementsRecord::OnCriteriaUpdate(const OnlineService::AchievementsEngine::CriteriaUpdateRecord & criteria) {
     if (criteria.m_startTime == 0) {
         blz::reverse_iterator<OnlineService::AchievementsEngine::CriteriaUpdateRecord *> it = blz::find_if(m_criteriaUpdateBuffer.rbegin(), m_criteriaUpdateBuffer.rend(),
-            [&criteria](const OnlineService::AchievementsEngine::CriteriaUpdateRecord & tRecord) { return tRecord.m_criteria == criteria.m_criteria; });
+            [&criteria](const OnlineService::AchievementsEngine::CriteriaUpdateRecord & tRecord) { return tRecord.unk_0 == criteria.unk_0 && tRecord.m_criteria == criteria.m_criteria; });
         if (it != m_criteriaUpdateBuffer.rend() && (!(it->m_flags & OnlineService::AchievementsEngine::TRACKED_CRITERIA_FLAG_DELETE_FROM_DB) || (criteria.m_flags & OnlineService::AchievementsEngine::TRACKED_CRITERIA_FLAG_DELETE_FROM_DB))) {
             *it = criteria;
         } else {
@@ -214,7 +214,7 @@ void ServerAchievementsInterface::PlayerAchievementsRecord::OnCriteriaUpdate(con
 
 
 void ServerAchievementsInterface::PlayerAchievementsRecord::OnCriteriaDeleted(const OnlineService::AchievementsEngine::CriteriaDeleteRecord & criteria) {
-    OnlineService::AchievementsEngine::CriteriaUpdateRecord tCriteria;
+    OnlineService::AchievementsEngine::CriteriaUpdateRecord tCriteria(criteria.unk_0);
     tCriteria.m_criteria = criteria.m_criteria;
     tCriteria.m_flags = OnlineService::AchievementsEngine::TRACKED_CRITERIA_FLAG_DELETE_FROM_DB;
     OnCriteriaUpdate(tCriteria);
@@ -227,7 +227,7 @@ void ServerAchievementsInterface::PlayerAchievementsRecord::OnCriteriaDeleted(co
 void ServerAchievementsInterface::PlayerAchievementsRecord::OnAchievementUpdate(const OnlineService::AchievementsEngine::AchievementUpdateRecord & achievement) {
     if (m_achievementsBuffer.full())
         SendAccumulatedUpdates();
-    m_achievementsBuffer.push_back(achievement.m_achievementId);
+    m_achievementsBuffer.push_back(blz::pair<uint32, unsigned long>(achievement.unk_0, achievement.m_achievementId));
 }
 
 
@@ -265,28 +265,28 @@ void ServerAchievementsInterface::PlayerAchievementsRecord::OnAchievementUpdate(
 void ServerAchievementsInterface::PlayerAchievementsRecord::SendAccumulatedUpdates() {
     m_dwTimeLastFlush = GameGetServerTime();
     if (!m_criteriaUpdateBuffer.empty()) {
-        AchievementsShared::SendAchievementCriteriaUpdate(m_gameAccount, m_criteriaUpdateBuffer.data(), m_criteriaUpdateBuffer.size());
+        const OnlineService::AchievementsEngine::CriteriaUpdateRecord * ptStart = m_criteriaUpdateBuffer.begin();
+        const OnlineService::AchievementsEngine::CriteriaUpdateRecord * it = m_criteriaUpdateBuffer.begin();
+        for (; it != m_criteriaUpdateBuffer.end(); ++it) {
+            if (it->unk_0 != ptStart->unk_0) {
+                AchievementsShared::SendAchievementCriteriaUpdate(m_gameAccount, ptStart->unk_0, ptStart, it - ptStart); ptStart = it;
+            }
+        }
+        if (it - ptStart) AchievementsShared::SendAchievementCriteriaUpdate(m_gameAccount, ptStart->unk_0, ptStart, it - ptStart);
         m_criteriaUpdateBuffer.clear();
     }
     if (!m_achievementsBuffer.empty()) {
-        AchievementsShared::SendAchievementAwardedMessage(m_gameAccount, m_achievementsBuffer.data(), m_achievementsBuffer.size());
+        const blz::pair<uint32, unsigned long> * ptStart = m_achievementsBuffer.begin();
+        const blz::pair<uint32, unsigned long> * it = m_achievementsBuffer.begin();
+        for (; it != m_achievementsBuffer.end(); ++it) {
+            if (it->first != ptStart->first) {
+                AchievementsShared::SendAchievementAwardedMessage(m_gameAccount, ptStart->first, ptStart, it - ptStart); ptStart = it;
+            }
+        }
+        if (it - ptStart) AchievementsShared::SendAchievementAwardedMessage(m_gameAccount, ptStart->first, ptStart, it - ptStart);
         m_achievementsBuffer.clear();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void ServerAchievementsInterface::PlayerAchievementsRecord::EnableNotifications() {
     OnlineService::AchievementsEngine::Listener::EnableNotifications();
 }
@@ -404,13 +404,13 @@ void ServerAchievementsInterface::Process() {
     uint32 dwNow = GameGetServerTime();
     for (AchievementRecordsMap::iterator it = m_tAchievementRecordsMap.begin(); it != m_tAchievementRecordsMap.end(); ++it) {
         blz::shared_ptr<PlayerAchievementsRecord> & ptPlayerAchievementsRecord = it->second;
-        if (!ptPlayerAchievementsRecord->m_achievementsBuffer.empty() || ptPlayerAchievementsRecord->m_tAchievementsEvaluator.FlushImmediatelyIfSignaled() || dwNow - ptPlayerAchievementsRecord->m_dwTimeLastFlush >= TICKS_BETWEEN_FLUSHES) {
+        if (!ptPlayerAchievementsRecord->m_achievementsBuffer.empty() || ptPlayerAchievementsRecord->m_tAchievementsEvaluator.FlushImmediatelyIfSignaled() || ptPlayerAchievementsRecord->unk_178.FlushImmediatelyIfSignaled() || dwNow - ptPlayerAchievementsRecord->m_dwTimeLastFlush >= TICKS_BETWEEN_FLUSHES) {
             ptPlayerAchievementsRecord->m_tAchievementsEvaluator.Flush();
             ptPlayerAchievementsRecord->m_tAchievementsEvaluator.SendAccumulatedUpdates();
+            ptPlayerAchievementsRecord->unk_178.Flush(); ptPlayerAchievementsRecord->unk_178.SendAccumulatedUpdates();
         }
     }
 }
-
 
 
 
@@ -431,9 +431,9 @@ void ServerAchievementsInterface::Flush(const OnlineService::GameAccountHandle &
     if (it != m_tAchievementRecordsMap.end()) {
         it->second->m_tAchievementsEvaluator.Flush();
         it->second->m_tAchievementsEvaluator.SendAccumulatedUpdates();
+        it->second->unk_178.Flush(); it->second->unk_178.SendAccumulatedUpdates();
     }
 }
-
 
 
 
@@ -506,8 +506,13 @@ OnlineService::ErrorCode ServerAchievementsInterface::EvaluateEvent(const Online
     if (!m_ptAchievements->IsEnabled())
         return OnlineService::ERROR_API_NOT_INITIALIZED;
     AchievementRecordsMap::iterator it = m_tAchievementRecordsMap.find(gameAccount);
-    if (it != m_tAchievementRecordsMap.end())
-        it->second->m_tAchievementsEvaluator.CheckEvent(eventId, comparand, quantity, 0, cb);
+    if (it != m_tAchievementRecordsMap.end()) {
+        PlayerAchievementsRecord * ptRecord = it->second.get();
+        OnlineService::AchievementsEngine::AchievementsEvaluator & tFirst = (uUnkFlags & 2) ? ptRecord->unk_178 : ptRecord->m_tAchievementsEvaluator;
+        OnlineService::AchievementsEngine::AchievementsEvaluator & tSecond = (uUnkFlags & 2) ? ptRecord->m_tAchievementsEvaluator : ptRecord->unk_178;
+        const uint64 updateTimeSeconds = timestamp.GetSeconds();
+        tFirst.CheckEvent(eventId, comparand, quantity, updateTimeSeconds, -1, cb);
+        tSecond.CheckEvent(eventId, comparand, quantity, updateTimeSeconds, 1, cb); }
     return OnlineService::ERROR_GLOBAL_SUCCESS;
 }
 
@@ -524,19 +529,14 @@ OnlineService::ErrorCode ServerAchievementsInterface::EvaluateEvent(const Online
 
 
 
-
-
-
-
-
-bool ServerAchievementsInterface::FindAwardedAchievement(const OnlineService::GameAccountHandle & gameAccount, OnlineService::AchievementId id, OnlineService::AchievementRecord & record) {
+bool ServerAchievementsInterface::FindAwardedAchievement(const OnlineService::GameAccountHandle & gameAccount, uint32 achievementSet, OnlineService::AchievementId id, OnlineService::AchievementRecord & record) {
     bool bFoundAch = false;
     if (m_ptAchievements->IsEnabled()) {
         AchievementRecordsMap::iterator it = m_tAchievementRecordsMap.find(gameAccount);
         if (it != m_tAchievementRecordsMap.end()) {
             PlayerAchievementsRecord * ptPlayerAchievementsRecord = it->second.get();
             OnlineService::AchievementsEngine::Achievement * ptAchievement = NULL;
-            bFoundAch = ptPlayerAchievementsRecord->m_snapshot.FindAchievement(id, ptAchievement);
+            bFoundAch = ptPlayerAchievementsRecord->m_snapshot.FindAchievement(achievementSet, id, ptAchievement);
             if (bFoundAch) {
                 ConvertAchievementRecord(*ptAchievement, record);
             }
@@ -574,7 +574,7 @@ bool ServerAchievementsInterface::FindAwardedAchievements(const OnlineService::G
     list.clear();
     for (size_t i = 0; i < ptPlayerAchievementsRecord->m_snapshot.GetAchievementCount(); ++i) {
         const OnlineService::AchievementsEngine::Achievement & tAch = ptPlayerAchievementsRecord->m_snapshot.GetAchievement(i);
-        OnlineService::AchievementRecord tRecord;
+        OnlineService::AchievementRecord tRecord(tAch.unk_0);
         ConvertAchievementRecord(tAch, tRecord);
         list.push_back(tRecord);
     }
@@ -600,14 +600,14 @@ bool ServerAchievementsInterface::FindAwardedAchievements(const OnlineService::G
 
 
 
-bool ServerAchievementsInterface::FindCriteriaRecord(const OnlineService::GameAccountHandle & gameAccount, OnlineService::CriteriaId criteriaId, OnlineService::CriteriaRecord & record) {
+bool ServerAchievementsInterface::FindCriteriaRecord(const OnlineService::GameAccountHandle & gameAccount, uint32 achievementSet, OnlineService::CriteriaId criteriaId, OnlineService::CriteriaRecord & record) {
     bool bFound = false;
     if (m_ptAchievements->IsEnabled()) {
         AchievementRecordsMap::iterator it = m_tAchievementRecordsMap.find(gameAccount);
         if (it != m_tAchievementRecordsMap.end()) {
             PlayerAchievementsRecord * ptPlayerAchievementsRecord = it->second.get();
             OnlineService::AchievementsEngine::Criteria * ptCriteria = NULL;
-            bFound = ptPlayerAchievementsRecord->m_snapshot.FindCriteria(criteriaId, ptCriteria);
+            bFound = ptPlayerAchievementsRecord->m_snapshot.FindCriteria(achievementSet, criteriaId, ptCriteria);
             if (bFound) {
                 ConvertCriteriaRecord(*ptCriteria, record);
             }
@@ -712,35 +712,35 @@ bool ServerAchievementsInterface::PopulateAccountAchievementSnapshot(const Onlin
 blz::shared_ptr<ServerAchievementsInterface::PlayerAchievementsRecord> ServerAchievementsInterface::LoadPlayerAchievementsRecord(const OnlineService::GameAccountHandle & gameAccount, const D3::Account::SavedDefinition & tDefinition) {
     blz::shared_ptr<PlayerAchievementsRecord> ptPlayerAchievementsRecord = blz::make_shared<PlayerAchievementsRecord>(m_ptAchievements->GetStaticDataFile(), gameAccount, m_partitionMask);
     ptPlayerAchievementsRecord->m_tAchievementsEvaluator.RegisterListener(ptPlayerAchievementsRecord);
-    const D3::Achievements::Snapshot & tSnapshot = tDefinition.console_data().achievement_snapshot();
+    ptPlayerAchievementsRecord->unk_178.RegisterListener(ptPlayerAchievementsRecord);
+    D3::Achievements::Snapshot tSnapshot;
+    tSnapshot.CopyFrom(tDefinition.console_data().achievement_snapshot());
+    sub_7100468fe0(m_ptAchievements->GetStaticDataFile(), &tSnapshot);
     const int criteriaCount = tSnapshot.criteria_snapshot_size();
     for (int i = 0; i < criteriaCount; ++i) {
         const D3::Achievements::CriteriaUpdateRecord & criteriaUpdateRecord = tSnapshot.criteria_snapshot(i);
-        ptPlayerAchievementsRecord->m_tAchievementsEvaluator.LoadCriteria(OnlineService::AchievementsEngine::ExtractCriteriaId64(criteriaUpdateRecord), criteriaUpdateRecord.quantity_32());
+        if (criteriaUpdateRecord.achievement_set() == 0)
+            ptPlayerAchievementsRecord->m_tAchievementsEvaluator.LoadCriteria(OnlineService::AchievementsEngine::ExtractCriteriaId64(criteriaUpdateRecord), criteriaUpdateRecord.quantity_32());
+        if (criteriaUpdateRecord.achievement_set() == 1)
+            ptPlayerAchievementsRecord->unk_178.LoadCriteria(OnlineService::AchievementsEngine::ExtractCriteriaId64(criteriaUpdateRecord), criteriaUpdateRecord.quantity_32());
     }
     const int achievementCount = tSnapshot.achievement_snapshot_size();
     for (int i = 0; i < achievementCount; ++i) {
         const D3::Achievements::AchievementUpdateRecord & achievementUpdateRecord = tSnapshot.achievement_snapshot(i);
         const bool fromDB = true;
         OnlineService::AchievementsEngine::AchievementUpdateRecord updateRecord;
+        updateRecord.unk_0 = achievementUpdateRecord.achievement_set();
         updateRecord.m_achievementId = achievementUpdateRecord.achievement_id();
         updateRecord.m_completion = achievementUpdateRecord.completion();
-        ptPlayerAchievementsRecord->m_tAchievementsEvaluator.UpdateAchievement(updateRecord, fromDB);
+        if (achievementUpdateRecord.achievement_set() == 0)
+            ptPlayerAchievementsRecord->m_tAchievementsEvaluator.UpdateAchievement(updateRecord, fromDB);
+        if (achievementUpdateRecord.achievement_set() == 1)
+            ptPlayerAchievementsRecord->unk_178.UpdateAchievement(updateRecord, fromDB);
     }
     ptPlayerAchievementsRecord->m_tAchievementsEvaluator.EnableNotifications();
+    ptPlayerAchievementsRecord->unk_178.EnableNotifications();
     return ptPlayerAchievementsRecord;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -780,13 +780,13 @@ inline ClientAchievementsInterface::ClientAchievementsInterface(Achievements * p
 
 
 
-inline bool ClientAchievementsInterface::FindAwardedAchievement(int32 nUserIndex, OnlineService::AchievementId id, OnlineService::AchievementRecord & record) {
+inline bool ClientAchievementsInterface::FindAwardedAchievement(int32 nUserIndex, uint32 achievementSet, OnlineService::AchievementId id, OnlineService::AchievementRecord & record) {
     SnapshotMap::iterator snapshotIt = m_snapshots.find(nUserIndex);
     if (snapshotIt == m_snapshots.end())
         return false;
     OnlineService::AchievementsEngine::ProgressData & tProgress = snapshotIt->second;
     OnlineService::AchievementsEngine::Achievement * ptAchievement = NULL;
-    if (!tProgress.FindAchievement(id, ptAchievement))
+    if (!tProgress.FindAchievement(achievementSet, id, ptAchievement))
         return false;
     ConvertAchievementRecord(*ptAchievement, record);
     return true;
@@ -826,13 +826,13 @@ bool ClientAchievementsInterface::FindAwardedAchievements(int32 nUserIndex, blz:
 
 
 
-inline bool ClientAchievementsInterface::FindCriteriaRecord(int32 nUserIndex, OnlineService::CriteriaId criteriaId, OnlineService::CriteriaRecord & tRecord) {
+inline bool ClientAchievementsInterface::FindCriteriaRecord(int32 nUserIndex, uint32 achievementSet, OnlineService::CriteriaId criteriaId, OnlineService::CriteriaRecord & tRecord) {
     SnapshotMap::iterator snapshotIt = m_snapshots.find(nUserIndex);
     if (snapshotIt == m_snapshots.end())
         return false;
     OnlineService::AchievementsEngine::ProgressData & tProgress = snapshotIt->second;
     OnlineService::AchievementsEngine::Criteria * ptCriteria = NULL;
-    if (!tProgress.FindCriteria(criteriaId, ptCriteria))
+    if (!tProgress.FindCriteria(achievementSet, criteriaId, ptCriteria))
         return false;
     ConvertCriteriaRecord(*ptCriteria, tRecord);
     return true;
@@ -885,7 +885,7 @@ void ClientAchievementsInterface::OnAchievementAwarded(int32 nUserIndex, const D
     OnlineService::AchievementsEngine::ProgressData & tProgress = snapshotIt->second;
     OnlineService::AchievementsEngine::Achievement * ptAchievement = NULL;
     for (OnlineService::AchievementId idAchievement : tUpdateMsg.achievements()) {
-        if (tProgress.AllocateAchievement(idAchievement, ptAchievement)) {
+        if (tProgress.AllocateAchievement(tUpdateMsg.achievement_set(), idAchievement, ptAchievement)) {
             ptAchievement->m_achievementId = idAchievement;
             ptAchievement->m_completion = Blizzard::Time::ToUnixTime(Blizzard::Time::GetTimestamp());
         }
@@ -912,11 +912,11 @@ void ClientAchievementsInterface::OnAchievementCriteriaUpdate(int32 nUserIndex, 
         OnlineService::CriteriaId idCriteria = OnlineService::AchievementsEngine::Make64BitCriteriaId(OnlineService::AchievementsEngine::ExtractCriteriaId32(tUpdate.id()));
         if (!tUpdate.deleted()) {
             OnlineService::AchievementsEngine::Criteria * ptCriteria = NULL;
-            if (tProgress.AllocateTrackedCriteria(idCriteria, ptCriteria))
+            if (tProgress.AllocateTrackedCriteria(tUpdateMsg.achievement_set(), idCriteria, ptCriteria))
                 ptCriteria->m_criteriaId = idCriteria;
             ptCriteria->m_baseQuantity = tUpdate.quantity();
         } else {
-            tProgress.FreeCriteria(idCriteria);
+            tProgress.FreeCriteria(tUpdateMsg.achievement_set(), idCriteria);
         }
     }
 }
@@ -961,21 +961,21 @@ void ClientAchievementsInterface::OnUserSignedIn(int32 nUserIndex) {
 
 
 void ClientAchievementsInterface::LoadPlayerAchievements(int nUserIndex) {
-    const D3::Account::SavedDefinition & tDefinition = GamerProfile::GetAccount(nUserIndex);
-    const D3::Achievements::Snapshot & tSnapshot = tDefinition.console_data().achievement_snapshot();
+    D3::Account::SavedDefinition & tDefinition = GamerProfile::GetAccount(nUserIndex); sub_7100468fe0(m_ptAchievements->GetStaticDataFile(), tDefinition.mutable_console_data()->mutable_achievement_snapshot());
+    const D3::Achievements::Snapshot & tSnapshot = GamerProfile::GetAccount(nUserIndex).console_data().achievement_snapshot();
     m_snapshots.erase(nUserIndex);
     OnlineService::AchievementsEngine::ProgressData & tProgress = m_snapshots[nUserIndex];
     for (const D3::Achievements::AchievementUpdateRecord & tRecord : tSnapshot.achievement_snapshot()) {
         OnlineService::AchievementId idAchievement = tRecord.achievement_id();
         OnlineService::AchievementsEngine::Achievement * ptAchievement;
-        tProgress.AllocateAchievement(idAchievement, ptAchievement);
+        tProgress.AllocateAchievement(tRecord.achievement_set(), idAchievement, ptAchievement);
         ptAchievement->m_achievementId = idAchievement;
         ptAchievement->m_completion = tRecord.completion();
     }
     for (const D3::Achievements::CriteriaUpdateRecord & tRecord : tSnapshot.criteria_snapshot()) {
         OnlineService::CriteriaId idCriteria = OnlineService::AchievementsEngine::ExtractCriteriaId64(tRecord);
         OnlineService::AchievementsEngine::Criteria * ptCriteria;
-        tProgress.AllocateTrackedCriteria(idCriteria, ptCriteria);
+        tProgress.AllocateTrackedCriteria(tRecord.achievement_set(), idCriteria, ptCriteria);
         ptCriteria->m_criteriaId = idCriteria;
         ptCriteria->m_baseQuantity = tRecord.quantity_32();
     }
@@ -1009,12 +1009,12 @@ void Achievements::Process() {
 void ClientAchievementsInterface::Process() {
 }
 
-bool ClientAchievementsInterface::FindAwardedAchievement(const OnlineService::GameAccountHandle & gameAccount, OnlineService::AchievementId id, OnlineService::AchievementRecord & record) {
-    return FindAwardedAchievement(GameAccountToUserIndex(gameAccount), id, record);
+bool ClientAchievementsInterface::FindAwardedAchievement(const OnlineService::GameAccountHandle & gameAccount, uint32 achievementSet, OnlineService::AchievementId id, OnlineService::AchievementRecord & record) {
+    return FindAwardedAchievement(GameAccountToUserIndex(gameAccount), achievementSet, id, record);
 }
 
-bool ClientAchievementsInterface::FindCriteriaRecord(const OnlineService::GameAccountHandle & gameAccount, OnlineService::CriteriaId criteriaId, OnlineService::CriteriaRecord & record) {
-    return FindCriteriaRecord(GameAccountToUserIndex(gameAccount), criteriaId, record);
+bool ClientAchievementsInterface::FindCriteriaRecord(const OnlineService::GameAccountHandle & gameAccount, uint32 achievementSet, OnlineService::CriteriaId criteriaId, OnlineService::CriteriaRecord & record) {
+    return FindCriteriaRecord(GameAccountToUserIndex(gameAccount), achievementSet, criteriaId, record);
 }
 
 bool ClientAchievementsInterface::FindAwardedAchievements(

@@ -30,10 +30,10 @@ typedef blz::unordered_map<unsigned long, OnlineService::AchievementsEngine::Cri
 
 typedef blz::unordered_map<unsigned long, OnlineService::AchievementsEngine::Achievement *, blz::hash<unsigned long>, blz::equal_to<unsigned long>, blz::allocator<blz::pair<const unsigned long, OnlineService::AchievementsEngine::Achievement *> > > TrackedAchievementMap;
 
-class AchievementsEvaluator {  // size 0xe8
+class AchievementsEvaluator {  // size 0xf0
 public:
-    AchievementsEvaluator(const OnlineService::AchievementsEngine::AchievementsStaticData *, OnlineService::AchievementsEngine::ProgressData *, uint32);
-    bool CheckEvent(OnlineService::CriteriaEventId eventId, OnlineService::CriteriaComparand eventComparand, OnlineService::CriteriaQuantity quantity, uint64 updateTimeSeconds, const OnlineService::AchievementsEngine::CheckEventCallback & cb);
+    AchievementsEvaluator(uint32, const OnlineService::AchievementsEngine::AchievementsStaticData *, OnlineService::AchievementsEngine::ProgressData *, uint32);
+    bool CheckEvent(OnlineService::CriteriaEventId eventId, OnlineService::CriteriaComparand eventComparand, OnlineService::CriteriaQuantity quantity, uint64 updateTimeSeconds, int32 nUnk, const OnlineService::AchievementsEngine::CheckEventCallback & cb);
     void UpdateStaticData(const OnlineService::AchievementsEngine::AchievementsStaticData *);
     void SetActivePartitionsMask(uint32);
     void LoadCriteria(OnlineService::CriteriaId idCriteria, OnlineService::CriteriaQuantity uQuantity);
@@ -86,25 +86,26 @@ private:
     void SignalImmediateFlush() const;
     void UpdateAchievementInternal(const OnlineService::AchievementsEngine::InternalAchievementDefinition * staticAchievement, const OnlineService::AchievementsEngine::Achievement * achievement, const bool fromDB);
     uint64 GetSeconds() const;
-    const OnlineService::AchievementsEngine::AchievementsStaticData * m_staticData;  // 0x00
-    uint32 m_activePartitionsMask;  // 0x08
-    OnlineService::AchievementsEngine::ProgressData * m_snapshot;  // 0x10
-    mutable OnlineService::AchievementsEngine::TrackedCriteriaMap m_dirtyCriteria;  // 0x18
-    mutable OnlineService::AchievementsEngine::TrackedAchievementMap m_dirtyAchievements;  // 0x38
+    uint32 unk_0;  // 0x00 (2.7.7: first constructor argument, the achievement set this evaluator serves)
+    const OnlineService::AchievementsEngine::AchievementsStaticData * m_staticData;  // 0x08
+    uint32 m_activePartitionsMask;  // 0x10
+    OnlineService::AchievementsEngine::ProgressData * m_snapshot;  // 0x18
+    mutable OnlineService::AchievementsEngine::TrackedCriteriaMap m_dirtyCriteria;  // 0x20
+    mutable OnlineService::AchievementsEngine::TrackedAchievementMap m_dirtyAchievements;  // 0x40
     typedef blz::unordered_map<OnlineService::AchievementsEngine::EventKey, bool, OnlineService::AchievementsEngine::EventKeyHash, blz::equal_to<OnlineService::AchievementsEngine::EventKey>, blz::allocator<blz::pair<const OnlineService::AchievementsEngine::EventKey, bool> > > HintMap;
-    OnlineService::AchievementsEngine::AchievementsEvaluator::HintMap m_subjetModifierHintMap;  // 0x58
-    OnlineService::AchievementsEngine::AchievementsEvaluator::HintMap m_objectModifierHintMap;  // 0x78
+    OnlineService::AchievementsEngine::AchievementsEvaluator::HintMap m_subjetModifierHintMap;  // 0x60
+    OnlineService::AchievementsEngine::AchievementsEvaluator::HintMap m_objectModifierHintMap;  // 0x80
     typedef blz::vector<blz::shared_ptr<OnlineService::AchievementsEngine::Listener>, blz::allocator<blz::shared_ptr<OnlineService::AchievementsEngine::Listener> > > ListenerVector;
-    OnlineService::AchievementsEngine::AchievementsEvaluator::ListenerVector m_listeners;  // 0x98
-    OnlineService::AchievementsEngine::Listener * m_stateListener;  // 0xb0
-    mutable bool m_flushImmediately;  // 0xb8
-    OnlineService::AchievementsEngine::AchievementsEvaluator::AchievementsEventType m_currentEventType;  // 0xbc
-    Blizzard::Time::Microsecond m_lastFlushTime;  // 0xc0
-    mutable bool m_checkEventHadSideEffects;  // 0xc8
-    bool m_notificationsEnabled;  // 0xc9
-    blz::vector<unsigned long, blz::allocator<unsigned long> > m_failedCriteria;  // 0xd0
+    OnlineService::AchievementsEngine::AchievementsEvaluator::ListenerVector m_listeners;  // 0xa0
+    OnlineService::AchievementsEngine::Listener * m_stateListener;  // 0xb8
+    mutable bool m_flushImmediately;  // 0xc0
+    OnlineService::AchievementsEngine::AchievementsEvaluator::AchievementsEventType m_currentEventType;  // 0xc4
+    Blizzard::Time::Microsecond m_lastFlushTime;  // 0xc8
+    mutable bool m_checkEventHadSideEffects;  // 0xd0
+    bool m_notificationsEnabled;  // 0xd1
+    blz::vector<unsigned long, blz::allocator<unsigned long> > m_failedCriteria;  // 0xd8
 };
-static_assert(sizeof(AchievementsEvaluator) == 0xe8, "AchievementsEvaluator");
+static_assert(sizeof(AchievementsEvaluator) == 0xf0, "AchievementsEvaluator");
 
 }  // namespace AchievementsEngine
 }  // namespace OnlineService

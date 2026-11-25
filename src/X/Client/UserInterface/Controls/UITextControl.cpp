@@ -332,6 +332,7 @@ void UIText::sInit(const TextCreationParams & tParams)
 
 
     m_nFontBoostSize = 0;
+    unk_3bc = 0;
 
     if (tParams.fHyperlinkAware)
     {

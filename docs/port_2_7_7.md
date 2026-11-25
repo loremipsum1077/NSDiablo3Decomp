@@ -77,7 +77,7 @@ the 2.6.2 build does.
 - `tools/check` then promoted every `M` that matches. All-7.1.0 build: 20,222 O. Mixed
   build: 22,632 O. Mixed build with the mapping repairs below: 23,427 O. After the first
   shared-cause fixes and the GlobalSNO renumbering: 23,786 O. After the protobuf
-  regeneration: 24,292 O. After the first struct-layout fixes (branch `structs/2.7.7`: ActorCommonData, HeroInfo/UserRuntime, HUD): 25,790 O. After the SWIG enum renumbering: 26,584 O. After struct round 2 (Player, definition arrays, inventory slots, float classification): 27,257 O. After the position-based mapping repairs: 28,208 O. After phase D round 1 (Astra): 28,321 O. After phase D wave 1 (see "Phase D wave 1" below): **29,849 O**, 3,004 M, 1,973 U, 2,175 L, 4 W (of 37,005 functions).
+  regeneration: 24,292 O. After the first struct-layout fixes (branch `structs/2.7.7`: ActorCommonData, HeroInfo/UserRuntime, HUD): 25,790 O. After the SWIG enum renumbering: 26,584 O. After struct round 2 (Player, definition arrays, inventory slots, float classification): 27,257 O. After the position-based mapping repairs: 28,208 O. After phase D round 1 (Astra): 28,321 O. After phase D wave 1 (see "Phase D wave 1" below): 29,849 O. After phase D wave 2: **30,273 O**, 2,746 M, 1,791 U, 2,191 L, 4 W (of 37,005 functions).
 
 ### Mapping repairs (look-alike functions)
 
@@ -288,6 +288,56 @@ Two functions stay marked `O` although the checker now rejects them (known, next
   functions match.
 - `pcre_fullinfo`: no source change; the checker now pairs its jump table (original
   0xeaf8c4) with `crc_table`. Under investigation (data labels).
+
+## Phase D wave 2
+
+Ten parallel agents again owned disjoint files (same brief, plus the NON_MATCHING rule
+below); the coordinator applied 213 functions.csv renames and did one build and check.
+**29,849 → 30,273 O (+424)**, M 3,004 → 2,746, U 1,973 → 1,791. No function that matched
+at e584103 stopped matching; the one O row that changed was 0x71003994e0, labelled
+`UIEdit::GainedKeyboardFocus` by mistake (the real Lost/Gained are 0x399340/0x399360, both O).
+The two rows the checker flagged after wave 1 (`_GLOBAL__sub_I_UIFunctions.cpp`,
+`pcre_fullinfo`) are no longer flagged.
+
+- **Shared templates:** `XBaseArray::RemoveAt` (2.7.7 tests `m_nArraySize - 1 > nIndex`),
+  `TChainedDataArray::ElementDelete` (index and highest-index tests were swapped; +15,
+  including `PowerDelete`/`sActorDelete`), TDataArray store order.
+- **Data:** `crc_table` was placed inside `_pcre_ucd_stage2`; moved to 0x7100e945e0, with
+  `inflate_table.dbase/.dext` swapped back. `swig_cast_initial` is 0x7101129bc8.
+- **UIFunctions literal counter:** 2.7.7's table adds exactly two entries
+  (`DarkAlchemyUI_OnUpdate`, `UI_Stash_FilterInput_OnChange`) yet keeps
+  `__cxx_global_var_init.17/.263`, so both strings must already occur before the table; the
+  two unknown-text VolumeUp/Down stand-ins now use them (still marked as stand-ins).
+- **Layouts and constants:** MAX_ACTORS 11776, NUM_SCREEN_SETS 33, NUM_XLOCALES 20, UIText
+  byte at 0x3bc (+4/+8 through UIButton, UIEdit, UIListItem), SGameGlobals ACDID[4] at
+  0x2128, TrickleMessage `XOptional<int>` at 0xb4, DeliveredRewards entries of 16 bytes,
+  TransmuteRecipeIngredient 0x14, PreferencesDefinition 0x670, Partition 6 values.
+- **New 2.7.7 code:** 8 Lua command wrappers and their callees, the season/ethereal loot
+  rules, jewel upgrade, achievement-set arguments through the Achievements API, Kanai's
+  powers panel class, LobbyService without linked accounts (TITLE_VERSION 277).
+- **Tools:** `tools/game_lua_tables.py --version` (locates the unnamed 2.7.7 SWIG tables);
+  `tools/bootstrap_game_data.py` has per-version tables and `versions["2.7.7"]` hashes in
+  `config/local_game_data.json`. Do not re-run bootstrap for 2.7.7 yet: its sno_calls and
+  gbid_rows inputs still come from 2.6.2.
+- About 15 functions gained `// NON_MATCHING:` comments: the 2.7.7 logic is in place and
+  only codegen differs.
+
+## Accepted limits (same as 2.6.2)
+
+The port keeps the 2.6.2 policy for code that cannot or should not match:
+
+- **Library and SDK runtime code** stays `L` and is not decompiled
+  (`docs/library_functions.md`, `config/excluded_functions.csv`). 2.7.7 has the same 2,191
+  `L` functions as 2.6.2. Sixteen small FMOD stubs had lost their names in the relinked
+  FMOD block, and 7 more `L` rows carried drifted names (Sample::set* names on codec
+  callbacks); wave 2 renamed all 23 from tail-call targets and vtable slots.
+- **NVN entry points:** 2.7.7's `nvnLoadCPPProcs` loads 516 procs, not 498. The 18 new
+  `<name>Func` typedefs are missing from the SDK's `nvn_Cpp.h`, which is not edited, so
+  that function stays non-matching.
+- **Best effort:** when the 2.7.7 logic is reproduced but codegen still differs (register
+  allocation, scheduling, block placement), that version stays in the source with
+  `// NON_MATCHING: <what differs>` directly above it (`docs/decomp_workflow.md` step 4).
+  It is not reverted to the 2.6.2 body. Such functions stay `M`.
 
 ## Known gaps (next work)
 

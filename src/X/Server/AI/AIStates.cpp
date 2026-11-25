@@ -579,7 +579,7 @@ static ACDID sGetClosestNewLegendaryTarget(
 
 
 static ACDID sGetClosestTrashItemTarget(
-    ActorID idActor)
+    ActorID idActor, ItemQualityLevel eQualityMin, ItemQualityLevel eQualityMax)
 {
     if (SGameGlobalsGet().dwFlags & (1 << SGAMEGLOBALS_AI_BLIND_BIT))
     {
@@ -608,7 +608,7 @@ static ACDID sGetClosestTrashItemTarget(
             if (tACDItem.IsItem())
             {
                 ItemQualityLevel eQuality = ItemGetDisplayedQualityLevel(tACDItem);
-                if (eQuality <= IQL_SUPERIOR &&
+                if (eQuality <= eQualityMax && eQuality >= eQualityMin &&
                     ItemIsEquippableByPlayerOrHireling(tACDItem))
                 {
 
@@ -1644,7 +1644,7 @@ BOOL sBrainAPITargetFilterSameTeam(ACDID idACDSource, ACDID idACDTarget)
 
 
 
-
+// NON_MATCHING: 2.7.7 logic (cases 46-48) reproduced; 18804 vs 18824 bytes, register allocation and block order differ
 const Target & CTargetCache::GetTarget(
     AIStateTargetType eTargetType,
     EntryData & tEntryData)
@@ -1743,6 +1743,9 @@ const Target & CTargetCache::GetTarget(
     case AISTATE_TARGET_CLOSEST_TRASH_ITEM:
     case AISTATE_TARGET_CLOSEST_PET:
     case AISTATE_TARGET_FARTHEST_PLAYER:
+    case AISTATE_TARGET_CLOSEST_MAGIC_ITEM:
+    case AISTATE_TARGET_CLOSEST_RARE_ITEM:
+    case AISTATE_TARGET_CLOSEST_DEATHS_BREATH:
         break;
     }
 
@@ -2086,12 +2089,74 @@ const Target & CTargetCache::GetTarget(
         }
         break;
     case AISTATE_TARGET_CLOSEST_TRASH_ITEM:
-        m_Target[eTargetType].idACDTarget = sGetClosestTrashItemTarget(idActor);
+        m_Target[eTargetType].idACDTarget = sGetClosestTrashItemTarget(idActor, IQL_INFERIOR, IQL_SUPERIOR);
         if (m_Target[eTargetType].idACDTarget != ACDID_INVALID)
         {
             m_Target[eTargetType].eType = TT_ACTOR;
         }
         break;
+    case AISTATE_TARGET_CLOSEST_MAGIC_ITEM:
+        m_Target[eTargetType].idACDTarget = sGetClosestTrashItemTarget(idActor, IQL_MAGIC_AFFIX_START, IQL_MAGIC_AFFIX_END);
+        if (m_Target[eTargetType].idACDTarget != ACDID_INVALID)
+        {
+            m_Target[eTargetType].eType = TT_ACTOR;
+        }
+        break;
+    case AISTATE_TARGET_CLOSEST_RARE_ITEM:
+        m_Target[eTargetType].idACDTarget = sGetClosestTrashItemTarget(idActor, IQL_RARE_AFFIX_START, IQL_RARE_AFFIX_END);
+        if (m_Target[eTargetType].idACDTarget != ACDID_INVALID)
+        {
+            m_Target[eTargetType].eType = TT_ACTOR;
+        }
+        break;
+    case AISTATE_TARGET_CLOSEST_DEATHS_BREATH:
+    {
+        GBID gbidDeathsBreath = GlobalGBIDGet(GLOBALGBID_ITEM_DEATHS_BREATH);
+        ACDID idACDWinner = ACDID_INVALID;
+        if (!(SGameGlobalsGet().dwFlags & (1 << SGAMEGLOBALS_AI_BLIND_BIT)))
+        {
+            ACDID idACDSelf = ACDFindByActor(idActor);
+            if (idACDSelf != ACDID_INVALID)
+            {
+                WorldPlace placeCenter;
+                float flTargetScanRadius = BrainAPIActorGetAwarenessScanRadius(idACDSelf, placeCenter);
+                XPooledDataIDList listACDsInRadius(MemoryPoolsGetDATAIDListPool());
+                ACDsIntersectSphere(placeCenter, flTargetScanRadius, idACDSelf, listACDsInRadius, 7);
+
+                float flDistWinnerSqr = FLT_MAX;
+                ActorCommonData & tACDSelf = ACDGet(idACDSelf);
+                Player * ptControllingPlayer = ACDGetControllingPlayer(idACDSelf);
+                ActorCommonData * ptACDPlayer = ptControllingPlayer ? ACDTryToGet(ptControllingPlayer->idPlayerACD) : NULL;
+
+                POS pos = listACDsInRadius.GetHeadPosition();
+                while (pos)
+                {
+                    ACDID idACDItem = (ACDID)listACDsInRadius.GetNext(pos);
+                    ActorCommonData & tACDItem = ACDGet(idACDItem);
+                    if (tACDItem.IsItem() && tACDItem.hGB.gbid == gbidDeathsBreath)
+                    {
+                        if (ptACDPlayer && (tACDItem.GetAssignedHeroID() == OnlineService::INVALID_HERO_ID || !ActorInventoryAllowedToPickupItem(*ptACDPlayer, tACDItem)))
+                        {
+                            continue;
+                        }
+
+                        float flDistSqr = ACDGetDistanceSquared(tACDSelf, tACDItem, FALSE);
+                        if (flDistSqr < flDistWinnerSqr)
+                        {
+                            flDistWinnerSqr = flDistSqr;
+                            idACDWinner = idACDItem;
+                        }
+                    }
+                }
+            }
+        }
+        m_Target[eTargetType].idACDTarget = idACDWinner;
+        if (m_Target[eTargetType].idACDTarget != ACDID_INVALID)
+        {
+            m_Target[eTargetType].eType = TT_ACTOR;
+        }
+    }
+    break;
     case AISTATE_TARGET_CLOSEST_RESPLENDENT_CHEST:
         m_Target[eTargetType].idACDTarget = sGetClosestResplendentChestTarget(idActor);
         if (m_Target[eTargetType].idACDTarget != ACDID_INVALID)
@@ -2264,6 +2329,7 @@ const Target & CTargetCache::GetTarget(
         break;
 
     default:
+#line 2381
         XASSERT(FALSE);
         break;
     }

@@ -33,7 +33,7 @@ private:
 };
 static_assert(sizeof(ItemButtonCreationParams) == 0x8a8, "ItemButtonCreationParams");
 
-class UIItemButton : public UIButton {  // size 0x4e8
+class UIItemButton : public UIButton {  // size 0x4f0
 public:
     UIItemButton(const ItemButtonCreationParams &, const Vector2D &, const Vector2D &);
     UIItemButton(const ItemButtonCreationParams &, const Rect2D *);
@@ -75,8 +75,10 @@ private:
     GBID m_gbid;  // 0x4d4
     ACDID m_idACDItem;  // 0x4d8
     uint64 m_nStackCount;  // 0x4e0
+    int32 unk_4e8;  // 0x4e8 (2.7.7: ctor zeroes 0x4e8/0x4ec, SetACDID stores two call results)
+    int32 unk_4ec;  // 0x4ec
 };
-static_assert(sizeof(UIItemButton) == 0x4e8, "UIItemButton");
+static_assert(sizeof(UIItemButton) == 0x4f0, "UIItemButton");
 
 inline void UIItemButton::SetDrawStackCount(BOOL fDrawStackCount) {  // line 157
     if (fDrawStackCount)

@@ -49,11 +49,11 @@ private:
     void sInit(const BlinkerCreationParams & tParams);
     void sUpdate();
 public:
-    uint32 m_dwStartTime;  // 0x3e4
-    uint32 m_dwDuration;  // 0x3e8
-    float m_flMinAlpha;  // 0x3ec
-    Angle m_flRotSpeed;  // 0x3f0
-    uint32 m_dwRotationFullCycleTimeInTicks;  // 0x3f4
-    uint32 m_dwAlphaFullCycleTimeInTicks;  // 0x3f8
+    uint32 m_dwStartTime;  // 0x3e8
+    uint32 m_dwDuration;  // 0x3ec
+    float m_flMinAlpha;  // 0x3f0
+    Angle m_flRotSpeed;  // 0x3f4
+    uint32 m_dwRotationFullCycleTimeInTicks;  // 0x3f8
+    uint32 m_dwAlphaFullCycleTimeInTicks;  // 0x3fc
 };
 static_assert(sizeof(UIBlinker) == 0x400, "UIBlinker");

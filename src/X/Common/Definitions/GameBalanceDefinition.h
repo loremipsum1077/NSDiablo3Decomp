@@ -186,12 +186,12 @@ enum ItemFlags {
     ITEM_ACCOUNT_WIDE_TRANSMOG = 23,
     ITEM_CANNOT_EXTRACT_POWER = 24,
     ITEM_UNK_25 = 25,
-    ITEM_UNK_26 = 26,
+    ITEM_UNK_26 = 26,                   // 2.7.7: drops only while GameIsSeasonal() (sub_7100897970)
     ITEM_IS_CURRENCY_BIT = 27,
     ITEM_FORCE_EXTRACT_POWER_MINIMUM = 28,
     ITEM_IS_NOT_TRASH_BIT = 29,
-    ITEM_UNK_30 = 30,
-    ITEM_UNK_31 = 31,
+    ITEM_UNK_30 = 30,                   // 2.7.7: red name; SItemUpgradeJewel replaces the item afterwards
+    ITEM_ETHEREAL_BIT = 31,             // 2.7.7: drop gated on ATTRIBUTE_ETHEREAL_ITEMS_UNLOCKED (sub_7100897970)
 };
 
 enum {
@@ -1464,22 +1464,24 @@ struct ScriptedAchievementEvent {  // size 0x18
 };
 static_assert(sizeof(ScriptedAchievementEvent) == 0x18, "ScriptedAchievementEvent");
 
-struct TransmuteRecipeIngredient {  // size 0xc
+struct TransmuteRecipeIngredient {  // size 0x14
     TransmuteRecipeIngredientType eType;  // 0x00
     int32 nTypeValue;  // 0x04
     int32 nQuantity;  // 0x08
+    int32 unk_0c;  // 0x0c
+    int32 unk_10;  // 0x10
 };
-static_assert(sizeof(TransmuteRecipeIngredient) == 0xc, "TransmuteRecipeIngredient");
+static_assert(sizeof(TransmuteRecipeIngredient) == 0x14, "TransmuteRecipeIngredient");
 
-struct TransmuteRecipe {  // size 0x88
+struct TransmuteRecipe {  // size 0xc8
     GBHeader tHeader;  // 0x00
     TransmuteRecipeAction eAction;  // 0x18
     TransmuteRecipeIngredient tIngredients[8];  // 0x1c
-    int32 nIngredientsCount;  // 0x7c
-    int32 nPage;  // 0x80
-    BOOL bHidden;  // 0x84
+    int32 nIngredientsCount;  // 0xbc
+    int32 nPage;  // 0xc0
+    BOOL bHidden;  // 0xc4
 };
-static_assert(sizeof(TransmuteRecipe) == 0x88, "TransmuteRecipe");
+static_assert(sizeof(TransmuteRecipe) == 0xc8, "TransmuteRecipe");
 
 const GameBalanceDefinition * ScriptedAchievementEventsTableLockR();
 void ScriptedAchievementEventsTableUnlockR(const GameBalanceDefinition * lpDef);

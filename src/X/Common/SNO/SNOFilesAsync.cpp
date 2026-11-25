@@ -38,6 +38,8 @@ BOOL FileRead(FileReference & tFileRef, void * lpBuf, const uint32 dwOffset, con
 // X/Common/Console/IO/SFileWrapper.cpp:155 and :565.
 Blizzard::Mopaq::ErrorCode SFileGetLastError();
 bool SFileOverrideLocation(HSFILERecord * pFile, int64 nLocationOverride);
+// X/Common/Console/IO/ConsoleIO.cpp: SNO group being opened, -1 otherwise.
+extern int32 unk_71010aba28;
 
 #include "../../Sigma/UnicodeText.h"
 
@@ -683,7 +685,9 @@ static void sSNOFilesAsyncRead(SNOElement * ptSnoElement, SNOFilesAsyncPriority 
     record.ePriority = ePriority;
     uint64 dwHash = SNOFileGetFileHash(ptSnoElement, TRUE);
     Console::IO::FileInfo info;
+    unk_71010aba28 = ptSnoElement->tEntry.snoGroup;
     Console::IO::CPKArchiveReader * ptArchive = Console::IO::FindArchiveContaining(dwHash, &info);
+    unk_71010aba28 = -1;
     if (!ptArchive) {
         if (!(ptSnoElement->dwFlags & SNOENTRY_FLAG_NOT_IN_CPK)) {
             Blizzard::Lock::Atomic::Or(SNOENTRY_FLAG_NOT_IN_CPK, &ptSnoElement->dwFlags);

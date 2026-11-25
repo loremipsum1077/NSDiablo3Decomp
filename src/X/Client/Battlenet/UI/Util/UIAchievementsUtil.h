@@ -43,26 +43,26 @@ bool CategorySortPredicate(const OnlineService::CategoryId & idA, const OnlineSe
 bool CriteriaSortPredicate(const OnlineService::CriteriaId & idA, const OnlineService::CriteriaId & idB);
 bool CriteriaSortByCompletedPredicate(const OnlineService::CriteriaId & idA, const OnlineService::CriteriaId & idB);
 BOOL CanShowCategory(const OnlineService::CategoryId & idCategory, BOOL fCheckForSeasonAchievements);
-void CalculateCategoryPoints(const OnlineService::GameAccountHandle & idPlayer, const OnlineService::CategoryId & idCategory, uint32 & nTotalPoints, uint32 & nEarnedPoints, BOOL fSeasonalPoints);
-void AnalyzeCriteria(const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, OnlineService::CriteriaQuantity & nEarnedPoints, OnlineService::CriteriaQuantity & nTotalPoints);
-BOOL IsHighestAchievementEarnedInSeries(const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement);
-BOOL IsHighestAchievementUnearnedInSeries(const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement);
-OnlineService::AchievementId GetHighestEarnedAchievementInSeries(const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement);
-OnlineService::AchievementId GetHighestUnearnedAchievementInSeries(const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement);
+void CalculateCategoryPoints(const OnlineService::GameAccountHandle & idPlayer, const OnlineService::CategoryId & idCategory, uint32 & nTotalPoints, uint32 & nEarnedPoints, uint32 nAchievementSet, BOOL fSeasonalPoints);
+void AnalyzeCriteria(const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, OnlineService::CriteriaQuantity & nEarnedPoints, OnlineService::CriteriaQuantity & nTotalPoints, uint32 nAchievementSet);
+BOOL IsHighestAchievementEarnedInSeries(const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, uint32 nAchievementSet);
+BOOL IsHighestAchievementUnearnedInSeries(const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, uint32 nAchievementSet);
+OnlineService::AchievementId GetHighestEarnedAchievementInSeries(const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, uint32 nAchievementSet);
+OnlineService::AchievementId GetHighestUnearnedAchievementInSeries(const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, uint32 nAchievementSet);
 void SortRewardParentAchievements(OnlineService::AchievementIdList & arIds, const OnlineService::GameAccountHandle * pidPlayer);
-OnlineService::AchievementStatus GetAchievementStatus(const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, OnlineService::CriteriaQuantity * pEarned, OnlineService::CriteriaQuantity * pTotal);
+OnlineService::AchievementStatus GetAchievementStatus(const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, uint32 nAchievementSet, OnlineService::CriteriaQuantity * pEarned, OnlineService::CriteriaQuantity * pTotal);
 CRefString GetRewardTypeString(const OnlineService::RewardDefinition & def);
 void AchievementsUtilInitializeForApp();
 void AchievementsUtilDisposeForApp();
 void ClearAchievementsCache();
-void GetNumCriteriaCompleted(OnlineService::AchievementId achievementId, int32 & nNumEarnedCriteria, int32 & nTotalCriteria);
-BOOL IsCriteriaEarned(const OnlineService::CriteriaId & criteriaId);
+void GetNumCriteriaCompleted(OnlineService::AchievementId achievementId, int32 & nNumEarnedCriteria, int32 & nTotalCriteria, uint32 nAchievementSet);
+BOOL IsCriteriaEarned(const OnlineService::CriteriaId & criteriaId, uint32 nAchievementSet);
 
 void GetFilteredSupercededAchievements( const OnlineService::GameAccountHandle & idPlayer,
                                         const OnlineService::AchievementId & idAchievement,
-                                        OnlineService::AchievementIdList & arIds );
+                                        OnlineService::AchievementIdList & arIds, uint32 nAchievementSet );
 
 OnlineService::AchievementId GetLowestUnearnedAchievementInSeries( const OnlineService::GameAccountHandle & idPlayer,
-                                                                   const OnlineService::AchievementId & idAchievement );
+                                                                   const OnlineService::AchievementId & idAchievement, uint32 nAchievementSet );
 
 }  // namespace OnlineService

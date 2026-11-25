@@ -72,7 +72,7 @@ typedef blz::map<unsigned int, unsigned long, blz::less<unsigned int>, blz::allo
 
 typedef blz::vector<blz::unordered_map<unsigned long, unsigned long, blz::hash<unsigned long>, blz::equal_to<unsigned long>, blz::allocator<blz::pair<const unsigned long, unsigned long> > >, blz::allocator<blz::unordered_map<unsigned long, unsigned long, blz::hash<unsigned long>, blz::equal_to<unsigned long>, blz::allocator<blz::pair<const unsigned long, unsigned long> > > > > SeasonJourneyObjective;
 
-class AchievementsStaticData {  // size 0x188
+class AchievementsStaticData {  // size 0x1c8
 public:
     AchievementsStaticData(const blz::string &);
     ~AchievementsStaticData();
@@ -117,9 +117,10 @@ private:
     OnlineService::AchievementsEngine::SeasonJourneyRankTailsMap m_seasonJourneyRankTails;  // 0x118
     OnlineService::AchievementsEngine::SeasonJourneyObjective m_arSeasonJourneyObjectives;  // 0x140
     blz::string m_timestamp;  // 0x158
-    int32 m_seasonCycleLength;  // 0x180
+    uint8 unk_180[0x40];  // 0x180 (2.7.7: 0x40 bytes before m_seasonCycleLength, read at +0x1c0; contents unknown)
+    int32 m_seasonCycleLength;  // 0x1c0
 };
-static_assert(sizeof(AchievementsStaticData) == 0x188, "AchievementsStaticData");
+static_assert(sizeof(AchievementsStaticData) == 0x1c8, "AchievementsStaticData");
 inline const OnlineService::AchievementsEngine::CriteriaMap & AchievementsStaticData::GetCriteriaMap() const { return m_criteria; }
 inline const OnlineService::AchievementsEngine::PartitionedCriteriaEventMap & AchievementsStaticData::GetStartEvents() const { return m_startEvents; }
 inline const OnlineService::AchievementsEngine::PartitionedCriteriaEventMap & AchievementsStaticData::GetFailEvents() const { return m_failEvents; }

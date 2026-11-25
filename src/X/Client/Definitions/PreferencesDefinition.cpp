@@ -381,6 +381,7 @@ static const PrefField sgtSocialPrefFields[] = {
     SOCIAL_BOOL("ShowLocalPlayersListDisabled", bShowLocalPlayersListDisabled, FALSE),
     SOCIAL_BOOL("NotifyGuildMemberOnlineDisabled", bNotifyGuildMemberOnlineDisabled, FALSE),
     SOCIAL_BOOL("NotifyGuildAchievementDisabled", bNotifyGuildAchievementDisabled, FALSE),
+    SOCIAL_BOOL("SocialFeaturesDisabled", bSocialFeaturesDisabled, FALSE),
 };
 
 static const PrefField sgtKeybindingPrefFields[] = {

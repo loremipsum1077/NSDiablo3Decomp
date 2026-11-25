@@ -9,13 +9,14 @@ Address,Name
 0x0000007100e9454c,_ZL16snPriorityLookup
 0x0000007100e94574,_ZZL25sRotateExitDirectionRightiE16sRightDirections
 0x0000007100e945ac,_ZZN8Blizzard4Time15GetDayOfTheYearEiiiE11addPerMonth
+0x0000007100e945e0,crc_table
 0x0000007100e99084,inflate.order
 0x0000007100e990aa,fixedtables.lenfix
 0x0000007100e998aa,fixedtables.distfix
 0x0000007100e9992a,inflate_table.lbase
 0x0000007100e99968,inflate_table.lext
-0x0000007100e999a6,inflate_table.dext
-0x0000007100e999e6,inflate_table.dbase
+0x0000007100e999a6,inflate_table.dbase
+0x0000007100e999e6,inflate_table.dext
 0x0000007100e9d6b4,_pcre_OP_lengths
 0x0000007100e9d7e0,_pcre_utf8_table1_size
 0x0000007100e9d7e4,_pcre_utf8_table2
@@ -23,7 +24,7 @@ Address,Name
 0x0000007100e9d83c,_pcre_ucp_gentype
 0x0000007100e9e5ec,_pcre_ucd_records
 0x0000007100e9f984,_pcre_ucd_stage1
-0x0000007100eac138,crc_table
+0x0000007100ea1b84,_pcre_ucd_stage2
 0x0000007100eaf347,rep_max
 0x0000007100eb19a0,_ZL26sctKeyWardenBossEncounters
 0x0000007100eb1b20,_ZZN4FMOD9CodecFSB520decodeSubSoundHeaderEPcPjS2_PiS3_PbbE6lookup
@@ -2162,7 +2163,7 @@ Address,Name
 0x00000071010fd248,_ZTV14ScriptGroupDef
 0x00000071010fd348,arUpgradeRareGBIDItemTypes
 0x00000071010fd400,_ZL12gLuaHydraReg
-0x0000007101129bd0,_ZL17swig_cast_initial
+0x0000007101129bc8,_ZL17swig_cast_initial
 0x000000710112bcb8,_ZTV17ConversationParam
 0x000000710112bcf8,_ZTV15TimedEventParam
 0x000000710112bd38,_ZTV10WorldParam

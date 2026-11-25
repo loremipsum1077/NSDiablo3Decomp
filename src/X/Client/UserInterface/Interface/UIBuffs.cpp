@@ -208,12 +208,12 @@ static UIID sCreateBuffControls(const SortedBuff & tBuff, const UIID & idBuffPar
     // the control-creation path is absent in its machine code.
     UIID id = GetUIIDNone();
     ACDNetworkName ann = ANNFromACD(ACDGet(tBuff.ptPlayer->idPlayerACD).id);
-    WindowCreationParams tDlgParams(UIT_WINDOW, CRefString().Format("buff %s:%d:%d:%d dlg", SNOToString(POWER_SNO, tBuff.snoPower, FALSE).str(), tBuff.nBuffIdx, ann, tBuff.fIsDebuff), idBuffParent);
+    WindowCreationParams tDlgParams(UIT_WINDOW, CRefString().Format("buff %s:%d:%d:%d dlg %d", SNOToString(POWER_SNO, tBuff.snoPower, FALSE).str(), tBuff.nBuffIdx, ann, tBuff.fIsDebuff, tBuff.unk_24), idBuffParent);
     return id;
 }
 
 void SortedBuff::Initialize(const SNO _snoPower, const int32 _nBuffIdx, const BOOL _fIsDebuff,
-        const BOOL _fIsHidden, const int32 _nStackCount, const Player * _ptPlayer, const BOOL bCreateControls) {
+        const BOOL _fIsHidden, const int32 _unk_24, const int32 _nStackCount, const Player * _ptPlayer, const BOOL bCreateControls) {
     snoPower = _snoPower;
     nBuffIdx = _nBuffIdx;
     ptPlayer = _ptPlayer;
@@ -222,6 +222,7 @@ void SortedBuff::Initialize(const SNO _snoPower, const int32 _nBuffIdx, const BO
     bPlayerCanCancel = FALSE;
     fIsDebuff = _fIsDebuff;
     fIsHidden = _fIsHidden;
+    unk_24 = _unk_24;
     if (!bCreateControls) return;
     UIID idWindowBase;
     Vector2D vecIcon;
@@ -549,7 +550,7 @@ void AddBuff(
 
 
     SortedBuff tBuff;
-    tBuff.Initialize(snoPower, nBuffIndex, bHarmful, bHiddenInStack, nStackCount, ptPlayer, !bMergesTooltips && bShowInBeneficialBuffArea);
+    tBuff.Initialize(snoPower, nBuffIndex, bHarmful, bHiddenInStack, 0, nStackCount, ptPlayer, !bMergesTooltips && bShowInBeneficialBuffArea);
 
 
     if (nStackCount == 1 && PlayerIsLocal(ptPlayer))

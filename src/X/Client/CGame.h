@@ -182,13 +182,14 @@ public:
     BOOL bFadeFrustumValid;  // 0xf4
     SNO snoLevelAreaSavePoint;  // 0xf8
     SNO snoLevelAreaHearthPortal;  // 0xfc
-    BOOL bHearthPortalIsTieredRift;  // 0x100
-    SNO snoLevelAreaReturnPoint;  // 0x104
-    float flDungeonFinderProgress;  // 0x108
-    int32 nDungeonFinderSeed;  // 0x10c
-    int32 nDungeonFinderParticipatingPlayerCount;  // 0x110
-    SNO snoDungeonFinderTimedEvent;  // 0x114
-    int32 nChallengeRiftCompletionMilliseconds;  // 0x118
+    SNO unk_100;  // 0x100 (2.7.7: world SNO from HearthPortalInfoMessage::unk_c)
+    BOOL bHearthPortalIsTieredRift;  // 0x104
+    SNO snoLevelAreaReturnPoint;  // 0x108
+    float flDungeonFinderProgress;  // 0x10c
+    int32 nDungeonFinderSeed;  // 0x110
+    int32 nDungeonFinderParticipatingPlayerCount;  // 0x114
+    SNO snoDungeonFinderTimedEvent;  // 0x118
+    int32 nChallengeRiftCompletionMilliseconds;  // 0x11c
     CRefString sChallengeRiftCompletionMillisecondsHeroName;  // 0x120
     float nChallengeRiftSprintMilliseconds;  // 0x138
     VideoPrefsToConfirm * pdefFallbackPrefs;  // 0x140

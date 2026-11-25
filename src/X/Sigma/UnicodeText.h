@@ -26,8 +26,9 @@ enum {
     XLOCALE_POLISH = 16,
     XLOCALE_PORTUGUESE_PORTUGAL = 17,
     XLOCALE_JAPANESE = 18,
+    XLOCALE_UNK_19 = 19,  // 2.7.7: stLocaleDefs[19] = {"ztCN", 'ztCN', FALSE} (_GLOBAL__sub_I_UnicodeText.cpp 0x7100a4bb10)
     NUM_PC_XLOCALES = 18,
-    NUM_XLOCALES = 19,
+    NUM_XLOCALES = 20,
 };
 
 typedef int32 XLocale;

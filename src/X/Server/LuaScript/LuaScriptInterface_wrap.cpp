@@ -76150,6 +76150,183 @@ static int _wrap_MAX_AFFIX_EXCLUDED_CATEGORIES_get(lua_State *L)
 }
 
 
+// 2.7.7 commands. The wrappers are unnamed in functions.csv (sub_<address>); SWIG names every
+// command wrapper _wrap_<command> (all 1116 others follow it), and the callee is the command.
+// The callees are unnamed too; their addresses are given with each declaration.
+void PlayerGrantLargeAmountOfExperience(VPACDID idACDPlayer, uint32 unk_2, uint32 unk_3);  // 0x710092fac0
+void ConductorLogActorRefs();  // 0x7100938e10
+void ConductorClearActorRefs();  // 0x7100938e40
+void SwarmRiftClosingTriggered(float unk_1);  // 0x710093f170
+void WarningCountdownNotification(float unk_1, LPCSTR unk_2);  // 0x710093f300
+void UberBossClosingTriggered(uint32 unk_1, float unk_2);  // 0x710093f540
+void GameTieredRiftClose();  // 0x7100940ac0
+void PowerSendOwnerCheatedDeath();  // 0x71009bf420
+
+// 0x71008c16a0
+static int _wrap_PlayerGrantLargeAmountOfExperience(lua_State *L)
+{
+    int SWIG_arg = 0;
+    VPACDID arg1;
+    uint32 arg2;
+    uint32 arg3;
+    if (!lua_isnumber(L, 2)) {
+        lua_pushfstring(L, "argument %d incorrect/missing", 2);
+        goto fail;
+    }
+    if (!lua_isnumber(L, 3)) {
+        lua_pushfstring(L, "argument %d incorrect/missing", 3);
+        goto fail;
+    }
+    if (!lua_isnumber(L, 1)) {
+        lua_pushfstring(L, "argument %d incorrect/missing", 1);
+        goto fail;
+    }
+    {
+        ACDID idACD = (ACDID)lua_tointeger(L, 1);
+        if (!sCheckPlayerACDID(idACD)) {
+            {
+                CRefString sError;
+                sError.Format("Argument %d (0x%08X) is an invalid player actor ID", 1, idACD);
+                lua_pushstring(L, sError.str());
+            }
+            goto fail;
+        }
+        arg1 = idACD;
+    }
+    arg2 = (uint32)lua_tonumber(L, 2);
+    arg3 = (uint32)lua_tonumber(L, 3);
+    PlayerGrantLargeAmountOfExperience(arg1, arg2, arg3);
+    return SWIG_arg;
+fail:
+    lua_error(L);
+    return -1;
+}
+
+// 0x71008c8b00
+static int _wrap_ConductorLogActorRefs(lua_State *L)
+{
+    int SWIG_arg = 0;
+    ConductorLogActorRefs();
+    return SWIG_arg;
+}
+
+// 0x71008c8b20
+static int _wrap_ConductorClearActorRefs(lua_State *L)
+{
+    int SWIG_arg = 0;
+    ConductorClearActorRefs();
+    return SWIG_arg;
+}
+
+// 0x71008db7d0
+static int _wrap_SwarmRiftClosingTriggered(lua_State *L)
+{
+    int SWIG_arg = 0;
+    float arg1;
+    if (lua_isnumber(L, 1)) {
+        float flInput = (float)lua_tonumber(L, 1);
+        if (!isfinite(flInput) || isnan(flInput)) {
+            {
+                CRefString sError;
+                sError.Format("Argument %d is an invalid floating point number", 1);
+                lua_pushstring(L, sError.str());
+            }
+            goto fail;
+        }
+        arg1 = flInput;
+    } else {
+        lua_pushfstring(L, "argument %d incorrect/missing", 1);
+        goto fail;
+    }
+    SwarmRiftClosingTriggered(arg1);
+    return SWIG_arg;
+fail:
+    lua_error(L);
+    return -1;
+}
+
+// 0x71008db8b0
+static int _wrap_WarningCountdownNotification(lua_State *L)
+{
+    int SWIG_arg = 0;
+    float arg1;
+    LPCSTR arg2;
+    if (!lua_isstring(L, 2)) {
+        lua_pushfstring(L, "argument %d incorrect/missing", 2);
+        goto fail;
+    }
+    if (lua_isnumber(L, 1)) {
+        float flInput = (float)lua_tonumber(L, 1);
+        if (!isfinite(flInput) || isnan(flInput)) {
+            {
+                CRefString sError;
+                sError.Format("Argument %d is an invalid floating point number", 1);
+                lua_pushstring(L, sError.str());
+            }
+            goto fail;
+        }
+        arg1 = flInput;
+    } else {
+        lua_pushfstring(L, "argument %d incorrect/missing", 1);
+        goto fail;
+    }
+    arg2 = (LPCSTR)lua_tostring(L, 2);
+    WarningCountdownNotification(arg1, arg2);
+    return SWIG_arg;
+fail:
+    lua_error(L);
+    return -1;
+}
+
+// 0x71008db9c0
+static int _wrap_UberBossClosingTriggered(lua_State *L)
+{
+    int SWIG_arg = 0;
+    uint32 arg1;
+    float arg2;
+    if (!lua_isnumber(L, 1)) {
+        lua_pushfstring(L, "argument %d incorrect/missing", 1);
+        goto fail;
+    }
+    arg1 = (uint32)lua_tonumber(L, 1);
+    if (lua_isnumber(L, 2)) {
+        float flInput = (float)lua_tonumber(L, 2);
+        if (!isfinite(flInput) || isnan(flInput)) {
+            {
+                CRefString sError;
+                sError.Format("Argument %d is an invalid floating point number", 2);
+                lua_pushstring(L, sError.str());
+            }
+            goto fail;
+        }
+        arg2 = flInput;
+    } else {
+        lua_pushfstring(L, "argument %d incorrect/missing", 2);
+        goto fail;
+    }
+    UberBossClosingTriggered(arg1, arg2);
+    return SWIG_arg;
+fail:
+    lua_error(L);
+    return -1;
+}
+
+// 0x71008dcc80
+static int _wrap_GameTieredRiftClose(lua_State *L)
+{
+    int SWIG_arg = 0;
+    GameTieredRiftClose();
+    return SWIG_arg;
+}
+
+// 0x71008ed5b0
+static int _wrap_PowerSendOwnerCheatedDeath(lua_State *L)
+{
+    int SWIG_arg = 0;
+    PowerSendOwnerCheatedDeath();
+    return SWIG_arg;
+}
+
 #include "../../Common/generated-game-data/lua_tables.inc"
 #line 81744
 

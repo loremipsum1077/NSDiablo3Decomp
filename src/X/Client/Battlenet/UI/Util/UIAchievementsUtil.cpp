@@ -387,10 +387,10 @@ bool CriteriaSortByCompletedPredicate( const OnlineService::CriteriaId & idA, co
     const OnlineService::CriteriaDefinition * ptDefinitionA = tAchievements.GetCriteriaDefinition( idA );
     const OnlineService::CriteriaDefinition * ptDefinitionB = tAchievements.GetCriteriaDefinition( idB );
 
-    if ( IsCriteriaEarned( ptDefinitionA->m_id ) && !IsCriteriaEarned( ptDefinitionB->m_id ) )
+    if ( IsCriteriaEarned( ptDefinitionA->m_id, sub_71000b4be0() ) && !IsCriteriaEarned( ptDefinitionB->m_id, sub_71000b4be0() ) )
         return true;
 
-    if ( IsCriteriaEarned( ptDefinitionB->m_id ) && !IsCriteriaEarned( ptDefinitionA->m_id ) )
+    if ( IsCriteriaEarned( ptDefinitionB->m_id, sub_71000b4be0() ) && !IsCriteriaEarned( ptDefinitionA->m_id, sub_71000b4be0() ) )
         return false;
 
     if ( ptDefinitionA && ptDefinitionB )
@@ -668,7 +668,7 @@ BOOL CanShowCategory( const OnlineService::CategoryId & idCategory, BOOL fCheckF
 
 
 
-void CalculateCategoryPoints( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::CategoryId & idCategory, uint32 & nTotalPoints, uint32 & nEarnedPoints, BOOL fSeasonalPoints )
+void CalculateCategoryPoints( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::CategoryId & idCategory, uint32 & nTotalPoints, uint32 & nEarnedPoints, uint32 nAchievementSet, BOOL fSeasonalPoints )
 {
     CategoryPointsMap * pmapCategoryPoints = NULL;
 
@@ -712,7 +712,7 @@ void CalculateCategoryPoints( const OnlineService::GameAccountHandle & idPlayer,
             {
                 nTotal += ptDefinition->m_pointsValue;
                 OnlineService::AchievementRecord tRecord;
-                if ( ptAchievementsInterface && ptAchievementsInterface->FindAwardedAchievement( idPlayer, arAchievementIds[i], tRecord ) )
+                if ( ptAchievementsInterface && ptAchievementsInterface->FindAwardedAchievement( idPlayer, nAchievementSet, arAchievementIds[i], tRecord ) )
                     nEarned += ptDefinition->m_pointsValue;
             }
         }
@@ -722,7 +722,7 @@ void CalculateCategoryPoints( const OnlineService::GameAccountHandle & idPlayer,
     if ( tAchievements.GetChildCategories( idCategory, arSubCategoryIds ) )
     {
         for ( uint32 i = 0; i < arSubCategoryIds.size(); ++i )
-            CalculateCategoryPoints( idPlayer, arSubCategoryIds[i], nTotal, nEarned, fSeasonalPoints );
+            CalculateCategoryPoints( idPlayer, arSubCategoryIds[i], nTotal, nEarned, nAchievementSet, fSeasonalPoints );
     }
 
     nTotalPoints += nTotal;
@@ -760,7 +760,7 @@ void CalculateCategoryPoints( const OnlineService::GameAccountHandle & idPlayer,
 
 
 
-void AnalyzeCriteria( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, OnlineService::CriteriaQuantity & nEarnedPoints, OnlineService::CriteriaQuantity & nTotalPoints )
+void AnalyzeCriteria( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, OnlineService::CriteriaQuantity & nEarnedPoints, OnlineService::CriteriaQuantity & nTotalPoints, uint32 nAchievementSet )
 {
     nEarnedPoints = 0;
     nTotalPoints = 0;
@@ -787,7 +787,7 @@ void AnalyzeCriteria( const OnlineService::GameAccountHandle & idPlayer, const O
         if ( ptDefinition )
         {
             OnlineService::AchievementRecord tAchRecord;
-            BOOL fAchievementEarned = ptAchievementsInterface && ptAchievementsInterface->FindAwardedAchievement( idPlayer, idAchievement, tAchRecord );
+            BOOL fAchievementEarned = ptAchievementsInterface && ptAchievementsInterface->FindAwardedAchievement( idPlayer, nAchievementSet, idAchievement, tAchRecord );
 
             for ( uint32 i = 0; i < arCriteriaIds.size(); ++i )
             {
@@ -797,7 +797,7 @@ void AnalyzeCriteria( const OnlineService::GameAccountHandle & idPlayer, const O
                     OnlineService::CriteriaRecord tRecord;
                     SigmaMemoryClear( &tRecord, sizeof( tRecord ) );
 
-                    if ( ptAchievementsInterface && !ptAchievementsInterface->FindCriteriaRecord( idPlayer, ptCritDef->m_id, tRecord ) )
+                    if ( ptAchievementsInterface && !ptAchievementsInterface->FindCriteriaRecord( idPlayer, nAchievementSet, ptCritDef->m_id, tRecord ) )
                     {
                         tRecord.m_criteriaId = arCriteriaIds[i];
                         tRecord.m_quantity = fAchievementEarned ? ptCritDef->m_necessaryQuantity : 0;
@@ -870,29 +870,29 @@ void AnalyzeCriteria( const OnlineService::GameAccountHandle & idPlayer, const O
 
 
 
-BOOL IsHighestAchievementEarnedInSeries( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement )
+BOOL IsHighestAchievementEarnedInSeries( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, uint32 nAchievementSet )
 {
-    return GetHighestEarnedAchievementInSeries( idPlayer, idAchievement ) == idAchievement;
+    return GetHighestEarnedAchievementInSeries( idPlayer, idAchievement, nAchievementSet ) == idAchievement;
 }
 
 
 
 
 
-BOOL IsHighestAchievementUnearnedInSeries( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement )
+BOOL IsHighestAchievementUnearnedInSeries( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, uint32 nAchievementSet )
 {
-    return GetHighestUnearnedAchievementInSeries( idPlayer, idAchievement ) == idAchievement;
+    return GetHighestUnearnedAchievementInSeries( idPlayer, idAchievement, nAchievementSet ) == idAchievement;
 }
 
 
 
 
 
-OnlineService::AchievementId GetHighestEarnedAchievementInSeries( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement )
+OnlineService::AchievementId GetHighestEarnedAchievementInSeries( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, uint32 nAchievementSet )
 {
     Console::Achievements & tAchievements = *sgtAppGlobals.ptAchievements;
 
-    OnlineService::AchievementId idHighestUnearned = GetHighestUnearnedAchievementInSeries( idPlayer, idAchievement );
+    OnlineService::AchievementId idHighestUnearned = GetHighestUnearnedAchievementInSeries( idPlayer, idAchievement, nAchievementSet );
     if ( idHighestUnearned != 0 )
     {
         const OnlineService::AchievementDefinition * ptDefinition = tAchievements.GetAchievementDefinition( idHighestUnearned );
@@ -918,7 +918,7 @@ OnlineService::AchievementId GetHighestEarnedAchievementInSeries( const OnlineSe
 
 
 
-OnlineService::AchievementId GetHighestUnearnedAchievementInSeries( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement )
+OnlineService::AchievementId GetHighestUnearnedAchievementInSeries( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, uint32 nAchievementSet )
 {
     OnlineService::Achievements & tAchievements = *sgtAppGlobals.ptAchievements;
     OnlineService::AchievementsInterface * ptAchievementsInterface = sgtAppGlobals.ptAchievementsInterface;
@@ -929,7 +929,7 @@ OnlineService::AchievementId GetHighestUnearnedAchievementInSeries( const Online
         OnlineService::AchievementId idHighestEarned = tAchievements.GetSeriesTail( idAchievement );
         OnlineService::AchievementRecord tRecord;
         const OnlineService::AchievementDefinition * ptDefinition;
-        while ( ptAchievementsInterface && !ptAchievementsInterface->FindAwardedAchievement( idPlayer, idHighestEarned, tRecord )
+        while ( ptAchievementsInterface && !ptAchievementsInterface->FindAwardedAchievement( idPlayer, nAchievementSet, idHighestEarned, tRecord )
                 && ( ptDefinition = tAchievements.GetAchievementDefinition( idHighestEarned ) ) != NULL )
         {
             idHighestUnearned = ptDefinition->m_id;
@@ -964,7 +964,7 @@ OnlineService::AchievementId GetHighestUnearnedAchievementInSeries( const Online
 
 
 
-OnlineService::AchievementId GetLowestUnearnedAchievementInSeries( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement )
+OnlineService::AchievementId GetLowestUnearnedAchievementInSeries( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, uint32 nAchievementSet )
 {
     OnlineService::Achievements & tAchievements = *sgtAppGlobals.ptAchievements;
     OnlineService::AchievementsInterface * ptAchievementsInterface = sgtAppGlobals.ptAchievementsInterface;
@@ -977,7 +977,7 @@ OnlineService::AchievementId GetLowestUnearnedAchievementInSeries( const OnlineS
         OnlineService::AchievementRecord tRecord;
         while ( ptSeriesDefinition )
         {
-            if ( !ptAchievementsInterface->FindAwardedAchievement( idPlayer, idSeriesAchievement, tRecord ) )
+            if ( !ptAchievementsInterface->FindAwardedAchievement( idPlayer, nAchievementSet, idSeriesAchievement, tRecord ) )
                 idLowestUnearned = idSeriesAchievement;
 
             idSeriesAchievement = ptSeriesDefinition->m_supersedes;
@@ -1005,7 +1005,7 @@ OnlineService::AchievementId GetLowestUnearnedAchievementInSeries( const OnlineS
 
 
 
-void GetFilteredSupercededAchievements( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, OnlineService::AchievementIdList & arIds )
+void GetFilteredSupercededAchievements( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, OnlineService::AchievementIdList & arIds, uint32 nAchievementSet )
 {
     OnlineService::Achievements & tAchievements = *sgtAppGlobals.ptAchievements;
     OnlineService::AchievementsInterface * ptAchievementsInterface = sgtAppGlobals.ptAchievementsInterface;
@@ -1020,7 +1020,7 @@ void GetFilteredSupercededAchievements( const OnlineService::GameAccountHandle &
             OnlineService::AchievementRecord tRecord;
             if ( !( ptSeriesDefinition->m_flags & ( 1 << OnlineService::ACHIEVEMENT_FLAG_HIDDEN ) ) &&
                  ( !( ptSeriesDefinition->m_flags & ( 1 << OnlineService::ACHIEVEMENT_FLAG_HIDDEN_TILL_AWARDED ) ) ||
-                   ( ptAchievementsInterface && ptAchievementsInterface->FindAwardedAchievement( idPlayer, idSeriesAchievement, tRecord ) ) ) )
+                   ( ptAchievementsInterface && ptAchievementsInterface->FindAwardedAchievement( idPlayer, nAchievementSet, idSeriesAchievement, tRecord ) ) ) )
             {
                 arIds.push_back( ptSeriesDefinition->m_id );
             }
@@ -1106,8 +1106,8 @@ static bool sRewardAchievementSort( const OnlineService::AchievementId & idA, co
 
 
     OnlineService::AchievementRecord tRecordA, tRecordB;
-    bool bEarnedA = ptInterface && ptInterface->FindAwardedAchievement( idGameAccount, idA, tRecordA );
-    bool bEarnedB = ptInterface && ptInterface->FindAwardedAchievement( idGameAccount, idB, tRecordB );
+    bool bEarnedA = ptInterface && ptInterface->FindAwardedAchievement( idGameAccount, 0, idA, tRecordA );
+    bool bEarnedB = ptInterface && ptInterface->FindAwardedAchievement( idGameAccount, 0, idB, tRecordB );
     if ( bEarnedA != bEarnedB )
     {
         return bEarnedA;
@@ -1172,11 +1172,11 @@ void SortRewardParentAchievements( OnlineService::AchievementIdList & arIds, con
 
 
 
-OnlineService::AchievementStatus GetAchievementStatus( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, OnlineService::CriteriaQuantity * pEarned, OnlineService::CriteriaQuantity * pTotal )
+OnlineService::AchievementStatus GetAchievementStatus( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, uint32 nAchievementSet, OnlineService::CriteriaQuantity * pEarned, OnlineService::CriteriaQuantity * pTotal )
 {
     OnlineService::AchievementsInterface * ptAchievementsInterface = sgtAppGlobals.ptAchievementsInterface;
     OnlineService::AchievementRecord tRecord;
-    BOOL fEarned = ptAchievementsInterface && ptAchievementsInterface->FindAwardedAchievement( idPlayer, idAchievement, tRecord );
+    BOOL fEarned = ptAchievementsInterface && ptAchievementsInterface->FindAwardedAchievement( idPlayer, nAchievementSet, idAchievement, tRecord );
 
     if ( fEarned )
     {
@@ -1184,7 +1184,7 @@ OnlineService::AchievementStatus GetAchievementStatus( const OnlineService::Game
         {
             OnlineService::CriteriaQuantity nTotal = 0;
             OnlineService::CriteriaQuantity nEarned = 0;
-            AnalyzeCriteria( idPlayer, idAchievement, nEarned, nTotal );
+            AnalyzeCriteria( idPlayer, idAchievement, nEarned, nTotal, nAchievementSet );
             if ( pEarned )
                 *pEarned = nEarned;
             if ( pTotal )
@@ -1195,7 +1195,7 @@ OnlineService::AchievementStatus GetAchievementStatus( const OnlineService::Game
 
     OnlineService::CriteriaQuantity nTotal = 0;
     OnlineService::CriteriaQuantity nEarned = 0;
-    AnalyzeCriteria( idPlayer, idAchievement, nEarned, nTotal );
+    AnalyzeCriteria( idPlayer, idAchievement, nEarned, nTotal, nAchievementSet );
     if ( pEarned )
         *pEarned = nEarned;
     if ( pTotal )
@@ -1435,7 +1435,7 @@ void ClearAchievementsCache()
 }
 
 
-void GetNumCriteriaCompleted( OnlineService::AchievementId achievementId, int32 & nNumEarnedCriteria, int32 & nTotalCriteria )
+void GetNumCriteriaCompleted( OnlineService::AchievementId achievementId, int32 & nNumEarnedCriteria, int32 & nTotalCriteria, uint32 nAchievementSet )
 {
     nNumEarnedCriteria = 0;
     nTotalCriteria = 0;
@@ -1449,7 +1449,7 @@ void GetNumCriteriaCompleted( OnlineService::AchievementId achievementId, int32 
         const OnlineService::CriteriaDefinition * ptCritDef = tAchievements.GetCriteriaDefinition( arCriteriaIds[i] );
         if ( ptCritDef && !( ptCritDef->m_flags & ( 1 << OnlineService::CRITERIA_FLAG_HIDDEN ) ) )
         {
-            BOOL fEarned = IsCriteriaEarned( arCriteriaIds[i] );
+            BOOL fEarned = IsCriteriaEarned( arCriteriaIds[i], nAchievementSet );
             if ( fEarned )
                 ++nNumEarnedCriteria;
             ++nTotalCriteria;
@@ -1479,7 +1479,7 @@ void GetNumCriteriaCompleted( OnlineService::AchievementId achievementId, int32 
 
 
 
-BOOL IsCriteriaEarned( const OnlineService::CriteriaId & criteriaId )
+BOOL IsCriteriaEarned( const OnlineService::CriteriaId & criteriaId, uint32 nAchievementSet )
 {
     OnlineService::Achievements & tAchievements = *sgtAppGlobals.ptAchievements;
     OnlineService::AchievementsInterface * ptAchievementsInterface = sgtAppGlobals.ptAchievementsInterface;
@@ -1497,13 +1497,13 @@ BOOL IsCriteriaEarned( const OnlineService::CriteriaId & criteriaId )
     OnlineService::CriteriaRecord tCritRecord;
     if ( ptAchievementsInterface )
     {
-        if ( ptAchievementsInterface->FindCriteriaRecord( heroId, ptCritDef->m_id, tCritRecord ) )
+        if ( ptAchievementsInterface->FindCriteriaRecord( heroId, nAchievementSet, ptCritDef->m_id, tCritRecord ) )
             return tCritRecord.m_quantity >= ptCritDef->m_necessaryQuantity;
 
         if ( ptAchievementDef->m_nMinRequiredCriteria == 0 )
         {
             OnlineService::AchievementRecord tRecord;
-            return ptAchievementsInterface->FindAwardedAchievement( heroId, ptCritDef->m_parentAchievementId, tRecord );
+            return ptAchievementsInterface->FindAwardedAchievement( heroId, nAchievementSet, ptCritDef->m_parentAchievementId, tRecord );
         }
     }
 

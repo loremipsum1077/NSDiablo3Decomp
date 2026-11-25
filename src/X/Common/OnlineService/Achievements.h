@@ -26,6 +26,8 @@ namespace D3 { namespace Achievements { class Snapshot; } }
 namespace D3 { namespace AchievementsStaticData { class AchievementFile; } }
 namespace D3 { namespace GameMessage { class AchievementsSnapshot; } }
 namespace D3 { namespace OnlineService { class ContentHandle; } }
+extern "C" uint32 sub_71000b4be0();  // 0x71000b4be0 (unnamed, 12 bytes): returns the u32 global at 0x179a200; the client UI passes it as the achievement set
+extern "C" int sub_71004c8e20();  // 0x71004c8e20 (unnamed, 48 bytes): CHero passes (result != 0) as the achievement set
 namespace OnlineService { namespace AchievementsEngine { struct Achievement; } }
 namespace OnlineService { namespace AchievementsEngine { class AchievementsStaticData; } }
 namespace OnlineService { namespace AchievementsEngine { struct Criteria; } }
@@ -334,27 +336,31 @@ static_assert(sizeof(RewardDefinition) == 0x28, "RewardDefinition");
 
 
 
-struct CriteriaRecord {  // size 0x18
-    OnlineService::CriteriaId m_criteriaId;  // 0x00
-    Blizzard::Time::Timestamp m_timestampStarted;  // 0x08
-    OnlineService::CriteriaQuantity m_quantity;  // 0x10
+struct CriteriaRecord {  // size 0x20
+    CriteriaRecord() : unk_0(0), m_criteriaId(0), m_timestampStarted(0), m_quantity(0) {}  // 2.7.7: IsCriteriaEarned zero-inits all four members
+    uint32 unk_0;  // 0x00 (2.7.7; achievement_set)
+    OnlineService::CriteriaId m_criteriaId;  // 0x08
+    Blizzard::Time::Timestamp m_timestampStarted;  // 0x10
+    OnlineService::CriteriaQuantity m_quantity;  // 0x18
 };
-static_assert(sizeof(CriteriaRecord) == 0x18, "CriteriaRecord");
+static_assert(sizeof(CriteriaRecord) == 0x20, "CriteriaRecord");
 
-struct AchievementRecord {  // size 0x10
+struct AchievementRecord {  // size 0x18
     AchievementRecord();
+    AchievementRecord(uint32 achievementSet) : unk_0(achievementSet), m_achievementId(0), m_timestampEarned(0) {}  // 2.7.7
     AchievementRecord(OnlineService::AchievementId, Blizzard::Time::Timestamp);
-    OnlineService::AchievementId m_achievementId;  // 0x00
-    Blizzard::Time::Timestamp m_timestampEarned;  // 0x08
+    uint32 unk_0;  // 0x00 (2.7.7; achievement_set)
+    OnlineService::AchievementId m_achievementId;  // 0x08
+    Blizzard::Time::Timestamp m_timestampEarned;  // 0x10
 };
-static_assert(sizeof(AchievementRecord) == 0x10, "AchievementRecord");
+static_assert(sizeof(AchievementRecord) == 0x18, "AchievementRecord");
 
 inline AchievementRecord::AchievementRecord()  // DWARF Achievements.h:430
 {
+    unk_0 = 0;
     m_achievementId = 0;
     m_timestampEarned = 0;
 }
-
 
 struct ClientSnapshot {  // size 0x30
     blz::vector<OnlineService::CriteriaRecord, blz::allocator<OnlineService::CriteriaRecord> > m_criteriaRecords;  // 0x00
@@ -401,7 +407,7 @@ public:
     bool GetRewardDefinition(OnlineService::RewardId id, OnlineService::RewardDefinition & tReward) const;
     bool GetRewardParentAchievements(OnlineService::RewardId id, OnlineService::AchievementIdList & idList) const;
     void GetAllRewardsByType(OnlineService::RewardType eType, OnlineService::RewardIdList & idList, uint32 nSeasonId) const;
-    void GetAllRewardsOfTypes(uint32 dwTypes, OnlineService::RewardIdList & idList, uint32 nSeasonId) const;
+    void GetAllRewardsOfTypes(uint32 dwTypes, OnlineService::RewardIdList & idList, uint32 nSeasonId, bool bAdvancedGuardianOnly) const;
     BOOL IsSeasonJourneyAchievement(OnlineService::AchievementId achievementId) const;
     BOOL IsSeasonJourneyAchievementObjective(OnlineService::AchievementId achievementId) const;
     BOOL GetAchievementObjectiveParent(OnlineService::AchievementId achievementId, OnlineService::AchievementId & achievementIdParent);
@@ -412,8 +418,8 @@ public:
     BOOL IsAchievementValidForSeason(const OnlineService::AchievementDefinition * ptAchievementDef, uint32 nSeasonId) const;
     BOOL IsAchievementHardcore(OnlineService::AchievementId) const;
     BOOL IsAchievementHardcoreByCriteria(OnlineService::AchievementId idAchievement) const;
-    OnlineService::AchievementId GetSeasonJourneyRankSeriesTail(uint32 nSeasonId) const;
-    OnlineService::AchievementId GetHighestEarnedSeasonJourneyAchievement(uint32 nSeasonId, const OnlineService::GameAccountHandle & gameAccountId, OnlineService::AchievementsInterface * ptAchievementsInterface);
+    OnlineService::AchievementId GetSeasonJourneyRankSeriesTail(uint32 nAchievementSet, uint32 nSeasonId) const;
+    OnlineService::AchievementId GetHighestEarnedSeasonJourneyAchievement(uint32 nAchievementSet, uint32 nSeasonId, const OnlineService::GameAccountHandle & gameAccountId, OnlineService::AchievementsInterface * ptAchievementsInterface);
     OnlineService::CategoryId GetTopMostCategory(OnlineService::CategoryId) const;
     bool IsAchievementInSeries(OnlineService::AchievementId achievementId) const;
     OnlineService::AchievementId GetSeriesTail(OnlineService::AchievementId achievementId) const;
@@ -485,9 +491,9 @@ public:
     virtual void RequestSnapshot(const OnlineService::GameAccountHandle &, const OnlineService::AchievementsInterface::SnapshotCallback &) = 0;  // vtable slot 10
     virtual bool GetSnapshot(const OnlineService::GameAccountHandle &, D3::Achievements::Snapshot &) = 0;  // vtable slot 11
     virtual void OnAchievementsSnapshotReceived(D3::GameMessage::AchievementsSnapshot &) = 0;  // vtable slot 12
-    virtual bool FindAwardedAchievement(const OnlineService::GameAccountHandle &, OnlineService::AchievementId, OnlineService::AchievementRecord &) = 0;  // vtable slot 13
+    virtual bool FindAwardedAchievement(const OnlineService::GameAccountHandle &, uint32, OnlineService::AchievementId, OnlineService::AchievementRecord &) = 0;  // vtable slot 13
     virtual bool FindAwardedAchievements(const OnlineService::GameAccountHandle &, blz::vector<OnlineService::AchievementRecord, blz::allocator<OnlineService::AchievementRecord> > &) = 0;  // vtable slot 14
-    virtual bool FindCriteriaRecord(const OnlineService::GameAccountHandle &, OnlineService::CriteriaId, OnlineService::CriteriaRecord &) = 0;  // vtable slot 15
+    virtual bool FindCriteriaRecord(const OnlineService::GameAccountHandle &, uint32, OnlineService::CriteriaId, OnlineService::CriteriaRecord &) = 0;  // vtable slot 15
     virtual bool IsReadyForDeletion();  // vtable slot 16
     virtual uint32 GetPartitionMask();  // vtable slot 17
     static void ConvertAchievementRecord(const OnlineService::AchievementsEngine::Achievement & bnetRecord, OnlineService::AchievementRecord & osRecord);

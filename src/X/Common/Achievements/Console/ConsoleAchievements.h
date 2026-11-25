@@ -76,20 +76,21 @@ public:
     OnlineService::ErrorCode RegisterPlayer(const OnlineService::GameAccountHandle & gameAccount, const D3::Account::SavedDefinition & tDefinition);
     virtual bool CancelSubscription(const OnlineService::GameAccountHandle & gameAccount, const OnlineService::AchievementsInterface::RegistrationCallback & cb);  // vtable slot 5
     virtual OnlineService::ErrorCode EvaluateEvent(const OnlineService::GameAccountHandle & gameAccount, uint32 eventId, uint64 comparand, uint64 quantity, OnlineService::Timestamp timestamp, uint32 uUnkFlags, const OnlineService::AchievementsInterface::ModifierCallback & cb);  // vtable slot 7
-    virtual bool FindAwardedAchievement(const OnlineService::GameAccountHandle & gameAccount, OnlineService::AchievementId id, OnlineService::AchievementRecord & record);  // vtable slot 13
+    virtual bool FindAwardedAchievement(const OnlineService::GameAccountHandle & gameAccount, uint32 achievementSet, OnlineService::AchievementId id, OnlineService::AchievementRecord & record);  // vtable slot 13
     virtual bool FindAwardedAchievements(const OnlineService::GameAccountHandle & gameAccount, blz::vector<OnlineService::AchievementRecord, blz::allocator<OnlineService::AchievementRecord> > & list);  // vtable slot 14
-    virtual bool FindCriteriaRecord(const OnlineService::GameAccountHandle & gameAccount, OnlineService::CriteriaId criteriaId, OnlineService::CriteriaRecord & record);  // vtable slot 15
+    virtual bool FindCriteriaRecord(const OnlineService::GameAccountHandle & gameAccount, uint32 achievementSet, OnlineService::CriteriaId criteriaId, OnlineService::CriteriaRecord & record);  // vtable slot 15
     bool PopulateAccountAchievementSnapshot(const OnlineService::GameAccountHandle & gameAccount, D3::Account::SavedDefinition & tDefinition);
     bool ClearAchievementSnapshot(const OnlineService::GameAccountHandle & gameAccount);
     void ClearAllAchievementSnapshots();
 private:
     static bool sModifierCallback(const OnlineService::AchievementsInterface::ModifierCallback &, uint64, uint64);
-    struct PlayerAchievementsRecord : public OnlineService::AchievementsEngine::Listener {  // size 0xc98
+    struct PlayerAchievementsRecord : public OnlineService::AchievementsEngine::Listener {  // size 0x1090
         OnlineService::AchievementsEngine::ProgressData m_snapshot;  // 0x18
         OnlineService::AchievementsEngine::AchievementsEvaluator m_tAchievementsEvaluator;  // 0x88
-        blzext::fixed_vector<unsigned long, 32> m_achievementsBuffer;  // 0x170
-        blzext::fixed_vector<OnlineService::AchievementsEngine::CriteriaUpdateRecord, 64> m_criteriaUpdateBuffer;  // 0x280
-        uint32 m_dwTimeLastFlush;  // 0xc90
+        OnlineService::AchievementsEngine::AchievementsEvaluator unk_178;  // 0x178 (2.7.7: second evaluator, achievement set 1, static data [1])
+        blzext::fixed_vector<blz::pair<uint32, unsigned long>, 32> m_achievementsBuffer;  // 0x268 (2.7.7: {achievement set, id})
+        blzext::fixed_vector<OnlineService::AchievementsEngine::CriteriaUpdateRecord, 64> m_criteriaUpdateBuffer;  // 0x478
+        uint32 m_dwTimeLastFlush;  // 0x1088
         PlayerAchievementsRecord(const OnlineService::AchievementsEngine::AchievementsStaticData * ptStaticData, const OnlineService::GameAccountHandle & gameAccount, uint32 partitionMask);
         virtual ~PlayerAchievementsRecord() { SendAccumulatedUpdates(); }  // vtable slot 0; line 242
         virtual void OnCriteriaUpdate(const OnlineService::AchievementsEngine::CriteriaUpdateRecord & criteria);  // vtable slot 0
@@ -111,12 +112,12 @@ public:
     ClientAchievementsInterface(Console::Achievements *);
     virtual ~ClientAchievementsInterface() {}  // vtable slot 0; line 276
     virtual void Process();  // vtable slot 2
-    virtual bool FindAwardedAchievement(const OnlineService::GameAccountHandle & gameAccount, OnlineService::AchievementId id, OnlineService::AchievementRecord & record);  // vtable slot 13
-    bool FindAwardedAchievement(int32 nUserIndex, OnlineService::AchievementId id, OnlineService::AchievementRecord & record);
+    virtual bool FindAwardedAchievement(const OnlineService::GameAccountHandle & gameAccount, uint32 achievementSet, OnlineService::AchievementId id, OnlineService::AchievementRecord & record);  // vtable slot 13
+    bool FindAwardedAchievement(int32 nUserIndex, uint32 achievementSet, OnlineService::AchievementId id, OnlineService::AchievementRecord & record);
     virtual bool FindAwardedAchievements(const OnlineService::GameAccountHandle & gameAccount, blz::vector<OnlineService::AchievementRecord, blz::allocator<OnlineService::AchievementRecord> > & list);  // vtable slot 14
     bool FindAwardedAchievements(int32 nUserIndex, blz::vector<OnlineService::AchievementRecord, blz::allocator<OnlineService::AchievementRecord> > & list);
-    virtual bool FindCriteriaRecord(const OnlineService::GameAccountHandle & gameAccount, OnlineService::CriteriaId criteriaId, OnlineService::CriteriaRecord & record);  // vtable slot 15
-    bool FindCriteriaRecord(int32 nUserIndex, OnlineService::CriteriaId criteriaId, OnlineService::CriteriaRecord & tRecord);
+    virtual bool FindCriteriaRecord(const OnlineService::GameAccountHandle & gameAccount, uint32 achievementSet, OnlineService::CriteriaId criteriaId, OnlineService::CriteriaRecord & record);  // vtable slot 15
+    bool FindCriteriaRecord(int32 nUserIndex, uint32 achievementSet, OnlineService::CriteriaId criteriaId, OnlineService::CriteriaRecord & tRecord);
     bool PopulateAccountAchievementSnapshot(int32 nUserIndex, D3::Account::SavedDefinition & tDefinition);
     void OnAchievementAwarded(int32 nUserIndex, const D3::GameMessage::AchievementsAwardedConsole & tUpdateMsg);
     void OnAchievementCriteriaUpdate(int32 nUserIndex, const D3::GameMessage::AchievementsCriteriaUpdateConsole & tUpdateMsg);

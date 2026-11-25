@@ -335,7 +335,7 @@ void FanfareManager::SendFanfare(OnlineService::AchievementId idAchievement, int
         {
             ptNewToast->eToastType = TT_SEASON_JOURNEY_PROGRESSION;
             OnlineService::GetNumCriteriaCompleted(idAchievement,
-                ptNewToast->nNumEarnedSeasonJourneyCriteria, ptNewToast->nTotalSeasonJourneyCriteria);
+                ptNewToast->nNumEarnedSeasonJourneyCriteria, ptNewToast->nTotalSeasonJourneyCriteria, sub_71000b4be0());
         }
         else
         {

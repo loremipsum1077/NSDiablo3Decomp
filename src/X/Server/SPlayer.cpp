@@ -431,10 +431,10 @@ XVarBool s_varCommunityEventPerkDoubleBloodShards(s_scopePerk, "CommunityEventDo
 XVarBool s_varCommunityEventPerkDoubleTreasureGoblins(s_scopePerk, "CommunityEventDoubleTreasureGoblins", false);
 XVarBool s_varEasterEggWorldPerkEnabled(s_scopePerk, "EasterEggWorldEnabled", false);
 XVarBool s_varCommunityEventPerkDoubleBountyBags(s_scopePerk, "CommunityEventDoubleBountyBags", false);
-
+bool sub_71007b7080();  // 0x71007b7080 (unnamed, SGame.cpp): tStartParams.dwCreationFlags bit 20
 static XVarScope s_scopeDashingStrikeStuck("DashingStrikeStuck", NULL);  // line 199
 XVarBool s_varDashingStrikeStuckMaxDurSpew(s_scopeDashingStrikeStuck, "EnableMaxDurationSpew", false);
-
+BOOL sub_71007d50c0(SNO snoWorld);  // 0x71007d50c0 (unnamed 2.7.7 function, also declared in SpellEffect.cpp)
 static XVarScope s_scopeSave("SaveMode", NULL);  // line 202
 XVarBool s_varParallelEnabled(s_scopeSave, "ParallelEnabled", false);
 
@@ -3873,10 +3873,10 @@ static void sPopulateAchievementHealingList()
     OnlineService::RewardIdList & idList = ptServerPlayerGlobals->tRewardHealingList;
 
 
-    ptAchievements->GetAllRewardsOfTypes((1 << OnlineService::REWARD_TYPE_ITEM_TRANSMOG) | (1 << OnlineService::REWARD_TYPE_COSMETIC), idList, 0);
+    ptAchievements->GetAllRewardsOfTypes((1 << OnlineService::REWARD_TYPE_ITEM_TRANSMOG) | (1 << OnlineService::REWARD_TYPE_COSMETIC), idList, 0, false);
     if (GameIsSeasonal())
     {
-        ptAchievements->GetAllRewardsOfTypes((1 << OnlineService::REWARD_TYPE_ITEM_TRANSMOG) | (1 << OnlineService::REWARD_TYPE_COSMETIC), idList, GameGetCurrentSeason());
+        ptAchievements->GetAllRewardsOfTypes((1 << OnlineService::REWARD_TYPE_ITEM_TRANSMOG) | (1 << OnlineService::REWARD_TYPE_COSMETIC), idList, GameGetCurrentSeason(), false);
     }
 }
 
@@ -4006,7 +4006,7 @@ static BOOL sPlayerTrickleCosmeticAchievements(
                 {
 
                     OnlineService::AchievementRecord tRecord;
-                    if (tSGameGlobals.ptAchievementsInterface != NULL && tSGameGlobals.ptAchievementsInterface->FindAwardedAchievement(tPlayer.tAccount.tHandle, listParentAchievements[i], tRecord))
+                    if (tSGameGlobals.ptAchievementsInterface != NULL && tSGameGlobals.ptAchievementsInterface->FindAwardedAchievement(tPlayer.tAccount.tHandle, sub_71007b7080(), listParentAchievements[i], tRecord))
                     {
 
                         if (tReward.m_type == OnlineService::REWARD_TYPE_ITEM_TRANSMOG)
@@ -5547,11 +5547,11 @@ static void sSendTrickleUpdateMessage(
         tMessage.nTieredRiftRank = ACDGetTieredLootRunLevel(tACD) + 1;
         tMessage.bBrawling = tACD.IsDueling();
         SNO snoWorld = WorldCommonGetWorldSNO(tACD.GetSWorldID());
-        tMessage.bInUberFight = snoWorld == GlobalSNOGet(GLOBALSNO_UBER_BOSS_WORLD_01)
+        tMessage.bInUberFight = snoWorld == GlobalSNOGet(GLOBALSNO_UBER_BOSS_WORLD_04)
+            || snoWorld == GlobalSNOGet(GLOBALSNO_UBER_BOSS_WORLD_01)
             || snoWorld == GlobalSNOGet(GLOBALSNO_UBER_BOSS_WORLD_02)
-            || snoWorld == GlobalSNOGet(GLOBALSNO_UBER_BOSS_WORLD_03)
-            || snoWorld == GlobalSNOGet(GLOBALSNO_UBER_BOSS_WORLD_04);
-
+            || snoWorld == GlobalSNOGet(GLOBALSNO_UBER_BOSS_WORLD_03);
+        tMessage.unk_b4 = sub_71007d50c0(snoWorld);
         tMessage.nAction = TRICKLE_ACTION_NONE;
         if (tACD.AttributesGetInt(ATTRIBUTE_BUSY))
         {
@@ -5805,7 +5805,7 @@ static BOOL sPlayerShouldSeeTrickledACD(
 
 
 
-
+// NON_MATCHING: 2 insns; the inlined sSendTrickleUpdateMessage reaches sgpLevelAreaErrorScene at merged-globals offset 0xf0, the target at 0xd0 (file-static layout, not logic)
 void SPlayerTrickleUpdate(Player & tPlayer)
 {
 
@@ -11115,7 +11115,7 @@ void SPlayerClearAllReturnPoints(
         {
             HearthPortalInfoMessage tHearthPortalMessage;
 
-            tHearthPortalMessage.snoLevelArea = SNO_NONE;
+            tHearthPortalMessage.snoLevelArea = SNO_NONE; tHearthPortalMessage.unk_c = SNO_NONE;
             tHearthPortalMessage.annPortal = ANN_INVALID;
             tHearthPortalMessage.bResetUI = FALSE;
             tHearthPortalMessage.bIsTieredRift = FALSE;
@@ -14622,7 +14622,7 @@ void DeliveredRewardsSavedData::Export(
 {
     for (size_t i = 0; i < Math::Min(tAchievementRewards.size(), (size_t)MAX_RECENT_ACHIEVEMENTS); i++)
     {
-        tDeliveredRewardsSavedData.add_achievement_reward()->set_achievement_id(tAchievementRewards[i]);
+        D3::Account::DeliveredAchievementReward * ptReward = tDeliveredRewardsSavedData.add_achievement_reward(); ptReward->set_achievement_id(tAchievementRewards[i].achievement_id); ptReward->set_set_id(tAchievementRewards[i].set_id);
     }
 
     for (size_t i = 0; i < tLegacyAchievementsToDeliver.size(); i++)
@@ -14639,7 +14639,7 @@ void DeliveredRewardsSavedData::Import(
 
     for (int i = 0; i < tDeliveredRewardsSavedData.achievement_reward_size(); i++)
     {
-        tAchievementRewards.push_back(tDeliveredRewardsSavedData.achievement_reward(i).achievement_id());
+        const D3::Account::DeliveredAchievementReward & tSaved = tDeliveredRewardsSavedData.achievement_reward(i); DeliveredAchievementRewardEntry tReward = { tSaved.achievement_id(), tSaved.set_id() }; tAchievementRewards.push_back(tReward);
     }
 
     for (int i = 0; i < tDeliveredRewardsSavedData.legacy_achievements_to_deliver_size(); i++)
@@ -14663,18 +14663,18 @@ void DeliveredRewardsSavedData::Import(
 
 
 
-void DeliveredRewardsSavedData::AddAchievementReward(uint64 achievement, Player * ptPlayer)
+void DeliveredRewardsSavedData::AddAchievementReward(uint64 achievement, int32 set_id, Player * ptPlayer)
 {
     // trim the list down to make room for the new one
     while (tAchievementRewards.size() >= MAX_RECENT_ACHIEVEMENTS)
     {
         OnlineService::AchievementRecord record;
-        unsigned long * earliestAchievementPos = tAchievementRewards.begin();
+        DeliveredAchievementRewardEntry * earliestAchievementPos = tAchievementRewards.begin();
         Blizzard::Time::Timestamp earliestAchievementTimestamp = INT64_MAX;
 
-        for (unsigned long * it = tAchievementRewards.begin(); it != tAchievementRewards.end(); ++it)
+        for (DeliveredAchievementRewardEntry * it = tAchievementRewards.begin(); it != tAchievementRewards.end(); ++it)
         {
-            if (SGameManager::GameGet().ptSGameGlobals->ptAchievementsInterface->FindAwardedAchievement(ptPlayer->tAccount.tHandle, *it, record))
+            if (SGameManager::GameGet().ptSGameGlobals->ptAchievementsInterface->FindAwardedAchievement(ptPlayer->tAccount.tHandle, it->set_id, it->achievement_id, record))
             {
                 if (record.m_timestampEarned < earliestAchievementTimestamp)
                 {
@@ -14684,13 +14684,13 @@ void DeliveredRewardsSavedData::AddAchievementReward(uint64 achievement, Player 
             }
         }
 
-        if (SGameManager::GameGet().ptSGameGlobals->ptAchievementsInterface->FindAwardedAchievement(ptPlayer->tAccount.tHandle, achievement, record) && record.m_timestampEarned < earliestAchievementTimestamp)
+        if (SGameManager::GameGet().ptSGameGlobals->ptAchievementsInterface->FindAwardedAchievement(ptPlayer->tAccount.tHandle, set_id, achievement, record) && record.m_timestampEarned < earliestAchievementTimestamp)
             return;
 
         tAchievementRewards.erase(earliestAchievementPos);
     }
 
-    tAchievementRewards.push_back(achievement);
+    DeliveredAchievementRewardEntry tReward = { achievement, set_id }; tAchievementRewards.push_back(tReward);
 }
 
 
@@ -14710,11 +14710,11 @@ void DeliveredRewardsSavedData::AddAchievementReward(uint64 achievement, Player 
 
 
 inline bool DeliveredRewardsSavedData::ContainsAchievement(
-    uint64 achievement)
+    uint64 achievement, int32 set_id)
 {
     for (size_t i = 0; i < tAchievementRewards.size(); i++)
     {
-        if (tAchievementRewards[i] == achievement)
+        if (tAchievementRewards[i].achievement_id == achievement && tAchievementRewards[i].set_id == set_id)
             return true;
     }
     return false;
@@ -14837,8 +14837,8 @@ void SPlayerMarkConquestDelivered(
 {
     SGame & game = SGameManager::GameGet();
     DeliveredRewardsSavedData & tDeliveredRewards = game.ptServerPlayerGlobals->tPerPlayer[player.nPlayerIndex].tDeliveredRewards;
-    if (!tDeliveredRewards.ContainsAchievement(achievementId))
-        tDeliveredRewards.AddAchievementReward(achievementId, &player);
+    if (!tDeliveredRewards.ContainsAchievement(achievementId, sub_71007b7080()))
+        game.ptServerPlayerGlobals->tPerPlayer[player.nPlayerIndex].tDeliveredRewards.AddAchievementReward(achievementId, sub_71007b7080(), &player);
 }
 
 

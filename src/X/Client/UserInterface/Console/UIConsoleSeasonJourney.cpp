@@ -699,7 +699,7 @@ void OpenForController(const int32 nControllerIndex)
         }
         tChapter.m_nCriteria = nSize;
         OnlineService::AchievementRecord tRecord;
-        tChapter.m_bComplete = tAchievementsInterface.FindAwardedAchievement(sgtUISeasonJourneyData.idPlayer, tChapter.m_idAchievement, tRecord);
+        tChapter.m_bComplete = tAchievementsInterface.FindAwardedAchievement(sgtUISeasonJourneyData.idPlayer, sub_71000b4be0(), tChapter.m_idAchievement, tRecord);
         if (tChapter.m_bComplete)
             sgtUISeasonJourneyData.m_nHighestCompletedChapter = n + 1;
         sgtUISeasonJourneyData.m_arChapters.push_back(tChapter);
@@ -719,7 +719,7 @@ void OpenForController(const int32 nControllerIndex)
         }
         tChapter.m_nCriteria = nSize;
         OnlineService::AchievementRecord tRecord;
-        tChapter.m_bComplete = tAchievementsInterface.FindAwardedAchievement(sgtUISeasonJourneyData.idPlayer, tChapter.m_idAchievement, tRecord);
+        tChapter.m_bComplete = tAchievementsInterface.FindAwardedAchievement(sgtUISeasonJourneyData.idPlayer, sub_71000b4be0(), tChapter.m_idAchievement, tRecord);
         if (tChapter.m_bComplete)
             sgtUISeasonJourneyData.m_nHighestCompletedChapter = NUM_CASUAL_CHAPTERS + n + 1;
         sgtUISeasonJourneyData.m_arChapters.push_back(tChapter);
@@ -1851,11 +1851,11 @@ void PopulateCommonUIElements(const UIID & idWindow, const OnlineService::Achiev
     UI_GetWindowFromID(idCheckbox).SetActive(bComplete);
 
     CRefString strName = sAchievementTitle;
-    if (!bComplete && (tAchievementDefinition.m_flags & (1 << OnlineService::ACHIEVEMENT_FLAG_HAS_PROGRESS_BAR)) && !OnlineService::IsCriteriaEarned(tCriteriaDefinition.m_id))
+    if (!bComplete && (tAchievementDefinition.m_flags & (1 << OnlineService::ACHIEVEMENT_FLAG_HAS_PROGRESS_BAR)) && !OnlineService::IsCriteriaEarned(tCriteriaDefinition.m_id, sub_71000b4be0()))
     {
         OnlineService::CriteriaQuantity nEarnedCriteria = 0;
         OnlineService::CriteriaQuantity nTotalCriteria = 0;
-        OnlineService::GetAchievementStatus(idPlayer, tAchievementDefinition.m_id, &nEarnedCriteria, &nTotalCriteria);
+        OnlineService::GetAchievementStatus(idPlayer, tAchievementDefinition.m_id, sub_71000b4be0(), &nEarnedCriteria, &nTotalCriteria);
         strName = LocalizedSprintf(StringListFetch("ConsoleSeasonJourney:CriteriaWithProgress"), sAchievementTitle.str(),
                                    UnicodeText::FormatNumber(nEarnedCriteria, TRUE, FNS_NORMAL, XLOCALE_INVALID).str(),
                                    UnicodeText::FormatNumber(nTotalCriteria, TRUE, FNS_NORMAL, XLOCALE_INVALID).str());

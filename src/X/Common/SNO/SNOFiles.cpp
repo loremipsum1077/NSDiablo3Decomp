@@ -1346,7 +1346,7 @@ static uint64 sSNOEntryGetHash(
     return sGetHashFrom8BytesString((const uint8 *)tEntry.pNameOrHash);
 }
 
-
+extern int32 unk_71010aba28;  // Console IO (ConsoleIO.cpp): SNO group being opened, -1 otherwise
 
 
 
@@ -1383,8 +1383,9 @@ bool sSNOEntryOpenFile(SNOElement * ptSNOElement, FileIO::File * ptFile, uint64 
 
             dwMyHash = Console::IO::CPKArchive::GetSubFileHash(sSNOEntryGetHash(ptSNOElement->tEntry), CRefString().Format("\\%s", ((SNOElementChild *)ptSNOElement)->szChildFile));
         }
-
+        unk_71010aba28 = ptSNOElement->tEntry.snoGroup;
         bFileOpened = ptFile->OpenConsoleFile(0, dwMyHash, NULL);
+        unk_71010aba28 = -1;
     }
     else
     {
@@ -1400,7 +1401,6 @@ bool sSNOEntryOpenFile(SNOElement * ptSNOElement, FileIO::File * ptFile, uint64 
             bFileOpened = ptFile->OpenChildSNO(ptSNOElement->tEntry.ToSNOName(), ((SNOElementChild *)ptSNOElement)->szChildFile);
         }
     }
-
 
 
 
@@ -1434,11 +1434,11 @@ BOOL sSNOEntryExists(
             dwHash = Console::IO::CPKArchive::GetSubFileHash(sSNOEntryGetHash(ptSNOElement->tEntry), CRefString().Format("\\%s", ((SNOElementChild *)ptSNOElement)->szChildFile));
         }
 
+        unk_71010aba28 = ptSNOElement->tEntry.snoGroup;
         BOOL fFileExists = SFileFileExists(0, dwHash, phArchiveExistsIn);
+        unk_71010aba28 = -1;
         return fFileExists;
     }
-
-
 
 
 

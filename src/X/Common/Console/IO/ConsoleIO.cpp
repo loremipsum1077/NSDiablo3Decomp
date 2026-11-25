@@ -30,6 +30,10 @@
 #include "ConsoleIO_TaskThread.h"
 #include "ConsoleIO_Tasks.h"
 
+// 0x71010aba28 (.data, initial -1): the SNO group of the file SNOFiles is opening, set around
+// sSNOEntryOpenFile / sSNOEntryExists / SNOFilesAsyncRead; -1 otherwise.
+int32 unk_71010aba28 = -1;
+
 namespace Console {
 namespace IO {
 
@@ -853,7 +857,7 @@ CPKArchiveReader * FindArchiveContaining(uint64 dwHash, FileInfo * ptFileInfo)
     if (ptArchive)
         return ptArchive;
 
-    if (UnicodeText::GetStringDisplayLocale() != UnicodeText::GetCurrentLocale())
+    if (unk_71010aba28 != FONT_SNO && UnicodeText::GetStringDisplayLocale() != UnicodeText::GetCurrentLocale())
     {
         uint64 dwLocaleOverrideHash = GetLocaleOverrideHash(dwHash);
         ptArchive = sFindArchiveContainingInternal(dwLocaleOverrideHash, ptFileInfo);

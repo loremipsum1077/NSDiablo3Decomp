@@ -13942,6 +13942,72 @@ RGBAColor ItemGetDisplayNameColor(const ItemQualityLevel eIQL)
 
 
 
+// 2.7.7 helpers (unnamed in functions.csv). Bit 31 of ItemDefinition::dwFlags forces an ancient roll
+// (LootRollForAncientLegendary) and a cyan name; attribute ITEM_WAS_SANCTIFIED marks sanctified items.
+extern "C" BOOL sub_710050e910(GBID gbidItem)
+{
+    ScopedItemDefinitionLockR ptItem(gbidItem);
+    if (ptItem == NULL)
+        return FALSE;
+    return (ptItem->dwFlags >> ITEM_ETHEREAL_BIT) & 1;
+}
+
+extern "C" BOOL sub_710050e800(GBID gbidItem)
+{
+    ScopedItemDefinitionLockR ptItem(gbidItem);
+    if (ptItem == NULL)
+        return FALSE;
+    return (ptItem->dwFlags >> ITEM_UNK_26) & 1;
+}
+
+extern "C" BOOL sub_71004f8a30(GBID gbidItem)
+{
+    ScopedItemDefinitionLockR ptItem(gbidItem);
+    return ptItem->unk_24 & 1;
+}
+
+extern "C" BOOL sub_710050eb20(GBID gbidItem)
+{
+    ScopedItemDefinitionLockR ptItem(gbidItem);
+    return (ptItem->unk_24 >> 1) & 1;
+}
+
+extern "C" BOOL sub_710050e880(const ActorCommonData * ptACD)
+{
+    if (ptACD == NULL || ptACD->hGB.eType != GB_ITEMS)
+        return FALSE;
+    ScopedItemDefinitionLockR ptItem(ptACD->hGB.gbid);
+    if (ptItem == NULL)
+        return FALSE;
+    return (ptItem->dwFlags >> ITEM_ETHEREAL_BIT) & 1;
+}
+
+extern "C" BOOL sub_71004f71e0(const ActorCommonData & tACDItem)
+{
+    if (tACDItem.hGB.eType != GB_ITEMS)
+        return FALSE;
+    ScopedItemDefinitionLockR ptItem(tACDItem.hGB.gbid);
+    return (ptItem->dwFlags >> ITEM_UNK_30) & 1;
+}
+
+extern "C" int32 sub_710050e990(GBID gbidItem)
+{
+    if (gbidItem == GBID_NONE)
+        return 0;
+    ScopedItemDefinitionLockR ptItem(gbidItem);
+    if (ptItem == NULL)
+        return 0;
+    return ptItem->unk_2f8;
+}
+
+extern "C" BOOL sub_710050ea10(const ActorCommonData * ptACD)
+{
+    if (ptACD == NULL)
+        return FALSE;
+    return ptACD->AttributesGetInt(ATTRIBUTE_ITEM_WAS_SANCTIFIED) != 0;
+}
+
+// NON_MATCHING: the cyan bit-31 color is the 2.7.7 global RGBAColor at 0x7100ed3648 ({0,255,225,255}, between crgbaUIOrange and crgbaDisabled), loaded through the GOT; RGBAColor.cpp does not define it yet, so it is built inline here.
 RGBAColor ItemGetDisplayNameColor(const ActorCommonData & tACD)
 {
     if (ItemIsGold(tACD))
@@ -13951,6 +14017,12 @@ RGBAColor ItemGetDisplayNameColor(const ActorCommonData & tACD)
         return rgbaColor;
     if (ItemIsQuest(tACD))
         return FontGetColorForFontSpecifier(FONTCOLOR_QUEST, FALSE);
+    if (sub_710050e880(&tACD))
+        return RGBAColor(0, 255, 225, 255);
+    if (sub_71004f71e0(tACD))
+        return RGBAColor(254, 24, 0, 255);
+    if (sub_710050ea10(&tACD))
+        return RGBAColor(172, 191, 205, 255);
     ItemQualityLevel eIQL = ItemGetDisplayedQualityLevel(tACD);
     return ItemGetDisplayNameColor(eIQL);
 }

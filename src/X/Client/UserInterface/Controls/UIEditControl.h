@@ -50,7 +50,7 @@ public:
 };
 static_assert(sizeof(EditBoxCreationParams) == 0x820, "EditBoxCreationParams");
 
-class UIEdit : public UIText {  // size 0x468
+class UIEdit : public UIText {  // size 0x470
 public:
     UIEdit(const EditBoxCreationParams &, const Vector2D &, const Vector2D &);
     UIEdit(const EditBoxCreationParams &, const Rect2D *);
@@ -121,26 +121,26 @@ private:
     void UpdateIMELocaleIndicator();
     void PerformNumberFormatting(LPSTR uszBuffer, uint32 nLength, int32 & nCursorPosition);
 public:
-    SNO m_snoCursor;  // 0x3e4
-    AnimState m_tCursorAnimState;  // 0x3e8
-    uint32 m_dwFlags;  // 0x400
-    int32 m_nCursorPosition;  // 0x404
-    int32 m_nMaximumAllowedCharacters;  // 0x408
-    int32 m_nMaximumAllowedBytes;  // 0x40c
-    int32 m_nUTF8Length;  // 0x410
-    int32 m_nNumDecimalDigits;  // 0x414
-    XLocale m_eLocaleOverride;  // 0x418
-    BOOL m_bIsIMEComposing;  // 0x41c
-    UIFunctionPtr m_pfnOnReturnEndEdit;  // 0x420
-    UIFunctionPtr m_pfnOnChange;  // 0x428
-    UIFunctionPtr m_pfnOnGainedFocus;  // 0x430
-    UIFunctionPtr m_pfnOnLostFocus;  // 0x438
-    UIFunctionPtr m_pfnMaximumAllowedCharactersReached;  // 0x440
-    UIEditFunction m_pfnStringWouldBeValid;  // 0x448
-    UIEditFunction m_pfnInputWouldBeValid;  // 0x450
-    EditBoxStyle m_eEditBoxStyle;  // 0x458
-    float m_flIndentLeft;  // 0x45c
-    float m_flIndentRight;  // 0x460
-    BOOL m_fIgnoreNextCharMessage;  // 0x464
+    SNO m_snoCursor;  // 0x3e8
+    AnimState m_tCursorAnimState;  // 0x3ec
+    uint32 m_dwFlags;  // 0x404
+    int32 m_nCursorPosition;  // 0x408
+    int32 m_nMaximumAllowedCharacters;  // 0x40c
+    int32 m_nMaximumAllowedBytes;  // 0x410
+    int32 m_nUTF8Length;  // 0x414
+    int32 m_nNumDecimalDigits;  // 0x418
+    XLocale m_eLocaleOverride;  // 0x41c
+    BOOL m_bIsIMEComposing;  // 0x420
+    UIFunctionPtr m_pfnOnReturnEndEdit;  // 0x428
+    UIFunctionPtr m_pfnOnChange;  // 0x430
+    UIFunctionPtr m_pfnOnGainedFocus;  // 0x438
+    UIFunctionPtr m_pfnOnLostFocus;  // 0x440
+    UIFunctionPtr m_pfnMaximumAllowedCharactersReached;  // 0x448
+    UIEditFunction m_pfnStringWouldBeValid;  // 0x450
+    UIEditFunction m_pfnInputWouldBeValid;  // 0x458
+    EditBoxStyle m_eEditBoxStyle;  // 0x460
+    float m_flIndentLeft;  // 0x464
+    float m_flIndentRight;  // 0x468
+    BOOL m_fIgnoreNextCharMessage;  // 0x46c
 };
-static_assert(sizeof(UIEdit) == 0x468, "UIEdit");
+static_assert(sizeof(UIEdit) == 0x470, "UIEdit");

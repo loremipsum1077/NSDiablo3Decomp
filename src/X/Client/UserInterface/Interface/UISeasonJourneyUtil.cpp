@@ -62,10 +62,10 @@ void SeasonJourney_GetAchievementsToDisplay( OnlineService::AchievementId & idAc
     if ( ptSeasonJourneyCategoryDefinition != NULL )
     {
         OnlineService::Achievements & tAchievements = sGetAchievements();
-        OnlineService::AchievementId idSeriesTail = tAchievements.GetSeasonJourneyRankSeriesTail( OnlineService::GetSeasonNum() );
+        OnlineService::AchievementId idSeriesTail = tAchievements.GetSeasonJourneyRankSeriesTail( sub_71000b4be0(), OnlineService::GetSeasonNum() );
         OnlineService::AchievementIdList arAchievementIds;
 
-        OnlineService::GetFilteredSupercededAchievements( tAccountId, idSeriesTail, arAchievementIds );
+        OnlineService::GetFilteredSupercededAchievements( tAccountId, idSeriesTail, arAchievementIds, sub_71000b4be0() );
 
         if ( arAchievementIds.size() != 0 )
         {
@@ -89,7 +89,7 @@ void SeasonJourney_GetAchievementsToDisplay( OnlineService::AchievementId & idAc
 
             eSeasonJourneyProgressionView = SEASON_JOURNEY_VIEW_INVALID;
 
-            OnlineService::AchievementId idLowestUnearned = OnlineService::GetLowestUnearnedAchievementInSeries( tAccountId, arAdvancedAchievementIds[0] );
+            OnlineService::AchievementId idLowestUnearned = OnlineService::GetLowestUnearnedAchievementInSeries( tAccountId, arAdvancedAchievementIds[0], sub_71000b4be0() );
 
             // NOTE: DWARF lines 148 and 151 map both GetAchievementDefinition calls here
             // and discard both results (0x3d8a68, 0x3d8a78); the original emits the calls
@@ -119,7 +119,7 @@ BOOL SeasonJourney_IsAchievementCompleted( const OnlineService::GameAccountHandl
     BOOL bShowCompleteHeader = FALSE;
 
     if ( ptAchievementsInterface != NULL )
-        bShowCompleteHeader = ptAchievementsInterface->FindAwardedAchievement( tAccountId, idAchievement, tRecord );
+        bShowCompleteHeader = ptAchievementsInterface->FindAwardedAchievement( tAccountId, sub_71000b4be0(), idAchievement, tRecord );
 
     return bShowCompleteHeader;
 }

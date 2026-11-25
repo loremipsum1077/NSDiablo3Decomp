@@ -13,7 +13,6 @@ public:
     XMemoryAllocatorInterface* ptMemoryInterface;
 
     void DeleteAll() {
-        if (this == NULL) return;
         unk_108 = 0x3ffff;
         dwTotalCount = 0;
         unk_110 = 0;
@@ -21,12 +20,13 @@ public:
         for (uint32 index = 0; index < dwMaximumCount; ++index) {
             DefDataElement* element = &ptData[index];
             element->id = DEFDATAELEMENTID_INVALID;
-            element->unk_4 = index + 1;
             element->unk_8 = XHashKey<LPCSTR>(szName) & 0x1fff;
+            element->unk_4 = index + 1;
         }
         ptData[dwMaximumCount - 1].unk_4 = 0x3ffff;
     }
 
+    // NON_MATCHING: 2.7.7 runtime-unrolls the inlined sGrow init loop x2 (prolog remainder); the loop body and the rest are identical.
     DefDataElementID ElementNew() {
         if (dwFreeCount == 0 && !sGrow()) return DEFDATAELEMENTID_INVALID;
         uint32 index = unk_110;
@@ -101,8 +101,8 @@ private:
         for (uint32 index = dwMaximumCount; index < newCount; ++index) {
             DefDataElement* element = &ptData[index];
             element->id = DEFDATAELEMENTID_INVALID;
-            element->unk_4 = index + 1;
             element->unk_8 = 1;
+            element->unk_4 = index + 1;
         }
         ptData[newCount - 1].unk_4 = 0x3ffff;
         unk_110 = dwMaximumCount;

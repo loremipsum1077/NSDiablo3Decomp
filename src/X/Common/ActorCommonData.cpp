@@ -211,7 +211,7 @@ void ACDInitializeForGame()
 
     tGCD.ptACDGlobals = (ACDGlobals *)SigmaMemoryNew(sizeof(ACDGlobals), 4, ptMemoryInterface, TRUE);
     tGCD.ptACDGlobals->ptACDs = TChainedDataArrayCreateTracked<ActorCommonData, ACDID>("ActorCommonData", ptMemoryInterface, 512);
-    tGCD.ptACDGlobals->ptACDs->SetGrowCap(0x2000);
+    tGCD.ptACDGlobals->ptACDs->SetGrowCap(0x2e00);
     tGCD.ptACDGlobals->poolQueuedACDMessageLists.Initialize();
     tGCD.ptACDGlobals->poolQueuedACDMessageLists.SetMemoryInterface(ptMemoryInterface);
     tGCD.ptACDGlobals->poolQueuedACDMessageLists.SetBlockCount_Tracked(1000);
@@ -229,7 +229,7 @@ void ACDInitializeForGame()
 
 
     tGCD.ptACDGlobals->ptACDPacks = TChainedDataArrayCreateTracked<ACDPack, int>("ACDPacks", ptMemoryInterface, 512);
-    tGCD.ptACDGlobals->ptACDPacks->SetGrowCap(0x2000);
+    tGCD.ptACDGlobals->ptACDPacks->SetGrowCap(0x2e00);
     {
         tGCD.ptACDGlobals->tACDGroups.poolACDGroups.Initialize();
         tGCD.ptACDGlobals->tACDGroups.poolACDGroups.SetMemoryInterface(ptMemoryInterface);

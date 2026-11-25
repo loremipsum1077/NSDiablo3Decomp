@@ -314,7 +314,8 @@ void XBaseArray<TYPE, ARG_TYPE, MEMORY_ALLOCATOR>::RemoveAt(const int32 nIndex) 
     (&m_pData[nIndex])->~TYPE();
 
     // Lines 320-328 from the copy inlined into X/Server/STimedEvents.cpp (STimedEventReset).
-    if (m_nArraySize - 1 - nIndex > 0) {
+    // 2.7.7 tests nIndex against m_nArraySize - 1 (GamerProfile Internal::RemoveTasks, 0x5deb0).
+    if (m_nArraySize - 1 > nIndex) {
         void * pDataDest = m_pData.Get() + nIndex;
         void * pDataSrc = m_pData.Get() + nIndex + 1;
         size_t nSize = (m_nArraySize - 1 - nIndex) * sizeof(TYPE);

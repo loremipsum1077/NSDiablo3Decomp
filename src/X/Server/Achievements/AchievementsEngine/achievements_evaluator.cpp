@@ -25,8 +25,8 @@ namespace AchievementsEngine {
 
 
 
-AchievementsEvaluator::AchievementsEvaluator(const AchievementsStaticData * staticData, ProgressData * snapshot, uint32 activePartitionsMask)
-    : m_staticData(staticData)
+AchievementsEvaluator::AchievementsEvaluator(uint32 uUnk0, const AchievementsStaticData * staticData, ProgressData * snapshot, uint32 activePartitionsMask)
+    : unk_0(uUnk0), m_staticData(staticData)
     , m_activePartitionsMask(activePartitionsMask)
     , m_snapshot(snapshot)
     , m_stateListener(NULL)
@@ -41,7 +41,7 @@ AchievementsEvaluator::AchievementsEvaluator(const AchievementsStaticData * stat
 
 
 
-bool AchievementsEvaluator::CheckEvent(CriteriaEventId eventId, CriteriaComparand eventComparand, CriteriaQuantity quantity, uint64 updateTimeSeconds, const CheckEventCallback & cb) {
+bool AchievementsEvaluator::CheckEvent(CriteriaEventId eventId, CriteriaComparand eventComparand, CriteriaQuantity quantity, uint64 updateTimeSeconds, int32 nUnk, const CheckEventCallback & cb) {
     m_checkEventHadSideEffects = false;
     m_subjetModifierHintMap.clear();
     m_objectModifierHintMap.clear();
@@ -248,10 +248,10 @@ inline bool AchievementsEvaluator::ShouldProcessCriteria(const CriteriaUpdateRec
     if (criteria->m_sharingThisCriteria || achievement->m_sharedChildrenAchievements.size() != 0)
         return true;
     Achievement * achievementAwarded;
-    if (m_snapshot->FindAchievement(achievement->m_id, achievementAwarded))
+    if (m_snapshot->FindAchievement(unk_0, achievement->m_id, achievementAwarded))
         return false;
     Criteria * criteriaSnapshot = NULL;
-    if (m_snapshot->FindCriteria(criteria->m_id, criteriaSnapshot) && HasSatisfiedCriteria(criteriaSnapshot, criteria))
+    if (m_snapshot->FindCriteria(unk_0, criteria->m_id, criteriaSnapshot) && HasSatisfiedCriteria(criteriaSnapshot, criteria))
         return false;
     return true;
 }
@@ -294,7 +294,7 @@ inline CriteriaQuantity AchievementsEvaluator::GetCriteriaQuantity(Criteria * tr
 
 void AchievementsEvaluator::LoadCriteria(CriteriaId idCriteria, CriteriaQuantity uQuantity) {
     Criteria * trackedCriteria = NULL;
-    m_snapshot->AllocateTrackedCriteria(idCriteria, trackedCriteria);
+    m_snapshot->AllocateTrackedCriteria(unk_0, idCriteria, trackedCriteria);
     trackedCriteria->m_criteriaId = idCriteria;
     trackedCriteria->m_baseQuantity = uQuantity;
 }
@@ -311,7 +311,7 @@ ErrorCode AchievementsEvaluator::UpdateCriteria(const CriteriaUpdateRecord & cri
     if (!ShouldProcessCriteria(criteriaUpdate, criteria, criteria->m_parentAchievement))
         return ERROR_GLOBAL_SUCCESS;
     Criteria * trackedCriteria = NULL;
-    m_snapshot->FindCriteria(criteria->m_id, trackedCriteria);
+    m_snapshot->FindCriteria(unk_0, criteria->m_id, trackedCriteria);
     if (fromDB) {
         DisplayInternalError(NULL, "", 329, ERROR_INTERNAL_FATAL);
         ExitProgram(ERROR_INTERNAL_FATAL);
@@ -408,7 +408,7 @@ void AchievementsEvaluator::DeleteAchievementTrackedCriteria(const InternalAchie
 
 inline void AchievementsEvaluator::DeleteTrackedCriteria(CriteriaId id, const InternalCriteriaDefinition * criteria) {
     Criteria * trackedCriteria = NULL;
-    if (m_snapshot->FindCriteria(id, trackedCriteria)) {
+    if (m_snapshot->FindCriteria(unk_0, id, trackedCriteria)) {
         if ((trackedCriteria->m_flags & TRACKED_CRITERIA_FLAG_SERIALIZED) && (criteria->m_parentAchievement->m_partitionMask & m_activePartitionsMask)) {
             trackedCriteria->m_flags |= TRACKED_CRITERIA_FLAG_DELETE_FROM_DB;
             MarkDirty(trackedCriteria, criteria);
@@ -431,7 +431,7 @@ inline void AchievementsEvaluator::DeleteTrackedCriteria(CriteriaId id, const In
 
 
 void AchievementsEvaluator::FreeTrackedCriteria(const InternalCriteriaDefinition * criteria) {
-    if (m_snapshot->FreeCriteria(criteria->m_id)) {
+    if (m_snapshot->FreeCriteria(unk_0, criteria->m_id)) {
         CriteriaDeleteRecord tDeleteRecord;
         tDeleteRecord.m_criteria = criteria;
         InformListeners(tDeleteRecord);
@@ -454,13 +454,13 @@ void AchievementsEvaluator::FreeTrackedCriteria(const InternalCriteriaDefinition
 
 void AchievementsEvaluator::StartCriteria(const CriteriaUpdateRecord & criteriaUpdate, const InternalCriteriaDefinition * criteria, bool fromDB) {
     Criteria * trackedCriteria = NULL;
-    m_snapshot->FindCriteria(criteria->m_id, trackedCriteria);
+    m_snapshot->FindCriteria(unk_0, criteria->m_id, trackedCriteria);
     if (fromDB) {
         DisplayInternalError(NULL, "", 469, ERROR_INTERNAL_FATAL);
         ExitProgram(ERROR_INTERNAL_FATAL);
     }
     if (!trackedCriteria) {
-        m_snapshot->AllocateTrackedCriteria(criteria->m_id, trackedCriteria);
+        m_snapshot->AllocateTrackedCriteria(unk_0, criteria->m_id, trackedCriteria);
         trackedCriteria->m_criteriaId = criteria->m_id;
     } else if (!(trackedCriteria->m_flags & TRACKED_CRITERIA_FLAG_FAILED) && !(criteria->m_flags & CRITERIA_FLAG_RESET_ON_START)) {
         return;
@@ -569,7 +569,7 @@ void AchievementsEvaluator::FailCriteria(
 {
     Achievement * sharedPtr;
 
-    if (m_snapshot->FindAchievement(criteria->m_parentAchievementId, sharedPtr) &&
+    if (m_snapshot->FindAchievement(unk_0, criteria->m_parentAchievementId, sharedPtr) &&
         !(flags & TRACKED_CRITERIA_FLAG_CHEAT))
     {
         return;
@@ -582,7 +582,7 @@ void AchievementsEvaluator::FailCriteria(
 
 
     Criteria * trackedCriteria = NULL;
-    m_snapshot->FindCriteria(criteria->m_id, trackedCriteria);
+    m_snapshot->FindCriteria(unk_0, criteria->m_id, trackedCriteria);
 
     if (fromDB)
     {
@@ -688,7 +688,7 @@ inline void AchievementsEvaluator::FailAllCriteria(const InternalAchievementDefi
         return;
     for (size_t i = 0; i < staticAchievement->m_criteriaList.size(); i++) {
         Criteria * trackedCriteria = NULL;
-        if (m_snapshot->FindCriteria(staticAchievement->m_criteriaList[i]->m_id, trackedCriteria) && !(trackedCriteria->m_flags & TRACKED_CRITERIA_FLAG_FAILED)) {
+        if (m_snapshot->FindCriteria(unk_0, staticAchievement->m_criteriaList[i]->m_id, trackedCriteria) && !(trackedCriteria->m_flags & TRACKED_CRITERIA_FLAG_FAILED)) {
             FailCriteria(staticAchievement->m_criteriaList[i], 0, updateTimeSeconds, fromDB, true);
         }
     }
@@ -791,11 +791,11 @@ void AchievementsEvaluator::UpdateCriteriaQuantity(const CriteriaUpdateRecord & 
         return;
     }
     Criteria * trackedCriteria = NULL;
-    m_snapshot->FindCriteria(criteria->m_id, trackedCriteria);
+    m_snapshot->FindCriteria(unk_0, criteria->m_id, trackedCriteria);
     if (!trackedCriteria) {
         if (!fromDB && criteria->m_startEvent.m_id != 0)
             return;
-        m_snapshot->AllocateTrackedCriteria(criteria->m_id, trackedCriteria);
+        m_snapshot->AllocateTrackedCriteria(unk_0, criteria->m_id, trackedCriteria);
         trackedCriteria->m_criteriaId = criteria->m_id;
         trackedCriteria->m_startTime = criteriaUpdate.m_startTime;
     } else if (!fromDB && criteria->m_startEvent.m_id != 0 && (trackedCriteria->m_flags & TRACKED_CRITERIA_FLAG_FAILED)) {
@@ -1118,7 +1118,7 @@ void AchievementsEvaluator::AccumulateAchievementCriteriaQuantity(
         }
 
         Criteria * trackedCriteria = NULL;
-        if (!m_snapshot->FindCriteria(staticCriteria->m_id, trackedCriteria))
+        if (!m_snapshot->FindCriteria(unk_0, staticCriteria->m_id, trackedCriteria))
         {
             continue;
         }
@@ -1303,10 +1303,10 @@ void AchievementsEvaluator::UpdateAchievementInternal(const InternalAchievementD
     bool alreadyExists;
     if (achievement->m_completion == 0) {
         if (fromDB) {
-            m_snapshot->FreeAchievement(achievement->m_achievementId);
+            m_snapshot->FreeAchievement(unk_0, achievement->m_achievementId);
         } else {
             Achievement * foundAchievement = NULL;
-            if (m_snapshot->FindAchievement(achievement->m_achievementId, foundAchievement)) {
+            if (m_snapshot->FindAchievement(unk_0, achievement->m_achievementId, foundAchievement)) {
                 foundAchievement->m_completion = 0;
                 MarkDirty(foundAchievement, staticAchievement);
                 SignalImmediateFlush();
@@ -1314,9 +1314,9 @@ void AchievementsEvaluator::UpdateAchievementInternal(const InternalAchievementD
         }
         InformListeners(*achievement);
     } else {
-        alreadyExists = m_snapshot->FindAchievement(achievement->m_achievementId, trackedAchievement);
+        alreadyExists = m_snapshot->FindAchievement(unk_0, achievement->m_achievementId, trackedAchievement);
         if (!alreadyExists) {
-            m_snapshot->AllocateAchievement(achievement->m_achievementId, trackedAchievement);
+            m_snapshot->AllocateAchievement(unk_0, achievement->m_achievementId, trackedAchievement);
             trackedAchievement->m_achievementId = achievement->m_achievementId;
             trackedAchievement->m_completion = achievement->m_completion;
             DeleteAchievementTrackedCriteria(staticAchievement);
@@ -1390,7 +1390,7 @@ void AchievementsEvaluator::UpdateAchievementInternal(const InternalAchievementD
 
 inline void AchievementsEvaluator::EvaluateMetaAchievement(AchievementId achievementId) {
     const uint32 EARNED_ACHIEVEMENT = 200;
-    CheckEvent(EARNED_ACHIEVEMENT, achievementId, 1, 0, CheckEventCallback());
+    CheckEvent(EARNED_ACHIEVEMENT, achievementId, 1, 0, -1, CheckEventCallback());
 }
 
 

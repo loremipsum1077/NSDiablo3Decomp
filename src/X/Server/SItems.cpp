@@ -1373,10 +1373,28 @@ BOOL SItemConsumableAddSockets(ActorCommonData & tACDItem, ActorCommonData & tAC
 #include "../Sigma/Math/MathGeneral.h"
 #include "../Common/Attributes/FastAttributeStructs.h"
 #include "../Common/Attributes/AttributeEnums.h"
+#include "../../Contrib/Contrib/blz/include/blz/algo_sort.h"
+#include "../../Contrib/Contrib/blz/include/blz/vector.h"
 BOOL ItemIsUpgradeableJewel(const ActorCommonData & tACDItem);  // X/Common/Items.cpp:9622
 BOOL ItemIsSocketed(const ActorCommonData & tACDItem);  // X/Common/Items.cpp:3522
 float ItemGetAttributeSpecifierValue(const GBID gbidItem, const AttributeSpecifier & tAttribute, const ActorCommonData * ptACDOwner, RNG * ptRNGOverride, int32 nLegendaryItemLevelOverride, BOOL bPrimalAncient);  // X/Common/Items.cpp:4889
 
+extern "C" BOOL sub_71004f71e0(const ActorCommonData & tACDItem);  // X/Common/Items.cpp (ItemDefinition flag bit 30)
+extern "C" void sub_71007e02c0(ActorCommonData & tACDItem, const AttributeSpecifier * ptSpecifier, const ActorCommonData * ptACDOwner);
+
+typedef blz::pair<int32, ActorCommonData::Unk2c0Value> JewelUpgradeAffix;
+
+struct JewelUpgradeAffixLess
+{
+    bool operator()(const JewelUpgradeAffix & tLeft, const JewelUpgradeAffix & tRight) const
+    {
+        if (tLeft.second.unk_0 != tRight.second.unk_0)
+            return tLeft.second.unk_0 < tRight.second.unk_0;
+        return tLeft.first < tRight.first;
+    }
+};
+
+// NON_MATCHING: 2344 vs 2316 bytes; same calls and branches as 2.7.7 (affix map copied to a vector, blz::sort by rank then GBID, three sub_71007e02c0 secondary effects, bit-30 SItemPlayerReplace tail). The frame is 0x10 smaller and registers/spill slots differ.
 BOOL SItemUpgradeJewel(ActorCommonData & tACDItem, int32 nUpgradeRanks, ActorCommonData & tACDOwner)
 {
     if (!ItemIsUpgradeableJewel(tACDItem))
@@ -1415,9 +1433,25 @@ BOOL SItemUpgradeJewel(ActorCommonData & tACDItem, int32 nUpgradeRanks, ActorCom
     RandSetSeed_Internal(tItemRNG, ptActor->dwItemIdentifySeed);
     tACDItem.ptRNG = &tItemRNG;
     ItemAddBaseAttributesForItem(tACDItem, tACDItem.hGB, FALSE, TRUE, FALSE);
-    tACDItem.ptRNG = NULL;
 
-    tACDItem.AttributesSetInt(ATTRIBUTE_JEWEL_RANK, nJewelRankNew);
+    blz::vector<JewelUpgradeAffix> arAffixes;
+    for (blz::unordered_map<int32, ActorCommonData::Unk2c0Value>::iterator it = tACDItem.unk_2c0.begin(); it != tACDItem.unk_2c0.end(); ++it)
+    {
+        arAffixes.push_back(JewelUpgradeAffix(it->first, it->second));
+    }
+    blz::sort(arAffixes.begin(), arAffixes.end(), JewelUpgradeAffixLess());
+
+    for (blz::vector<JewelUpgradeAffix>::iterator it = arAffixes.begin(); it != arAffixes.end(); ++it)
+    {
+        if (nJewelRank < it->second.unk_0 && nJewelRankNew >= it->second.unk_0)
+        {
+            D3::Items::Generator tGenerator;
+            ItemGeneratorPopulateFromACDID(tACDItem, tGenerator, TRUE);
+            ItemsAddItemAffixGBID(tACDItem, it->first, tGenerator.flags() & (1 << IGF_IDENTIFIED_BIT), tGenerator.item_quality_level(), FALSE, NULL);
+            it->second.unk_4 = TRUE;
+        }
+    }
+    tACDItem.ptRNG = NULL;
 
     if (pdefItem->tJewelUpgradeAttribute.eAttribute != -1)
     {
@@ -1449,30 +1483,22 @@ BOOL SItemUpgradeJewel(ActorCommonData & tACDItem, int32 nUpgradeRanks, ActorCom
     int32 nUnlockRank = pdefItem->nJewelSecondaryEffectUnlockRank;
     if (nJewelRankNew >= nUnlockRank && nJewelRank < nUnlockRank && nUnlockRank > 0)
     {
-        FastAttribKey tKey = MakeAttribKey(pdefItem->tJewelSecondaryEffectAttribute.eAttribute, pdefItem->tJewelSecondaryEffectAttribute.nParam);
-        AttributeDataType eAttribType = KeyGetDataType(tKey);
-        ActorCommonData * ptACDOwner = ACDTryToGet(tACDItem.tLocation.tInvLocation.idACDContainer);
-        float flSecondaryEffectAttributeValue = ItemGetAttributeSpecifierValue(tACDItem.hGB.gbid, pdefItem->tJewelSecondaryEffectAttribute, ptACDOwner, tACDItem.ptRNG, tACDItem.AttributesGetInt(ATTRIBUTE_ITEM_LEGENDARY_ITEM_LEVEL_OVERRIDE), FALSE);
-        FastAttribValue tSecondaryEffectValue;
-        if (eAttribType == ATTRIBUTEDT_FLOAT)
-        {
-            tSecondaryEffectValue.flValue = flSecondaryEffectAttributeValue;
-        }
-        else
-        {
-            tSecondaryEffectValue.nValue = (int32)flSecondaryEffectAttributeValue;
-        }
-        FastAttribValue tValue = FastAttribGetValue(tACDItem.idFastAttrib, tKey);
-        if (eAttribType == ATTRIBUTEDT_FLOAT)
-        {
-            tValue.flValue += tSecondaryEffectValue.flValue;
-        }
-        else
-        {
-            tValue.nValue += tSecondaryEffectValue.nValue;
-        }
-        FastAttribSetValue(tACDItem.idFastAttrib, tKey, tValue);
+        sub_71007e02c0(tACDItem, &pdefItem->tJewelSecondaryEffectAttribute, ACDTryToGet(tACDItem.tLocation.tInvLocation.idACDContainer));
     }
+
+    nUnlockRank = pdefItem->unk_2d0;
+    if (nJewelRankNew >= nUnlockRank && nJewelRank < nUnlockRank && nUnlockRank > 0)
+    {
+        sub_71007e02c0(tACDItem, &pdefItem->unk_2b8, ACDTryToGet(tACDItem.tLocation.tInvLocation.idACDContainer));
+    }
+
+    nUnlockRank = pdefItem->unk_2f0;
+    if (nJewelRankNew >= nUnlockRank && nJewelRank < nUnlockRank && nUnlockRank > 0)
+    {
+        sub_71007e02c0(tACDItem, &pdefItem->unk_2d8, ACDTryToGet(tACDItem.tLocation.tInvLocation.idACDContainer));
+    }
+
+    tACDItem.AttributesSetInt(ATTRIBUTE_JEWEL_RANK, nJewelRankNew);
 
     tACDItem.ModifiedMark(0);
     SACDInventoryAddToDirtyList(tACDItem, AIDA_UPDATE_JEWEL_UPGRADE, tACDItem.GetLocationSlot(), tACDItem.GetLocationSlot());
@@ -1486,22 +1512,41 @@ BOOL SItemUpgradeJewel(ActorCommonData & tACDItem, int32 nUpgradeRanks, ActorCom
             SACDInventoryAddToDirtyList(*ptACDHostItem, AIDA_UPDATE_JEWEL_UPGRADE, ptACDHostItem->GetLocationSlot(), ptACDHostItem->GetLocationSlot());
         }
     }
+
+    if (sub_71004f71e0(tACDItem))
+    {
+        D3::Items::Generator tGenerator;
+        ItemGeneratorPopulateFromACDID(tACDItem, tGenerator, TRUE);
+        return SItemPlayerReplace(tACDItem, tGenerator, *PlayerGetByACD(tACDOwner.id), FALSE) != ACDID_INVALID;
+    }
     return TRUE;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+extern "C" void sub_71007e02c0(ActorCommonData & tACDItem, const AttributeSpecifier * ptSpecifier, const ActorCommonData * ptACDOwner)
+{
+    FastAttribKey tKey = MakeAttribKey(ptSpecifier->eAttribute, ptSpecifier->nParam);
+    AttributeDataType eAttribType = KeyGetDataType(tKey);
+    float flEffectValue = ItemGetAttributeSpecifierValue(tACDItem.hGB.gbid, *ptSpecifier, ptACDOwner, tACDItem.ptRNG, tACDItem.AttributesGetInt(ATTRIBUTE_ITEM_LEGENDARY_ITEM_LEVEL_OVERRIDE), FALSE);
+    FastAttribValue tEffectValue;
+    if (eAttribType == ATTRIBUTEDT_FLOAT)
+    {
+        tEffectValue.flValue = flEffectValue;
+    }
+    else
+    {
+        tEffectValue.nValue = (int32)flEffectValue;
+    }
+    FastAttribValue tValue = FastAttribGetValue(tACDItem.idFastAttrib, tKey);
+    if (eAttribType == ATTRIBUTEDT_FLOAT)
+    {
+        tValue.flValue += tEffectValue.flValue;
+    }
+    else
+    {
+        tValue.nValue += tEffectValue.nValue;
+    }
+    FastAttribSetValue(tACDItem.idFastAttrib, tKey, tValue);
+}
 
 
 

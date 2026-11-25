@@ -95,7 +95,7 @@ bdEnvironmentString stLobbyEnvironmentStrings("crimson-switch-lobby.dev.demonwar
 #include "../Definitions/PreferencesDefinition.h"
 #include "../../Sigma/UnicodeText.h"
 // DWARF X/Common/Console/TitleVersion.h:25; TitleVersion enumerator value 265.
-namespace Console { enum TitleVersion { TITLE_VERSION_CURRENT = 265 }; }
+namespace Console { enum TitleVersion { TITLE_VERSION_CURRENT = 277 }; }
 #include "MailService.h"
 // DWARF HeroPublishing.cpp:129, SaveMigration.cpp:1601, UpdateManager.cpp:381/417.
 namespace Console { namespace HeroPublishing { void SetPublishIntervalInMinutes(int32); } namespace SaveMigration { void SetCrossPlatformSaveMigrationEnabled(BOOL); } namespace UpdateManager { int32 GetCurrentUpdateVersion(XLocale &); void RemoveUpdates(); } }
@@ -278,7 +278,6 @@ public:
     virtual void LeaderboardReadStatsByRank(const LeaderboardKeyAndPartition & idLeaderboard, uint32 uFirstRank, uint32 uMaxResults, LeaderboardReadStatsCallback pfnCallback);
     virtual void LeaderboardReadMetadata(const LeaderboardKeyAndPartition & idLeaderboard, bdOnlineUserID idUser, LeaderboardReadStatsCallback pfnCallback);
     virtual void LookupUserAccounts(OnlineUserId * pidUsers, uint32 uNumUsers, LookupUserAccountsCallback pfnCallback);
-    virtual void GetLinkedAccounts(LinkedAccountsSearchCallback pfnCallback);
     virtual void UpdateGlobalCounters(const CounterVector & atCounters);
     virtual void GetServerTime(GetServerTimeCallback pfnCallback, bool bStartImmediately);
     virtual BOOL SendGlobalInstantMessage(OnlineUserId idRecipient, const void * const ptMessage, const bdUInt uMsgSize);
@@ -372,12 +371,10 @@ public:
     void OnBlacklistFileRetrieved(StorageResult eResult, blz::shared_ptr<blz::string> pszFileData);
     void OnUpdateInfoRetrieved(StorageResult eResult, blz::shared_ptr<blz::string> pszFileData);
     void OnUpdateFragmentRetrieved(UpdateFileInfo * ptUpdateInfo, uint32 uFragmentNum, StorageResult eResult, blz::shared_ptr<blz::string> pszFileData);
-    void OnLinkedAccountsRetrieved(LinkedAccountsResult eResult, bdLinkedAccountsResult tResult);
     static void OnServerTime(BOOL bSuccess, const bdTimeStamp & tTimestamp);
 
 private:
     virtual void onNewMail();
-    virtual void onLinkedAccountStatusChange(bdUserAccountID userAccountID);
     virtual void onSubscribedRichPresenceUpdate(const bdNChar8 * szContext, const bdTitleID idTitle, const bdRichPresenceSource tSource, const bdRichPresenceData & tData);
     virtual void onGlobalInstantMessage(bdOnlineUserID idSender, bdNChar8 * szSenderName, void * ptMessage, bdUInt uMessageSize);
     virtual void onMultipleLogon(bdOnlineUserID userID);
@@ -1208,10 +1205,6 @@ void LobbyServiceInternal::IdleInternal()
     if (IsConnected() &&
         !m_bCheckedForBnetAccount)
     {
-        if (!GamerProfile::GetAccount(m_nUserIndex).console_data().has_bnet_account())
-        {
-            GetLinkedAccounts(LinkedAccountsSearchCallback(OnlineService::internal::method_bind_0_2<void, LobbyServiceInternal, LobbyServiceInternal *, LinkedAccountsResult, bdLinkedAccountsResult, &LobbyServiceInternal::OnLinkedAccountsRetrieved>(this)));
-        }
         m_bCheckedForBnetAccount = TRUE;
     }
 
@@ -1594,8 +1587,8 @@ void LobbyServiceInternal::IdleInternal()
         }
         case bdLobbyConnection::BD_CONNECTING:
         case bdLobbyConnection::BD_CONNECTED:
-        { // Inference: original fatal assertion reports line1598 with stripped text.
-            DisplayInternalError(NULL, "", 1598, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        { // Inference: original fatal assertion reports line1610 with stripped text.
+            DisplayInternalError(NULL, "", 1610, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
 
             break;
         }
@@ -1616,7 +1609,7 @@ void LobbyServiceInternal::IdleInternal()
         {
 
             // Inference: original fatal assertion reports this source line, with stripped text.
-            DisplayInternalError(NULL, "", 1619, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+            DisplayInternalError(NULL, "", 1631, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
         }
         break;
     }
@@ -2322,11 +2315,6 @@ public:
 
 
 
-void LobbyServiceInternal::GetLinkedAccounts(LinkedAccountsSearchCallback pfnCallback)
-{
-    // (2327-2328)
-    ::new GetLinkedAccountsTask(this, m_idOnlineUser, pfnCallback);
-}
 
 
 
@@ -3603,32 +3591,6 @@ void LobbyServiceInternal::OnUpdateFragmentRetrieved(UpdateFileInfo * ptUpdateIn
 
 
 
-void LobbyServiceInternal::OnLinkedAccountsRetrieved(LinkedAccountsResult eResult, bdLinkedAccountsResult tResult)
-{
-    // (3608-3609)
-
-    if (eResult == LINKED_ACCOUNTS_SUCCESS &&
-        m_idOnlineUser == tResult.m_userAccount.m_userID &&
-        GamerProfile::IsSignedIn(m_nUserIndex))
-    {
-        // (3614-3616)
-
-
-        for (uint32 i = 0; i < tResult.m_numLinkedAccounts; ++i)
-        {
-            const bdUserAccountID & tAccount = tResult.m_linkedAccountsResult[i];
-
-            if (strcmp(tAccount.m_accountType, "battle") == 0)
-            {
-                GamerProfile::GetAccount(m_nUserIndex).mutable_console_data()->set_has_bnet_account(true);
-                return;
-            }
-        }
-    }
-}
-
-
-
 void LobbyServiceInternal::OnServerTime(BOOL bSuccess, const bdTimeStamp & tTimestamp)
 {
     // (3633-3635)
@@ -3654,16 +3616,6 @@ void LobbyServiceInternal::onNewMail()
 
 
 
-void LobbyServiceInternal::onLinkedAccountStatusChange(bdUserAccountID userAccountID)
-{
-    // (3659)
-    if (userAccountID.m_userID == m_idOnlineUser &&
-        GamerProfile::IsSignedIn(m_nUserIndex) &&
-        !GamerProfile::GetAccount(m_nUserIndex).console_data().has_bnet_account())
-    {
-        GetLinkedAccounts(LinkedAccountsSearchCallback(OnlineService::internal::method_bind_0_2<void, LobbyServiceInternal, LobbyServiceInternal *, LinkedAccountsResult, bdLinkedAccountsResult, &LobbyServiceInternal::OnLinkedAccountsRetrieved>(this)));
-    }
-}
 
 
 
@@ -4596,7 +4548,10 @@ void LinkedAccountsSearch(int32 nUserIndex, LinkedAccountsSearchCallback pfnCall
     ScopedNetworkThreadLock tLock;
 
     // (4598)
-    LobbyService::Get(nUserIndex)->GetLinkedAccounts(
+    // 2.7.7: LobbyService::GetLinkedAccounts (vtable slot 28) is gone and so is this function; ImportSave calls
+    // StorageFindUserFile directly. Kept only until SaveMigration.cpp stops calling it.
+    LobbyService * ptLobbyService = LobbyService::Get(nUserIndex);
+    ::new GetLinkedAccountsTask(ptLobbyService, ptLobbyService->GetOnlineUserID(),
         [pfnCallback](LinkedAccountsResult eResult, const bdLinkedAccountsResult & tResult)
         {
             QueueNetworkEventForMainThread(OnlineService::internal::method_binder_2<void, OnlineService::internal::callback_base<2, LinkedAccountsSearchCallback>, const LinkedAccountsResult &, const bdLinkedAccountsResult &>::bind<&OnlineService::internal::callback_base<2, LinkedAccountsSearchCallback>::execute>(pfnCallback, eResult, tResult));

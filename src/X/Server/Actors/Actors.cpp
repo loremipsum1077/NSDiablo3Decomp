@@ -1245,7 +1245,7 @@ static void sPerformGarbageCollectionOverInactiveList()
 
 
 
-
+// NON_MATCHING: 2.7.7 logic reproduced; 1640 vs 1488 bytes, the inlined inactive-list loop duplicates the RemoveAt tail that 2.7.7 merges
 void ActorsPerformGarbageCollection()
 {
 

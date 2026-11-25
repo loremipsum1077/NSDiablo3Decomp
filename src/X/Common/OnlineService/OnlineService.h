@@ -104,7 +104,7 @@ struct Timestamp {  // size 0x8
     Timestamp(uint64 microsecondsSinceUnixEpoch);
     uint64 GetMicroseconds() const;
     uint64 GetMilliseconds() const;
-    uint64 GetSeconds() const;
+    uint64 GetSeconds() const { return m_microsecondsSinceUnixEpoch / 1000000; }  // inlined into ServerAchievementsInterface::EvaluateEvent (2.7.7)
     void AddMicroseconds(const uint64 &);
     void AddMilliseconds(const uint64 &);
     void AddSeconds(const uint64 &);

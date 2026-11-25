@@ -1712,6 +1712,19 @@ void PowerSendCancelTargetLock(ACDID idActor)
     MessageSendToClient(listDestPlayers, SMSG_CANCEL_ACD_TARGET, &tMsg, sizeof(tMsg));
 }
 
+// 2.7.7 command (0x71009bf420, unnamed)
+void PowerSendOwnerCheatedDeath()
+{
+    ActorCommonData * ptACDOwner = PowerGetOwner(sGetCurrentPower());
+    if (!ACDIsPlayer(ptACDOwner->id))
+        return;
+    IntDataMessage tMessage;
+    tMessage.nData = PlayerGetByACD(ptACDOwner->id)->nPlayerIndex;
+    PlayerList listDestPlayers(PlayerListGetElementPool());
+    PlayerListGetAllConnected(listDestPlayers, -1, FALSE);
+    MessageSendToClient(listDestPlayers, SMSG_PLAYER_CHEATED_DEATH, &tMessage, sizeof(tMessage));
+}
+
 // Original PowersSwig.cpp:3116.
 int32 PowerCreatePayload(float flBaseDamageScalar, BOOL bForcedPhysical, ACDID idACDToUse)
 {
@@ -6864,7 +6877,7 @@ int32 PowerGetRuneLevelForRuneType(
         eAttribOverride = ATTRIBUTE_RUNE_E_OVERRIDE;
         break;
     default:
-        DisplayInternalError(NULL, "", 13792, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 13836, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
         break;
     }
 
@@ -7612,6 +7625,14 @@ static ActorCommonData * sGetCurrentItemPassivePowerHostItem()
             SLOT_HIRELING_LEFT_FINGER,
             SLOT_HIRELING_RIGHT_FINGER,
             SLOT_HIRELING_NECK,
+            SLOT_HIRELING_HEAD,
+            SLOT_HIRELING_TORSO,
+            SLOT_HIRELING_HANDS,
+            SLOT_HIRELING_WAIST,
+            SLOT_HIRELING_FEET,
+            SLOT_HIRELING_SHOULDERS,
+            SLOT_HIRELING_LEGS,
+            SLOT_HIRELING_BRACERS,
             SLOT_NONE
         };
 
@@ -12151,6 +12172,14 @@ PetType sInventorySlotTypeToPetType(InventorySlotType eInventorySlot)
     case SLOT_HIRELING_NECK: return PETTYPE_ITEM_PROC_PET_SLOT_HIRELING_NECK;
     case SLOT_HIRELING_RIGHT_FINGER: return PETTYPE_ITEM_PROC_PET_SLOT_HIRELING_RIGHT_FINGER;
     case SLOT_HIRELING_LEFT_FINGER: return PETTYPE_ITEM_PROC_PET_SLOT_HIRELING_LEFT_FINGER;
+    case SLOT_HIRELING_HEAD: return PETTYPE_ITEM_PROC_PET_SLOT_HIRELING_HEAD;
+    case SLOT_HIRELING_TORSO: return PETTYPE_ITEM_PROC_PET_SLOT_HIRELING_TORSO;
+    case SLOT_HIRELING_HANDS: return PETTYPE_ITEM_PROC_PET_SLOT_HIRELING_HANDS;
+    case SLOT_HIRELING_WAIST: return PETTYPE_ITEM_PROC_PET_SLOT_HIRELING_WAIST;
+    case SLOT_HIRELING_FEET: return PETTYPE_ITEM_PROC_PET_SLOT_HIRELING_FEET;
+    case SLOT_HIRELING_SHOULDERS: return PETTYPE_ITEM_PROC_PET_SLOT_HIRELING_SHOULDERS;
+    case SLOT_HIRELING_LEGS: return PETTYPE_ITEM_PROC_PET_SLOT_HIRELING_LEGS;
+    case SLOT_HIRELING_BRACERS: return PETTYPE_ITEM_PROC_PET_SLOT_HIRELING_BRACERS;
     default: return PETTYPE_NONE;
     }
 }
@@ -12176,6 +12205,14 @@ PetType PowerGetPetTypeFromItemSlot()
             SLOT_HIRELING_LEFT_FINGER,
             SLOT_HIRELING_RIGHT_FINGER,
             SLOT_HIRELING_NECK,
+            SLOT_HIRELING_HEAD,
+            SLOT_HIRELING_TORSO,
+            SLOT_HIRELING_HANDS,
+            SLOT_HIRELING_WAIST,
+            SLOT_HIRELING_FEET,
+            SLOT_HIRELING_SHOULDERS,
+            SLOT_HIRELING_LEGS,
+            SLOT_HIRELING_BRACERS,
             SLOT_NONE
         };
 

@@ -22,7 +22,8 @@ namespace AchievementsShared {
 //-------------------------------------------------------------------------------------------------
 void SendAchievementAwardedMessage(
     const OnlineService::GameAccountHandle & gameAccount,
-    const OnlineService::AchievementId * aidAchievements,
+    uint32 uAchievementSet,
+    const blz::pair<uint32, unsigned long> * ptAchievements,
     size_t uNumAchievements )
 {
 
@@ -36,10 +37,11 @@ void SendAchievementAwardedMessage(
     PlayerListGetAllInGame( listPlayers, -1, FALSE, -1 );
 
     D3::GameMessage::AchievementsAwardedConsole tMsg;
+    tMsg.set_achievement_set( uAchievementSet );
     tMsg.set_player_index( ptPlayer->nPlayerIndex );
     for ( size_t i = 0; i < uNumAchievements; ++i )
     {
-        OnlineService::AchievementId idAchievement = aidAchievements[ i ];
+        OnlineService::AchievementId idAchievement = ptAchievements[ i ].second;
         SPlayerAchievementEarned( gameAccount, idAchievement );
         tMsg.add_achievements( idAchievement );
     }
@@ -47,11 +49,10 @@ void SendAchievementAwardedMessage(
     MessageSendToClient( listPlayers, SMSG_ACHIEVEMENT_AWARDED, tMsg );
 }
 
-
-
 //-------------------------------------------------------------------------------------------------
 void SendAchievementCriteriaUpdate(
     const OnlineService::GameAccountHandle & gameAccount,
+    uint32 uAchievementSet,
     const OnlineService::AchievementsEngine::CriteriaUpdateRecord * ptUpdates,
     size_t uNumUpdates )
 {
@@ -69,9 +70,8 @@ void SendAchievementCriteriaUpdate(
 
     PlayerList listDestPlayer( PlayerListGetElementPool() );
     PlayerListGetSingle( listDestPlayer, *ptPlayer );
-
-
     D3::GameMessage::AchievementsCriteriaUpdateConsole tMessage;
+    tMessage.set_achievement_set( uAchievementSet );
 
     for ( uint32 i = 0; i < uNumUpdates; ++i )
     {

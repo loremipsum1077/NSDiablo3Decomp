@@ -141,7 +141,7 @@ void CTrickleUpdate(
         {
             tTrickleEntry.bInUberFight = pTrickleMessage->bInUberFight.Get();
         }
-
+        if (pTrickleMessage->unk_b4.Exists()) tTrickleEntry.unk_68 = pTrickleMessage->unk_b4.Get();
         tTrickleEntry.gbidPortraitFrame = gbidPortraitFrame;
     }
     else
@@ -170,7 +170,7 @@ void CTrickleUpdate(
         tTrickleEntry.bBrawling = pTrickleMessage->bBrawling.Exists() ? pTrickleMessage->bBrawling.Get() : FALSE;
         tTrickleEntry.bInUberFight = pTrickleMessage->bInUberFight.Exists() ? pTrickleMessage->bInUberFight.Get() : FALSE;
         tTrickleEntry.gbidPortraitFrame = pTrickleMessage->gbidPortraitFrame.Exists() ? pTrickleMessage->gbidPortraitFrame.Get() : -1;
-
+        tTrickleEntry.unk_68 = pTrickleMessage->unk_b4.Exists() ? pTrickleMessage->unk_b4.Get() : 0;
         sgptClientTrickleGlobals->pListTrickle->AddTail_Tracked(tTrickleEntry);
     }
 
@@ -208,14 +208,14 @@ void CTrickleUpdate(
 
 
 
-
-
                     else if (pTrickleMessage->bBrawling.Exists() && pTrickleMessage->bBrawling.Get())
                         ptPlayer->eOpenWorldStatus = 3;
 
 
                     else if (pTrickleMessage->bInUberFight.Exists() && pTrickleMessage->bInUberFight.Get())
                         ptPlayer->eOpenWorldStatus = 4;
+                    else if (pTrickleMessage->unk_b4.Exists() && pTrickleMessage->unk_b4.Get())
+                        ptPlayer->eOpenWorldStatus = 5;
                     else
                         ptPlayer->eOpenWorldStatus = 1;
                 }

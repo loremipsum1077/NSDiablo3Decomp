@@ -5252,8 +5252,8 @@ BOOL ClientMessageReceiveGameMessage(void * pMessage)
             HearthPortalInfoMessage * ptHearthPortalInfoMessage = (HearthPortalInfoMessage *)pMessage;
             CGameGlobals & tCGameGlobals = CGameGlobalsGet();
             tCGameGlobals.snoLevelAreaHearthPortal = ptHearthPortalInfoMessage->snoLevelArea;
+            tCGameGlobals.unk_100 = ptHearthPortalInfoMessage->unk_c;
             tCGameGlobals.bHearthPortalIsTieredRift = ptHearthPortalInfoMessage->bIsTieredRift;
-
             if (ptHearthPortalInfoMessage->bResetUI)
             {
                 UI_ResetForPlayerMovement(LocalPlayerGet());

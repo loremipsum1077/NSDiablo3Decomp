@@ -10,7 +10,7 @@
 struct UIControlDataExt;
 struct Rect2D;
 
-class UIConsoleEdit : public UIEdit {  // size 0x468
+class UIConsoleEdit : public UIEdit {  // size 0x470
 public:
     UIConsoleEdit(const EditBoxCreationParams &, const Vector2D &, const Vector2D &);
     UIConsoleEdit(const EditBoxCreationParams & tParams, const Rect2D * pRect) : UIEdit(tParams, pRect) {}  // line 29
@@ -21,7 +21,7 @@ public:
         return eType == UIT_CONSOLEEDIT || UIEdit::IsType(eType);
     }
 };
-static_assert(sizeof(UIConsoleEdit) == 0x468, "UIConsoleEdit");
+static_assert(sizeof(UIConsoleEdit) == 0x470, "UIConsoleEdit");
 
 // UIConsoleEditControl.cpp: the app subsystem entry points (X/Common/Game.cpp sgtAppSubsystems).
 namespace UIConsole {

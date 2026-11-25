@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Generate ignored 2.6.2 C++ bindings and includes from a local extracted game."""
+"""Generate ignored 2.6.2 C++ bindings and includes from a local extracted game.
+
+  python3 tools/bootstrap_game_data.py GAME_DIR                 # 2.6.2: everything, from the .nss
+  python3 tools/bootstrap_game_data.py --raw-tables 2.7.7       # later version: RAW_TABLES only
+  python3 tools/bootstrap_game_data.py --raw-tables 2.7.7 --check
+"""
 import argparse
 import hashlib
 import json
@@ -14,6 +19,7 @@ from game_lua_tables import LuaTableImage, generate_lua_tables
 from game_proto import schema
 from game_protoc import build_protoc
 from game_sno_tables import generate
+from project_version import VERSION
 from validation.elf import Elf
 from verify_original_inputs import InputError, require_inputs
 
@@ -145,6 +151,79 @@ def gameplay_tables(image, relocations):
     }
 
 
+# Fixed-size tables copied row by row from the image: (include name, address, rows, row layout).
+# 2.6.2 reads them from the .nss. 2.7.7 ships no .nss; its addresses are the operands of the code
+# that uses each table in data/2.7.7/main.elf:
+#   account_attribs / account_wide_attribs / partition_attribs: AccountDefinition_SerializeAttributes
+#     (0x71006b38fc / 0x71006b391c / 0x71006b390c, counts 23 / 10 / 13 in w1)
+#   hero_attribs: HeroDefinitionSavedAttributeGetInt (0x71006e32ac, count 27)
+#   actor_particles: RActorsInitializeForGame (0x71002fc464, loop bound 0x33)
+RAW_TABLES = {
+    "2.6.2": (
+        ("account_attribs", 0xe53ed4, 21, "<ii"),
+        ("account_wide_attribs", 0xe53f7c, 10, "<ii"),
+        ("partition_attribs", 0xe53fcc, 11, "<ii"),
+        ("hero_attribs", 0xe54c10, 27, "<ii"),
+        ("actor_particles", 0xe42d58, 51, "<iiiI"),
+    ),
+    "2.7.7": (
+        ("account_attribs", 0xec9aa4, 23, "<ii"),
+        ("account_wide_attribs", 0xec9b5c, 10, "<ii"),
+        ("partition_attribs", 0xec9bac, 13, "<ii"),
+        ("hero_attribs", 0xeca830, 27, "<ii"),
+        ("actor_particles", 0xeb99fc, 51, "<iiiI"),
+    ),
+}
+
+
+def raw_tables(image, version="2.6.2"):
+    """{include name: text} for the RAW_TABLES of a version, read through image.read_vaddr."""
+    tables = {}
+    for name, address, count, layout in RAW_TABLES[version]:
+        size = count * struct.calcsize(layout)
+        raw = image.read_vaddr(address, size)
+        if len(raw) != size:
+            raise ValueError(f"{name}: {version} table at {address:#x} is outside the image")
+        tables[name + ".inc"] = "".join(
+            "    { " + ", ".join(map(str, row)) + " },\n" for row in struct.iter_unpack(layout, raw)
+        )
+    return tables
+
+
+def write_raw_tables(version, check=False):
+    """Write (or with check, compare) RAW_TABLES[version] from data/<version>/main.elf."""
+    image = Elf(ROOT / "data" / version / "main.elf")
+    stale = []
+    for name, text in raw_tables(image, version).items():
+        path = INCLUDES / name
+        if path.is_file() and path.read_text() == text:
+            continue
+        stale.append(name)
+        if not check:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(text)
+    verb = "differ" if check else "written"
+    print(f"{version}: {len(RAW_TABLES[version])} tables, {len(stale)} {verb}: {', '.join(stale) or '-'}")
+    return 1 if check and stale else 0
+
+
+def version_tables(image, version):
+    """The includes a later version replaces, from data/<version>/main.elf: the Lua tables and RAW_TABLES.
+
+    Returns ({include name: text}, Lua evidence JSON)."""
+    tables = raw_tables(image, version)
+    tables["lua_tables.inc"], evidence = generate_lua_tables(LuaTableImage(ROOT, image, version))
+    return tables, evidence
+
+
+def verify(tables, evidence, expected, label):
+    if digest(evidence.encode()) != expected["lua_evidence_sha256"]:
+        raise ValueError(f"{label} SWIG evidence differs from its reviewed hash")
+    for name, text in tables.items():
+        if digest(text.encode()) != expected["includes"][name]:
+            raise ValueError(f"{label} table reconstruction mismatch: {name} (check llvm-objdump version)")
+
+
 def bootstrap(args):
     game = args.game.resolve()
     require_inputs(game, nso=args.nso)
@@ -165,8 +244,6 @@ def bootstrap(args):
     tables["nvn_entry_points.inc"] = nvn_entry_points(image)
     tables.update(gameplay_tables(image, lua_image.relocations))
     tables["lua_tables.inc"], evidence = generate_lua_tables(lua_image)
-    if digest(evidence.encode()) != manifest["lua_evidence_sha256"]:
-        raise ValueError("SWIG evidence differs from its reviewed hash")
     sounds = struct.unpack("<185I", image.read_vaddr(0xe4495c, 185 * 4))
     tables["error_sounds.inc"] = "\n".join(
         "    " + ", ".join(map(str, sounds[i:i + 10])) + "," for i in range(0, len(sounds), 10)
@@ -177,23 +254,22 @@ def bootstrap(args):
         raise ValueError("unterminated Switch issuer mapping")
     tables["issuer_mapping.inc"] = json.dumps(issuer_data[:-1].decode("ascii")) + "\n"
 
-    for name, address, count, layout in (
-        ("account_attribs", 0xe53ed4, 21, "<ii"),
-        ("account_wide_attribs", 0xe53f7c, 10, "<ii"),
-        ("partition_attribs", 0xe53fcc, 11, "<ii"),
-        ("hero_attribs", 0xe54c10, 27, "<ii"),
-        ("actor_particles", 0xe42d58, 51, "<iiiI"),
-    ):
-        raw = image.read_vaddr(address, count * struct.calcsize(layout))
-        tables[name + ".inc"] = "".join(
-            "    { " + ", ".join(map(str, row)) + " },\n" for row in struct.iter_unpack(layout, raw)
-        )
+    tables.update(raw_tables(image, "2.6.2"))
 
     if tables.keys() != manifest["includes"].keys():
         raise ValueError("generated include inventory differs from manifest")
-    for name, expected in manifest["includes"].items():
-        if digest(tables[name].encode()) != expected:
-            raise ValueError(f"table reconstruction mismatch: {name} (check llvm-objdump version)")
+    verify(tables, evidence, manifest, "2.6.2")
+
+    # The .nss proves the 2.6.2 inputs; a checkout that targets a later version then takes the
+    # tables that version changed from its own image (config.toml default_version).
+    version = args.version or VERSION
+    if version != "2.6.2":
+        expected = manifest["versions"][version]
+        later, evidence = version_tables(Elf(ROOT / "data" / version / "main.elf"), version)
+        if later.keys() != expected["includes"].keys():
+            raise ValueError(f"{version} include inventory differs from manifest")
+        verify(later, evidence, expected, version)
+        tables.update(later)
 
     build = ROOT / "build"
     build.mkdir(exist_ok=True)
@@ -237,7 +313,12 @@ def bootstrap(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("game", type=Path, help="extracted directory containing exefs/ and romfs/")
+    parser.add_argument("game", type=Path, nargs="?", help="extracted directory containing exefs/ and romfs/")
+    parser.add_argument("--version", choices=sorted(RAW_TABLES),
+                        help="game version the includes are for (default: tools/config.toml default_version)")
+    parser.add_argument("--raw-tables", metavar="VERSION", choices=sorted(RAW_TABLES),
+                        help="only write the fixed-size attribute/particle tables from data/VERSION/main.elf")
+    parser.add_argument("--check", action="store_true", help="with --raw-tables: compare, write nothing")
     parser.add_argument("--nso", type=Path, help="alternative location of the compressed NSO for setup")
     parser.add_argument("--objdump", default="llvm-objdump")
     compiler = parser.add_mutually_exclusive_group()
@@ -247,6 +328,10 @@ def main():
                           help="migrate previously generated private bindings with matching SHA-256 hashes")
     compiler.add_argument("--protoc-archive", type=Path, help="build from a local protobuf-2.6.0.tar.bz2 release archive")
     args = parser.parse_args()
+    if args.raw_tables:
+        raise SystemExit(write_raw_tables(args.raw_tables, args.check))
+    if args.game is None:
+        parser.error("the game directory is required (or pass --raw-tables VERSION)")
     # Subprocesses run in a private staging directory. Resolve relative tool paths up front.
     for option in ("protoc", "objdump"):
         tool = getattr(args, option)

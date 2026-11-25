@@ -198,7 +198,7 @@ public:
     virtual void * MemAllocTracked(size_t size, size_t align, BOOL bClear, const char * szFile, uint32 dwLine);  // vtable slot 3
     virtual void MemFree(void * pMem);  // vtable slot 4
     virtual void * MemResize(void * pMem, size_t size, size_t align) {  // vtable slot 5
-        DisplayInternalError(NULL, "", 212, ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 216, ERROR_INTERNAL_FATAL);
         ExitProgram(ERROR_INTERNAL_FATAL);
     }
     virtual BOOL ContainsMem(void * pMem) {  // vtable slot 7

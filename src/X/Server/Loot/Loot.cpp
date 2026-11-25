@@ -169,11 +169,11 @@ void LootModifyBeforeSpawning(LootSpecifierArray & arLootSpecifiersToSpawn, cons
 int32 LootGetAffixFrequencyWeight(const AffixTableEntry * ptAffix, const LootSpecifier * ptSpecifier);
 static BOOL sAffixExcludedFromAffixes(GBID gbidAffix, LootSpecifier & tSpecifier);
 int32 ItemAffixGetNumSockets(GBID gbidItem, GBID gbidAffix);  // X/Common/Items.cpp:2474
-static GBID sGetGoldGBIDFromAmount(uint32 nGoldAmount);
+GBID sGetGoldGBIDFromAmount(uint32 nGoldAmount);  // out of line in 2.7.7 (0x7100894820)
 SNO LootMonsterGetTreasureClass(const ActorCommonData & tACDMonster, const ACDID idACDLooter, const MonsterRarity eRarity);
 BOOL LootMonsterSupportsFirstKillTreasureClass(SNO snoMonster);
 void LootDropCatchupLoot(ActorCommonData & tACDVictim, Player * ptPlayer, uint32 dwGameEventNumber);
-ACDID LootCreateItem(LootSpecifier & tSpecifier, const WorldPlace & tPlace, const ActorCommonData * ptACDSource);
+ACDID LootCreateItem(LootSpecifier & tSpecifier, const WorldPlace & tPlace, const ActorCommonData * ptACDSource); extern "C" int32 sub_710050e990(GBID gbidItem); extern "C" BOOL sub_710050e910(GBID gbidItem);
 void LootDetermineInherentAffixes(LootSpecifier & tSpecifier);
 void LootDetermineRandomAffixes(LootSpecifier & tSpecifier); void LootDetermineRareName(ActorCommonData & tACD, const LootSpecifier & tSpecifier);
 BOOL ItemIsConsumablePotion(const GBID gbidItem); BOOL ItemIsSpecial(GBID gbidItem); BOOL ItemCanBeMagical(GBID gbidItem); GBID ItemsChooseLevelAppropriateItemFromBaseItem(GBID gbidBaseItem, int32 nItemLevel);  // X/Common/Items.cpp
@@ -1547,7 +1547,13 @@ static CRefString sDebugTranslateItemLabelMask(const uint32 * pdwItemLabelMask,
 
 
 
-static BOOL sPickItem_PreliminaryFilterOut(ACDID idACDLooter, const Item & tItem, BOOL bWantLegendary, BOOL bDisableTormentCheck, BOOL bDisableTormentDrops, Act eCurrentAct, int32 nHandicapLevel, BOOL bX1Enabled, BOOL bIgnoreSeason)
+extern "C" BOOL sub_710050e800(GBID gbidItem);
+extern "C" BOOL sub_71004f8a30(GBID gbidItem);
+extern "C" BOOL sub_710050eb20(GBID gbidItem);
+extern "C" BOOL sub_7100897970(GBID gbidItem, const ActorCommonData * ptACDLooter);
+
+// sPickItem_PreliminaryFilterOut (unnamed in the 2.7.7 functions.csv)
+BOOL sPickItem_PreliminaryFilterOut(ACDID idACDLooter, const Item & tItem, BOOL bWantLegendary, BOOL bDisableTormentCheck, BOOL bDisableTormentDrops, Act eCurrentAct, int32 nHandicapLevel, BOOL bX1Enabled, BOOL bIgnoreSeason)
 {
 
 
@@ -1606,8 +1612,8 @@ static BOOL sPickItem_PreliminaryFilterOut(ACDID idACDLooter, const Item & tItem
             return TRUE;
     }
 
-    // NOT RECOVERED: the bIgnoreSeason check (presumably on tItem.nSeasonRequiredToDrop) sits
-    // somewhere in here; the only caller written so far passes TRUE, so it compiles away.
+    if (!bIgnoreSeason && !sub_7100897970(tItem.gbid, ACDTryToGet(idACDLooter)))
+        return TRUE;
 
 
 
@@ -1621,6 +1627,19 @@ static BOOL sPickItem_PreliminaryFilterOut(ACDID idACDLooter, const Item & tItem
 
 
 
+}
+
+extern "C" BOOL sub_7100897970(GBID gbidItem, const ActorCommonData * ptACDLooter)
+{
+    if (sub_710050e800(gbidItem) && !GameIsSeasonal())
+        return FALSE;
+    if (sub_710050e910(gbidItem) && !ptACDLooter->AttributesGetInt(ATTRIBUTE_ETHEREAL_ITEMS_UNLOCKED))
+        return FALSE;
+    if (sub_71004f8a30(gbidItem) && !ptACDLooter->AttributesGetInt(ATTRIBUTE_SOUL_SHARDS_UNLOCKED))
+        return FALSE;
+    if (sub_710050eb20(gbidItem) && !ptACDLooter->AttributesGetInt(ATTRIBUTE_SANCTIFIED_ITEMS_UNLOCKED))
+        return FALSE;
+    return TRUE;
 }
 
 
@@ -1673,7 +1692,7 @@ static GBID sPickByItemLabel(const SharedLooteeParams & tLooteeParams,
 
     Act eCurrentAct = GameGetCurrentAct();
     int32 nHandicapLevel = GameGetHandicapLevel();
-    BOOL bX1Enabled = OnlineService::GetServerContentFlags() & (1 << 1);
+    BOOL bX1Enabled = (OnlineService::GetServerContentFlags() & (1 << 1)) != 0;
 
     for (int32 nItemIdx = 0; nItemIdx < nMemberItems; nItemIdx++)
     {
@@ -4217,7 +4236,8 @@ static GBID sGetItemBasedOnItem(GBID gbidBaseItem, int32 nLooteeMLvl, uint32 dwI
 
 
 
-static GBID sGetGoldGBIDFromAmount(uint32 nGoldAmount)
+// sGetGoldGBIDFromAmount (unnamed in the 2.7.7 functions.csv)
+GBID sGetGoldGBIDFromAmount(uint32 nGoldAmount)
 {
     GlobalGBID eGlobalGBID;
     if (nGoldAmount > 2000)
@@ -4242,7 +4262,7 @@ static GBID sGetGoldGBIDFromAmount(uint32 nGoldAmount)
     }
     else
     {
-        DisplayInternalError(NULL, "", 4245, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 4451, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
     return GlobalGBIDGet(eGlobalGBID);
 }
@@ -4335,7 +4355,7 @@ ACDID LootQuickCreateItem(const GBHandle & hGB, const BOOL fAutoIdentify)
 
 
 
-// NON_MATCHING: 2 of 621 insns, same size: one register (x9 vs x10) in the inlined sChooseFromItemWeightArray tail; binding-level block and eIQL switch now match (t04)
+// NON_MATCHING: 2.7.7 logic is in (unlockable_random_affix_properties from unk_a0, jewel_rank from sub_710050e990). 2764 vs 2652: we inline sGetGoldGBIDFromAmount (the original calls it, sub_7100894820, 7 call sites); with it out of line only register choices differ (x9/x10 in the sChooseFromItemWeightArray tail, x20/x22 in the map loop).
 ACDID LootCreateItem(
     LootSpecifier & tSpecifier,
     const WorldPlace & tPlace,
@@ -4566,6 +4586,12 @@ ACDID LootCreateItem(
         GBHandle hGBAffix(GB_AFFIXES, tSpecifier.arAffixGBIDs[i]);
         fIdentified = fIdentified && sAffixIsAlreadyIdentified(hGBAffix);
     }
+    for (blz::unordered_map<int, int>::iterator it = tSpecifier.unk_a0.begin(); it != tSpecifier.unk_a0.end(); ++it)
+    {
+        D3::Items::UnlockableRandomAffixProperties * ptProperties = tGenerator.add_unlockable_random_affix_properties();
+        ptProperties->set_affix(it->first);
+        ptProperties->set_unlock_rank(it->second);
+    }
 
 
 
@@ -4639,6 +4665,11 @@ ACDID LootCreateItem(
     if (ItemIsUpgradeableJewel(tSpecifier.hGBItem.gbid))
     {
         fIdentified = TRUE;
+        int32 nJewelRank = sub_710050e990(tSpecifier.hGBItem.gbid);
+        if (nJewelRank > 0)
+        {
+            tGenerator.set_jewel_rank(nJewelRank);
+        }
     }
 
 
@@ -6677,8 +6708,8 @@ static void sRemoveConsumablePotions(LootSpecifierArray & arLootSpecifiersToSpaw
 
 int32 sGetLegendaryItemDropWeightIfValidToDrop(const Item & tItem, ActorCommonData * ptACDLooter, const SharedLooteeParams & tLooteeParams, PlayerClass ePlayerClass, ItemLabel eItemLabel1, ItemLabel eItemLabel2, int32 nLooteeLevelToUse, BOOL bHardcore, BOOL bX1Enabled, Act eCurrentAct, BOOL bIgnoreClassLegendaryDropWeight)
 {
-
-
+    if (tLooteeParams.fIsVendor && sub_710050e910(tItem.gbid))
+        return 0;
 
 
 
@@ -6695,7 +6726,7 @@ int32 sGetLegendaryItemDropWeightIfValidToDrop(const Item & tItem, ActorCommonDa
 
 
     int32 nHandicapLevel = GameGetHandicapLevel();
-    if (sPickItem_PreliminaryFilterOut(ptACDLooter ? ptACDLooter->id : ACDID_INVALID, tItem, TRUE, tLooteeParams.bDisableTormentCheck, tLooteeParams.bDisableTormentDrops, eCurrentAct, nHandicapLevel, bX1Enabled, TRUE))
+    if (sPickItem_PreliminaryFilterOut(ptACDLooter ? ptACDLooter->id : ACDID_INVALID, tItem, TRUE, tLooteeParams.bDisableTormentCheck, tLooteeParams.bDisableTormentDrops, eCurrentAct, nHandicapLevel, bX1Enabled, FALSE))
         return 0;
 
 
@@ -6884,8 +6915,8 @@ static GBID sPickLegendary(ActorCommonData * ptACDLooter,
     {
         const Item & tItem = ptItemAppGlobals->ptItems[nItemIdx];
 
-
-
+        if (tLooteeParams.unk_50 && !ItemIsEquippableByPlayerOrHireling(tItem.gbid))
+            continue;
 
 
 
@@ -7136,7 +7167,7 @@ static void sRollForTargetedItem(
     }
 }
 
-BOOL sub_710050e910(GBID gbidItem); BOOL GameCommonGameFlagIsSet(LPCSTR szFlagLabel); namespace NephalemRiftManager { int32 RiftPlayerCount(); }
+BOOL GameCommonGameFlagIsSet(LPCSTR szFlagLabel); namespace NephalemRiftManager { int32 RiftPlayerCount(); }
 // NON_MATCHING: 2.7.7 logic is complete (sub_710050e910 always-ancient check, seasonal solo tiered-rift guaranteed primal with ATTRIBUTE_TIERED_RIFT_PRIMAL_RECEIVED); the remaining diff is block layout only: the original puts the "LootRunTieredRiftFailed not set" path (looter / rift-level / attribute checks) out of line at the end of the function. Tried the flag in a local.
 void LootRollForAncientLegendary(LootSpecifier & tSpecifier, const ACDID idACDLooter)
 {
@@ -7275,7 +7306,7 @@ GBID LootPickLegendaryOfItemType(const Player & tPlayer,
 
     Act eCurrentAct = GameGetCurrentAct();
     int32 nHandicapLevel = GameGetHandicapLevel();
-    BOOL bX1Enabled = OnlineService::GetServerContentFlags() & (1 << 1);
+    BOOL bX1Enabled = (OnlineService::GetServerContentFlags() & (1 << 1)) != 0;
 
 
     PlayerClass ePlayerClass = PlayerGetPlayerClass(&tPlayer);
@@ -7363,7 +7394,7 @@ GBID LootPickLegendaryOfItemType(const Player & tPlayer,
             continue;
         }
 
-        if (sPickItem_PreliminaryFilterOut(ptACDPlayer->id, tItem, TRUE, TRUE, FALSE, eCurrentAct, nHandicapLevel, bX1Enabled, TRUE))
+        if (sPickItem_PreliminaryFilterOut(ptACDPlayer->id, tItem, TRUE, TRUE, FALSE, eCurrentAct, nHandicapLevel, bX1Enabled, FALSE))
         {
             continue;
         }
@@ -7442,7 +7473,7 @@ GBID LootPickItemFromSet(const Player & tPlayer,
 
     Act eCurrentAct = GameGetCurrentAct();
     int32 nHandicapLevel = GameGetHandicapLevel();
-    BOOL bX1Enabled = OnlineService::GetServerContentFlags() & (1 << 1);
+    BOOL bX1Enabled = (OnlineService::GetServerContentFlags() & (1 << 1)) != 0;
 
 
     BOOL bHardcore = tPlayer.tHeroStateData.uPlayerFlags & (1 << PLAYERFLAG_HARDCORE);

@@ -2126,7 +2126,7 @@ static ACDID sResetPlayer(
 
 
     AccountDefinition_ToDefaults(tAccountDefinition);
-    if (bResetAllHeroData)
+
     {
         D3AccountPartition idPartition = GetPartition((ptPlayer->tHeroStateData.uPlayerFlags & (1u << PLAYERFLAG_HARDCORE)) != 0, GameIsSeasonal());
         tAccountDefinition.mutable_partitions(0)->set_partition_id(idPartition);
@@ -2135,10 +2135,10 @@ static ACDID sResetPlayer(
 
 
 
-    else
-    {
-        SHero::sComposeAccountDefinition(*ptPlayer, dwSaveOptionBits, tAccountDefinition);
-    }
+
+
+
+
 
 
     ACDInventoryDeleteAll(tACDPlayer);

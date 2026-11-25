@@ -35,10 +35,6 @@ namespace FileIO {
 
 
 
-
-
-
-
 }  // namespace FileIO
 
 ImageHandle StringToImageHandle(LPCSTR pszName);  // X/Client/ImageCollection.cpp
@@ -129,7 +125,7 @@ bool Achievements::GetRewardParentAchievements(RewardId id, AchievementIdList & 
     for (uint32 i = 0; i < ptReward->m_parentAchievements.size(); ++i) idList.push_back(ptReward->m_parentAchievements[i]->m_id);
     return true;
 }
-void Achievements::GetAllRewardsByType(RewardType eType, RewardIdList & idList, uint32 nSeasonId) const { GetAllRewardsOfTypes(1u << eType, idList, nSeasonId); }
+void Achievements::GetAllRewardsByType(RewardType eType, RewardIdList & idList, uint32 nSeasonId) const { GetAllRewardsOfTypes(1u << eType, idList, nSeasonId, false); }
 inline int32 Achievements::GetSeasonCycleLength() const { return GetStaticDataFile()->GetSeasonCycleLength(); }
 int32 Achievements::GetSeasonDataPartition(uint32 seasonNum) const {
     int32 seasonCycleLength = GetSeasonCycleLength();
@@ -137,7 +133,8 @@ int32 Achievements::GetSeasonDataPartition(uint32 seasonNum) const {
     if (!seasonNum) return 0;
     return (seasonNum - 1) % seasonCycleLength + 1;
 }
-void Achievements::GetAllRewardsOfTypes(uint32 dwTypes, RewardIdList & idList, uint32 nSeasonId) const
+// NON_MATCHING: 2.7.7 tests the AdvancedGuardian name prefix with only the xpos 0 compare of the inlined find (ours keeps the full find loop); also the cycle-length/partition codegen
+void Achievements::GetAllRewardsOfTypes(uint32 dwTypes, RewardIdList & idList, uint32 nSeasonId, bool bAdvancedGuardianOnly) const
 {
     AchievementsEngine::AchievementsStaticData * ptStaticData = GetStaticDataFile();
     for (AchievementsEngine::RewardMap::const_iterator it = ptStaticData->GetRewardMap().begin(); it != ptStaticData->GetRewardMap().end(); it++)
@@ -154,6 +151,7 @@ void Achievements::GetAllRewardsOfTypes(uint32 dwTypes, RewardIdList & idList, u
                 continue;
             if (nSeasonId <= 3 && IsSeasonJourneyAchievement(ptAchievementDef->m_id))
                 continue;
+            if (bAdvancedGuardianOnly) { blz::string strPrefix("Achievements:SeasonJourneyAdvancedGuardian"); blz::string strName(ptAchievementDef->m_pszNameKey); if (strName.find(strPrefix) != 0) continue; }
             idList.push_back(it->first);
             break;
         }
@@ -235,29 +233,31 @@ BOOL Achievements::IsAchievementHardcoreByCriteria(AchievementId idAchievement) 
     }
     return FALSE;
 }
-AchievementId Achievements::GetSeasonJourneyRankSeriesTail(uint32 nSeasonId) const
+// NON_MATCHING: 2.7.7 branches on the set and duplicates the partition computation per branch with the key spilled to the stack (ours selects the static data with csel)
+AchievementId Achievements::GetSeasonJourneyRankSeriesTail(uint32 nAchievementSet, uint32 nSeasonId) const
 {
     if (!nSeasonId)
         return INVALID_ACHIEVEMENT_ID;
-    AchievementsEngine::AchievementsStaticData * ptStaticData = m_pStaticDataFile;
+    AchievementsEngine::AchievementsStaticData * ptStaticData = nAchievementSet ? &m_pStaticDataFile[1] : m_pStaticDataFile;
     uint32 seasonPartition = GetSeasonDataPartition(nSeasonId);
     AchievementsEngine::SeasonJourneyRankTailsMap::const_iterator it = ptStaticData->GetSeasonJourneyRankTails().find(seasonPartition);
     if (it == ptStaticData->GetSeasonJourneyRankTails().end())
         return INVALID_ACHIEVEMENT_ID;
     return it->second;
 }
-AchievementId Achievements::GetHighestEarnedSeasonJourneyAchievement(uint32 nSeasonId, const GameAccountHandle & gameAccountId, AchievementsInterface * ptAchievementsInterface)
+// NON_MATCHING: inlines GetSeasonJourneyRankSeriesTail, which differs as above (branch-duplicated partition computation)
+AchievementId Achievements::GetHighestEarnedSeasonJourneyAchievement(uint32 nAchievementSet, uint32 nSeasonId, const GameAccountHandle & gameAccountId, AchievementsInterface * ptAchievementsInterface)
 {
     AchievementId idSeasonJourneyRank = INVALID_ACHIEVEMENT_ID;
-    AchievementId idSeasonJourneyRankTail = GetSeasonJourneyRankSeriesTail(nSeasonId);
+    AchievementId idSeasonJourneyRankTail = GetSeasonJourneyRankSeriesTail(nAchievementSet, nSeasonId);
     if (ptAchievementsInterface && idSeasonJourneyRankTail)
     {
         AchievementId idCurrentSeriesAchievement = idSeasonJourneyRankTail;
         const AchievementDefinition * ptDef;
         while ((ptDef = GetAchievementDefinition(idCurrentSeriesAchievement)) != NULL)
         {
-            AchievementRecord tRecord;
-            bool bAchievementEarned = ptAchievementsInterface->FindAwardedAchievement(gameAccountId, idCurrentSeriesAchievement, tRecord);
+            AchievementRecord tRecord(nAchievementSet == 1);
+            bool bAchievementEarned = ptAchievementsInterface->FindAwardedAchievement(gameAccountId, nAchievementSet == 1, idCurrentSeriesAchievement, tRecord);
             if (idSeasonJourneyRank == INVALID_ACHIEVEMENT_ID && bAchievementEarned)
                 idSeasonJourneyRank = ptDef->m_id;
             else if (!bAchievementEarned)

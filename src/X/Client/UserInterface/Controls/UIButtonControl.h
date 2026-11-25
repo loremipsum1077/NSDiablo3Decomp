@@ -116,26 +116,26 @@ private:
     void sCustomDraw(const uint8 bLayerAlpha, float & flZSlice);
     void sDrawStretchWithCaps(const Rect2D & rectWindowUIC, const Rect2D & rectClippingUIC, uint8, const RGBAColor & rgbaColor, float flZ);
 public:
-    ImageTextureFrame m_tTextureFrame[3];  // 0x3e4
-    ImageTextureFrame m_tIconTextureFrame[3];  // 0x3fc
-    BOOL m_fHasDisabledTextureFrame;  // 0x414
-    ImageTextureFrame m_tTextureFrameDisabled;  // 0x418
-    ImageTextureFrame m_tIconTextureFrameDisabled;  // 0x420
-    RGBAColor m_rgbaTextOriginal;  // 0x428
-    RGBAColor m_rgbaTextOriginalDropShadow;  // 0x42c
-    RGBAColor m_rgbaTextHighlight;  // 0x430
-    RGBAColor m_rgbaTextHighlightDropShadow;  // 0x434
-    RGBAColor m_rgbaTextPushed;  // 0x438
-    RGBAColor m_rgbaTextPushedDropShadow;  // 0x43c
-    RGBAColor m_rgbaDisabled;  // 0x440
-    ButtonIconAlignment m_eButtonIconAlignment;  // 0x444
-    int32 m_nIconTextPaddingX;  // 0x448
-    BOOL m_fDoActionOnMouseDown;  // 0x44c
-    BOOL m_fIsDragTarget;  // 0x450
-    BOOL m_fIsDragSource;  // 0x454
-    int32 m_nUIAction;  // 0x458
-    int32 m_nUIActionAlt;  // 0x45c
-    ButtonState m_eButtonState;  // 0x460
+    ImageTextureFrame m_tTextureFrame[3];  // 0x3e8
+    ImageTextureFrame m_tIconTextureFrame[3];  // 0x400
+    BOOL m_fHasDisabledTextureFrame;  // 0x418
+    ImageTextureFrame m_tTextureFrameDisabled;  // 0x41c
+    ImageTextureFrame m_tIconTextureFrameDisabled;  // 0x424
+    RGBAColor m_rgbaTextOriginal;  // 0x42c
+    RGBAColor m_rgbaTextOriginalDropShadow;  // 0x430
+    RGBAColor m_rgbaTextHighlight;  // 0x434
+    RGBAColor m_rgbaTextHighlightDropShadow;  // 0x438
+    RGBAColor m_rgbaTextPushed;  // 0x43c
+    RGBAColor m_rgbaTextPushedDropShadow;  // 0x440
+    RGBAColor m_rgbaDisabled;  // 0x444
+    ButtonIconAlignment m_eButtonIconAlignment;  // 0x448
+    int32 m_nIconTextPaddingX;  // 0x44c
+    BOOL m_fDoActionOnMouseDown;  // 0x450
+    BOOL m_fIsDragTarget;  // 0x454
+    BOOL m_fIsDragSource;  // 0x458
+    int32 m_nUIAction;  // 0x45c
+    int32 m_nUIActionAlt;  // 0x460
+    ButtonState m_eButtonState;  // 0x464
     UIFunctionPtr m_pfnOnHitRegionEnter;  // 0x468
     UIFunctionPtr m_pfnOnHitRegionExit;  // 0x470
     UIFunctionPtr m_pfnOnLeftMouseUp;  // 0x478

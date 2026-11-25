@@ -1688,7 +1688,7 @@ void OpenForController(
 
         uint32 dwItemTypes = 1 << OnlineService::REWARD_TYPE_ITEM;
 
-        ptAchievements->GetAllRewardsOfTypes(dwItemTypes, idItemsList, nSeasonNum);
+        ptAchievements->GetAllRewardsOfTypes(dwItemTypes, idItemsList, nSeasonNum, false);
 
         for (int32 n = 0; n < idItemsList.size(); n++)
         {
@@ -1729,7 +1729,7 @@ void OpenForController(
 
         uint32 dwCosmeticTypes = 1 << OnlineService::REWARD_TYPE_COSMETIC;
 
-        ptAchievements->GetAllRewardsOfTypes(dwCosmeticTypes, idCosmeticsList, nSeasonNum);
+        ptAchievements->GetAllRewardsOfTypes(dwCosmeticTypes, idCosmeticsList, nSeasonNum, false);
 
         for (uint32 i = 0; i < idCosmeticsList.size(); i++)
         {

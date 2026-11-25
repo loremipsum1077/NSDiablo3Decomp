@@ -23,7 +23,7 @@
 #include "../Sigma/Math/Sphere.h"
 #include "../Sigma/Memory/SigmaMemory.h"
 #include "Nav/NavZoneIntersectPrim.h"
-struct ACDCollThreadGlobals { ACDCollInfo arCollBroadResults[8192]; };
+struct ACDCollThreadGlobals { ACDCollInfo arCollBroadResults[11776]; };
 struct ACDCollGlobals { XChainedFixedBlockAllocator<XSphereArray> tSphereTreeAlloc; };
 struct Circle;
 BOOL ACDCollBroadCircle(SWorldID idSWorld, const Vector2D & wpCenter, float flRadius, const ACDCollParams & tCollParams, BOOL bAllowNonWorldACDs, ACDCollBroadResult & tResult, ACDID idOwner);  // line 396, not written yet

@@ -22,7 +22,8 @@ struct SortedBuff {  // size 0x28
     BOOL bPlayerCanCancel;  // 0x18
     BOOL fIsDebuff;  // 0x1c
     BOOL fIsHidden;  // 0x20
-    void Initialize(const SNO _snoPower, const int32 _nBuffIdx, const BOOL _fIsDebuff, const BOOL _fIsHidden, const int32 _nStackCount, const Player * _ptPlayer, const BOOL bCreateControls);
+    int32 unk_24;  // 0x24
+    void Initialize(const SNO _snoPower, const int32 _nBuffIdx, const BOOL _fIsDebuff, const BOOL _fIsHidden, const int32 _unk_24, const int32 _nStackCount, const Player * _ptPlayer, const BOOL bCreateControls);
     ImageHandle GetImage() const;
     int32 GetCanCancelTag() const;
 };

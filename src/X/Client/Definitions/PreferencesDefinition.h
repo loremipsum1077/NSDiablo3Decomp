@@ -419,7 +419,7 @@ struct KeybindingPrefs {  // size 0x484
 };
 static_assert(sizeof(KeybindingPrefs) == 0x484, "KeybindingPrefs");
 
-struct SocialPrefs {  // size 0x30
+struct SocialPrefs {  // size 0x34
     void ResetToDefaults();
     BOOL GetNotifyFriendOnline() const;
     void SetNotifyFriendOnline(BOOL);
@@ -457,8 +457,9 @@ struct SocialPrefs {  // size 0x30
     BOOL bShowLocalPlayersListDisabled;  // 0x24
     BOOL bNotifyGuildMemberOnlineDisabled;  // 0x28
     BOOL bNotifyGuildAchievementDisabled;  // 0x2c
+    BOOL bSocialFeaturesDisabled;  // 0x30 (2.7.7: pref field "SocialFeaturesDisabled", default FALSE)
 };
-static_assert(sizeof(SocialPrefs) == 0x30, "SocialPrefs");
+static_assert(sizeof(SocialPrefs) == 0x34, "SocialPrefs");
 
 struct ChatPrefs {  // size 0x8
     void ResetToDefaults();
@@ -471,7 +472,7 @@ struct ChatPrefs {  // size 0x8
 };
 static_assert(sizeof(ChatPrefs) == 0x8, "ChatPrefs");
 
-struct PreferencesDefinition {  // size 0x66c
+struct PreferencesDefinition {  // size 0x670
     BOOL bSuccessfullyLoadedBNetAccountSettings;  // 0x00
     int32 nVersion;  // 0x04
     uint8 bPlayedCutscene[5];  // 0x08
@@ -488,10 +489,10 @@ struct PreferencesDefinition {  // size 0x66c
     GameplayPrefs tGameplayPrefs;  // 0x5ac
     MacPrefs tMacPrefs;  // 0x61c
     SocialPrefs tSocialPrefs;  // 0x628
-    ChatPrefs tChatPrefs;  // 0x658
-    ConsoleMultiplayerPrefs tConsoleMultiplayerPrefs;  // 0x660
+    ChatPrefs tChatPrefs;  // 0x65c
+    ConsoleMultiplayerPrefs tConsoleMultiplayerPrefs;  // 0x664
 };
-static_assert(sizeof(PreferencesDefinition) == 0x66c, "PreferencesDefinition");
+static_assert(sizeof(PreferencesDefinition) == 0x670, "PreferencesDefinition");
 
 typedef int32 UIAction;
 

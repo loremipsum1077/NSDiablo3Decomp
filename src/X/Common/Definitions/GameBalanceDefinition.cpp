@@ -1842,13 +1842,13 @@ TypeDescriptorField("", DT_SERIALIZEDATA, offsetof(EnchantItemAffixUseCountCostS
 TypeDescriptorField(NULL, DT_NULL, sizeof(EnchantItemAffixUseCountCostScalarsTable), NULL, 0), }; ComplexTypeDescriptor TypeDescriptor_EnchantItemAffixUseCountCostScalarsTable("EnchantItemAffixUseCountCostScalarsTable", 0, EnchantItemAffixUseCountCostScalarsTable_Fields, 3, NULL, 0x0, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_ENCHANT_ITEM_AFFIX_USE_COUNT_COST_SCALARS_TABLE = &TypeDescriptor_EnchantItemAffixUseCountCostScalarsTable;
 
 
-
-
-static const TypeDescriptorField TransmuteRecipeIngredient_Fields[4] = {
+static const TypeDescriptorField TransmuteRecipeIngredient_Fields[6] = {
 TypeDescriptorField("", DT_INT, offsetof(TransmuteRecipeIngredient, eType), NULL, 1),
 TypeDescriptorField("", DT_INT, offsetof(TransmuteRecipeIngredient, nTypeValue), NULL, 1),
 TypeDescriptorField("", DT_INT, offsetof(TransmuteRecipeIngredient, nQuantity), NULL, 1),
-TypeDescriptorField(NULL, DT_NULL, sizeof(TransmuteRecipeIngredient), NULL, 0), }; ComplexTypeDescriptor TypeDescriptor_TransmuteRecipeIngredient("TransmuteRecipeIngredient", 0, TransmuteRecipeIngredient_Fields, 4, NULL, 0x0, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_TRANSMUTE_RECIPE_INGREDIENT = &TypeDescriptor_TransmuteRecipeIngredient;
+TypeDescriptorField("", DT_INT, offsetof(TransmuteRecipeIngredient, unk_0c), NULL, 1),
+TypeDescriptorField("", DT_INT, offsetof(TransmuteRecipeIngredient, unk_10), NULL, 1),
+TypeDescriptorField(NULL, DT_NULL, sizeof(TransmuteRecipeIngredient), NULL, 0), }; ComplexTypeDescriptor TypeDescriptor_TransmuteRecipeIngredient("TransmuteRecipeIngredient", 0, TransmuteRecipeIngredient_Fields, 6, NULL, 0x0, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_TRANSMUTE_RECIPE_INGREDIENT = &TypeDescriptor_TransmuteRecipeIngredient;
 
 static const TypeDescriptorField TransmuteRecipe_Fields[11] = {
 TypeDescriptorField("", DT_SERIALIZEDATA, offsetof(TransmuteRecipe, tHeader), NULL, 7340032), VariableArrayTypeDescriptorField("", DT_BYTE, offsetof(TransmuteRecipe, tHeader.szName), 0x700020, offsetof(TransmuteRecipe, tHeader) - offsetof(TransmuteRecipe, tHeader.szName)), TypeDescriptorField("", DT_INT, offsetof(TransmuteRecipe, tHeader.gbid), NULL, 0), TypeDescriptorField("", DT_INT, offsetof(TransmuteRecipe, tHeader.dwPad), NULL, 0),

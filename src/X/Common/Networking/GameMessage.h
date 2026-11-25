@@ -403,6 +403,14 @@ struct PlayerDWordDataMessage {  // size 0x10
 };
 static_assert(sizeof(PlayerDWordDataMessage) == 0x10, "PlayerDWordDataMessage");
 
+struct PlayerDWord2DataMessage {  // size 0x14
+    RequiredMessageHeader tHeader;  // 0x00
+    uint32 unk_08;  // 0x08
+    uint32 unk_0c;  // 0x0c
+    int32 unk_10;  // 0x10
+};
+static_assert(sizeof(PlayerDWord2DataMessage) == 0x14, "PlayerDWord2DataMessage");
+
 // X/Server/SWorld.cpp (SWorld::SendStatus)
 enum {
     SMSG_WORLD_STATUS = 213,
@@ -480,6 +488,13 @@ struct RiftJoinMessage {  // size 0x18
     uint32 nPlayerKeyTiers;  // 0x14
 };
 static_assert(sizeof(RiftJoinMessage) == 0x18, "RiftJoinMessage");
+
+struct RiftStartAcceptedMessage {  // size 0x10
+    RequiredMessageHeader tHeader;  // 0x00
+    int32 unk_08;  // 0x08
+    BOOL unk_0c;  // 0x0c
+};
+static_assert(sizeof(RiftStartAcceptedMessage) == 0x10, "RiftStartAcceptedMessage");
 
 // X/Common/Networking/GameMessage.h:413-431 (rift encounter messages).
 enum {
@@ -613,12 +628,14 @@ class XTypeDescriptor;
 extern const XTypeDescriptor * DT_REQUIRED_MESSAGE_HEADER;
 extern const XTypeDescriptor * DT_SIMPLE_MESSAGE;
 extern const XTypeDescriptor * DT_GENERIC_BLOB_MESSAGE;
+extern const XTypeDescriptor * DT_CHUNK_MESSAGE;
 extern const XTypeDescriptor * DT_BOOL_DATA_MESSAGE;
 extern const XTypeDescriptor * DT_BYTE_DATA_MESSAGE;
 extern const XTypeDescriptor * DT_PLAYER_INDEX_MESSAGE;
 extern const XTypeDescriptor * DT_DATAID_DATA_MESSAGE;
 extern const XTypeDescriptor * DT_DWORD_DATA_MESSAGE;
 extern const XTypeDescriptor * DT_PLAYER_DWORD_DATA_MESSAGE;
+extern const XTypeDescriptor * DT_PLAYER_DWORD2_DATA_MESSAGE;
 extern const XTypeDescriptor * DT_INT_DATA_MESSAGE;
 extern const XTypeDescriptor * DT_INT64_DATA_MESSAGE;
 extern const XTypeDescriptor * DT_UINT64_DATA_MESSAGE;
@@ -721,6 +738,7 @@ extern const XTypeDescriptor * DT_MAP_MARKER_MESSAGE;
 extern const XTypeDescriptor * DT_BOSS_ENCOUNTER_MESSAGE;
 extern const XTypeDescriptor * DT_SET_DUNGEON_MESSAGE;
 extern const XTypeDescriptor * DT_BOSS_ENCOUNTER_INVITE_MESSAGE;
+extern const XTypeDescriptor * DT_RIFT_START_ACCEPTED_MESSAGE;
 extern const XTypeDescriptor * DT_RIFT_JOIN_MESSAGE;
 extern const XTypeDescriptor * DT_ACT_TRANSITION_MESSAGE;
 extern const XTypeDescriptor * DT_INTERSTITIAL_MESSAGE;
@@ -758,6 +776,8 @@ extern const XTypeDescriptor * DT_CONSOLE_COUNTER_INCREMENT_MESSAGE;
 extern const XTypeDescriptor * DT_SERVER_NOTIFICATION_DATA_MESSAGE;
 extern const XTypeDescriptor * DT_JEWEL_UPGRADE_RESULTS_MESSAGE;
 extern const XTypeDescriptor * DT_DUNGEON_FINDER_CLOSING_MESSAGE;
+extern const XTypeDescriptor * DT_UBER_BOSSS_CLOSING_MESSAGE;
+extern const XTypeDescriptor * DT_WARNING_COUNTDOWN_NOTIFICATION_MESSAGE;
 extern const XTypeDescriptor * DT_BLIZZCON_END_SCREEN_MESSAGE;
 extern const XTypeDescriptor * DT_HORADRIC_QUEST_CURSED_REALM_RESULTS_MESSAGE;
 extern const XTypeDescriptor * DT_SET_DUNGEON_DIALOG_MESSAGE;
@@ -1272,6 +1292,13 @@ struct GenericBlobMessage {  // size 0xc
 };
 static_assert(sizeof(GenericBlobMessage) == 0xc, "GenericBlobMessage");
 
+struct ChunkMessage {  // size 0x10
+    RequiredMessageHeader tHeader;  // 0x00
+    uint32 unk_08;  // 0x08
+    BOOL unk_0c;  // 0x0c
+};
+static_assert(sizeof(ChunkMessage) == 0x10, "ChunkMessage");
+
 struct BoolDataMessage {  // size 0xc
     RequiredMessageHeader tHeader;  // 0x00
     BOOL bVal;  // 0x08
@@ -1737,7 +1764,7 @@ enum TrickleAction {
     TRICKLE_ACTION_IN_COMBAT = 7,
 };
 
-struct TrickleMessage {  // size 0xb4
+struct TrickleMessage {  // size 0xbc
     RequiredMessageHeader tHeader;  // 0x00
     ACDNetworkName ann;  // 0x08
     SNO snoActor;  // 0x0c
@@ -1761,9 +1788,9 @@ struct TrickleMessage {  // size 0xb4
     XOptional<int> nTieredRiftRank;  // 0x94
     XOptional<int> bBrawling;  // 0x9c
     XOptional<int> bInUberFight;  // 0xa4
-    XOptional<int> gbidPortraitFrame;  // 0xac
+    XOptional<int> gbidPortraitFrame;  /* 0xac */  XOptional<int> unk_b4;  // 0xb4 (2.7.7: copied into ClientTrickleEntry::unk_68 by CTrickleUpdate)
 };
-static_assert(sizeof(TrickleMessage) == 0xb4, "TrickleMessage");
+static_assert(sizeof(TrickleMessage) == 0xbc, "TrickleMessage");
 
 struct PlayerIntValMessage {  // size 0x10
     RequiredMessageHeader tHeader;  // 0x00
@@ -2220,6 +2247,41 @@ struct DungeonFinderClosingMessage {  // size 0x10
     int32 nRiftLevel;  // 0x0c
 };
 static_assert(sizeof(DungeonFinderClosingMessage) == 0x10, "DungeonFinderClosingMessage");
+
+struct UberBosssClosingMessage {  // size 0x10
+    RequiredMessageHeader tHeader;  // 0x00
+    int32 unk_08;  // 0x08
+    int32 unk_0c;  // 0x0c
+};
+static_assert(sizeof(UberBosssClosingMessage) == 0x10, "UberBosssClosingMessage");
+
+struct WarningCountdownNotificationMessage {  // size 0x10c
+    RequiredMessageHeader tHeader;  // 0x00
+    int32 unk_08;  // 0x08
+    CHAR unk_0c[255];  // 0x0c
+};
+static_assert(sizeof(WarningCountdownNotificationMessage) == 0x10c, "WarningCountdownNotificationMessage");
+
+// 2.7.7 dark-alchemy messages; descriptors are built in the static init sub_71004b4c50 (a TU not in the source tree yet).
+struct ActivateNodeMessage {  // size 0x10
+    RequiredMessageHeader tHeader;  // 0x00
+    int32 unk_08;  // 0x08
+    int32 unk_0c;  // 0x0c
+};
+static_assert(sizeof(ActivateNodeMessage) == 0x10, "ActivateNodeMessage");
+
+struct DectivateNodeMessage {  // size 0xc
+    RequiredMessageHeader tHeader;  // 0x00
+    int32 unk_08;  // 0x08
+};
+static_assert(sizeof(DectivateNodeMessage) == 0xc, "DectivateNodeMessage");
+
+struct GizmoInteractMessage {  // size 0x10
+    RequiredMessageHeader tHeader;  // 0x00
+    int32 unk_08;  // 0x08
+    int32 unk_0c;  // 0x0c
+};
+static_assert(sizeof(GizmoInteractMessage) == 0x10, "GizmoInteractMessage");
 
 struct BlizzconEndScreenMessage {  // size 0x10
     RequiredMessageHeader tHeader;  // 0x00

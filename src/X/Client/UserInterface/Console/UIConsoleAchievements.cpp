@@ -450,7 +450,7 @@ void UpdateProgress(BOOL bSeasonal)
     {
         uint32 nTotal = 0;
         uint32 nEarned = 0;
-        OnlineService::CalculateCategoryPoints(sgtUIAchievementsData.idPlayer, 0, nTotal, nEarned, TRUE);
+        OnlineService::CalculateCategoryPoints(sgtUIAchievementsData.idPlayer, 0, nTotal, nEarned, sub_71000b4be0(), TRUE);
         UI_GetProgressBarFromID(UIPROGRESS_CONSOLE_ACHIEVEMENTS_OVERALL).SetExtentsAndPosition(0.0f, (float)nTotal, (float)nEarned, -1.0f);
         float flPercentage = 0.0f;
         if (nTotal)
@@ -465,7 +465,7 @@ void UpdateProgress(BOOL bSeasonal)
     {
         uint32 nTotal = 0;
         uint32 nEarned = 0;
-        OnlineService::CalculateCategoryPoints(sgtUIAchievementsData.idPlayer, 0, nTotal, nEarned, FALSE);
+        OnlineService::CalculateCategoryPoints(sgtUIAchievementsData.idPlayer, 0, nTotal, nEarned, sub_71000b4be0(), FALSE);
         UI_GetProgressBarFromID(UIPROGRESS_CONSOLE_ACHIEVEMENTS_OVERALL).SetExtentsAndPosition(0.0f, (float)nTotal, (float)nEarned, -1.0f);
         float flPercentage = 0.0f;
         if (nTotal)
@@ -687,17 +687,17 @@ BOOL sShouldShowAchievement(const OnlineService::GameAccountHandle & idPlayer, c
     if (tAchievements.IsAchievementInSeries(tDef.m_id))
     {
         if (!(tDef.m_flags & (1 << OnlineService::ACHIEVEMENT_FLAG_HIDE_SERIES)) &&
-            OnlineService::GetHighestUnearnedAchievementInSeries(idPlayer, tDef.m_id) != tDef.m_id &&
-            OnlineService::GetHighestEarnedAchievementInSeries(idPlayer, tDef.m_id) != tDef.m_id)
+            OnlineService::GetHighestUnearnedAchievementInSeries(idPlayer, tDef.m_id, sub_71000b4be0()) != tDef.m_id &&
+            OnlineService::GetHighestEarnedAchievementInSeries(idPlayer, tDef.m_id, sub_71000b4be0()) != tDef.m_id)
             return FALSE;
 
         if ((tDef.m_flags & (1 << OnlineService::ACHIEVEMENT_FLAG_HIDE_SERIES)) &&
-            ((tDef.m_supersedes == 0 && OnlineService::IsHighestAchievementUnearnedInSeries(idPlayer, tDef.m_id)) ||
-             OnlineService::IsHighestAchievementEarnedInSeries(idPlayer, tDef.m_id)))
+            ((tDef.m_supersedes == 0 && OnlineService::IsHighestAchievementUnearnedInSeries(idPlayer, tDef.m_id, sub_71000b4be0())) ||
+             OnlineService::IsHighestAchievementEarnedInSeries(idPlayer, tDef.m_id, sub_71000b4be0())))
             return FALSE;
     }
     else if ((tDef.m_flags & (1 << OnlineService::ACHIEVEMENT_FLAG_HIDDEN_TILL_AWARDED)) &&
-             OnlineService::GetAchievementStatus(idPlayer, tDef.m_id, NULL, NULL) != OnlineService::EARNED)
+             OnlineService::GetAchievementStatus(idPlayer, tDef.m_id, sub_71000b4be0(), NULL, NULL) != OnlineService::EARNED)
     {
         return FALSE;
     }
@@ -745,7 +745,7 @@ void FilterAndSortAchievements(const OnlineService::GameAccountHandle & idPlayer
         {
             blzext::vector_erase_reorder(arUnearnedAchievements, i--);
         }
-        else if (OnlineService::GetAchievementStatus(idPlayer, arUnearnedAchievements[i], NULL, NULL) == OnlineService::EARNED)
+        else if (OnlineService::GetAchievementStatus(idPlayer, arUnearnedAchievements[i], sub_71000b4be0(), NULL, NULL) == OnlineService::EARNED)
         {
             arEarnedAchievements.push_back(arUnearnedAchievements[i]);
             blzext::vector_erase_reorder(arUnearnedAchievements, i--);
@@ -1159,7 +1159,7 @@ void UpdateCategoryDisplay(OnlineService::CategoryId idCategory, BOOL bSeasonal)
     {
         uint32 nTotal = 0;
         uint32 nEarned = 0;
-        OnlineService::CalculateCategoryPoints(sgtUIAchievementsData.idPlayer, ptCatDef->m_id, nTotal, nEarned, bSeasonal);
+        OnlineService::CalculateCategoryPoints(sgtUIAchievementsData.idPlayer, ptCatDef->m_id, nTotal, nEarned, sub_71000b4be0(), bSeasonal);
 
         CRefString sName = StringListFetch(ptCatDef->m_pszNameKey);
         UI_GetTextFromID(UITEXT_CONSOLE_ACHIEVEMENTS_CATEGORY).SetText(sName, FALSE);
@@ -1322,7 +1322,7 @@ uint32 GetPointsAndResolveSeriesAchievement(
     BOOL bIsSeries = tAchievements.IsAchievementInSeries(tDefinition.m_id) &&
         !(tDefinition.m_flags & (1 << OnlineService::ACHIEVEMENT_FLAG_HIDE_SERIES)) &&
         // Inference: zero supersedes short-circuits the original highest-earned lookup.
-        (!tDefinition.m_supersedes || OnlineService::GetHighestEarnedAchievementInSeries(idPlayer, tDefinition.m_id) == tDefinition.m_id);
+        (!tDefinition.m_supersedes || OnlineService::GetHighestEarnedAchievementInSeries(idPlayer, tDefinition.m_id, sub_71000b4be0()) == tDefinition.m_id);
 #line 1279
     // Inference: A nonnull output pointer receives the series decision.
     if (pbIsSeries)
@@ -1338,7 +1338,7 @@ uint32 GetPointsAndResolveSeriesAchievement(
         OnlineService::AchievementIdList arSeriesAchievementIds;
         OnlineService::GetFilteredSupercededAchievements(
             idPlayer,
-            tAchievements.GetSeriesTail(tDefinition.m_id), arSeriesAchievementIds);
+            tAchievements.GetSeriesTail(tDefinition.m_id), arSeriesAchievementIds, sub_71000b4be0());
 
 #line 1292
     // Inference: A nonnull output vector receives the filtered series.
@@ -1363,7 +1363,7 @@ uint32 GetPointsAndResolveSeriesAchievement(
             OnlineService::AchievementRecord tRecord;
 #line 1305
     // Inference: The original checks the interface before querying an award.
-            if (ptAchievementsInterface && ptAchievementsInterface->FindAwardedAchievement(idPlayer, arSeriesAchievementIds[i], tRecord))
+            if (ptAchievementsInterface && ptAchievementsInterface->FindAwardedAchievement(idPlayer, sub_71000b4be0(), arSeriesAchievementIds[i], tRecord))
             {
                 nPointsValue += ptSeriesDef->m_pointsValue;
 #line 1308
@@ -1465,7 +1465,7 @@ void PopulateCommonUIElements(
     SigmaMemoryClear(&tRecord, sizeof(tRecord));
 #line 1397
     // Inference: The original guards the interface before querying earned state.
-    BOOL bEarned = ptAchievementsInterface && ptAchievementsInterface->FindAwardedAchievement(idPlayer, tAchievementDefinition.m_id, tRecord);
+    BOOL bEarned = ptAchievementsInterface && ptAchievementsInterface->FindAwardedAchievement(idPlayer, sub_71000b4be0(), tAchievementDefinition.m_id, tRecord);
 #line 1398
     // Inference: An earned record shows its date; otherwise the date control is hidden.
     if (bEarned)
@@ -1566,7 +1566,7 @@ void PopulateDetailView(
 #line 1458
     // Inference: Display flags are derived from the resolved achievement.
     uint32 dwFlags = GetCriteriaFlags(tAchievement);
-    OnlineService::AchievementStatus eStatus = OnlineService::GetAchievementStatus(sgtUIAchievementsData.idPlayer, tAchievement.m_id, &nEarned, &nTotal);
+    OnlineService::AchievementStatus eStatus = OnlineService::GetAchievementStatus(sgtUIAchievementsData.idPlayer, tAchievement.m_id, sub_71000b4be0(), &nEarned, &nTotal);
 
     // Inference: original flag tests gate the progress and checklist sections independently.
     UI_GetWindowFromID(UIWND_CONSOLE_ACHIEVEMENTS_DETAILVIEW_PROGRESS).SetActive((dwFlags & (1 << PROGRESS_BAR)) != 0);
@@ -1718,7 +1718,7 @@ void PopulateSeriesElement(
     if (ptDef)
     {
         OnlineService::AchievementRecord tRecord;
-        BOOL bEarned = ptAchievementsInterface->FindAwardedAchievement(sgtUIAchievementsData.idPlayer, idAchievement, tRecord);
+        BOOL bEarned = ptAchievementsInterface->FindAwardedAchievement(sgtUIAchievementsData.idPlayer, sub_71000b4be0(), idAchievement, tRecord);
         CRefString sAchievementIcon;
         sAchievementIcon.Format("UI:%s", ptDef->m_pszIconTexture);
         ImageTextureFrame tAchievementIcon(sAchievementIcon);
@@ -1794,7 +1794,7 @@ void PopulateRewardElement(
         {
 #line 1639
     // Inference: The first awarded parent marks the reward earned and ends traversal.
-            if (ptAchievementsInterface->FindAwardedAchievement(sgtUIAchievementsData.idPlayer, listParentAchievements[i], tRecord))
+            if (ptAchievementsInterface->FindAwardedAchievement(sgtUIAchievementsData.idPlayer, sub_71000b4be0(), listParentAchievements[i], tRecord))
             {
                 bEarned = TRUE;
                 break;
@@ -1960,12 +1960,12 @@ void PopulateCriteriaElement(
         {
 
             // Inference: absent criteria fall back to the parent award only when no minimum criteria is specified.
-            if (!ptAchievementsInterface->FindCriteriaRecord(sgtUIAchievementsData.idPlayer, idCriteria, tCritRecord))
+            if (!ptAchievementsInterface->FindCriteriaRecord(sgtUIAchievementsData.idPlayer, sub_71000b4be0(), idCriteria, tCritRecord))
             {
                 if (!ptAchievementDef->m_nMinRequiredCriteria)
                 {
                     OnlineService::AchievementRecord tRecord;
-                    fEarned = ptAchievementsInterface->FindAwardedAchievement(sgtUIAchievementsData.idPlayer, ptCritDef->m_parentAchievementId, tRecord);
+                    fEarned = ptAchievementsInterface->FindAwardedAchievement(sgtUIAchievementsData.idPlayer, sub_71000b4be0(), ptCritDef->m_parentAchievementId, tRecord);
                 }
             }
             else

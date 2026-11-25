@@ -218,7 +218,7 @@ struct ModalDialogInfo {  // size 0x20
 
 
 
-struct ConsoleScreenManagerData {  // size 0xfd8
+struct ConsoleScreenManagerData {  // size 0xfe8
 
     ConsoleScreenManagerData()
     : m_ptCurrentScreenSet( NULL )
@@ -226,22 +226,22 @@ struct ConsoleScreenManagerData {  // size 0xfd8
     {
         SigmaMemoryClear( m_parScreenSets, sizeof(m_parScreenSets) );
     }
-    Console::ScreenSet * m_parScreenSets[Console::Screens::NUM_SCREEN_SETS];  // 0x00
-    Console::ScreenSet * m_ptCurrentScreenSet;  // 0xf8
-    Console::ControllerActionManager m_tActionManager;  // 0x100
-    FrontendBackgroundCameraManager m_tFrontendBackgroundCameraManager;  // 0x6c8
-    FrontendBackgroundHeroManager m_tFrontendBackgroundHeroManager;  // 0x6d8
-    FrontendScreenTransitionManager m_tScreenTransitionManager;  // 0x9a8
-    LightBoxManager m_tLightboxManager;  // 0xa50
-    ConsoleModalNotificationManager m_tModalManager;  // 0xac0
-    ConsoleToastManager m_tToastManager;  // 0xb30
-    FanfareManager m_tFanfareManager;  // 0xd08
-    XGrowableList<ModalDialogInfo, const ModalDialogInfo &> m_listModalDialogInfoStack;  // 0xee0
-    XGrowableList<ScreenHistoryNode, const ScreenHistoryNode &> m_listScreenStack;  // 0xf38
-    LogoffCountDownData m_atLogoffCountDownData[4];  // 0xf90
-    ModalNotificationId m_idLeaveGameDialog;  // 0xfd0
+    Console::ScreenSet * m_parScreenSets[Console::Screens::NUM_SCREEN_SETS];  // 0x0
+    Console::ScreenSet * m_ptCurrentScreenSet;  // 0x108
+    Console::ControllerActionManager m_tActionManager;  // 0x110
+    FrontendBackgroundCameraManager m_tFrontendBackgroundCameraManager;  // 0x6d8
+    FrontendBackgroundHeroManager m_tFrontendBackgroundHeroManager;  // 0x6e8
+    FrontendScreenTransitionManager m_tScreenTransitionManager;  // 0x9b8
+    LightBoxManager m_tLightboxManager;  // 0xa60
+    ConsoleModalNotificationManager m_tModalManager;  // 0xad0
+    ConsoleToastManager m_tToastManager;  // 0xb40
+    FanfareManager m_tFanfareManager;  // 0xd18
+    XGrowableList<ModalDialogInfo, const ModalDialogInfo &> m_listModalDialogInfoStack;  // 0xef0
+    XGrowableList<ScreenHistoryNode, const ScreenHistoryNode &> m_listScreenStack;  // 0xf48
+    LogoffCountDownData m_atLogoffCountDownData[4];  // 0xfa0
+    ModalNotificationId m_idLeaveGameDialog;  // 0xfe0
 };
-static_assert(sizeof(ConsoleScreenManagerData) == 0xfd8, "ConsoleScreenManagerData");
+static_assert(sizeof(ConsoleScreenManagerData) == 0xfe8, "ConsoleScreenManagerData");
 
 ConsoleScreenManagerData * gptScreenManagerData;
 
@@ -342,6 +342,11 @@ inline void sInitShopScreenSet(); inline void sInitBloodShardVendorScreenSet(); 
 inline void sInitBlacksmithScreenSet(); inline void sInitMysticScreenSet(); inline void sInitMapScreenSet(); inline void sInitSeasonJourneyScreenSet();
 void sInitMainMenuScreenSet(); void sInitHeroCreateScreenSet(); void sInitHeroSelectScreenSet(); void sInitOptionsScreenSet();
 inline void sInitBannerScreenSet(); inline void sInitAchievementsScreenSet(); inline void sInitCharacterDetailsScreenSet(); inline void sInitCinematicsScreenSet();
+// 2.7.7 screen sets 31/32 (unnamed open/close callbacks).
+extern "C" void sub_7100178a10(int32 nControllerIndex);
+extern "C" void sub_71001794e0(int32 nControllerIndex);
+extern "C" void sub_7100370440(int32 nControllerIndex);
+static void sub_710016cae0(int32 nControllerIndex) { UIInventory::Console::Close(); }
 inline void sInitDesignerMenuScreenSet(); inline void sInitTradeScreenSet(); inline void sInitTradeItemSelectScreenSet(); inline void sInitLeaderboardScreenSet();
 
 Console::Screens::ScreenSets sGetScreenSet( const Console::ScreenSet * ptScreenSet )
@@ -826,6 +831,18 @@ void Console::Screens::InitializeForGame()
 
     sInitLeaderboardScreenSet();
 
+    {
+        Console::ScreenSet * ptScreenSet = new Console::ScreenSet( sub_7100178a10, sub_71001794e0 );
+        gptScreenManagerData->m_parScreenSets[Console::Screens::UNK_31_SCREEN_SET] = ptScreenSet;
+        ptScreenSet->AddScreen();
+    }
+    {
+        Console::ScreenSet * ptScreenSet = new Console::ScreenSet( sub_7100370440, sub_710016cae0 );
+        ptScreenSet->SetCloseSound( GlobalSNOGet( GLOBALSNO_SOUND_PANEL_GENERIC_CLOSE ) );
+        gptScreenManagerData->m_parScreenSets[Console::Screens::UNK_32_SCREEN_SET] = ptScreenSet;
+        ptScreenSet->AddScreen();
+    }
+
     Console::Notifications::CreateAmiiboTutorial();
 
 
@@ -836,14 +853,6 @@ void Console::Screens::InitializeForGame()
     {
         Online::GetPartyMemberAddedEvent().Subscribe( OnlineService::internal::function_bind_0_1<void, int32, &OnPartyMemberAddedEvent>() );
     }
-
-
-    UI_GetTextFromID( UITXT_CONSOLE_BUTTON_LEGEND_TEXT ).SetWordWrapScalar( 1.6f );
-
-    Rect2D tSwitchRect = UI_GetTextFromID( UITXT_CONSOLE_BUTTON_LEGEND_TEXT ).GetUnshiftedWindowRect();
-    tSwitchRect.top = tSwitchRect.bottom - 80.0f;
-    UI_GetTextFromID( UITXT_CONSOLE_BUTTON_LEGEND_TEXT ).SetWindowRect( tSwitchRect );
-    UI_GetTextFromID( UITXT_CONSOLE_BUTTON_LEGEND_TEXT ).SetJustification( UIJH_CENTER, UIJV_LINE_MIDDLE );
 }
 
 
@@ -885,6 +894,8 @@ void Console::Screens::DisposeForGame()
     sCleanUpScreenSet( Console::Screens::BANNER_SCREEN_SET );
     sCleanUpScreenSet( Console::Screens::ACHIEVEMENTS_SCREEN_SET );
     sCleanUpScreenSet( Console::Screens::LEADERBOARD_SCREEN_SET );
+    sCleanUpScreenSet( Console::Screens::UNK_31_SCREEN_SET );
+    sCleanUpScreenSet( Console::Screens::UNK_32_SCREEN_SET );
 
     Online::GetPartyMemberAddedEvent().Unsubscribe( OnlineService::internal::function_bind_0_1<void, int32, &OnPartyMemberAddedEvent>() );
 }

@@ -6034,10 +6034,10 @@ BOOL SGameJoinPendingPlayer(const OnlineService::HeroId uHeroId)
     return TRUE;
 }
 
-
-
-
-
+bool sub_71007b7080()  // 0x71007b7080 (unnamed): tStartParams.dwCreationFlags bit 20 (2.7.7 GAMECREATEPARAM bit, name unknown)
+{
+    return (SGameManager::GameGet().tStartParams.dwCreationFlags >> 20) & 1;
+}
 
 
 
@@ -7728,10 +7728,10 @@ void SGameSyncData(const Player * ptPlayer)
     MessageSendToClient(listDestPlayers, SMSG_GAME_SYNCED_DATA, &tMessage, sizeof(tMessage));
 }
 
-
-
-
-
+uint64 sub_71007b5e70()  // 0x71007b5e70 (unnamed): GAMECREATEPARAM_SEASON bit | (creation bit 20 << 1); every 2.7.7 EvaluateEvent caller passes it
+{
+    return ((SGameManager::GameGet().tStartParams.dwCreationFlags >> GAMECREATEPARAM_SEASON) & 1) | ((SGameManager::GameGet().tStartParams.dwCreationFlags >> 19) & 2);
+}
 
 
 

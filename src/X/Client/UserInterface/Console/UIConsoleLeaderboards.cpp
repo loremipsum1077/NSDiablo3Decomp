@@ -1052,7 +1052,7 @@ void IconSelectionChanged(const ::Console::RingWrapper & tRingWrapper, const UII
         }
     }
     UpdatePlayerScore();
-    SoundManager::PlaySound(GlobalSNOGet((GlobalSNO)0x395), cgtPSODefaults);
+    SoundManager::PlaySound(GlobalSNOGet((GlobalSNO)0x3b9), cgtPSODefaults);
 }
 
 BOOL CreateLeaderboardKeyForSelection(LeaderboardKeyAndPartition & tKey, CurrentTab eCurrentTab, int32 nIndex, BOOL bHardcore, BOOL bPreviousResults); // DWARF owner:3503.
@@ -2126,12 +2126,12 @@ void PopulateCriteriaElement(
         {
 
 
-            if (!ptAchievementsInterface->FindCriteriaRecord(sgtUILeaderboardData.idPlayer, idCriteria, tCritRecord))
+            if (!ptAchievementsInterface->FindCriteriaRecord(sgtUILeaderboardData.idPlayer, sub_71000b4be0(), idCriteria, tCritRecord))
             {
                 if (ptAchievementDef->m_nMinRequiredCriteria == 0)
                 {
                     OnlineService::AchievementRecord tRecord;
-                    fEarned = ptAchievementsInterface->FindAwardedAchievement(sgtUILeaderboardData.idPlayer, ptCritDef->m_parentAchievementId, tRecord);
+                    fEarned = ptAchievementsInterface->FindAwardedAchievement(sgtUILeaderboardData.idPlayer, sub_71000b4be0(), ptCritDef->m_parentAchievementId, tRecord);
                 }
             }
 
@@ -2297,7 +2297,7 @@ void sUpdateConquestDetails(
     OnlineService::AchievementRecord tRecord;
     CRefString sEarnedText;
     OnlineService::AchievementsInterface * ptAchievementsInterface = sgtAppGlobals.ptAchievementsInterface;
-    if (ptAchievementsInterface && ptAchievementsInterface->FindAwardedAchievement(sgtUILeaderboardData.idPlayer, idAchievement, tRecord))
+    if (ptAchievementsInterface && ptAchievementsInterface->FindAwardedAchievement(sgtUILeaderboardData.idPlayer, sub_71000b4be0(), idAchievement, tRecord))
     {
         sEarnedText = LocalizedSprintf(
             StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_BNET_TOOLTIPS), "AchievementTooltipEarned").str(),
@@ -2331,7 +2331,7 @@ void sUpdateConquestDetails(
     OnlineService::CriteriaQuantity nEarned = 0, nTotal = 0;
     uint32 dwFlags = GetCriteriaFlags(*ptDefinition);
 
-    OnlineService::AchievementStatus eStatus = OnlineService::GetAchievementStatus(::Console::ClientAchievementsInterface::UserIndexToGameAccount(sgtUILeaderboardData.nControllerIndex), idAchievement, &nEarned, &nTotal);
+    OnlineService::AchievementStatus eStatus = OnlineService::GetAchievementStatus(::Console::ClientAchievementsInterface::UserIndexToGameAccount(sgtUILeaderboardData.nControllerIndex), idAchievement, sub_71000b4be0(), &nEarned, &nTotal);
 
 
     UI_GetWindowFromID(UIWND_CONSOLE_LEADERBOARDS_CONQUESTS_DETAILVIEW_PROGRESS).SetActive(dwFlags & (1 << PROGRESS_BAR));

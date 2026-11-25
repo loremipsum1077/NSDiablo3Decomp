@@ -928,7 +928,7 @@ void UpdateDetailsDisplay(Console::BannerDataType eType, int32 nDataIndex)
     {
         OnlineService::AchievementRecord tAchRecord;
 
-        BOOL bEarned = sgtAppGlobals.ptAchievementsInterface->FindAwardedAchievement(Console::sgtBannerCustomizationGlobals.idPlayer, ptAchievement->m_id, tAchRecord);
+        BOOL bEarned = sgtAppGlobals.ptAchievementsInterface->FindAwardedAchievement(Console::sgtBannerCustomizationGlobals.idPlayer, sub_71000b4be0(), ptAchievement->m_id, tAchRecord);
         BOOL bIsFOS = ptAchievement->m_pointsValue == 0;
 
         CRefString sAchievementTitle = StringListFetch(ptAchievement->m_pszNameKey);
@@ -1437,7 +1437,7 @@ BOOL IsBannerPieceLocked(
             BOOL bEarned = FALSE;
             for (uint32 i = 0; i < listParentAchievements.size(); i++)
             {
-                if (ptAchievementsInterface->FindAwardedAchievement(Console::sgtBannerCustomizationGlobals.idPlayer,
+                if (ptAchievementsInterface->FindAwardedAchievement(Console::sgtBannerCustomizationGlobals.idPlayer, sub_71000b4be0(),
                     listParentAchievements[i], tAchRecord))
                 {
                     bEarned = TRUE;

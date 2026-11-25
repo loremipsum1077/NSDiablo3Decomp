@@ -230,9 +230,6 @@ extern UIID UIWND_SKILLS_CONSOLE_KANAIS_POWERS_RING_ICON;
 extern UIID UIWND_SKILLS_CONSOLE_KANAIS_POWERS_RING_ICON_LOCKED;
 extern UIID UIWND_SKILLS_CONSOLE_KANAIS_POWERS_RING_ICON_UNASSIGNED;
 extern UIID UIWND_SKILLS_CONSOLE_KANAIS_POWERS_RING_ICON_ASSIGNED;
-extern UIID UIWND_SKILLS_CONSOLE_KANAIS_POWERS_WEAPON_VISUAL;
-extern UIID UIWND_SKILLS_CONSOLE_KANAIS_POWERS_ARMOR_VISUAL;
-extern UIID UIWND_SKILLS_CONSOLE_KANAIS_POWERS_JEWELRY_VISUAL;
 extern UIID UIWND_SKILLS_CONSOLE_ELECTIVE_MODE;
 extern UIID UIWND_SKILLS_CONSOLE_SKILL_INFO_DIMMER;
 extern UIID UIWND_SKILLS_CONSOLE_RUNE_INFO_DIMMER;
@@ -243,9 +240,6 @@ extern UIID UIWRAPPANEL_SKILLS_CONSOLE_PASSIVE_SKILLS;
 extern UIID UISCROLL_SKILLS_CONSOLE_SKILL_INFO;
 extern UIID UISCROLL_SKILLS_CONSOLE_RUNE_INFO;
 extern UIID UISCROLL_SKILLS_CONSOLE_PASSIVE_SKILLS_INFO;
-extern UIID UISCROLL_SKILLS_CONSOLE_KANAIS_POWERS_WEAPON;
-extern UIID UISCROLL_SKILLS_CONSOLE_KANAIS_POWERS_ARMOR;
-extern UIID UISCROLL_SKILLS_CONSOLE_KANAIS_POWERS_JEWELRY;
 extern UIID UITXT_SKILLS_CONSOLE_HEADER;
 extern UIID UITXT_SKILLS_CONSOLE_CATEGORY_NAME;
 extern UIID UITXT_SKILLS_CONSOLE_CATEGORY_DESCRIPTION;
@@ -255,12 +249,6 @@ extern UIID UITXT_SKILLS_CONSOLE_RUNE_NAME;
 extern UIID UITXT_SKILLS_CONSOLE_RUNE_INFO;
 extern UIID UITXT_SKILLS_CONSOLE_PASSIVE_SKILLS_NAME;
 extern UIID UITXT_SKILLS_CONSOLE_PASSIVE_SKILLS_INFO;
-extern UIID UITXT_SKILLS_CONSOLE_KANAIS_POWERS_WEAPON_NAME;
-extern UIID UITXT_SKILLS_CONSOLE_KANAIS_POWERS_WEAPON_DETAILS;
-extern UIID UITXT_SKILLS_CONSOLE_KANAIS_POWERS_ARMOR_NAME;
-extern UIID UITXT_SKILLS_CONSOLE_KANAIS_POWERS_ARMOR_DETAILS;
-extern UIID UITXT_SKILLS_CONSOLE_KANAIS_POWERS_JEWELRY_NAME;
-extern UIID UITXT_SKILLS_CONSOLE_KANAIS_POWERS_JEWELRY_DETAILS;
 
 // AppGlobals (X/Common/Game.h:940) comes from X/Common/Game.h via ActorCommonData.h.
 
@@ -778,6 +766,31 @@ inline void PlayerSkillsGlobals::InitAnalogStickRules()  // line 734; inline: DW
 
 PlayerSkillsGlobals * sgptSkillsGlobals;  // line 758
 
+// 2.7.7: Kanai's powers panel, an unnamed 0x30-byte class shared with the leaderboard-inspect
+// and equipment-manager skill screens. Constructor sub_710019b630 (this, parent UIID) fills the
+// four owned 0xd8-byte children (constructor sub_710019aec0); the inline destructor frees them
+// in reverse order with plain delete.
+struct Unk19aec0 { uint8 unk_00[0xd8]; };
+struct Unk19b630 {  // size 0x30
+    ~Unk19b630()
+    {
+        delete unk_00[3];
+        delete unk_00[2];
+        delete unk_00[1];
+        delete unk_00[0];
+    }
+    Unk19aec0 * unk_00[4];  // 0x00
+    uint64 unk_20;  // 0x20
+    UIID unk_28;  // 0x28
+};
+static_assert(sizeof(Unk19b630) == 0x30, "Unk19b630");
+extern "C" void sub_710019b630(void * pThis, const UIID & idParent);
+extern "C" BOOL sub_710019b960(Unk19b630 * pThis);  // any child scroll box can scroll
+extern "C" void sub_710019b9d0(Unk19b630 * pThis);  // reset child scroll positions
+extern "C" void sub_710019ba50(Unk19b630 * pThis, float flDelta);  // scroll child scroll boxes
+extern "C" void sub_710019bab0(Unk19b630 * pThis, const Player * ptPlayer);  // refresh from player
+static Unk19b630 * s_unk_186dc48;  // 0x710186dc48
+
 const UIID & sGetActiveScrollBox(const PlayerSkillsGlobals::SelectionMode eSelectionMode)  // line 763
 {
     switch (eSelectionMode) {
@@ -795,9 +808,7 @@ const UIID & sGetActiveScrollBox(const PlayerSkillsGlobals::SelectionMode eSelec
 BOOL CanScrollDetails(const PlayerSkillsGlobals::SelectionMode eSelectionMode)  // line 785
 {
     if (eSelectionMode == PlayerSkillsGlobals::SLOT_SELECTION_MODE) {
-        return UIUtils::Console::CanScrollContentInScrollBox(UISCROLL_SKILLS_CONSOLE_KANAIS_POWERS_WEAPON) ||
-               UIUtils::Console::CanScrollContentInScrollBox(UISCROLL_SKILLS_CONSOLE_KANAIS_POWERS_ARMOR) ||
-               UIUtils::Console::CanScrollContentInScrollBox(UISCROLL_SKILLS_CONSOLE_KANAIS_POWERS_JEWELRY);
+        return sub_710019b960(s_unk_186dc48);
     } else {
         const UIID & idScrollBox = sGetActiveScrollBox(eSelectionMode);
         if (idScrollBox == GetUIIDNone()) {
@@ -818,17 +829,13 @@ void ResetDetailScrollPositions()  // line 818
     ResetDetailScrollPosition(UISCROLL_SKILLS_CONSOLE_RUNE_INFO);
     ResetDetailScrollPosition(UISCROLL_SKILLS_CONSOLE_PASSIVE_SKILLS_INFO);
 
-    ResetDetailScrollPosition(UISCROLL_SKILLS_CONSOLE_KANAIS_POWERS_WEAPON);
-    ResetDetailScrollPosition(UISCROLL_SKILLS_CONSOLE_KANAIS_POWERS_ARMOR);
-    ResetDetailScrollPosition(UISCROLL_SKILLS_CONSOLE_KANAIS_POWERS_JEWELRY);
+    sub_710019b9d0(s_unk_186dc48);
 }
 
 void ScrollDetailInfo(const PlayerSkillsGlobals::SelectionMode eSelectionMode, const float nDelta)  // line 833
 {
     if (eSelectionMode == PlayerSkillsGlobals::SLOT_SELECTION_MODE) {
-        UIUtils::Console::ScrollContentInScrollBox(UISCROLL_SKILLS_CONSOLE_KANAIS_POWERS_WEAPON, nDelta);
-        UIUtils::Console::ScrollContentInScrollBox(UISCROLL_SKILLS_CONSOLE_KANAIS_POWERS_ARMOR, nDelta);
-        UIUtils::Console::ScrollContentInScrollBox(UISCROLL_SKILLS_CONSOLE_KANAIS_POWERS_JEWELRY, nDelta);
+        sub_710019ba50(s_unk_186dc48, nDelta);
     } else {
         const UIID & idScrollBox = sGetActiveScrollBox(eSelectionMode);
         if (idScrollBox != GetUIIDNone()) {
@@ -1027,27 +1034,9 @@ void PlayerSkillsGlobals::UpdateSkillAndRuneUIs()  // line 1136
     UpdateRuneInfoUI();
 }
 
-static void sUpdateKanaisPowerUI(const Player * ptPlayer, LegendaryPowerSlotType eSlot, const UIID & idVisual, const UIID & idNameText, const UIID & idDescText)  // line 1149
-{
-    CRefString sPowerName;
-    CRefString sPowerDesc;
-    const GBID gbidPower = ptPlayer->gbidLegendaryPowers[eSlot];
-    if (gbidPower == -1) {
-        sPowerName = StringListFetch("ConsoleSkills:NoKanaiPowerAssigned");
-    } else {
-        sPowerName = StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_ITEMS), GBIDToString(gbidPower).str());
-        sPowerDesc = UIEquipLegendaryPowers::GetPowerTooltipText(gbidPower, false);
-    }
-    UIEquipLegendaryPowers::ShowPowerIcon(idVisual, gbidPower, TRUE);
-    UI_GetTextFromID(idNameText).SetText(sPowerName, FALSE);
-    UI_GetTextFromID(idDescText).SetText(sPowerDesc, FALSE);
-}
-
 void PlayerSkillsGlobals::UpdateKanaisPowersUI()  // line 1178
 {
-    sUpdateKanaisPowerUI(ptPlayer, 0, UIWND_SKILLS_CONSOLE_KANAIS_POWERS_WEAPON_VISUAL, UITXT_SKILLS_CONSOLE_KANAIS_POWERS_WEAPON_NAME, UITXT_SKILLS_CONSOLE_KANAIS_POWERS_WEAPON_DETAILS);
-    sUpdateKanaisPowerUI(ptPlayer, 1, UIWND_SKILLS_CONSOLE_KANAIS_POWERS_ARMOR_VISUAL, UITXT_SKILLS_CONSOLE_KANAIS_POWERS_ARMOR_NAME, UITXT_SKILLS_CONSOLE_KANAIS_POWERS_ARMOR_DETAILS);
-    sUpdateKanaisPowerUI(ptPlayer, 2, UIWND_SKILLS_CONSOLE_KANAIS_POWERS_JEWELRY_VISUAL, UITXT_SKILLS_CONSOLE_KANAIS_POWERS_JEWELRY_NAME, UITXT_SKILLS_CONSOLE_KANAIS_POWERS_JEWELRY_DETAILS);
+    sub_710019bab0(s_unk_186dc48, ptPlayer);
 }
 
 void PlayerSkillsGlobals::UpdateSkillsListUI()  // line 1198
@@ -2268,13 +2257,19 @@ BOOL PlayerSkillsGlobals::IsInTieredRift() const  // line 3114
     return UIUtils::Console::PlayerIsInActiveTieredRift(ptPlayer);
 }
 
+
 void InitializeForGame()  // line 3122
 {
     sgptSkillsGlobals = new PlayerSkillsGlobals();
+    Unk19b630 * ptKanaisPowers = (Unk19b630 *)operator new(sizeof(Unk19b630));
+    sub_710019b630(ptKanaisPowers, UIWND_SKILLS_CONSOLE_KANAIS_POWERS);
+    s_unk_186dc48 = ptKanaisPowers;
 }
 
 void DisposeForGame()  // line 3130
 {
+    delete s_unk_186dc48;
+    s_unk_186dc48 = NULL;
     delete sgptSkillsGlobals;
     sgptSkillsGlobals = NULL;
 }

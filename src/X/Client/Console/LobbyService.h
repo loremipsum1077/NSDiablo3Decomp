@@ -90,18 +90,17 @@ public:
     virtual void LeaderboardReadMetadata(const LeaderboardKeyAndPartition &, bdOnlineUserID, Console::Online::LobbyService::LeaderboardReadStatsCallback) = 0;  // vtable slot 26
     typedef OnlineService::Callback<void (int, unsigned long *, unsigned long *, unsigned int)> LookupUserAccountsCallback;
     virtual void LookupUserAccounts(OnlineUserId *, uint32, Console::Online::LobbyService::LookupUserAccountsCallback) = 0;  // vtable slot 27
-    virtual void GetLinkedAccounts(Console::Online::LinkedAccountsSearchCallback) = 0;  // vtable slot 28
     typedef blz::vector<blz::pair<Console::Online::GlobalCounter, int>, blz::allocator<blz::pair<Console::Online::GlobalCounter, int> > > CounterVector;
-    virtual void UpdateGlobalCounters(const Console::Online::LobbyService::CounterVector &) = 0;  // vtable slot 29
+    virtual void UpdateGlobalCounters(const Console::Online::LobbyService::CounterVector &) = 0;  // vtable slot 28
     typedef OnlineService::Callback<void (int, const bdTimeStamp &)> GetServerTimeCallback;
-    virtual void GetServerTime(Console::Online::LobbyService::GetServerTimeCallback, bool) = 0;  // vtable slot 30
-    virtual BOOL SendGlobalInstantMessage(OnlineUserId, const void *const, const bdUInt) = 0;  // vtable slot 31
+    virtual void GetServerTime(Console::Online::LobbyService::GetServerTimeCallback, bool) = 0;  // vtable slot 29
+    virtual BOOL SendGlobalInstantMessage(OnlineUserId, const void *const, const bdUInt) = 0;  // vtable slot 30
     typedef OnlineService::SubscriptionEvent<int> ConnectEvent;
-    virtual Console::Online::LobbyService::ConnectEvent & GetConnectEvent() = 0;  // vtable slot 32
+    virtual Console::Online::LobbyService::ConnectEvent & GetConnectEvent() = 0;  // vtable slot 31
     typedef OnlineService::SubscriptionEvent<int> DisconnectEvent;
-    virtual Console::Online::LobbyService::DisconnectEvent & GetDisconnectEvent() = 0;  // vtable slot 33
+    virtual Console::Online::LobbyService::DisconnectEvent & GetDisconnectEvent() = 0;  // vtable slot 32
     typedef OnlineService::SubscriptionEvent<> NewMailEvent;
-    virtual Console::Online::LobbyService::NewMailEvent & GetNewMailEvent() = 0;  // vtable slot 34
+    virtual Console::Online::LobbyService::NewMailEvent & GetNewMailEvent() = 0;  // vtable slot 33
     static bdOnlineUserID CreateBDOnlineUserID(OnlineUserId);
 };
 static_assert(sizeof(LobbyService) == 0x8, "LobbyService");

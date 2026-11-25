@@ -7,6 +7,9 @@
 // which string literals share, so it depends on the number of string literals before line
 // 798: UIFunction_VolumeUp / UIFunction_VolumeDown (lines 410-451, removed by the linker in
 // the original) are reconstructed below with one stand-in literal each for that reason.
+// 2.7.7 adds two entries to sgtUIFunctions (DarkAlchemyUI_OnUpdate, UI_Stash_FilterInput_OnChange)
+// yet keeps .17/.263, so those two literals must already exist before the table; the stand-ins
+// use exactly those two texts (still stand-ins: the real VolumeUp/Down literals are unknown).
 // Recovered functions follow the tables; original-line annotations use the same convention.
 // Walk, zoom, mouse position, inventory actor update and hero preview creation are implemented.
 // Existing table initializers and matching functions are preserved.
@@ -839,7 +842,7 @@ void UIFunction_ToggleItemsOnGround(const UIID &)
 static const float flVolumeStep = 0.1f;
 
 //@ 410
-// RECONSTRUCTED (linker-removed in the original, DWARF low_pc 0): structure from the DWARF; the string literal text is NOT recoverable and is a stand-in. Present so that the module's string-literal count matches the original.
+// RECONSTRUCTED (linker-removed in the original, DWARF low_pc 0): structure from the DWARF; the string literal text is NOT recoverable; the stand-in reuses a table name so the module's string-literal count matches the original (see the file header).
 // DWARF: unnamed `const UIID &` at 411; XGrowableList<UIID>::Count() inlined at 413 on the
 // result of a call (the callee is not recorded; UI_GetInGameDlgStack() is assumed from the
 // three functions above); `float fMasterVol` at 418 = Math::Min<float>(1.0f, y) with y
@@ -856,12 +859,12 @@ void UIFunction_VolumeUp(const UIID &)
     float fMasterVol = Math::Min(1.0f, flVolumeStep);
 
     //@ 422
-    CRefString sVolume("STAND-IN: UIFunction_VolumeUp string literal, original text unknown");
+    CRefString sVolume("DarkAlchemyUI_OnUpdate");
     CRefString sOutput;
 }
 
 //@ 431
-// RECONSTRUCTED (linker-removed in the original, DWARF low_pc 0): structure from the DWARF; the string literal text is NOT recoverable and is a stand-in. Present so that the module's string-literal count matches the original.
+// RECONSTRUCTED (linker-removed in the original, DWARF low_pc 0): structure from the DWARF; the string literal text is NOT recoverable; the stand-in reuses a table name so the module's string-literal count matches the original (see the file header).
 // DWARF: unnamed `const UIID &` at 432; XGrowableList<UIID>::Count() inlined at 434 (as
 // above); `float flMasterVolume` at 440 = Math::Max<float>(0.0f, y) with y computed (source
 // not recorded); `CRefString sVolume` at 444; `CRefString sOutput` at 445.
@@ -876,7 +879,7 @@ void UIFunction_VolumeDown(const UIID &)
     float flMasterVolume = Math::Max(0.0f, flVolumeStep);
 
     //@ 444
-    CRefString sVolume("STAND-IN: UIFunction_VolumeDown string literal, original text unknown");
+    CRefString sVolume("UI_Stash_FilterInput_OnChange");
     CRefString sOutput;
 }
 

@@ -5,6 +5,7 @@
 #include "../../Sigma/TypeDescriptor/TypeDescriptorField.h"
 #include "../../Sigma/Networking/XDecoder.h"
 #include "../../Sigma/Networking/XEncoder.h"
+#include "../../Sigma/Memory/SigmaMemory.h"
 #include "../CombatLog.h"
 #include "../Definitions/GameBalanceDefinition.h"
 
@@ -536,7 +537,7 @@ BOOL GetGameMessageTypeAndSize(GameMessageType eMessageType, const XTypeDescript
         MESSAGE_CASE(SMSG_HERO_STATE, DT_HERO_STATE_MESSAGE, HeroStateMessage)
         MESSAGE_CASE(SMSG_HERO_STATE_SAVEDDATA, DT_PLAYER_SAVED_DATA_MESSAGE, PlayerSavedDataMessage)
         MESSAGE_CASE(SMSG_HERO_STATE_SKILLS, DT_PLAYER_SKILLS_MESSAGE, PlayerSkillsMessage)
-        MESSAGE_CASE(SMSG_HERO_STATE_PLAYERFLAGS, DT_PLAYER_DWORD_DATA_MESSAGE, PlayerDWordDataMessage)
+        MESSAGE_CASE(SMSG_HERO_STATE_PLAYERFLAGS, DT_PLAYER_DWORD2_DATA_MESSAGE, PlayerDWord2DataMessage)
         MESSAGE_CASE(SMSG_HERO_STATE_WAYPOINTS, DT_PLAYER_DWORD_DATA_MESSAGE, PlayerDWordDataMessage)
         MESSAGE_CASE(SMSG_HERO_STATE_LASTSAVEPOINT, DT_SAVE_POINT_DATA_MESSAGE, SavePointDataMessage)
         MESSAGE_CASE(SMSG_HERO_STATE_LASTWAYPOINTLEVELAREA, DT_LAST_WAYPOINT_LEVELAREA_DATA_MESSAGE, LastWaypointLevelAreaDataMessage)
@@ -849,8 +850,8 @@ BOOL GetGameMessageTypeAndSize(GameMessageType eMessageType, const XTypeDescript
         MESSAGE_CASE(SMSG_DUNGEON_FINDER_COMPLETION_TIME, DT_SET_DUNGEON_FINDER_TIME_MESSAGE, DungeonFinderCompletionTimeMessage)
         MESSAGE_CASE(SMSG_GREED_REALM_CLOSING, DT_INT_DATA_MESSAGE, IntDataMessage)
         MESSAGE_CASE(SMSG_SWARM_RIFT_CLOSING, DT_INT_DATA_MESSAGE, IntDataMessage)
-        // 2.7.7: SMSG_UBER_BOSS_WORLD_CLOSING (UberBosssClosingMessage) and SMSG_WARNING_COUNTDOWN_NOTIFY
-        // (WarningCountdownNotificationMessage) go here once their descriptors exist.
+        MESSAGE_CASE(SMSG_UBER_BOSS_WORLD_CLOSING, DT_UBER_BOSSS_CLOSING_MESSAGE, UberBosssClosingMessage)
+        MESSAGE_CASE(SMSG_WARNING_COUNTDOWN_NOTIFY, DT_WARNING_COUNTDOWN_NOTIFICATION_MESSAGE, WarningCountdownNotificationMessage)
         MESSAGE_CASE(SMSG_AMIIBO_SCAN_BEGIN, DT_ACD_LOOK_AT_MESSAGE, ACDLookAtMessage)
         MESSAGE_CASE(SMSG_AMIIBO_SCAN_END, DT_ANN_DATA_MESSAGE, ANNDataMessage)
         MESSAGE_CASE(SMSG_SYNC_AMIIBO_SCAN_TIME, DT_PLAYER_DWORD_DATA_MESSAGE, PlayerDWordDataMessage)
@@ -861,7 +862,8 @@ BOOL GetGameMessageTypeAndSize(GameMessageType eMessageType, const XTypeDescript
         // 2.7.7: SMSG_UNLOCKABLE_RANDOM_AFFIX (UnlockableRandomAffixMessage), CMSG_DARK_ALCHEMY_ACTIVATE_NODE
         // (ActivateNodeMessage) go here once their descriptors exist.
         MESSAGE_CASE(SMSG_DARK_ALCHEMY_NODE_ACTIVATED, DT_DWORD_DATA_MESSAGE, DWordDataMessage)
-        // 2.7.7: SMSG_DARK_ALCHEMY_INTERACT (GizmoInteractMessage), SMSG_CHUNKED (ChunkMessage).
+        // 2.7.7: SMSG_DARK_ALCHEMY_INTERACT (GizmoInteractMessage) goes here once its descriptor exists.
+        MESSAGE_CASE(SMSG_CHUNKED, DT_CHUNK_MESSAGE, ChunkMessage)
         MESSAGE_CASE(CMSG_SET_DUNGEON_ACCEPT, DT_SIMPLE_MESSAGE, SimpleMessage)
         MESSAGE_CASE(SMSG_DISPLAY_GAME_CHAT_TEXT, DT_DISPLAY_GAME_TEXT_MESSAGE, DisplayGameTextMessage)
         MESSAGE_CASE(SMSG_DISPLAY_ERROR, DT_INT_DATA_MESSAGE, IntDataMessage)
@@ -951,7 +953,7 @@ BOOL GetGameMessageTypeAndSize(GameMessageType eMessageType, const XTypeDescript
         MESSAGE_CASE(CMSG_SET_DUNGEON_VOTE_CONTINUE, DT_SIMPLE_MESSAGE, SimpleMessage)
         MESSAGE_CASE(CMSG_SET_DUNGEON_VOTE_CANCEL, DT_SIMPLE_MESSAGE, SimpleMessage)
         MESSAGE_CASE(SMSG_RIFT_START_ENCOUNTER, DT_ANN_DATA_MESSAGE, ANNDataMessage)
-        MESSAGE_CASE(CMSG_RIFT_START_ACCEPTED, DT_INT_DATA_MESSAGE, IntDataMessage)
+        MESSAGE_CASE(CMSG_RIFT_START_ACCEPTED, DT_RIFT_START_ACCEPTED_MESSAGE, RiftStartAcceptedMessage)
         MESSAGE_CASE(CMSG_RIFT_START_DECLINED, DT_SIMPLE_MESSAGE, SimpleMessage)
         MESSAGE_CASE(SMSG_RIFT_INVITE_STATE, DT_BOSS_ENCOUNTER_INVITE_MESSAGE, EncounterInviteStateMessage)
         MESSAGE_CASE(SMSG_RIFT_JOIN_ENCOUNTER, DT_RIFT_JOIN_MESSAGE, RiftJoinMessage)
@@ -1067,6 +1069,20 @@ BOOL EncodeMessage(void * pMessage, XEncoder & tEncoder)
                 tEncoder.PutBytesAligned8(pBlobData, pBlobMessage->uBlobSize);
             }
         }
+        else if (pTypeDescriptor == DT_CHUNK_MESSAGE)
+        {
+            ChunkMessage tChunkMessage = {};
+            SigmaMemoryCopy(&tChunkMessage, pMessage, sizeof(ChunkMessage));
+            if (tEncoder.SizeBytes() - tEncoder.UsedBytes() < tChunkMessage.unk_08)
+            {
+                bRetVal = FALSE;
+            }
+            else
+            {
+                uint8 * pChunkData = (uint8 *)pMessage + sizeof(ChunkMessage);
+                tEncoder.PutBytesAligned8(pChunkData, tChunkMessage.unk_08);
+            }
+        }
         else if (ptHeader->eType == SMSG_ATTRIBUTE_SET_VALUE)
         {
             bRetVal = AttributeCompressor::Encode(tEncoder, ((AttributeSetValueMessage *)pMessage)->tKeyVal);
@@ -1125,6 +1141,26 @@ XDecoder::Result DecodeMessage(GameMessageType eMessageType, void * pDecodeToBuf
 
         uint8 * pBlobLoc = (uint8 *)pDecodeToBuffer + sizeof(GenericBlobMessage);
         return tDecoder.GetBytesAligned8(pBlobLoc, pBlobMessage->uBlobSize);
+    }
+    else if (pTypeDescriptor == DT_CHUNK_MESSAGE)
+    {
+        ChunkMessage tChunkMessage;
+        SigmaMemoryCopy(&tChunkMessage, pDecodeToBuffer, sizeof(ChunkMessage));
+        uint32 dwNewSize = tChunkMessage.tHeader.dwSize + tChunkMessage.unk_08;
+        tChunkMessage.tHeader.dwSize = dwNewSize;
+        SigmaMemoryCopy(pDecodeToBuffer, &tChunkMessage, sizeof(ChunkMessage));
+        if (dwNewSize > 0x8000)
+        {
+            return XDecoder::RESULT_CORRUPTED;
+        }
+
+        if (tDecoder.SizeBytes() - tDecoder.UsedBytes() < tChunkMessage.unk_08)
+        {
+            return XDecoder::RESULT_CORRUPTED;
+        }
+
+        uint8 * pChunkLoc = (uint8 *)pDecodeToBuffer + sizeof(ChunkMessage);
+        return tDecoder.GetBytesAligned8(pChunkLoc, tChunkMessage.unk_08);
     }
     else if (eMessageType == SMSG_ATTRIBUTE_SET_VALUE)
     {

@@ -54,12 +54,12 @@ BOOL ActorIsKeywarden(SNO snoActor);  // ActorCommon.cpp:255
 enum {
     ACTOR_INITIAL_COUNT = 512,
     DEFAULT_ACTOR_SOFT_CAP = 7680,
-    MAX_ACTORS = 8192,
+    MAX_ACTORS = 11776,
 };
 
 enum {
     ACTOR_POOL_PAD_SIZE = 24,
-    ANN_POOL_SIZE = 11676,
+    ANN_POOL_SIZE = 15260,
 };
 
 

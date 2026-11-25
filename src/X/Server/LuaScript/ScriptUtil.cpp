@@ -2196,6 +2196,14 @@ void PlayerGrantExperience(ACDID idACDPlayer, uint32 nXPAmount)
         ExperienceGrantDirectly(*ptACDPlayer, nXPAmount, TRUE, FALSE);
 }
 
+// 2.7.7 command (0x710092fac0, unnamed): the Lua number cannot carry 64 bits, so the amount comes in two halves.
+void PlayerGrantLargeAmountOfExperience(ACDID idACDPlayer, uint32 nXPAmountHigh, uint32 nXPAmountLow)
+{
+    ActorCommonData * ptACDPlayer = ACDTryToGet(idACDPlayer);
+    if (ptACDPlayer)
+        ExperienceGrantDirectly(*ptACDPlayer, ((uint64)nXPAmountHigh << 32) | nXPAmountLow, TRUE, FALSE);
+}
+
 void PlayerWarpToWaypoint(VPACDID idACDPlayer, int32 nWaypointNumber)
 {
     SWorldPlayerWarpToWaypoint(idACDPlayer, ACDID_INVALID, nWaypointNumber);
@@ -2326,6 +2334,8 @@ void GameFlagSet(LPCSTR szFlagLabel, BOOL bValue)
     }
 }
 
+BOOL sub_71007d5160();  // unnamed 2.7.7 function (0x71007d5160)
+
 void GameFlagSendSyncedFlags()
 {
     SGameGlobals & tSGameGlobals = SGameGlobalsGet();
@@ -2338,12 +2348,14 @@ void GameFlagSendSyncedFlags()
         BOOL bLootRunBossActive = (tSGameGlobals.dwFlags2 >> SGAMEGLOBALS2_LOOT_RUN_BOSS_ACTIVE) & 1;
         BOOL bLootRunChallengeCompleted = (tSGameGlobals.dwFlags2 >> SGAMEGLOBALS2_LOOT_RUN_CHALLENGE_COMPLETED) & 1;
         BOOL bSetDungeonActive = GameCommonGameFlagIsSet("Sets_Generic_DungeonInProgress");
+        BOOL bUnk4c = sub_71007d5160();
         if (tGCD.tGameSyncedData.bLootRunOpen != bLootRunOpen ||
             tGCD.tGameSyncedData.bLootRunBossDead != bLootRunBossDead ||
             tGCD.tGameSyncedData.bTieredLootRunFailed != bTieredLootRunFailed ||
             tGCD.tGameSyncedData.bLootRunBossActive != bLootRunBossActive ||
             tGCD.tGameSyncedData.bLootRunChallengeCompleted != bLootRunChallengeCompleted ||
-            tGCD.tGameSyncedData.bSetDungeonActive != bSetDungeonActive)
+            tGCD.tGameSyncedData.bSetDungeonActive != bSetDungeonActive ||
+            tGCD.tGameSyncedData.unk_4c != bUnk4c)
         {
             tGCD.tGameSyncedData.bLootRunOpen = bLootRunOpen;
             tGCD.tGameSyncedData.nOpenLootRunLevel = NephalemRiftManager::GetActiveRiftLevel();
@@ -2352,6 +2364,7 @@ void GameFlagSendSyncedFlags()
             tGCD.tGameSyncedData.bLootRunBossActive = bLootRunBossActive;
             tGCD.tGameSyncedData.bLootRunChallengeCompleted = bLootRunChallengeCompleted;
             tGCD.tGameSyncedData.bSetDungeonActive = bSetDungeonActive;
+            tGCD.tGameSyncedData.unk_4c = bUnk4c;
             SGameSyncData(NULL);
         }
         tSGameGlobals.dwFlags2 &= ~(1 << SGAMEGLOBALS2_GAME_FLAGS_CHANGED);
@@ -2765,7 +2778,8 @@ int32 PVPGetTokensAwardAmount(uint32 nRank, PVPGameResult ePVPGameResult)
     return nTokensAwardAmount;
 }
 
-inline BOOL sTriggerTrialEndInternal(float flDelayInSeconds, uint32 uFlags)
+// 0x7100933790 (unnamed): 2.7.7 keeps the trial-end body out of line; TriggerTrialEnd tail-calls it.
+extern "C" BOOL sub_7100933790(float flDelayInSeconds, uint32 uFlags)
 {
     PlayerList listDestPlayers(PlayerListGetElementPool());
     PlayerListGetAllContentFlagRestrictedPlayers(listDestPlayers, uFlags);
@@ -2782,7 +2796,7 @@ inline BOOL sTriggerTrialEndInternal(float flDelayInSeconds, uint32 uFlags)
 
 BOOL TriggerTrialEnd(float flDelayInSeconds)
 {
-    return sTriggerTrialEndInternal(flDelayInSeconds, 1);
+    return sub_7100933790(flDelayInSeconds, 1);
 }
 
 BOOL TriggerBetaEnd()
@@ -2798,9 +2812,6 @@ BOOL TriggerBetaEnd()
         {
             SimpleMessage tMessage;
             MessageSendToClient(listDestPlayers, SMSG_BETA_OVER, &tMessage, sizeof(tMessage));
-            POS pos = listDestPlayers.GetHeadPosition();
-            while (pos)
-                SPlayerUnlockAdventureMode(*listDestPlayers.GetNext(pos));
         }
     }
     return TRUE;
@@ -3473,6 +3484,37 @@ void ConductorStop()
         SGameGlobalsGet();
         ptConductor->bFlaggedForDeletion = TRUE;
     }
+}
+
+void sub_71007c2140(ConductorInstance & tConductor);  // unnamed 2.7.7 function (0x71007c2140)
+void sub_71007c2240(ConductorInstance & tConductor);  // unnamed 2.7.7 function (0x71007c2240)
+
+// 2.7.7 command (0x7100938e10, unnamed)
+void ConductorLogActorRefs()
+{
+    ScriptInstanceID idScriptInstance = LuaScriptGetExecutingScriptInstance();
+    ScriptID idScript = LuaScriptGetInstanceParent(idScriptInstance);
+    ConductorInstance * ptConductor = SConductorFindConductorByScriptID(idScript);
+    if (ptConductor)
+        sub_71007c2140(*ptConductor);
+}
+
+// 2.7.7 command (0x7100938e40, unnamed)
+void ConductorClearActorRefs()
+{
+    ScriptInstanceID idScriptInstance = LuaScriptGetExecutingScriptInstance();
+    ScriptID idScript = LuaScriptGetInstanceParent(idScriptInstance);
+    ConductorInstance * ptConductor = SConductorFindConductorByScriptID(idScript);
+    if (ptConductor)
+        sub_71007c2240(*ptConductor);
+}
+
+void sub_710077c8b0();  // unnamed 2.7.7 function (0x710077c8b0)
+
+// 2.7.7 command (0x7100940ac0, unnamed)
+void GameTieredRiftClose()
+{
+    sub_710077c8b0();
 }
 
 void StartChallengeRiftTimer()
@@ -4331,6 +4373,52 @@ void GreedRealmClosingTriggered(float flSeconds)
     PlayerListGetAllConnected(listDestPlayers, -1, FALSE);
     MessageSendToClient(listDestPlayers, SMSG_GREED_REALM_CLOSING, &tMessage, sizeof(tMessage));
     SWorldResetGreedRealm(flSeconds);
+}
+
+void sub_71007d4d70(float flSeconds);  // unnamed 2.7.7 function (0x71007d4d70)
+
+// 2.7.7 command (0x710093f170, unnamed)
+void SwarmRiftClosingTriggered(float flSeconds)
+{
+    IntDataMessage tMessage;
+    tMessage.nData = GameGetServerTime() + Math::FloatToInt(flSeconds * 60.0f);
+    PlayerList listDestPlayers(PlayerListGetElementPool());
+    PlayerListGetAllConnected(listDestPlayers, -1, FALSE);
+    MessageSendToClient(listDestPlayers, SMSG_SWARM_RIFT_CLOSING, &tMessage, sizeof(tMessage));
+    sub_71007d4d70(flSeconds);
+}
+
+// 2.7.7 command (0x710093f300, unnamed)
+// NON_MATCHING: 492/564 bytes; the original keeps the bounded string copy as a byte loop unrolled by 4,
+// ours becomes a memcpy call (same min(strlen, 254) bytes plus terminator).
+void WarningCountdownNotification(float flSeconds, LPCSTR szMessage)
+{
+    WarningCountdownNotificationMessage tMessage;
+    tMessage.unk_08 = GameGetServerTime() + Math::FloatToInt(flSeconds * 60.0f);
+    size_t nLength = strlen(szMessage);
+    size_t nIndex;
+    for (nIndex = 0; nIndex < sizeof(tMessage.unk_0c) - 1 && nIndex < nLength; ++nIndex)
+        tMessage.unk_0c[nIndex] = szMessage[nIndex];
+    tMessage.unk_0c[nIndex] = '\0';
+    PlayerList listDestPlayers(PlayerListGetElementPool());
+    PlayerListGetAllConnected(listDestPlayers, -1, FALSE);
+    MessageSendToClient(listDestPlayers, SMSG_WARNING_COUNTDOWN_NOTIFY, &tMessage, sizeof(tMessage));
+}
+
+void sub_71007d4840(uint32 nIndex, float flSeconds);  // unnamed 2.7.7 function (0x71007d4840)
+
+// 2.7.7 command (0x710093f540, unnamed)
+void UberBossClosingTriggered(uint32 nIndex, float flSeconds)
+{
+    if (!ACDTryToGet(SGameGlobalsGet().unk_2128[nIndex]))
+        return;
+    UberBosssClosingMessage tMessage;
+    tMessage.unk_08 = GameGetServerTime() + Math::FloatToInt(flSeconds * 60.0f);
+    tMessage.unk_0c = nIndex;
+    PlayerList listDestPlayers(PlayerListGetElementPool());
+    PlayerListGetAllConnected(listDestPlayers, -1, FALSE);
+    MessageSendToClient(listDestPlayers, SMSG_UBER_BOSS_WORLD_CLOSING, &tMessage, sizeof(tMessage));
+    sub_71007d4840(nIndex, flSeconds);
 }
 
 void DungeonFinderReset()
@@ -7075,7 +7163,8 @@ static void sGetQuestReward(
         int32 nGameBalanceIndex = nTieredRiftDepth;
         nGameBalanceIndex = Math::Min(nGameBalanceIndex, (int32)pdefGB->tTieredLootRunLevelTable.serTieredLootRunLevels.ElementCount(sizeof(TieredLootRunLevel)) - 1);
 
-        if (nGameBalanceIndex < pdefGB->tTieredLootRunLevelTable.serTieredLootRunLevels.dwSize / (uint32)sizeof(TieredLootRunLevel))
+        if (pdefGB->tTieredLootRunLevelTable.serTieredLootRunLevels.dwSize != 0 &&
+            nGameBalanceIndex < pdefGB->tTieredLootRunLevelTable.serTieredLootRunLevels.dwSize / (uint32)sizeof(TieredLootRunLevel))
         {
             const TieredLootRunLevel & tTieredLootRunLevel = pdefGB->tTieredLootRunLevelTable.ptTieredLootRunLevels[nGameBalanceIndex];
 
@@ -9373,7 +9462,7 @@ ActorIDArray * GameGetOpenWorldBossSpawnMarkerLocationsNearActor(
 }
 
 #line 8714 "X/Server/LuaScript/ScriptUtil.cpp"
-// NON_MATCHING: 396/400 bytes; failure return shares the earlier tail and epilogue restores are scheduled differently; one faithful spelling.
+// NON_MATCHING: 384/388 bytes; failure return shares the earlier tail and epilogue restores are scheduled differently; one faithful spelling.
 ACDID ActorSpawnActor(
     LPCSTR szActorName,
     ACDID idACDLocation,
