@@ -234,7 +234,7 @@ void TextureGroupDef::Delete(void * lpDefinition) const {
 
 // line 566
 void TextureGroupDef::PurgeAllDynamic() {
-    TDataArrayIterator<void> tIt;
+    TDataArrayIterator<void> tIt(0x3ffff);
     TextureDefinition * ptDefinition;
     while (DefinitionDataArrayIterate(tIt, (void *&)ptDefinition)) {
         if (WasDynamicallyCreated(ptDefinition->tHeader.snoHandle))

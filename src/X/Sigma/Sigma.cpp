@@ -1,3 +1,5 @@
+extern "C" void sub_7100a244b0();
+extern "C" void sub_7100a24520();
 #include "Sigma.h"
 
 #include "../../BlizzardCore/Include/Blizzard/Using.h"
@@ -18,6 +20,7 @@ void SigmaInit(LPCSTR szApplicationName, uint32 dwInspectorProjectID) {
     SigmaMemoryInit();
     XVarInitialize();
     DataArrayTrackerInit();
+    sub_7100a244b0();
     ErrorManagerInitialize(szApplicationName, dwInspectorProjectID);
     Blizzard::Using::StartUsing("ErrorManager::Logging");
 }
@@ -25,6 +28,7 @@ void SigmaInit(LPCSTR szApplicationName, uint32 dwInspectorProjectID) {
 void SigmaDispose() {
     XRegistryDispose();
     ErrorManagerDispose();
+    sub_7100a24520();
     DataArrayTrackerDispose();
     SFileShutdown();
     XVarDispose();

@@ -79,7 +79,8 @@ static const uint32 MAX_DATA_ARRAY_ELEMENTS = 0xFFFE;
 template <typename TYPE>
 struct TDataArrayIterator {
 
-    uint16 wIndex;
+    // Reconstructed ABI storage: the definition family uses the wide index.
+    union { uint16 wIndex; uint32 unk_0; };
     TYPE* ptElement;
 
     inline TDataArrayIterator() {
@@ -88,6 +89,8 @@ struct TDataArrayIterator {
     }
 
 
+
+    explicit TDataArrayIterator(uint32 index) : unk_0(index), ptElement(NULL) {}
 
     inline TYPE* operator->() { return ptElement; }
 };

@@ -840,7 +840,7 @@ void GroupDefinition::Init()
         if (sptGlobalInstances == NULL)
         {
 
-            sptGlobalInstances = TDataArrayCreateTracked<DefDataElement, DefDataElementID>("Global", NULL, 0x8000);
+            sptGlobalInstances = TDataArrayCreateTracked<DefDataElement, DefDataElementID>("Global", NULL, 40000);
         }
         ptInstances = sptGlobalInstances;
     }
@@ -925,7 +925,7 @@ void GroupDefinition::ResizeCache(uint32 dwCacheSizeOverride)
 
 
     TDataArray<DefDataElement, DefDataElementID> * ptInstancesNew = TDataArrayCreateTracked<DefDataElement, DefDataElementID>(ptInstances->szName, NULL, dwNewMaxCount);
-    TDataArrayIterator<DefDataElement> tIterator;
+    TDataArrayIterator<DefDataElement> tIterator(0x3ffff);
     DefDataElement * ptNext = ptInstances->Iterate(tIterator);
     while (ptNext != NULL)
     {
@@ -1934,7 +1934,7 @@ void * GroupDefinition::DefinitionDataArrayIterate(TDataArrayIterator<void> & tI
 
 
 
-        ptDefData = ptInstances->Iterate(tIt.wIndex, (DefDataElement *&)tIt.ptElement);
+        ptDefData = ptInstances->Iterate(tIt.unk_0, (DefDataElement *&)tIt.ptElement);
 
 
         if (dwFlags & (1 << GROUPDEFINITION_USE_GLOBAL_CACHE_LIMIT))
@@ -1942,7 +1942,7 @@ void * GroupDefinition::DefinitionDataArrayIterate(TDataArrayIterator<void> & tI
             SNOGroup snoGroup = GetGroup();
             while (ptDefData != NULL && ptDefData->snoGroup != snoGroup)
             {
-                ptDefData = ptInstances->Iterate(tIt.wIndex, (DefDataElement *&)tIt.ptElement);
+                ptDefData = ptInstances->Iterate(tIt.unk_0, (DefDataElement *&)tIt.ptElement);
             }
         }
     }
@@ -2020,7 +2020,7 @@ void GroupDefinition::DeleteAll()
 
 
 
-    TDataArrayIterator<void> tIt;
+    TDataArrayIterator<void> tIt(0x3ffff);
     RequiredDefinitionHeader * ptDefHeader;
     while (DefinitionDataArrayIterate(tIt, (void *&)ptDefHeader) != NULL)
     {
@@ -3319,7 +3319,7 @@ SNO GroupDefinition::CacheManagerFindElementToPurge() const
 
 
 
-    TDataArrayIterator<DefDataElement> tIterator;
+    TDataArrayIterator<DefDataElement> tIterator(0x3ffff);
     while ((ptDefData = ptInstances->Iterate(tIterator)) != NULL)
     {
 
@@ -3487,7 +3487,7 @@ void GroupDefinition::GlobalCacheManagerGeneratePurgeList(
     sdwInvCurrentUsageFrame = dwInvCurrentUsageFrame & 0xffffff;
 
     // The original has the Iterate call once, at 3537 (DWARF call_line); this decl-init copy is
-    TDataArrayIterator<DefDataElement> tIterator;
+    TDataArrayIterator<DefDataElement> tIterator(0x3ffff);
     DefDataElement * ptDefData = sptGlobalInstances->Iterate(tIterator);
     // tail-merged into it. No continue: the loop step sits at the bottom of the body.
     while (ptDefData != NULL)
@@ -3662,7 +3662,7 @@ inline BOOL GroupDefinition::GlobalCacheManagerPurge(GlobalCacheType eGlobalCach
                     continue;
 
                 RequiredDefinitionHeader * ptDefHeader;
-                TDataArrayIterator<void> tIt;
+                TDataArrayIterator<void> tIt(0x3ffff);
                 ptGroupDef->LockMapChange();
 
 
@@ -3775,7 +3775,7 @@ BOOL GroupDefinition::CacheManagerPurge(const BOOL fLockCanFail)
 
 
             RequiredDefinitionHeader * ptDefHeader;
-            TDataArrayIterator<void> tIt;
+            TDataArrayIterator<void> tIt(0x3ffff);
             while (DefinitionDataArrayIterate(tIt, (void *&)ptDefHeader) != NULL)
             {
                 CRefString sName;
@@ -6656,7 +6656,7 @@ void DefinitionPurgeNonRequired()
             continue;
 
         RequiredDefinitionHeader * ptHeader;
-        TDataArrayIterator<void> tIt;
+        TDataArrayIterator<void> tIt(0x3ffff);
 
 
         while (ptGroupDef->DefinitionDataArrayIterate(tIt, (void *&)ptHeader) != NULL)

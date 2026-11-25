@@ -6320,3 +6320,4 @@ Address,Name
 0x0000007101aa5afe,init_ssl
 0x0000007101aa5b00,g_allocatorTable
 0x0000007101aa5b28,g_garbageCollectorThread
+0x0000007101a46c30,unk_7101a46c30

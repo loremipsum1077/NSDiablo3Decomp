@@ -154,11 +154,14 @@ enum DefDataElementID {
 
 struct DefDataElement {  // size 0x10
     DefDataElementID id;  // 0x00
-    uint32 dwLastUsedFrame : 24;  // 0x04
-    SNOGroup snoGroup : 8;  // 0x04
-    void * lpDefinitionBase;  // 0x08
+    union {
+        struct { uint32 dwLastUsedFrame : 24; SNOGroup snoGroup : 8; };
+        uint32 unk_4;  // free element: next index
+    };
+    union { void * lpDefinitionBase; uint32 unk_8; };  // free element: generation
 };
 static_assert(sizeof(DefDataElement) == 0x10, "DefDataElement");
+#include "DefinitionDataArray.h"
 
 struct PendingDefDataElement : public DefDataElement {  // size 0x18
     SNO sno;  // 0x10
@@ -330,8 +333,8 @@ protected:
     static Blizzard::Lock::RMutex stDynamicDefinitionHandleLock;
     static DefDataElementID spptDynamicDefinitionArray[10000];
     static uint32 sdwLowestUnusedDynamicHandle;
-    TDataArray<DefDataElement, DefDataElementID> * ptInstances;  // 0x18
-    TDataArray<PendingDefDataElement, DefDataElementID> * ptPendingInstances;  // 0x20
+    TDataArray<PendingDefDataElement, DefDataElementID> * ptPendingInstances;  // 0x18
+    TDataArray<DefDataElement, DefDataElementID> * ptInstances;  // 0x20
     static Blizzard::Lock::RMutex stGlobalInstanceLock;
     static TDataArray<DefDataElement, DefDataElementID> * sptGlobalInstances;
 private:
