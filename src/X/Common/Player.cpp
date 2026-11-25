@@ -5348,6 +5348,12 @@ int32 PlayerGetParagonPointsTotalForCategory(const ActorCommonData & tACDPlayer,
 
 
 
+extern "C" int32 sub_71005272f0(const ActorCommonData & tACDPlayer, GBID gbidParagonBonus)
+{
+    ScopedParagonBonusLockR pdefBonus(gbidParagonBonus);
+    return tACDPlayer.AttributesGetInt(ATTRIBUTE_PARAGON_CAP_ENABLED) ? pdefBonus->unk_1c : pdefBonus->nPointsMax;
+}
+
 Player * PlayerGetPrimaryPlayerForGameConnection(GameConnectionID idGameConnection)
 {
     for (Player * ptPlayer = PlayerGetFirstInGame(); ptPlayer; ptPlayer = PlayerGetNextInGame(ptPlayer))

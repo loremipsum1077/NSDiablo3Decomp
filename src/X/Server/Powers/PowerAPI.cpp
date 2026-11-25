@@ -7976,7 +7976,6 @@ static void sApplyMiscDamageBonuses(
 }
 #line 7871
 
-// NON_MATCHING: two compare instructions test deleted/winner in the reverse order (line 313: bDeleted load at col 21, cmp/ccmp at col 13); != FALSE, == TRUE, operand-swapped (both || and !=), negated-&& and an empty positive if with else all fail.
 #line 257
 static void sUpdateAuras(
     ActorCommonData & tACD)
@@ -8013,7 +8012,7 @@ static void sUpdateAuras(
         PowerAPIBuffInstance * ptBuff = sBuffGet(idBuff);
         if (!ptBuff->bIsAura)
             continue;
-        if (ptBuff->bDeleted || ptBuff != ptWinningBuff) {
+        if (!ptBuff->bDeleted && ptBuff != ptWinningBuff) {
 #line 320
             Power * ptPower = PowerTryToGet(ptBuff->idPower);
 #line 322

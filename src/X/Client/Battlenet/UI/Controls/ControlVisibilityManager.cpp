@@ -20,10 +20,10 @@ int32 ControlVisibilityManager::AddControl(const UIID & id)
 
 void ControlVisibilityManager::SetActive(int32 nControlIndex, bool bForceRefresh)
 {
-    UIID idActiveControl;
-
     if (m_aridMangedControls.size() == 0)
         return;
+
+    UIID idActiveControl;
 
     nControlIndex = Math::Pin(nControlIndex, -1, (int32)m_aridMangedControls.size() - 1);
 

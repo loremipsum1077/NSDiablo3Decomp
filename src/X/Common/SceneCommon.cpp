@@ -1253,7 +1253,7 @@ BOOL ScenesCommonNavMeshNodeFromPlace(const WorldPlace & tPlace, NavMeshHandle *
 
             ptSCD = SceneCommonDataTryToGet(idSScene);
 
-            if (ptSCD && (fCanActivateScenes || ptSCD->ptNavMeshInst))
+            if (ptSCD && (ptSCD->ptNavMeshInst || fCanActivateScenes))
             {
                 if (sSceneCommonDataNavMeshAtPoint(*ptSCD, tPlace.wp, ptNavMeshHandle, fCanActivateScenes, fProcessInactive))
                     return TRUE;

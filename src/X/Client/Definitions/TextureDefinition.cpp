@@ -293,7 +293,7 @@ static void sComputeTextureParams(const TextureDefinition * pdefTexture, const u
     if (tTexParams.fCompressed) {
         uint32 dwMipWidth = pdefTexture->dwWidth >> (nMaxMipLevel - pdefTexture->dwMipMapLevelMin);
         uint32 dwMipHeight = pdefTexture->dwHeight >> (nMaxMipLevel - pdefTexture->dwMipMapLevelMin);
-        while (dwMipWidth < 4 || dwMipHeight < 4) {
+        while (dwMipHeight < 4 || dwMipWidth < 4) {
             nMaxMipLevel--;
             dwMipWidth = pdefTexture->dwWidth >> (nMaxMipLevel - pdefTexture->dwMipMapLevelMin);
             dwMipHeight = pdefTexture->dwHeight >> (nMaxMipLevel - pdefTexture->dwMipMapLevelMin);

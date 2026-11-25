@@ -386,7 +386,7 @@ void NavCellPathFinder::InitializeNode(NavCellPathNode & tNode, const NavCellPat
         tNode.flCost = ptParentNode->flCost + Vector2D::Distance(ptParentNode->tLocation.wpPos, tNode.tLocation.wpPos) + Vector2D::Distance(tNode.tLocation.wpPos, m_tEndLocation.wpPos); tNode.flHeuristicDistance = 0.0f;
     }
 
-    tNode.flEstimatedDistance = tNode.flHeuristicDistance + tNode.flCost;
+    tNode.flEstimatedDistance = tNode.flCost + tNode.flHeuristicDistance;
 }
 
 

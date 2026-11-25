@@ -38,6 +38,8 @@
 
 #include <float.h>
 
+extern "C" int32 sub_71005272f0(const ActorCommonData & tACDPlayer, GBID gbidParagonBonus);
+
 // Declared here because their headers are not adopted yet; each comment names the defining file.
 #include "../Interface/UIParagonCommon.h"
 #include "../../../Common/UserInterface/UIToolTips.h"
@@ -822,6 +824,8 @@ void UpdateItemAttributeDynamicDetails(const UIID & idItemUI, const int32 nAttri
 
 
     if (idItemUI == GetUIIDNone()) return;
+    ActorCommonData * ptACDPlayer = ACDTryToGet(sgptParagonGlobals->m_ptPlayer->idPlayerACD);
+    if (!ptACDPlayer) return;
 
 
 
@@ -834,9 +838,9 @@ void UpdateItemAttributeDynamicDetails(const UIID & idItemUI, const int32 nAttri
     UIID idProgressSpending = UIIDCreateFromParent(idItemUI, ".ProgressPointsSpending");
 
     GBID gbidParagonBonus = sgptParagonGlobals->m_gbidAttributes[sgptParagonGlobals->m_nCategory][nAttribute];
+    int32 nPointsMax = sub_71005272f0(*ptACDPlayer, gbidParagonBonus);
     ScopedParagonBonusLockR pdefParagonBonus(gbidParagonBonus);
     const int32 UNCAPPED_POINTS_MAX = 100000;
-    int32 nPointsMax = pdefParagonBonus->nPointsMax;
     BOOL bUncapped = nPointsMax >= UNCAPPED_POINTS_MAX;
 
     UI_GetWindowFromID(idHighlight).SetActive(bSelected);
@@ -1294,12 +1298,14 @@ BOOL ParagonGlobals::AttemptToAllocatePoints(int32 nPoints)
 
 
 
+    ActorCommonData * ptACDPlayer = ACDTryToGet(sgptParagonGlobals->m_ptPlayer->idPlayerACD);
+    if (!ptACDPlayer) return FALSE;
+
     m_nAttributePointsSpending += nPoints;
 
 
     GBID gbidParagonBonus = m_gbidAttributes[m_nCategory][m_nAttribute];
-    ScopedParagonBonusLockR pdefParagonBonus(gbidParagonBonus);
-    int32 nPointsMax = pdefParagonBonus->nPointsMax;
+    int32 nPointsMax = sub_71005272f0(*ptACDPlayer, gbidParagonBonus);
     BOOL bOverCap = nPointsMax < m_nAttributePointsSpending + m_nAttributePointsSpent[m_nCategory][m_nAttribute];
 
 

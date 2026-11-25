@@ -918,7 +918,7 @@ OnlineService::AchievementId GetHighestEarnedAchievementInSeries( const OnlineSe
 
 
 
-OnlineService::AchievementId GetHighestUnearnedAchievementInSeries( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, uint32 nAchievementSet )
+__attribute__((noinline)) OnlineService::AchievementId GetHighestUnearnedAchievementInSeries( const OnlineService::GameAccountHandle & idPlayer, const OnlineService::AchievementId & idAchievement, uint32 nAchievementSet )
 {
     OnlineService::Achievements & tAchievements = *sgtAppGlobals.ptAchievements;
     OnlineService::AchievementsInterface * ptAchievementsInterface = sgtAppGlobals.ptAchievementsInterface;

@@ -13527,7 +13527,7 @@ Address,File,Compiler
 0x00000071004f8820,X/Common/Items.cpp,7.1.0
 0x00000071004f8850,X/Common/Items.cpp,7.1.0
 0x00000071004f8890,,
-0x00000071004f88d0,,
+0x00000071004f88d0,X/Common/Items.cpp,7.1.0
 0x00000071004f8950,,
 0x00000071004f89b0,,
 0x00000071004f8a30,,
@@ -13792,7 +13792,7 @@ Address,File,Compiler
 0x0000007100517f40,X/Common/Leaderboard.cpp,7.1.0
 0x0000007100517f50,X/Common/Leaderboard.cpp,7.1.0
 0x0000007100517f70,X/Common/Leaderboard.cpp,7.1.0
-0x0000007100517f80,,
+0x0000007100517f80,X/Common/Leaderboard.cpp,7.1.0
 0x0000007100517f90,,
 0x0000007100517fc0,X/Common/Leaderboard.cpp,7.1.0
 0x0000007100517fd0,X/Common/Leaderboard.cpp,7.1.0
@@ -14031,7 +14031,7 @@ Address,File,Compiler
 0x00000071005270e0,X/Common/Player.cpp,7.1.0
 0x00000071005271b0,X/Common/Player.cpp,7.1.0
 0x00000071005271c0,X/Common/Player.cpp,7.1.0
-0x00000071005272f0,,
+0x00000071005272f0,X/Common/Player.cpp,7.1.0
 0x0000007100527370,,
 0x0000007100527380,,
 0x0000007100527410,,
@@ -20301,7 +20301,7 @@ Address,File,Compiler
 0x00000071006a59f0,X/Common/Crafting/ItemCrafting.cpp,7.1.0
 0x00000071006a5a30,X/Common/Crafting/ItemCrafting.cpp,7.1.0
 0x00000071006a5a40,X/Common/Crafting/ItemCrafting.cpp,7.1.0
-0x00000071006a5a50,,
+0x00000071006a5a50,X/Common/Crafting/ItemCrafting.cpp,7.1.0
 0x00000071006a5a90,,
 0x00000071006a5d70,X/Common/Crafting/ItemCrafting.cpp,7.1.0
 0x00000071006a6660,X/Common/Crafting/Salvage.cpp,7.1.0

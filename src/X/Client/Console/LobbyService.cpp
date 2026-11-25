@@ -3905,6 +3905,8 @@ LeaderboardStatsInfo & LeaderboardScoreToStat(LeaderboardStatsInfo & tStat, cons
 
 
 
+extern "C" bool sub_7100517f80(LeaderboardScope eScope);
+
 void LeaderboardPostRiftTime(int32 nUserIndex, const D3::Leaderboard::PostScore & tScoreFromServer, LeaderboardPostCallback pfnCallback)
 {
     // (3958)
@@ -3983,7 +3985,8 @@ void LeaderboardPostRiftTime(int32 nUserIndex, const D3::Leaderboard::PostScore 
         LeaderboardScoreToStat(tStats.push_back(), tScore, nRating, true);
 
         // (4031)
-        if (tScore.category_id() < 10 || tScore.category_id() > 12)
+        if ((tScore.category_id() < 10 || tScore.category_id() > 12) &&
+            !sub_7100517f80((LeaderboardScope)tScore.scope_id()))
         {
             // (4034-4035)
 

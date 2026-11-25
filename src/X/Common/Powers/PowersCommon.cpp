@@ -4494,7 +4494,6 @@ static int32 sGetGenericAttributeParameter(
     int32 nParameter = -1;
 
     const CTagMap *pTagMap;
-    size_t nFormulaLength = 0;
     BOOL bIsPVP = GameTypeIsPvP();
 
     if (TagMapGetTagInfo(pdefPower->tPower.hGeneralTagMap, dwPowerTag))
@@ -4522,7 +4521,7 @@ static int32 sGetGenericAttributeParameter(
     }
 
     LPCSTR szFormula = TagMapGetFormulaString(pTagMap, dwPowerTag);
-    nFormulaLength = strlen(szFormula); // inferred: DWARF local nFormulaLength (8380) and the ldrb row at 8408:22
+    const char firstChar = szFormula[0];
 
     if (strlen(szFormula) > 1)
     {
@@ -4542,7 +4541,7 @@ static int32 sGetGenericAttributeParameter(
         return -1;
     }
 
-    else if (nFormulaLength == 0) // inferred: ccmp of that byte at 8428:28 (else-if column)
+    else if (firstChar == '\0')
     {
 
 

@@ -13,6 +13,8 @@
 #include "../../../../Contrib/Contrib/blz/include/blz/set.h"
 #include "UITransmogrifyCommon.h"
 
+extern "C" BOOL sub_710050e910(GBID gbidItem);
+
 // DWARF Items.cpp:1883; declaration only, using canonical GBID and PlayerClass types.
 BOOL ItemMeetsOwnerClassRestrictions(const GBID gbidItem, const PlayerClass ePlayerClass, BOOL bCheckLegendaryClassDropWeight);
 
@@ -185,7 +187,11 @@ void UpdateTransmogLegendaryBackground(
     if (ItemIsLegendary(gbidTransmog))
     {
         ImageTextureFrame tBackgroundTexFrame;
-        if (ItemIsSetItem(gbidTransmog))
+        if (sub_710050e910(gbidTransmog))
+        {
+            ImageCollectionGetImageInfo("UI:Quality_Large_Inventory_Legendary_SeasonOnly", tBackgroundTexFrame);
+        }
+        else if (ItemIsSetItem(gbidTransmog))
         {
             ImageCollectionGetImageInfo("UI:Quality_Large_Inventory_Set", tBackgroundTexFrame);
         }

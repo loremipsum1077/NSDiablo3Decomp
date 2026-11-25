@@ -6791,6 +6791,8 @@ static void sSPlayerRemoveTrait(
 
 
 
+extern "C" int32 sub_71005272f0(const ActorCommonData & tACDPlayer, GBID gbidParagonBonus);
+
 void SPlayerSpendParagonPoints(
     Player & tPlayer,
     GBID gbidParagonBonus,
@@ -6806,7 +6808,8 @@ void SPlayerSpendParagonPoints(
     {
         FastAttribKey tKey = MakeAttribKey(ATTRIBUTE_PARAGON_BONUS, gbidParagonBonus);
         int32 nCurrentPoints = tACDPlayer.AttributesGetInt(tKey);
-        if (nCurrentPoints + nPoints <= ptParagonBonus->nPointsMax)
+        int32 nMaxPoints = sub_71005272f0(tACDPlayer, gbidParagonBonus);
+        if (nCurrentPoints + nPoints <= nMaxPoints)
         {
             tACDPlayer.AttributesSetInt(tKey, nCurrentPoints + nPoints);
             tACDPlayer.AttributesSetInt(MakeAttribKey(ATTRIBUTE_PARAGON_BONUS_POINTS_AVAILABLE, ptParagonBonus->nCategory), nPointsAvailable - nPoints);

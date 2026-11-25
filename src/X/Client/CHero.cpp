@@ -145,9 +145,9 @@ void CHero::DisposeForGame()
 
 
 
-static D3::Account::AccountPartition & sGetAccountPartitionForHero(D3::Account::SavedDefinition & tDefinition, BOOL bIsHardcore, BOOL bIsSeasonal)
+static D3::Account::AccountPartition & sGetAccountPartitionForHero(D3::Account::SavedDefinition & tDefinition, BOOL bIsHardcore, BOOL bIsSeasonal, BOOL bUnk = FALSE)
 {
-    D3AccountPartition ePartition = GetPartition(bIsHardcore, bIsSeasonal);
+    D3AccountPartition ePartition = GetPartition(bIsHardcore, bIsSeasonal, bUnk);
     return *tDefinition.mutable_partitions(ePartition);
 }
 
@@ -1937,7 +1937,7 @@ void CHero::SyncRandomCubeSeeds(
     BOOL bIsHardcore = ptPlayer->tHeroStateData.uPlayerFlags & 1;
 
     D3::Account::SavedDefinition & tAccountDefinition = Console::GamerProfile::GetAccount(ptPlayer->nControllerIndex);
-    D3::Account::AccountPartition & tPartition = sGetAccountPartitionForHero(tAccountDefinition, bIsHardcore, GameIsSeasonal());
+    D3::Account::AccountPartition & tPartition = sGetAccountPartitionForHero(tAccountDefinition, bIsHardcore, GameIsSeasonal(), sub_71004c8e20());
 
     tPartition.mutable_console_partition_data()->mutable_console_random_transmute_seed_list()->CopyFrom(tRandomSeedData);
 }
@@ -2229,7 +2229,7 @@ BOOL CHero::Validate(int32 nControllerIndex)
 
 
 
-    const D3::Account::AccountPartition & tPartition = sGetAccountPartitionForHero(tAccountDefinition, bIsHardcore, GameIsSeasonal());
+    const D3::Account::AccountPartition & tPartition = sGetAccountPartitionForHero(tAccountDefinition, bIsHardcore, GameIsSeasonal(), sub_71004c8e20());
 
 
     int32 nAltLevel = tPartition.alt_level();

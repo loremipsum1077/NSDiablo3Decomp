@@ -249,7 +249,7 @@ void Initialize()
     Console::Online::DummySetupParams tParams;
     tParams.m_snoWorld = GlobalSNOGet(GLOBALSNO_WORLD_FLATWORLD);
     tParams.m_dwLocalPlayerCount = CmdLineGetParams()->nTestPlayerNum;
-    tParams.m_nHandicap = 16;
+    tParams.m_nHandicap = 19;
     if (CmdLineGetParams()->eTestClassOverride != -1)  // original line 256: override stores (258-261) first, 0..3 defaults (265-266) in the else
     {
         tParams.m_playerClasses[0] = CmdLineGetParams()->eTestClassOverride;

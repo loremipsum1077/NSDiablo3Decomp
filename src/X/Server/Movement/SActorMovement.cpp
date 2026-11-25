@@ -247,8 +247,8 @@ BOOL SActorMovement::Initialize(ActorID idActor, const WorldPlace & placeStart)
     m_uLastClientMoveReportedTimeBase = 0;
     m_uLastServerTickTime = GameGetServerTime();
     m_uLastBankSlopTime = GameGetServerTime();
-    m_bAcceptNextClientPowerWalk = FALSE;
     m_uAckValue = (uint32)-1;
+    m_bAcceptNextClientPowerWalk = FALSE;
     m_uCameraSmoothingTime = 0;
     ResetValidationToPlace(placeStart);
     m_pfnMovementBlockedCallback = NULL;

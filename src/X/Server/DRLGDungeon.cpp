@@ -10181,7 +10181,10 @@ int32 DRLGDungeonGenerator::ConnectDRLGTiles(
 
                     ptTile = ptTileNext;
 
-                } while (nTotalTilesConsidered++ < nTotalTiles);
+                    if (nTotalTilesConsidered >= nTotalTiles)
+                        break;
+                    ++nTotalTilesConsidered;
+                } while (true);
             }
         }
 

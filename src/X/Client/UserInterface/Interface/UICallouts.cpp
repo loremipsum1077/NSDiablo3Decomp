@@ -1096,8 +1096,8 @@ void MassacreStart(const CalloutEvent & tEvent, int32 nLevel)
 inline void GetFontColorsForLevel(int32 nLevel, RGBAColor & rgbaTitleColor, RGBAColor & rgbaDropShadow)
 
 {
-    rgbaTitleColor = RGBAColor(255, 234, 0, 255);
-    rgbaDropShadow = RGBAColor(56, 0, 0, 191);
+    rgbaTitleColor = RGBAColor(255, 248, 193, 255);
+    rgbaDropShadow = RGBAColor(0, 0, 0, 191);
     switch (nLevel)
     {
     case 0:

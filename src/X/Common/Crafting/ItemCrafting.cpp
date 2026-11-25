@@ -2647,3 +2647,13 @@ uint32 CrafterGetIdleAnim(uint32 nRank)
 {
     return ItemCrafting_BackEnd::sArrIdleAnimTags[nRank];
 }
+
+extern "C" int32 sub_71006a5a50(int32 nJewelRank)
+{
+    if (static_cast<uint32>(nJewelRank) >= 4)
+    {
+        DisplayInternalError(NULL, "", 2580, ERROR_INTERNAL_FATAL);
+        ExitProgram(ERROR_INTERNAL_FATAL);
+    }
+    return nJewelRank * 25 + 50;
+}

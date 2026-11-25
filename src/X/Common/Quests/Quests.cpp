@@ -2138,9 +2138,9 @@ BOOL QuestIsACDObjective(const ActorCommonData & tACD)
 
         for (int32 i = 0; i < 10; i++)
         {
-            if (ptQuestGlobals->tDynamicQuestObjectives[i].eObjectiveType == OBJECTIVE_KILL_MONSTER && ptQuestGlobals->tDynamicQuestObjectives[i].snoname1.snoHandle == tACD.snoActor)
+            if (ptQuestGlobals->tDynamicQuestObjectives[i].eObjectiveType == OBJECTIVE_KILL_MONSTER && tACD.snoActor == ptQuestGlobals->tDynamicQuestObjectives[i].snoname1.snoHandle)
                 return TRUE;
-            if (ptQuestGlobals->tDynamicQuestObjectives[i].eObjectiveType == OBJECTIVE_INTERACT_WITH_GIZMO && ptQuestGlobals->tDynamicQuestObjectives[i].snoname1.snoHandle == tACD.snoActor)
+            if (ptQuestGlobals->tDynamicQuestObjectives[i].eObjectiveType == OBJECTIVE_INTERACT_WITH_GIZMO && tACD.snoActor == ptQuestGlobals->tDynamicQuestObjectives[i].snoname1.snoHandle)
                 return TRUE;
         }
     }

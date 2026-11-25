@@ -4026,6 +4026,7 @@ void Party::GetGameInfo(GameInfo & tGameInfo)
     if (!tGameInfo.m_bIsChallenge) {
         tGameInfo.m_bIsHardcore = m_tGameParams.m_bIsHardcore;
         tGameInfo.m_bIsSeasonal = m_tGameParams.m_bIsSeasonal;
+        tGameInfo.unk_14 = m_tGameParams.unk_14;
         tGameInfo.m_uSeason = m_tGameParams.m_uSeason;
         tGameInfo.m_eAct = m_tGameParams.m_eAct;
         tGameInfo.m_snoQuest = m_tGameParams.m_snoQuest;

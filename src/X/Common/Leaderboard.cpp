@@ -21,7 +21,16 @@ uint64 LeaderboardMakeConquestScore(Blizzard::Time::Timestamp ts) { return ~stat
 
 Blizzard::Time::Timestamp LeaderboardGetConquestTime(uint64 score) { return ~score; }
 
-bool LeaderboardIsRift(uint64 leaderboardId) { return leaderboardId >= LB_RIFT_FIRST && leaderboardId <= LB_RIFT_LAST && leaderboardId != LB_RIFT_PLACEHOLDER_9; }
+extern "C" bool sub_7100517f80(LeaderboardScope eScope)
+{
+    return (static_cast<uint32>(eScope) & ~1u) == 8;
+}
+
+bool LeaderboardIsRift(uint64 leaderboardId)
+{
+    return (leaderboardId != LB_RIFT_PLACEHOLDER_9 && leaderboardId >= LB_RIFT_FIRST && leaderboardId <= LB_RIFT_LAST)
+        || (leaderboardId >= 41 && leaderboardId <= 82);
+}
 
 bool LeaderboardIsChallengeRift(uint64_t leaderboardId)
 {

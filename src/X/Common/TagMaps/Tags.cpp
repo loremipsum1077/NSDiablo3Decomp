@@ -1898,6 +1898,7 @@ inline void StringFormula::DisposeFormula()
 
 
 
+// NON_MATCHING: clang schedules the zero store at +0x40 after the paired zero stores.
 StringFormulaDefault::StringFormulaDefault(LPCSTR szFormulaString)
 {
     bCompiled = FALSE;

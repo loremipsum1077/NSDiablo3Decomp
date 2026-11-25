@@ -2338,6 +2338,7 @@ void sEventStartGame(
     {
         if (tGameParams.m_bIsHardcore) dwGameFlags |= 1 << GAMECREATEPARAM_HARDCORE;
         if (tGameParams.m_bIsSeasonal) dwGameFlags |= 1 << GAMECREATEPARAM_SEASON;
+        if (tGameParams.unk_14) dwGameFlags |= 1u << 20;
 
         BOOL bHasOpenRift = (tSyncedData.nOpenLootRunLevel == -1 || tSyncedData.nOpenLootRunLevel > 0) &&
             tSyncedData.bLootRunOpen &&

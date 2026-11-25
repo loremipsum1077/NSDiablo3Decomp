@@ -89,15 +89,15 @@ void ProgressBarCreationParams::Load(const SNO snoUI, const UIControlDataExt * p
 
 void UIProgressBar::sInit(const ProgressBarCreationParams & tParams, const Vector2D &, const Vector2D & vecDim)
 {
+    m_bUseCustomExtents = FALSE;
     m_flCustomMin = 0.0f;
     m_flCustomMax = 0.0f;
-    m_bUseCustomExtents = FALSE;
     m_fIsVertical = tParams.fIsVertical;
     m_fDrawReversed = tParams.fDrawReversed;
     m_flMinPos = tParams.flMinPos;
-    m_flMaxPos = tParams.flMaxPos;
-    m_flCurrentPos = m_flMaxPos;
-    m_flTargetPos = m_flMaxPos;
+    m_flCurrentPos = tParams.flMaxPos;
+    m_flMaxPos = m_flCurrentPos;
+    m_flTargetPos = m_flCurrentPos;
 
     const UIID & id = GetID();
     const UIControlSourceKey & tSrcKey = GetUISrcKey();

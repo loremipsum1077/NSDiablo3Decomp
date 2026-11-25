@@ -3572,6 +3572,7 @@ void SQuestsGetCurrent(SNO & snoQuest, int32 & nStepUID)
 
 
 
+// NON_MATCHING: the early failure paths share a return block in the target.
 BOOL SQuestsAdvanceTo(SNO snoQuest, int32 nStepUID, BOOL bAllowRollback)
 {
     int32 nNextStepUID = nStepUID;

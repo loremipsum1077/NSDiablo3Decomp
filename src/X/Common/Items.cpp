@@ -13960,6 +13960,14 @@ extern "C" BOOL sub_710050e800(GBID gbidItem)
     return (ptItem->dwFlags >> ITEM_UNK_26) & 1;
 }
 
+extern "C" BOOL sub_71004f88d0(const ActorCommonData * ptACDItem)
+{
+    if (!ptACDItem || ptACDItem->hGB.eType != GB_ITEMS)
+        return FALSE;
+    ScopedItemDefinitionLockR pdefItem(ptACDItem->hGB.gbid);
+    return (pdefItem->dwFlags >> ITEM_UNK_30) & 1;
+}
+
 extern "C" BOOL sub_71004f8a30(GBID gbidItem)
 {
     ScopedItemDefinitionLockR ptItem(gbidItem);

@@ -682,10 +682,9 @@ void sComputeAppearanceFXParms( ShaderFloat & tRegTemp, const RenderableDetails 
 
 
 void DisplayList::Initialize( const RenderContext eContext, const BOOL fSimple ) {
+    int32 nRenderLayerCount = fSimple ? NUM_SIMPLE_RENDERLAYERS : NUM_RENDERLAYERS;
     m_eContext = eContext;
     m_fSimple = fSimple;
-
-    int32 nRenderLayerCount = m_fSimple ? NUM_SIMPLE_RENDERLAYERS : NUM_RENDERLAYERS;
 
     m_tLock.Create();
 

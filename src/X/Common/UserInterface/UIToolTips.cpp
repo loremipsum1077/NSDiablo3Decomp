@@ -187,7 +187,7 @@ static void sOutputSingleFormulaTagValue(CRefString * psOutput,
     if (strResult.Length() == 0)
     {
 
-        usValue = sPrintValue(flValue, FALSE, 4, TRUE);
+        usValue = sPrintValue(flValue, FALSE, 5, TRUE);
     }
     else
     {

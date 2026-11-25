@@ -1843,10 +1843,10 @@ static AsyncRecordRef sGetBestRecordToProcess()
     return pCurrentRecordPos;
 }
 
-// NON_MATCHING: 44 vs 44 bytes; seven instructions differ in register allocation; existing equality operand order.
 BOOL SNOFilesAsyncIsLocking(SNOElement * ptSNOElement) {
 
-    return s_globals->m_tLockingSNO == ptSNOElement->tEntry.ToSNOName();
+    const SNOName tName = ptSNOElement->tEntry.ToSNOName();
+    return s_globals->m_tLockingSNO == tName;
 }
 
 

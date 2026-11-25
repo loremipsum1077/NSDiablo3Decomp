@@ -1130,14 +1130,14 @@ BOOL IntersectGround(const LineSeg3D & wline, Vector3D & wpIntersect, uint32 dwI
 
     if (idSScene != -1)
     {
-        bIntersect = CSceneIntersectLineSeg(idSScene, tStructIntersect) != FALSE;
+        bIntersect = CSceneIntersectLineSeg(idSScene, tStructIntersect);
     }
     else
     {
 
 
 
-        bIntersect = CScenesIntersectLineSeg(tStructIntersect, SkipHolodeckScenes) != FALSE;
+        bIntersect = CScenesIntersectLineSeg(tStructIntersect, SkipHolodeckScenes);
     }
 
 
@@ -1166,7 +1166,8 @@ BOOL IntersectGround(const LineSeg3D & wline, Vector3D & wpIntersect, uint32 dwI
         {
             *pwdIntersect = tStructIntersect.wdIntersect;
         }
+        return TRUE;
     }
 
-    return bIntersect;
+    return FALSE;
 }

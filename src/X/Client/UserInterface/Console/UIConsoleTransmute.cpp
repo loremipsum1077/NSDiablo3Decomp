@@ -239,7 +239,7 @@ struct RecipeIngredientInfo {  // size 0x10
     RecipeIngredientInfo() {}  // DWARF line 264; no out-of-line copy and the inlined instance leaves no code: empty body inferred
 };
 
-struct TransmuteGlobalsConsole {  // size 0x80
+struct TransmuteGlobalsConsole {  // size 0x88
     TransmuteGlobalsConsole();
     ~TransmuteGlobalsConsole();
     int32 nControllerIndex;  // 0x00
@@ -252,12 +252,13 @@ struct TransmuteGlobalsConsole {  // size 0x80
     uint32 nFXCoverageEndTime;  // 0x3c
     uint32 nFXEndTime;  // 0x40
     BOOL bMissingAutoFillIngredients;  // 0x44
-    BOOL bSpecialItemsInCube;  // 0x48
-    BOOL bBrowsingDetails;  // 0x4c
-    ActorCommonData * ptACDInsertedSpecialIngredient;  // 0x50
-    TransmuteResultsMessage tResultsMsg;  // 0x58
+    BOOL unk_48;  // 0x48
+    BOOL bSpecialItemsInCube;  // 0x4c
+    BOOL bBrowsingDetails;  // 0x50
+    ActorCommonData * ptACDInsertedSpecialIngredient;  // 0x58
+    TransmuteResultsMessage tResultsMsg;  // 0x60
 };
-static_assert(sizeof(TransmuteGlobalsConsole) == 0x80, "TransmuteGlobalsConsole");
+static_assert(sizeof(TransmuteGlobalsConsole) == 0x88, "TransmuteGlobalsConsole");
 
 
 
@@ -321,7 +322,7 @@ static const uint32 FX_UBER_COVERAGE_TIME = 180;
 
 inline TransmuteGlobalsConsole::TransmuteGlobalsConsole()
     : nControllerIndex(-1), nCurrentIngredient(-1), eState(TransmuteState::SELECTING_RECIPE), nFXStartTime(0), nFXCoverageEndTime(0), nFXEndTime(0)
-    , bMissingAutoFillIngredients(FALSE), bSpecialItemsInCube(FALSE), bBrowsingDetails(FALSE), ptACDInsertedSpecialIngredient(NULL)
+    , bMissingAutoFillIngredients(FALSE), unk_48(FALSE), bSpecialItemsInCube(FALSE), bBrowsingDetails(FALSE), ptACDInsertedSpecialIngredient(NULL)
 {
 
 
@@ -1265,6 +1266,9 @@ struct SpecialIngredientCallbackData
 
 
 
+extern "C" BOOL sub_71004f88d0(const ActorCommonData * ptACDItem);
+extern "C" int32 sub_71006a5a50(int32 nJewelRank);
+
 static void sSpecialIngredientsCallback(
     ACDID idACDSquare,
     InventorySlotType,
@@ -1345,6 +1349,8 @@ static void sSpecialIngredientsCallback(
             if (tInfo.tIngredient.eType == TRIT_UPGRADED_LEGENDARY_GEM)
             {
                 int32 nJewelRank = ptACDItem->AttributesGetInt(ATTRIBUTE_JEWEL_RANK);
+                if (sub_71004f88d0(ptACDItem))
+                    nJewelRank = sub_71006a5a50(nJewelRank);
 
 
 
@@ -1760,11 +1766,13 @@ struct AutoFillCallbackData
     blz::vector<ACDID, blz::allocator<ACDID> > arIngredients;
     GBID gbidItem;
     int32 nIngredientIndex;
+    BOOL unk_28;
 
     AutoFillCallbackData()  // DWARF line 1761; its inlined instance only zeroes the vector (line 1764): scalar initialisers inferred (dead stores)
         : ptACDPlayer(NULL)
         , gbidItem(GBID_NONE)
         , nIngredientIndex(-1)
+        , unk_28(FALSE)
     {
     }
 };
@@ -1795,13 +1803,19 @@ static void sAutoFillCallback(
     }
 
 
-    if (ItemIsUnidentified(*ptACDItem))
-    {
+    const BOOL bUnidentified = ItemIsUnidentified(*ptACDItem);
+    if (tInfo.tIngredient.unk_0c != -1 && tInfo.tIngredient.unk_0c > ItemGetAncientRank(*ptACDItem))
         return;
-    }
+    if (tInfo.tIngredient.unk_10 != -1 && tInfo.tIngredient.unk_10 != ItemGetAncientRank(*ptACDItem))
+        return;
 
     if (ptACDItem->hGB.gbid == ptCallbackData->gbidItem)
     {
+        if (bUnidentified)
+        {
+            ptCallbackData->unk_28 = TRUE;
+            return;
+        }
         ptCallbackData->arIngredients.push_back(idACDSquare);
         tInfo.nHave += Math::Max<int32>(ptACDItem->GetStackCount(), 1);
     }
@@ -1892,6 +1906,7 @@ static void sAutoFillIngredients()
 
                 if (!bFoundItem)
                 {
+                    sgptTransmuteGlobalsConsole->unk_48 |= tCallbackData.unk_28;
                     UITransmute::AddItem(NULL, NULL, gbidItem, tIngredient.nQuantity, TRIT_INVALID, FALSE, 0);
 
                     UIID idGrid = UIIDCreateFromParent(UIWND_KANAIS_CUBE_INGREDIENTS_DETAILS_CONTAINER, ".grid");
@@ -2229,6 +2244,10 @@ static void sStartTransmute(
         UITransmute::Lock(FX_DURATION);
 
         sEnableTabNavigation(FALSE);
+    }
+    else if (sgptTransmuteGlobalsConsole->unk_48)
+    {
+        UIGame::DisplayError(GameErrorData(GAMEERROR_TRANSMUTE_CANNOT_USE_UNIDENTIFIED_ITEM), FALSE, NULL);
     }
 }
 

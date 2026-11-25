@@ -768,7 +768,7 @@ BOOL NavCellPlaceIsOnWalkableCorner(const WorldPlace & tPlace) {
         const NavCell * ptCell = NavCellHandleToNavCell(ptZoneDef, hNavCell);
         if (ptCell) {
             Vector2D vWorldMin = (const Vector2D &)ptCell->tMin + ptZoneInstance->wpWorldMin;
-            Vector2D vWorldMax = ptZoneInstance->wpWorldMin + (const Vector2D &)ptCell->tMax;
+            Vector2D vWorldMax = (const Vector2D &)ptCell->tMax + ptZoneInstance->wpWorldMin;
 
             // Only cells with a rounded corner can leave a point outside the walkable area.
             if (ptCell->uFlags >= 0x1000 && !Point2DInsideRoundedAABB2D((const Vector2D &)tPlace.wp, vWorldMin, vWorldMax, ptCell->uFlags))
