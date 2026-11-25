@@ -347,6 +347,7 @@ struct Unk19b630 {  // size 0x30
 };
 static_assert(sizeof(Unk19b630) == 0x30, "Unk19b630");
 extern "C" void sub_710019b630(void * pThis, const UIID & idParent);
+extern "C" BOOL sub_710019b960(Unk19b630 * pThis);
 extern "C" void sub_710019b9d0(Unk19b630 * pThis);
 extern "C" void sub_710019ba50(Unk19b630 * pThis, float flDelta);
 
@@ -1092,9 +1093,7 @@ inline BOOL DetailsSkillsScreen::CanScrollDetails()
 {
     const UIID & idSelectedIcon = m_tRingUI.GetSelectedControlID();
     return UISkills::Console::IconIsKanaiPowers(idSelectedIcon) &&
-           (UIUtils::Console::CanScrollContentInScrollBox(UISCROLL_CONSOLE_LEADERBOARDS_SKILLS_KANAIS_POWERS_WEAPON) ||
-            UIUtils::Console::CanScrollContentInScrollBox(UISCROLL_CONSOLE_LEADERBOARDS_SKILLS_KANAIS_POWERS_ARMOR) ||
-            UIUtils::Console::CanScrollContentInScrollBox(UISCROLL_CONSOLE_LEADERBOARDS_SKILLS_KANAIS_POWERS_JEWELRY));
+           sub_710019b960(&unk_98);
 }
 
 // line 1342
@@ -1106,9 +1105,7 @@ inline void DetailsSkillsScreen::ResetDetailScrollPosition(const UIID & idScroll
 // line 1351
 inline void DetailsSkillsScreen::ResetDetailScrollPositions()
 {
-    ResetDetailScrollPosition(UISCROLL_CONSOLE_LEADERBOARDS_SKILLS_KANAIS_POWERS_WEAPON);
-    ResetDetailScrollPosition(UISCROLL_CONSOLE_LEADERBOARDS_SKILLS_KANAIS_POWERS_ARMOR);
-    ResetDetailScrollPosition(UISCROLL_CONSOLE_LEADERBOARDS_SKILLS_KANAIS_POWERS_JEWELRY);
+    sub_710019b9d0(&unk_98);
 }
 
 // line 1362

@@ -143,6 +143,8 @@ XVarInt32 s_varStoreStatus(s_scopeStore, "Status", DEFAULT_STORE_STATUS);
 XVarString s_varStoreCatalogDigest(s_scopeStore, "ProductCatalogDigest", DEFAULT_CATALOG_DIGEST);
 XVarUint64 s_varStoreCatalogVersion(s_scopeStore, "ProductCatalogVersion", DEFAULT_CATALOG_VERSION);
 XVarInt64 s_varStoreNewestProductTime(s_scopeStore, "NewestProductTime", DEFAULT_NEWEST_PRODUCT_TIME);
+XVarBool unk_1a1c880(s_scopeStore, "Diablo4AdvertisementEnabled", false);
+XVarBool unk_1a1c938(s_scopeStore, "Diablo4ChinaAdvertisementEnabled", false);
 
 static XVarScope s_scopeAnniversaryEvent(s_scopeOnlineService, "AnniversaryEvent");  // line 182
 XVarInt32 s_varAnniversaryEventStatus(s_scopeAnniversaryEvent, "Status", DEFAULT_ANNIVERSARY_EVENT_STATUS);
@@ -392,6 +394,14 @@ SeasonState GetSeasonState()  // line 1231
     return (SeasonState)s_varSeasonState.Get();
 }
 
+// NON_MATCHING: clang combines the false and low-bit return paths.
+extern "C" BOOL sub_710072e0b0(uint32 uSeasonCreated, uint32 uFlags)
+{
+    if (!uSeasonCreated || GetSeasonNum() != uSeasonCreated)
+        return FALSE;
+    return GetSeasonState() != SEASON_STATE_ENDED && (uFlags & 1);
+}
+
 uint32 GetLeaderboardEra()  // line 1276
 {
     return s_varLeaderboardEra.Get();
@@ -468,6 +478,7 @@ void InitializeForApp()  // line 1488
     s_tSyncronizedVarCollection.Add(s_varStoreCatalogVersion, XVariant::MakeUint64(DEFAULT_CATALOG_VERSION));
     s_tSyncronizedVarCollection.Add(s_varStoreNewestProductTime, XVariant::MakeInt64(DEFAULT_NEWEST_PRODUCT_TIME));
     s_tSyncronizedVarCollection.Add(s_varRegionId, XVariant::MakeUint32(DEFAULT_REGION_ID));
+    s_tSyncronizedVarCollection.Add(unk_1a1c880, XVariant::MakeBool(false));
 
     RegisterGuildSyncedVars();
     Achievements::RegisterSyncedVars();

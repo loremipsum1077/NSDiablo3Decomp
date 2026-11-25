@@ -4985,6 +4985,7 @@ static void sGetAttribsFromSocket(
 
 
 extern "C" BOOL sub_710050e910(GBID gbidItem);
+extern "C" BOOL sub_71004f71e0(const ActorCommonData & tACDItem);
 extern "C" RGBAColor sub_710050e7e0();
 
 BOOL UIInventory::GetItemTooltipParametersForSlot(
@@ -7588,7 +7589,7 @@ static BOOL sAttemptToSocketItem(
 
 
         case SOCKET_REASON_TYPE_MISMATCH:
-            UIGame::DisplayError(GameErrorData(GAMEERROR_ITEM_SOCKET_TYPE_MISMATCH), FALSE, NULL);
+            UIGame::DisplayError(GameErrorData(sub_71004f71e0(tACDHandItem) ? GAMEERROR_UNK_138 : GAMEERROR_ITEM_SOCKET_TYPE_MISMATCH), FALSE, NULL);
             return TRUE;
 
 

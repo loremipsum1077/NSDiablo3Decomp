@@ -807,10 +807,29 @@ void ItemUIElements::SetupSubControlsData(
 
 
 
+extern "C" BOOL sub_710050e910(GBID gbidItem);
+
 static void sSetTextureForItemQuality(
     UIWindow & tWnd,
-    const ItemQualityLevel eIQL)
+    const ItemQualityLevel eIQL,
+    const GBID gbidItem,
+    const BOOL bSanctified)
 {
+    if (bSanctified)
+    {
+        tWnd.SetTextureFrame("UI:Tooltip_Frame_QualityColor_Sanctified");
+        return;
+    }
+    if (sub_710050e910(gbidItem))
+    {
+        tWnd.SetTextureFrame("UI:Tooltip_Frame_QualityColor_SeasonOnly");
+        return;
+    }
+    if (gbidItem == GlobalGBIDGet(GLOBALGBID_ITEM_DEATHS_BREATH))
+    {
+        tWnd.SetTextureFrame("UI:Tooltip_Frame_QualityColor_Default");
+        return;
+    }
     switch (eIQL)
     {
     case IQL_INFERIOR:
@@ -837,14 +856,14 @@ static void sSetTextureForItemQuality(
         }
         else
         {
+#line 861
             DisplayInternalError(NULL, "", __LINE__, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
         }
         break;
     }
 }
 
-
-
+#line 848
 void ItemUIElements::PositionSubControls(
     const ItemTooltipData & tData,
     const BOOL fEquipped,
@@ -939,14 +958,8 @@ void ItemUIElements::PositionSubControls(
     {
         const UIID idName = UIIDCreateFromParent(idWrapper, ".stack.top_wrapper.stack.name");
         UIText & tNameText = UI_GetTextFromID(idName);
-        if (tData.gbid == GlobalGBIDGet(GLOBALGBID_ITEM_DEATHS_BREATH))
-        {
-            sSetTextureForItemQuality(tNameText, IQL_NORMAL);
-        }
-        else
-        {
-            sSetTextureForItemQuality(tNameText, tData.eIQL);
-        }
+        sSetTextureForItemQuality(tNameText, tData.eIQL, tData.gbid, (tData.dwTooltipFlags >> 8) & 1);
+#line 951
 
 
         tNameText.SetText(tData.uszName, FALSE);
@@ -1332,7 +1345,7 @@ void RecipeUIElements::PositionSubControls(
     {
         const UIID idName = UIIDCreateFromParent(idWrapper, ".stack.top_wrapper.stack.name");
         UIText & tNameText = UI_GetTextFromID(idName);
-        sSetTextureForItemQuality(tNameText, tData.eIQL);
+        sSetTextureForItemQuality(tNameText, tData.eIQL, tData.gbidItem, FALSE);
         tNameText.SetText(tData.uszName, FALSE);
     }
 

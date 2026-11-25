@@ -4081,6 +4081,7 @@ inline void GameUnloadShaders() {
 
 
 
+// NON_MATCHING: clang selects the pending pause delta where the target branches to separate stores and returns.
 void GamePause(BOOL bPause) {
 
 
@@ -4105,19 +4106,21 @@ void GamePause(BOOL bPause) {
 
 
 
-    PauseGameDelta eCancel;
-    PauseGameDelta eRequest;
     if (bPause) {
         CGameGlobalsGet().nPauseRefCount = 1;
-        eRequest = PAUSEGAMEDELTA_REQUEST_PAUSE;
-        eCancel = PAUSEGAMEDELTA_REQUEST_UNPAUSE;
+        CGameGlobals & tCGameGlobals = CGameGlobalsGet();
+        if (tCGameGlobals.ePauseGameDelta == PAUSEGAMEDELTA_REQUEST_UNPAUSE)
+            tCGameGlobals.ePauseGameDelta = PAUSEGAMEDELTA_NO_CHANGE;
+        else
+            tCGameGlobals.ePauseGameDelta = PAUSEGAMEDELTA_REQUEST_PAUSE;
     } else {
         CGameGlobalsGet().nPauseRefCount = 0;
-        eRequest = PAUSEGAMEDELTA_REQUEST_UNPAUSE;
-        eCancel = PAUSEGAMEDELTA_REQUEST_PAUSE;
+        CGameGlobals & tCGameGlobals = CGameGlobalsGet();
+        if (tCGameGlobals.ePauseGameDelta == PAUSEGAMEDELTA_REQUEST_PAUSE)
+            tCGameGlobals.ePauseGameDelta = PAUSEGAMEDELTA_NO_CHANGE;
+        else
+            tCGameGlobals.ePauseGameDelta = PAUSEGAMEDELTA_REQUEST_UNPAUSE;
     }
-    CGameGlobals & tCGameGlobals = CGameGlobalsGet();
-    tCGameGlobals.ePauseGameDelta = (tCGameGlobals.ePauseGameDelta == eCancel) ? PAUSEGAMEDELTA_NO_CHANGE : eRequest;
 }
 
 
@@ -4143,6 +4146,7 @@ void GamePause(BOOL bPause) {
 
 
 
+// NON_MATCHING: clang selects the pending pause delta where the target branches to separate stores and returns.
 void GameRefPause(BOOL bPause) {
 
 
@@ -4152,15 +4156,16 @@ void GameRefPause(BOOL bPause) {
 
 
 
-    PauseGameDelta eCancel;
-    PauseGameDelta eRequest;
     if (bPause) {
         CGameGlobalsGet().nPauseRefCount++;
 
         if (CGameGlobalsGet().nPauseRefCount > 1)
             return;
-        eRequest = PAUSEGAMEDELTA_REQUEST_PAUSE;
-        eCancel = PAUSEGAMEDELTA_REQUEST_UNPAUSE;
+        CGameGlobals & tCGameGlobals = CGameGlobalsGet();
+        if (tCGameGlobals.ePauseGameDelta == PAUSEGAMEDELTA_REQUEST_UNPAUSE)
+            tCGameGlobals.ePauseGameDelta = PAUSEGAMEDELTA_NO_CHANGE;
+        else
+            tCGameGlobals.ePauseGameDelta = PAUSEGAMEDELTA_REQUEST_PAUSE;
     } else {
 
 
@@ -4180,12 +4185,13 @@ void GameRefPause(BOOL bPause) {
 
         if (CGameGlobalsGet().nPauseRefCount > 0)
             return;
-        eRequest = PAUSEGAMEDELTA_REQUEST_UNPAUSE;
-        eCancel = PAUSEGAMEDELTA_REQUEST_PAUSE;
+        CGameGlobals & tCGameGlobals = CGameGlobalsGet();
+        if (tCGameGlobals.ePauseGameDelta == PAUSEGAMEDELTA_REQUEST_PAUSE)
+            tCGameGlobals.ePauseGameDelta = PAUSEGAMEDELTA_NO_CHANGE;
+        else
+            tCGameGlobals.ePauseGameDelta = PAUSEGAMEDELTA_REQUEST_UNPAUSE;
     }
 
-    CGameGlobals & tCGameGlobals = CGameGlobalsGet();
-    tCGameGlobals.ePauseGameDelta = (tCGameGlobals.ePauseGameDelta == eCancel) ? PAUSEGAMEDELTA_NO_CHANGE : eRequest;
 }
 
 

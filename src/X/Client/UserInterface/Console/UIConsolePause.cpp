@@ -50,7 +50,7 @@
 // Declared here because their headers are not adopted yet; each comment names the defining file.
 const CmdLineParams * CmdLineGetParams();  // X/Common/Shell/CmdLine.cpp
 CRefString StringListFetch(LPCSTR szLabel);  // X/Common/Definitions/StringListDefinition.cpp
-namespace Console { namespace Online { void PartyForceMigration(); void RefreshAdHocList(); } }  // X/Client/Console/Online.cpp
+namespace Console { namespace Online { BOOL PartyIsInGame(); void PartyForceMigration(); void RefreshAdHocList(); } }  // X/Client/Console/Online.cpp
 namespace UIPartyDisplay { namespace Console { void ShowFriendDisplay(BOOL bShow); void HideFriendDisplay(); void ShowLocalCommunicationsDisplay(); void HideLocalCommunicationsDisplay(); BOOL CanDisplayLocalCommunicationDisplay(); } }  // UIConsolePartyDisplay.cpp
 namespace UIGamePrivacyOptions { namespace Console { void ShowGamePrivacyOptions(int32 nControllerIndex); } }  // UIConsoleGamePrivacyOptions.cpp
 const UIID & UI_GetControllerFocus();  // UI.cpp:674
@@ -398,6 +398,7 @@ void PauseOptionsListDataSource::UpdateOptionsAvailability()
     m_menuItems.push_back(pauseOption);
 }
 
+// NON_MATCHING: four instructions differ in the option checks.
 BOOL PauseOptionsListDataSource::IsItemEnabled(const UIConsoleListBox & tListBox, const int32 nIndex)
 {
 
@@ -412,7 +413,8 @@ BOOL PauseOptionsListDataSource::IsItemEnabled(const UIConsoleListBox & tListBox
     Player * ptPlayer = PlayerGetByControllerIndex(sgptPauseMenuGlobals->nOpeningControllerIndex);
 
 
-    BOOL bIsGuest = ::Console::GamerProfile::IsGuest(sgptPauseMenuGlobals->nOpeningControllerIndex);
+    BOOL bIsPrimaryHost = ::Console::Online::PartyIsHost() &&
+        sgptPauseMenuGlobals->nOpeningControllerIndex == ::Console::GamerProfile::GetPrimaryProfileUserIndex();
     if (ptPlayer)
     {
         ActorCommonData & tACDPlayer = ACDGet(ptPlayer->idPlayerACD);
@@ -426,7 +428,7 @@ BOOL PauseOptionsListDataSource::IsItemEnabled(const UIConsoleListBox & tListBox
             case BANNER:
                 return FALSE;
             case NETWORK_SETTINGS:
-                return ::Console::Online::PartyIsHost() && !bIsGuest;
+                return bIsPrimaryHost;
             case LEADERBOARDS:
                 return ::Console::GamerProfile::IsSignedInOnline(::Console::GamerProfile::GetPrimaryProfileUserIndex());
             default:
@@ -439,12 +441,11 @@ BOOL PauseOptionsListDataSource::IsItemEnabled(const UIConsoleListBox & tListBox
             {
             case DIFFICULTY:
             {
-                BOOL bIsPartyHost = ::Console::Online::PartyIsHost();
                 BOOL bIsHardcore = ptPlayer->tHeroStateData.uPlayerFlags & 1;
-                return bIsPartyHost && !bIsHardcore && !bIsGuest;
+                return bIsPrimaryHost && !bIsHardcore;
             }
             case NETWORK_SETTINGS:
-                return ::Console::Online::PartyIsHost() && !bIsGuest;
+                return bIsPrimaryHost;
             case LEADERBOARDS:
                 return ::Console::GamerProfile::IsSignedInOnline(::Console::GamerProfile::GetPrimaryProfileUserIndex());
             default:
@@ -524,6 +525,7 @@ void LoadHeroModel(UIID & idRActorWindow)
 
     BOOL bSeasonal = ::Console::UIOnlineActions::IsActiveSeason(tHeroDigest->season_created(), tAccountDefinition.digest());
     BOOL bHardcore = ptPlayer->tHeroStateData.uPlayerFlags & 1;
+    BOOL bSolo = bSeasonal && (tHeroDigest->player_flags2() & 1);
     GlobalSNO gsnoWaypointActor;
     if (GameIsWeeklyChallenge())
     {
@@ -535,11 +537,11 @@ void LoadHeroModel(UIID & idRActorWindow)
     }
     else if (!bHardcore && bSeasonal)
     {
-        gsnoWaypointActor = GLOBALSNO_ACTOR_CONSOLE_BNET_HERO_WAYPOINT_SEASONAL;
+        gsnoWaypointActor = bSolo ? GLOBALSNO_UNK_922 : GLOBALSNO_ACTOR_CONSOLE_BNET_HERO_WAYPOINT_SEASONAL;
     }
     else if (bSeasonal && bHardcore)
     {
-        gsnoWaypointActor = GLOBALSNO_ACTOR_CONSOLE_BNET_HERO_WAYPOINT_SEASONAL_HC;
+        gsnoWaypointActor = bSolo ? GLOBALSNO_UNK_924 : GLOBALSNO_ACTOR_CONSOLE_BNET_HERO_WAYPOINT_SEASONAL_HC;
     }
     else
     {
@@ -695,6 +697,8 @@ namespace UITrade { namespace Console { void ForceCancel(); }
 namespace Tutorial { BOOL PlayerHasSeen(const Player & tPlayer, const SNO snoTutorial); }
 extern UITutorialManager gtTutorialMgr;
 BOOL UIDeathMenu_Console_IsADeathScreenActive(); UIIDList & UI_GetInGameDlgStack(); void UI_PopDialog(UIIDList & listMenuStack, const BOOL fActivatePrev);
+extern UIID unk_71018606a8, unk_71018606b0;
+extern "C" BOOL sub_710072e0b0(uint32 uSeasonCreated, uint32 uFlags);
 extern UIID UIRACTOR_CONSOLE_CENTERED, UIWND_CONSOLE_UIRACTOR_ROOT, UITXT_PAUSE_TITLE, UIWND_PAUSE_ARROW_UP, UIWND_PAUSE_ARROW_DOWN, UIWND_CONSOLE_PAUSE_TITLE_HARDCORE, UIWND_CONSOLE_PAUSE_TITLE_SEASONAL, UIWND_CONSOLE_PAUSE_TITLE_SEASONAL_HARDCORE;
 extern UIID UIWND_CONSOLE_PAUSE_ONLINE_STATE, UITEXT_CONSOLE_PAUSE_ONLINE_STATE_MESSAGE, UIWND_CONSOLE_PAUSE_ONLINE_STATE_OFFLINE_ICON, UIWND_CONSOLE_PAUSE_ONLINE_STATE_ONLINE_ICON;
 namespace Console { namespace GamerProfile { void EnsureNetworkServiceAccountForUser(int32 nUserIndex); }
@@ -744,6 +748,20 @@ inline void OnLeavePartyAccept(int nControllerIndex, const UIID & id)
 
 void SwitchSocialWindow(UISocialDisplayWindow eNewWindowToSwitch, BOOL bInitializing, int32 nControllerIndex)
 {
+    BOOL bSoloGame = FALSE;
+    if (::Console::Online::PartyIsInGame())
+    {
+        ::Console::Online::GameParams tParams;
+        ::Console::Online::PartyGetGameParams(tParams);
+        bSoloGame = tParams.unk_14 && tParams.m_eGameType != GT_CHALLENGE_RIFTS;
+    }
+    if (bSoloGame)
+    {
+        UIPartyDisplay::Console::HidePartyDisplay();
+        UIPartyDisplay::Console::HideFriendDisplay();
+        UIPartyDisplay::Console::HideLocalCommunicationsDisplay();
+        return;
+    }
     if (bInitializing || sgptPauseMenuGlobals->eSocialWindowActive != eNewWindowToSwitch)
     {
         switch (eNewWindowToSwitch)
@@ -901,7 +919,7 @@ void OpenForController(int32 nControllerIndex)
     if (!CmdLineGetParams()->tBitArray.Get(CMDLINE_BLIZZCON_BIT))
     {
 
-        SwitchSocialWindow(PARTY_WINDOW, TRUE, nControllerIndex);
+        SwitchSocialWindow(PARTY_WINDOW, TRUE, -1);
     }
     UI_GetConsoleListBoxFromID(UILIST_CONSOLE_MENU_PARTY).SetSelectedIndex(-1);
     UI_SetControllerFocus(UILIST_PAUSE_CONSOLE);
@@ -955,9 +973,12 @@ void OpenForController(int32 nControllerIndex)
     BOOL bIsChallengeRift = GameIsWeeklyChallenge();
     BOOL bIsHardcore = !bIsChallengeRift && (ptPlayer->tHeroStateData.uPlayerFlags & 1);
     BOOL bIsSeasonal = !bIsChallengeRift && ::Console::UIOnlineActions::IsActiveSeason(tHeroDigest.season_created(), tAccountDefinition.digest());
+    BOOL bSolo = !bIsChallengeRift && sub_710072e0b0(tHeroDigest.season_created(), tHeroDigest.player_flags2());
     UI_GetWindowFromID(UIWND_CONSOLE_PAUSE_TITLE_HARDCORE).SetActive(bIsHardcore && !bIsSeasonal);
-    UI_GetWindowFromID(UIWND_CONSOLE_PAUSE_TITLE_SEASONAL).SetActive(!bIsHardcore && bIsSeasonal);
-    UI_GetWindowFromID(UIWND_CONSOLE_PAUSE_TITLE_SEASONAL_HARDCORE).SetActive(bIsHardcore && bIsSeasonal);
+    UI_GetWindowFromID(UIWND_CONSOLE_PAUSE_TITLE_SEASONAL).SetActive(!bIsHardcore && bIsSeasonal && !bSolo);
+    UI_GetWindowFromID(UIWND_CONSOLE_PAUSE_TITLE_SEASONAL_HARDCORE).SetActive(bIsHardcore && bIsSeasonal && !bSolo);
+    UI_GetWindowFromID(unk_71018606a8).SetActive(!bIsHardcore && bIsSeasonal && bSolo);
+    UI_GetWindowFromID(unk_71018606b0).SetActive(bIsHardcore && bIsSeasonal && bSolo);
 }
 
 
@@ -1015,6 +1036,7 @@ void Close()
 
 
 
+// NON_MATCHING: the compiled update is 20 bytes shorter with different basic-block placement.
 void OnUpdate(const UIID & id)
 {
     UI_GetWindowFromID(UIRACTOR_CONSOLE_CENTERED).SetActive(!UISeasonJourney::Console::IsActive());
@@ -1091,7 +1113,14 @@ void OnUpdate(const UIID & id)
 
         GameCommonData & tGCD = CGameGetGameCommonData();
         BOOL bTieredRiftIsOpen = tGCD.tGameSyncedData.nOpenLootRunLevel >= 0;
-        if (::Console::Online::PartyIsHost() && ::Console::GamerProfile::GetPrimaryProfileUserIndex() == sgptPauseMenuGlobals->nOpeningControllerIndex && !bTieredRiftIsOpen && ::Console::Online::GetNetworkMode() != ::Console::Online::NET_ADHOC && ::Console::GamerProfile::IsSignedInOnline(sgptPauseMenuGlobals->nOpeningControllerIndex) && ::Console::Online::LobbyService::IsUserConnected(sgptPauseMenuGlobals->nOpeningControllerIndex))
+        BOOL bSoloGame = FALSE;
+        if (::Console::Online::PartyIsInGame())
+        {
+            ::Console::Online::GameParams tParams;
+            ::Console::Online::PartyGetGameParams(tParams);
+            bSoloGame = tParams.unk_14 && tParams.m_eGameType != GT_CHALLENGE_RIFTS;
+        }
+        if (::Console::Online::PartyIsHost() && ::Console::GamerProfile::GetPrimaryProfileUserIndex() == sgptPauseMenuGlobals->nOpeningControllerIndex && !bTieredRiftIsOpen && ::Console::Online::GetNetworkMode() != ::Console::Online::NET_ADHOC && ::Console::GamerProfile::IsSignedInOnline(sgptPauseMenuGlobals->nOpeningControllerIndex) && ::Console::Online::LobbyService::IsUserConnected(sgptPauseMenuGlobals->nOpeningControllerIndex) && !bSoloGame)
         {
 
 
@@ -1110,35 +1139,38 @@ void OnUpdate(const UIID & id)
         }
         else
             tActionManager.ClearAction(eNetworkOptionsButton);
-        tActionManager.SetAction(::Console::CONTROLLER_INPUT_LEFT_SHOULDER, ACTION_VIEW_LEFT_SOCIAL, StringListFetch("Console:ViewMyPartyNX64"));
-        if (::Console::Online::PartyGetOnlineState() == ::Console::Online::PARTY_ADHOC)
-            tActionManager.SetAction(::Console::CONTROLLER_INPUT_RIGHT_SHOULDER, ACTION_VIEW_LEFT_SOCIAL, StringListFetch("Console:ViewPlayersNearbyNX64"));
-        else
-            tActionManager.SetAction(::Console::CONTROLLER_INPUT_RIGHT_SHOULDER, ACTION_VIEW_LEFT_SOCIAL, StringListFetch("Console:ViewOnlineFriendsNX64"));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        if (::Console::Online::PartyGetOnlineState() == ::Console::Online::PARTY_ADHOC &&
-            (UI_GetControllerFocus() == UILIST_CONSOLE_LOCAL_COMMUNICATION_LIST ||
-             UI_GetControllerFocus() == UITEXT_CONSOLE_LOCAL_COMMUNICATION_NO_PLAYERS))
+        if (!bSoloGame)
         {
+            tActionManager.SetAction(::Console::CONTROLLER_INPUT_LEFT_SHOULDER, ACTION_VIEW_LEFT_SOCIAL, StringListFetch("Console:ViewMyPartyNX64"));
+            if (::Console::Online::PartyGetOnlineState() == ::Console::Online::PARTY_ADHOC)
+                tActionManager.SetAction(::Console::CONTROLLER_INPUT_RIGHT_SHOULDER, ACTION_VIEW_LEFT_SOCIAL, StringListFetch("Console:ViewPlayersNearbyNX64"));
+            else
+                tActionManager.SetAction(::Console::CONTROLLER_INPUT_RIGHT_SHOULDER, ACTION_VIEW_LEFT_SOCIAL, StringListFetch("Console:ViewOnlineFriendsNX64"));
 
-            CRefString sRefreshOptionString = StringListFetch("Console:AdHocRefreshListNX64");
-            tActionManager.SetAction(::Console::CONTROLLER_INPUT_BUTTON_3, ACTION_VIEW_LEFT_SOCIAL, sRefreshOptionString);
+
+
+
+
+
+
+
+
+
+
+
+
+
+            if (::Console::Online::PartyGetOnlineState() == ::Console::Online::PARTY_ADHOC &&
+                (UI_GetControllerFocus() == UILIST_CONSOLE_LOCAL_COMMUNICATION_LIST ||
+                 UI_GetControllerFocus() == UITEXT_CONSOLE_LOCAL_COMMUNICATION_NO_PLAYERS))
+            {
+
+                CRefString sRefreshOptionString = StringListFetch("Console:AdHocRefreshListNX64");
+                tActionManager.SetAction(::Console::CONTROLLER_INPUT_BUTTON_3, ACTION_VIEW_LEFT_SOCIAL, sRefreshOptionString);
+            }
+            else
+                ::Console::Screens::GetActionManager().ClearAction(::Console::CONTROLLER_INPUT_BUTTON_3);
         }
-        else
-            ::Console::Screens::GetActionManager().ClearAction(::Console::CONTROLLER_INPUT_BUTTON_3);
     }
 
 
@@ -1460,6 +1492,15 @@ static void sHandleOpenGamePrivacyOptions(const int32 nControllerIndex)
         ::Console::Online::LobbyService::IsUserConnected(nControllerIndex) &&
         !bInRift)
     {
+        BOOL bSoloGame = FALSE;
+        if (::Console::Online::PartyIsInGame())
+        {
+            ::Console::Online::GameParams tParams;
+            ::Console::Online::PartyGetGameParams(tParams);
+            bSoloGame = tParams.unk_14 && tParams.m_eGameType != GT_CHALLENGE_RIFTS;
+        }
+        if (bSoloGame)
+            return;
         UIGamePrivacyOptions::Console::ShowGamePrivacyOptions(nControllerIndex);
     }
 }
@@ -1527,6 +1568,15 @@ void SwitchListFocus(Directions eDirection)
         return;
     if (UI_GetControllerFocus() == UILIST_PAUSE_CONSOLE && eDirection == DIRECTION_RIGHT)
     {
+        BOOL bSoloGame = FALSE;
+        if (::Console::Online::PartyIsInGame())
+        {
+            ::Console::Online::GameParams tParams;
+            ::Console::Online::PartyGetGameParams(tParams);
+            bSoloGame = tParams.unk_14 && tParams.m_eGameType != GT_CHALLENGE_RIFTS;
+        }
+        if (bSoloGame)
+            return;
         SoundManager::PlaySound(GlobalSNOGet(GLOBALSNO_SOUND_GENERIC_FOCUS_SWITCH), cgtPSODefaults);
 
         ClearHighlightRActor();

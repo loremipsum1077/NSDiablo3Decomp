@@ -892,7 +892,7 @@ CRefString ItemGetCooldownTooltip(
 
 
 
-//@ 896
+extern "C" BOOL sub_71004f71e0(const ActorCommonData & tACDItem);
 CRefString ItemGetItemTypeDescription(
     const ActorCommonData & tACDItem,
     const PlayerClass ePlayerClass)
@@ -907,13 +907,13 @@ CRefString ItemGetItemTypeDescription(
     else
     {
         RGBAColor rgbaColor = ItemGetDisplayNameColor(tACDItem);
+        if (sub_71004f71e0(tACDItem))
+            rgbaColor = FontGetColorForFontSpecifier(FONTCOLOR_LEGENDARY, FALSE);
         Set_Text_Color(sItemType, rgbaColor);
     }
 
     return sItemType;
 }
-
-
 
 
 

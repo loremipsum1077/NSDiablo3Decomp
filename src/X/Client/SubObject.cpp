@@ -1158,6 +1158,7 @@ int32 SubObjectGetNumTriangles(const SubObject & tSubObject)
     }
 }
 
+// NON_MATCHING: the unpacked path selects the triangle index where the target branches.
 void SubObjectGetTriangleSegment(const SubObject & tSubObject,
                                  const int32 nTriangleIndex,
                                  int32 & nSegmentIndex,
@@ -1166,32 +1167,39 @@ void SubObjectGetTriangleSegment(const SubObject & tSubObject,
     int32 nSegment = 0;
     int32 nTriangle = nTriangleIndex;
 
-    if (tSubObject.dwFlags & PACK_SKIN)
+    if (!(tSubObject.dwFlags & PACK_SKIN))
     {
-        int32 nNumSegments = SubObjectGetNumSegments(tSubObject);
-        int32 nTriangleBase = 0;
-        for (nSegment = 0; nSegment < nNumSegments; nSegment++)
+        nSegmentIndex = 0;
+        if (tSubObject.dwFlags & UNSTRIPIFIED)
+            nIndexListIndex = nTriangleIndex * 3;
+        else
+            nIndexListIndex = nTriangleIndex;
+        return;
+    }
+
+    int32 nNumSegments = SubObjectGetNumSegments(tSubObject);
+    int32 nTriangleBase = 0;
+    for (nSegment = 0; nSegment < nNumSegments; nSegment++)
+    {
+        int32 nSegmentTriangles;
+        if (tSubObject.dwFlags & UNSTRIPIFIED)
         {
-            int32 nSegmentTriangles;
-            if (tSubObject.dwFlags & UNSTRIPIFIED)
-            {
-                nSegmentTriangles = tSubObject.ptSkinningInfo[nSegment].nPackIndexCount / 3;
-            }
-            else
-            {
-                nSegmentTriangles = tSubObject.ptSkinningInfo[nSegment].nPackIndexCount - 2;
-            }
-            nTriangle = nTriangleIndex - nTriangleBase;
-            if (nTriangle < nSegmentTriangles)
-            {
-                break;
-            }
-            nTriangleBase += nSegmentTriangles;
+            nSegmentTriangles = tSubObject.ptSkinningInfo[nSegment].nPackIndexCount / 3;
         }
-        if (nSegment >= nNumSegments)
+        else
         {
-            return;
+            nSegmentTriangles = tSubObject.ptSkinningInfo[nSegment].nPackIndexCount - 2;
         }
+        nTriangle = nTriangleIndex - nTriangleBase;
+        if (nTriangle < nSegmentTriangles)
+        {
+            break;
+        }
+        nTriangleBase += nSegmentTriangles;
+    }
+    if (nSegment >= nNumSegments)
+    {
+        return;
     }
 
     nSegmentIndex = nSegment;

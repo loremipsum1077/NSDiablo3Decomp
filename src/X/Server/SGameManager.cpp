@@ -663,12 +663,12 @@ void SGameManager::_UpdateGames()
 
     sgtAppGlobals.tGlobalServerSemaphore.WaitForever();
 
-    SGameID idSGame;
-    while ((idSGame = _DequeueSimGame()) != SGAMEID_INVALID)
+    SGameID idSGame = _DequeueSimGame();
+    while (idSGame != SGAMEID_INVALID)
     {
         _UpdateGame(idSGame);
+        idSGame = _DequeueSimGame();
     }
-
     sgtAppGlobals.tGlobalServerSemaphore.Set();
 }
 

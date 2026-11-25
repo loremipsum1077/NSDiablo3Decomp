@@ -5309,7 +5309,10 @@ BOOL GameIsSeasonal()
     return (GameGetActiveGameCommonData().tGameSyncedData.dwGameSyncedFlags >> GAME_SYNCED_FLAGS_SEASONAL) & 1;
 }
 
-
+extern "C" BOOL sub_71004c8e20()
+{
+    return (GameGetActiveGameCommonData().tGameSyncedData.dwGameSyncedFlags >> 4) & 1;
+}
 
 BOOL GameIsUtility()
 {

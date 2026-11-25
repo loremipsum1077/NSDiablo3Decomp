@@ -3040,6 +3040,7 @@ inline void Console::Notifications::CreateAmiiboTutorial()
 
 void Console::Notifications::ShowAmiiboTutorial( int32 nControllerIndex )
 {
+    Screens::CloseAllScreenSets( FALSE );
     UIID idButton = UIIDCreateFromParent( UIWND_CONSOLE_AMIIBOTUTORIAL, ".LayoutRoot.AmiiboNotification.Buttons.ButtonList.ContinueButton" );
     UIText & tButton = UI_GetTextFromID( idButton );
     tButton.SetControllerIndexOverride( nControllerIndex );

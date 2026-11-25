@@ -4000,17 +4000,16 @@ BOOL SWorldPlayerAllowed(SWorldID idSWorld, const Player & tPlayer)
     if (!ptSWorld)
         return FALSE;
 
-    BOOL bHadAllowedPlayers = FALSE;
+    const uint64 idPlayer = tPlayer.tAccount.tHandle.m_id;
     for (int32 i = 0; i < 4; i++)
     {
         uint64 idAllowedPlayer = ptSWorld->arAllowedPlayers[i];
         if (!idAllowedPlayer)
-            break;
-        bHadAllowedPlayers = TRUE;
-        if (idAllowedPlayer == tPlayer.tAccount.tHandle.m_id)
+            return i == 0;
+        if (idAllowedPlayer == idPlayer)
             return TRUE;
     }
-    return !bHadAllowedPlayers;
+    return FALSE;
 }
 
 
