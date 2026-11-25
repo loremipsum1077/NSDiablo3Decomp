@@ -77,7 +77,7 @@ the 2.6.2 build does.
 - `tools/check` then promoted every `M` that matches. All-7.1.0 build: 20,222 O. Mixed
   build: 22,632 O. Mixed build with the mapping repairs below: 23,427 O. After the first
   shared-cause fixes and the GlobalSNO renumbering: 23,786 O. After the protobuf
-  regeneration: 24,292 O. After the first struct-layout fixes (branch `structs/2.7.7`: ActorCommonData, HeroInfo/UserRuntime, HUD): 25,790 O. After the SWIG enum renumbering: 26,584 O. After struct round 2 (Player, definition arrays, inventory slots, float classification): 27,257 O. After the position-based mapping repairs: 28,208 O. After phase D round 1 (Astra): 28,321 O. After phase D wave 1 (see "Phase D wave 1" below): 29,849 O. After phase D wave 2: 30,273 O. After phase D wave 3: **30,861 O**, 2,408 M, 1,541 U, 2,191 L, 4 W (of 37,005 functions).
+  regeneration: 24,292 O. After the first struct-layout fixes (branch `structs/2.7.7`: ActorCommonData, HeroInfo/UserRuntime, HUD): 25,790 O. After the SWIG enum renumbering: 26,584 O. After struct round 2 (Player, definition arrays, inventory slots, float classification): 27,257 O. After the position-based mapping repairs: 28,208 O. After phase D round 1 (Astra): 28,321 O. After phase D wave 1 (see "Phase D wave 1" below): 29,849 O. After phase D wave 2: 30,273 O. After phase D wave 3: 30,861 O. With checker patch 0012 installed: **30,931 O**, 2,338 M, 1,541 U, 2,191 L, 4 W (of 37,005 functions).
 
 ### Mapping repairs (look-alike functions)
 
@@ -352,10 +352,12 @@ were relabelled from their call structure).
 - **Checker:** `check_data_symbol_ex` requires a reference to the exact start of a known
   data symbol, but 2.7.7 folds field offsets of globals into the ADRP/ADD pair (sound globals,
   preferences, bindings: about 60 functions). `tools/patches/0012-viking-data-symbol-interior-offset.patch`
-  compares the offset inside the symbol instead. It is not installed in `tools/check` yet
-  (installing a new checker binary is the user's decision). Until it is, the full check
-  reports `Prefs::GetUIActionFromInput` as "marked as matching but does not match": both
-  binaries reference `cgtDefaultBindings + 0x220`; only the checker rejects it.
+  compares the offset inside the symbol instead. Installed in `tools/check` with the
+  user's approval (built from `tools/common/viking` plus patches 0005-0012; 0001-0004 are
+  already in the vendored commit). The next full check promoted 70 functions (24
+  SoundPlatformFModEx, 18 PreferencesDefinition, 8 InputNX64, ...) and reported no
+  errors: every `O` row still verifies, so no row had relied on the old start-only
+  comparison.
 - About 30 functions gained or updated `// NON_MATCHING:` comments.
 - Not done: the UIInventoryConsole add-sockets rework (about 40 new functions), Kanai's
   powers class bodies, SGameGlobals 0x22c8 (three new arrays), NephalemRiftState 0xd0,
