@@ -188,7 +188,7 @@ static BOOL sbHasSeasonalHero;
 static BOOL sbHaveSeasonData;
 static BOOL sbHeroIsSeasonal;
 static BOOL sbHaveNecroLicense;
-
+static bool unk_186d92d;
 
 static BOOL sbIsShowingConnectOption;
 
@@ -1312,7 +1312,7 @@ void OnEventPartyJoined()
     RefreshMainMenu(FALSE);
     RefreshQuestInfo();
 
-    if (!UIBannerCustomization::Console::IsVisible() && !UIProfileSummary::Console::IsVisible() && !UIAchievements::Console::IsVisible())
+    if (!UIBannerCustomization::Console::IsVisible() && !UIProfileSummary::Console::IsVisible() && !UIAchievements::Console::IsVisible() && !UISeasonJourney::Console::IsActive())
         FocusMainMenu();
 }
 
@@ -2725,12 +2725,12 @@ void UpdateLogoText()
 void UpdateQuestPrefetch();
 void UpdateCommunityEventsDisplay();
 
-// NON_MATCHING: global layout: original keeps sbIsShowingConnectOption/sbHaveSeasonData as separate bytes and sbHeroIsSeasonal in the merged block; ours merges differently. bSeasonDataStateKnown restored as the DWARF local (2815, const 0 then 1); size 2336 vs 2344; original has an extra bSeasonActive test near 2905 (adding it to the conditions gave 2388).
 
 
 
 
 
+// NON_MATCHING: The target tests season activity again after checking sbHeroIsSeasonal.
 void OnUpdate(const UIID &)
 {
     UpdateLogoText();
@@ -2936,7 +2936,7 @@ void OnUpdate(const UIID &)
 
 
 
-        if (bSeasonDataStateKnown && !sbHeroIsSeasonal)
+        if (bSeasonDataStateKnown && !sbHeroIsSeasonal && bSeasonActive)
         {
 
 
@@ -2954,6 +2954,11 @@ void OnUpdate(const UIID &)
         UI_GetWindowFromID(UITEXT_CONSOLE_MAIN_MENU_SEASON_HERO_REQUIRED).SetActive(bSeasonActive && !sbHeroIsSeasonal);
     }
 
+    if (!unk_186d92d && ::Console::Online::IsSeasonsInitialized())
+    {
+        unk_186d92d = true;
+        Refresh3DBackgroundHeroes();
+    }
     ::Console::Screens::UpdateButtonLegendText();
 }
 

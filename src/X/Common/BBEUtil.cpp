@@ -89,7 +89,8 @@ static float sGetMonsterDamageValue(
         }
     }
 
-    if (FastAttribGetValueInt(idFastAttrib, FastAttribKey(ATTRIBUTE_IN_SET_DUNGEON_WORLD)) != 0)
+    if (FastAttribGetValueInt(idFastAttrib, FastAttribKey(ATTRIBUTE_IN_SET_DUNGEON_WORLD)) != 0 ||
+        FastAttribGetValueInt(idFastAttrib, FastAttribKey(ATTRIBUTE_IN_SWARM_RIFT_WORLD)) != 0)
         flHandicapScalar = 1.0f;
 
 
@@ -134,7 +135,8 @@ static float sGetMonsterHealthValue(
         }
     }
 
-    if (FastAttribGetValueInt(idFastAttrib, FastAttribKey(ATTRIBUTE_IN_SET_DUNGEON_WORLD)) != 0)
+    if (FastAttribGetValueInt(idFastAttrib, FastAttribKey(ATTRIBUTE_IN_SET_DUNGEON_WORLD)) != 0 ||
+        FastAttribGetValueInt(idFastAttrib, FastAttribKey(ATTRIBUTE_IN_SWARM_RIFT_WORLD)) != 0)
         flHandicapScalar = 1.0f;
 
 
@@ -260,7 +262,7 @@ BOOL BBEIdentifierEvaluate(
 
 
 
-        flResult = (nLevel - 1 < 0) ? 0.0f : (float)(nLevel - 1);
+        flResult = (float)(nLevel < 1 ? 0 : nLevel - 1);
         break;
     }
 

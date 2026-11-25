@@ -1554,7 +1554,7 @@ void SubObjectGetSegmentVertexUV(const SubObject & tSubObject,
     }
 }
 
-
+// NON_MATCHING: Clang merges packed and skinned vertex-color address calculations earlier.
 void SubObjectGetSegmentVertexColor(const SubObject & tSubObject,
                                     int32 nSegmentIndex,
                                     uint16 wVertexIndex,
@@ -1563,45 +1563,18 @@ void SubObjectGetSegmentVertexColor(const SubObject & tSubObject,
 {
     if (tSubObject.dwFlags & PACK_GEOMETRY)
     {
-        const Vertex2TexLCPos * ptVert;
+        VertexColor vcColor;
         if (!(tSubObject.dwFlags & PACK_SKIN))
         {
-
-
-
-
-
-
-            ptVert = (const Vertex2TexLCPos *)tSubObject.pPackVertList.Get() + wVertexIndex;
+            const Vertex2TexLCPos * ptVert = (const Vertex2TexLCPos *)tSubObject.pPackVertList.Get() + wVertexIndex;
+            vcColor = (nColorSetIndex == 1) ? ptVert->vcAuxColor : ptVert->vcDiffuse;
         }
         else
         {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             const SkinningInfo & tSkinningInfo = tSubObject.ptSkinningInfo[nSegmentIndex];
-            ptVert = (const Vertex2TexLCPos *)((const VertexSkinCPos *)tSkinningInfo.pPackVertList.Get() + wVertexIndex);
+            const VertexSkinCPos * ptVert = (const VertexSkinCPos *)tSkinningInfo.pPackVertList.Get() + wVertexIndex;
+            vcColor = (nColorSetIndex == 1) ? ptVert->vcAuxColor : ptVert->vcDiffuse;
         }
-
-
-
-
-
-
-        VertexColor vcColor = (nColorSetIndex == 1) ? ptVert->vcAuxColor : ptVert->vcDiffuse;
-
-
 
         rgbaColor.r = vcColor.Red();
         rgbaColor.g = vcColor.Green();

@@ -2589,7 +2589,7 @@ static void sGenerateParticles(ParticleSystem * ptParticleSystem, float flDeltaT
 
     default:
 
-        DisplayInternalError(NULL, "", 2592, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 2594, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 
     float fSpawnRate = 0.0f;
@@ -2994,7 +2994,7 @@ void ParticleSystem::Update(float flDeltaTime)
 }
 
 
-
+// NON_MATCHING: Clang combines the visibility mask updates and places the outside branch differently.
 static BOOL sPreThreadSafeUpdateAParticleSystem(ParticleSystem * ptParticleSystem, BOOL bMustUpdate, float flDeltaTime)
 
 
@@ -3057,8 +3057,19 @@ static BOOL sPreThreadSafeUpdateAParticleSystem(ParticleSystem * ptParticleSyste
     Intersect::DetailedFrustumResult tResult = sParticleSystemDetailedVisibilityCheck(ptParticleSystem);
     bOnScreen = tResult != Intersect::INTERSECT_OUTSIDE;
     /*VIS*/
-    if (tResult == Intersect::INTERSECT_PARTIALLY) ptParticleSystem->dwFlags |= (1 << PARTICLE_SYSTEM_PARTIALLY_VISIBLE_BIT); else ptParticleSystem->dwFlags &= ~(1 << PARTICLE_SYSTEM_PARTIALLY_VISIBLE_BIT);
-    if (bOnScreen) { ptParticleSystem->dwFlags |= (1 << PARTICLE_SYSTEM_VISIBLE_BIT); bMustUpdate = TRUE; } else ptParticleSystem->dwFlags &= ~(1 << PARTICLE_SYSTEM_VISIBLE_BIT);
+    uint32 dwFlags = ptParticleSystem->dwFlags;
+    if (tResult == Intersect::INTERSECT_PARTIALLY)
+        dwFlags |= (1 << PARTICLE_SYSTEM_PARTIALLY_VISIBLE_BIT);
+    else
+        dwFlags &= ~(1 << PARTICLE_SYSTEM_PARTIALLY_VISIBLE_BIT);
+    if (bOnScreen)
+    {
+        dwFlags |= (1 << PARTICLE_SYSTEM_VISIBLE_BIT);
+        bMustUpdate = TRUE;
+    }
+    else
+        dwFlags &= ~(1 << PARTICLE_SYSTEM_VISIBLE_BIT);
+    ptParticleSystem->dwFlags = dwFlags;
 
 
 
@@ -6076,7 +6087,7 @@ static void sParticleAttachmentGetAttachmentScale(const int32 nParentType, const
         }
 
         default:
-            DisplayInternalError(NULL, "", 6079, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+            DisplayInternalError(NULL, "", 6081, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 }
 
@@ -6111,7 +6122,7 @@ static void sParticleAttachmentGetAttachmentSpeed(const int32 nParentType, const
 
 
         default:
-            DisplayInternalError(NULL, "", 6114, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+            DisplayInternalError(NULL, "", 6116, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 }
 
@@ -6150,6 +6161,11 @@ static void sParticleAttachmentCreate(RMessage & msg, const BOOL fSpawn)
 
 
 
+    if (!fOverrideScale)
+    {
+        flScale = 1.0f;
+    }
+
     if (!msg.tTriggerEvent.fUseParticleScalar)
     {
 
@@ -6158,10 +6174,7 @@ static void sParticleAttachmentCreate(RMessage & msg, const BOOL fSpawn)
         msg.tTriggerEvent.flParticleScalar = flSpeed;
     }
 
-    if (!fOverrideScale)
-    {
-        flScale = 1.0f;
-    }
+
 
 
 

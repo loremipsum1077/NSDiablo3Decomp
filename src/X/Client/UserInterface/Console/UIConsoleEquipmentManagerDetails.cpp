@@ -274,7 +274,7 @@ public:
         m_arLoadoutItems[0] = ACDID_INVALID;
 
         Player * ptPlayer = GetPlayer();
-        if (ptPlayer && nLoadoutIndex >= 0 && nLoadoutIndex < 5)
+        if (ptPlayer && nLoadoutIndex >= 0 && nLoadoutIndex < 10)
         {
             const LoadoutSavedData & tLoadout = ptPlayer->tLoadouts[nLoadoutIndex];
             if (!tLoadout.bEmpty)

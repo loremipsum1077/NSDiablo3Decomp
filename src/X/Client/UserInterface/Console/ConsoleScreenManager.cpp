@@ -921,6 +921,11 @@ void Console::Screens::InitializeForWorld()
             UIConsoleRiftEndScreen::InitializeForWorld();
         }
     }
+    UI_GetTextFromID( UITXT_CONSOLE_BUTTON_LEGEND_TEXT ).SetWordWrapScalar( 1.6f );
+    Rect2D rect = UI_GetTextFromID( UITXT_CONSOLE_BUTTON_LEGEND_TEXT ).GetUnshiftedWindowRect();
+    rect.top = rect.bottom - 80.0f;
+    UI_GetTextFromID( UITXT_CONSOLE_BUTTON_LEGEND_TEXT ).SetWindowRect( rect );
+    UI_GetTextFromID( UITXT_CONSOLE_BUTTON_LEGEND_TEXT ).SetJustification( 2, 4 );
 }
 
 

@@ -79,9 +79,12 @@ void Update() {
     }
     if (snoSkyboxActor != SNO_NONE) {
         RActor * ptRActor = RActorTryToGet(ptSkyGlobals->idSkyboxActor);
-        if (ptRActor == NULL || ptRActor->snoActor != snoSkyboxActor) {
-            if (ptRActor != NULL)
-                RActorFlagForDeletion(ptRActor);
+        if (ptRActor == NULL) {
+            ptSkyGlobals->idSkyboxActor = RActorCreate(snoSkyboxActor, 1.0f, -1.0f, cgtPRTransformIdentity, 0, RENDERCONTEXT_DEFAULT, -1);
+            ptRActor = RActorGet(ptSkyGlobals->idSkyboxActor);
+            ptRActor->dwFlags &= ~(1 << RACTOR_SELECTABLE_BIT);
+        } else if (ptRActor->snoActor != snoSkyboxActor) {
+            RActorFlagForDeletion(ptRActor);
             ptSkyGlobals->idSkyboxActor = RActorCreate(snoSkyboxActor, 1.0f, -1.0f, cgtPRTransformIdentity, 0, RENDERCONTEXT_DEFAULT, -1);
             ptRActor = RActorGet(ptSkyGlobals->idSkyboxActor);
             ptRActor->dwFlags &= ~(1 << RACTOR_SELECTABLE_BIT);

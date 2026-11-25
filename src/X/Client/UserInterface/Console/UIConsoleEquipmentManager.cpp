@@ -127,7 +127,7 @@ void CloseModalDialog(const UIID & idDialog);
 }  // namespace Console
 // X/Client/UserInterface/Interface/UIEquipmentManagerCommon.h/.cpp
 namespace UIEquipmentManager {
-const int32 cgnLoadoutsPerPage = 5;
+const int32 cgnLoadoutsPerPage = 10;
 int32 GetSelectedLoadout();
 void SetSelectedLoadout(int32 nLoadout);
 BOOL LoadoutGetLoadoutEquipError(const Player & tPlayer, int32 nLoadout, CRefString & sError, BOOL bUnused);
@@ -177,25 +177,26 @@ enum class NameInputState : int {
     ACTIVE = 1,
 };
 
-struct EquipManGlobals {  // size 0x68
+struct EquipManGlobals {  // size 0x88
     Player * ptPlayer;  // 0x00
     int32 nControllerIndex;  // 0x08
     NameInputState eNameInputState;  // 0x0c
     uint32 dwLastKnownEquippedIndexMap;  // 0x10
     bool bCurrentHeroDirty;  // 0x14
     bool bDirtySlots[UIEquipmentManager::cgnLoadoutsPerPage];  // 0x15
-    bool bIsScrolling;  // 0x1a
-    Vector2D vecScrollDest;  // 0x1c
-    const float SCROLL_ANIM_SPEED;  // 0x24
-    EffectGroupID idHightlightEffect;  // 0x28
-    EffectGroupID idEquippedArmorSetEffect[UIEquipmentManager::cgnLoadoutsPerPage];  // 0x2c
-    Console::AnalogStickInputFilter tStickFilter;  // 0x40
+    bool bIsScrolling;  // 0x1f
+    Vector2D vecScrollDest;  // 0x20
+    const float SCROLL_ANIM_SPEED;  // 0x28
+    const float unk_2c;
+    EffectGroupID idHightlightEffect;  // 0x30
+    EffectGroupID idEquippedArmorSetEffect[UIEquipmentManager::cgnLoadoutsPerPage];  // 0x34
+    Console::AnalogStickInputFilter tStickFilter;  // 0x60
     EquipManGlobals();
     void CleanupHighlightEffect();
     void CleanupEquippedEffects();
     void CleanupEquippedEffect(int32 nIndex);
 };
-static_assert(sizeof(EquipManGlobals) == 0x68, "EquipManGlobals");
+static_assert(sizeof(EquipManGlobals) == 0x88, "EquipManGlobals");
 
 static EquipManGlobals * sgptEquipManGlobals;  // line 89
 
@@ -214,7 +215,7 @@ static uint32 sGetEquippedLoadoutIndexes();
 static bool sIsLoadoutEquipped(int32 nIndex);
 
 EquipManGlobals::EquipManGlobals()
-    : ptPlayer(NULL), nControllerIndex(-1), eNameInputState(NameInputState::INACTIVE), dwLastKnownEquippedIndexMap(0), bCurrentHeroDirty(false), bIsScrolling(false), vecScrollDest(0.0f, 0.0f), SCROLL_ANIM_SPEED(10.0f), idHightlightEffect(-1)
+    : ptPlayer(NULL), nControllerIndex(-1), eNameInputState(NameInputState::INACTIVE), dwLastKnownEquippedIndexMap(0), bCurrentHeroDirty(false), bIsScrolling(false), vecScrollDest(0.0f, 0.0f), SCROLL_ANIM_SPEED(0.035f), unk_2c(0.1f), idHightlightEffect(-1)
 {
     SigmaMemoryFill(bDirtySlots, 0, sizeof(bDirtySlots));
     SigmaMemoryFill(idEquippedArmorSetEffect, 0, sizeof(idEquippedArmorSetEffect));
@@ -935,18 +936,15 @@ static void sUpdateScrolling()
         Vector2D vecDim;
         tContainer.GetRelativePosition(vecTL, vecDim);
 
-        if (Math::Abs(vecTL.x - sgptEquipManGlobals->vecScrollDest.x) <= 1e-6f) {
+        if (Math::Abs(vecTL.x - sgptEquipManGlobals->vecScrollDest.x) <= sgptEquipManGlobals->unk_2c) {
             vecTL.x = sgptEquipManGlobals->vecScrollDest.x;
             tContainer.SetRelativePosition(vecTL, vecDim);
             sgptEquipManGlobals->bIsScrolling = false;
         } else {
-            float flAmountToMove;
-            if (vecTL.x < sgptEquipManGlobals->vecScrollDest.x) {
-                flAmountToMove = Math::Min(sgptEquipManGlobals->vecScrollDest.x - vecTL.x, sgptEquipManGlobals->SCROLL_ANIM_SPEED);
-            } else {
-                flAmountToMove = -Math::Min(vecTL.x - sgptEquipManGlobals->vecScrollDest.x, sgptEquipManGlobals->SCROLL_ANIM_SPEED);
-            }
-            tContainer.Move(Vector2D(flAmountToMove, 0.0f));
+            float flDeltaTime = CGameGet().flRealDeltaTime;
+            float flAmount = 1.0f - powf(sgptEquipManGlobals->SCROLL_ANIM_SPEED, flDeltaTime);
+            float flX = vecTL.x + flAmount * (sgptEquipManGlobals->vecScrollDest.x - vecTL.x);
+            tContainer.SetRelativePosition(Vector2D(flX, vecTL.y), vecDim);
         }
     }
 }
@@ -971,7 +969,7 @@ static void sScrollToSelectedLoadout()
     tViewport.GetRelativePosition(vecViewportTL, vecViewportDim);
     flDestX += vecViewportDim.x * 0.5f;
 
-    if (Math::Abs(vecTL.x - flDestX) > 1e-6f) {
+    if (Math::Abs(vecTL.x - flDestX) > sgptEquipManGlobals->unk_2c) {
         sgptEquipManGlobals->bIsScrolling = true;
         sgptEquipManGlobals->vecScrollDest.Set(flDestX, 0.0f);
     }

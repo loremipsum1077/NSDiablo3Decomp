@@ -431,11 +431,12 @@ void RopeGetHardpointOrientation(
     int32 nKnotNext;
     BOOL bLast = nKnotIndex >= ptRope->nRopeKnots - 1;
 
+    if (ptRope->nRopeKnots == 1)
+    {
+        transform.q = cgqIdentity;
+        return;
+    }
     nKnotNext = bLast ? nKnotNumber - 1 : nKnotNumber + 1;
-
-
-
-
 
     PointMass * ptPointMass0 = ptRope->ptKnotPoints[nKnotNumber].ptPointMass;
     PointMass * ptPointMass1 = ptRope->ptKnotPoints[nKnotNext].ptPointMass;
@@ -1312,9 +1313,9 @@ RopeID RopeAdd(
 
     InterpTime tInterp;
     tInterp.Init();
-    tInterp.nTimeType = TICK_TIME_NON_LOOPING;
     tInterp.flTime = 0.0f;
     tInterp.flScale = ptRope->flSystemDuration;
+    tInterp.nTimeType = TICK_TIME_NON_LOOPING;
 
 
 
@@ -1405,6 +1406,11 @@ static void sDeleteAsyncRope(void * pParam, void *)
 
 void RopeDelete(RopeID id)
 {
+    if (ThreadGlobals::Get().m_nThreadIndex != THREADINDEX_MAIN)
+    {
+        DisplayInternalError(NULL, "", 1420, ERROR_INTERNAL_FATAL);
+        ExitProgram(ERROR_INTERNAL_FATAL);
+    }
     Rope * ptRope = RopeTryToGet(id);
     if (ptRope)
     {

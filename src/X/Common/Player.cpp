@@ -4222,7 +4222,7 @@ BOOL PlayerCanChangeLoadoutEquipment(const Player & tPlayer, int32 nLoadoutIndex
 
 
 
-
+// NON_MATCHING: Clang branches around rune reads and uses a different final potion comparison.
 BOOL PlayerLoadoutMatchesCurrentEquipment(
     const Player & tPlayer,
     int32 nLoadoutIndex)
@@ -4299,17 +4299,16 @@ BOOL PlayerLoadoutMatchesCurrentEquipment(
             }
         }
     }
-    // Inference: skill/trait/legendary bounds 6/4/3 follow the DWARF arrays and original unrolled comparisons.
+    RuneType eRuneType;
     for (int32 i = 0; i < 6; ++i)
     {
-        RuneType eRuneType;
         SNO snoCurrentPower = PlayerGetPowerInActiveSkillSlot(tPlayer, i, &eRuneType);
         if (snoCurrentPower != tLoadout.tActiveSkills[i].snoPower)
         {
             return FALSE;
         }
 
-        if (snoCurrentPower != SNO_NONE && eRuneType != tLoadout.tActiveSkills[i].eRune)
+        if (tLoadout.tActiveSkills[i].snoPower != SNO_NONE && eRuneType != tLoadout.tActiveSkills[i].eRune)
         {
             return FALSE;
         }
@@ -4324,7 +4323,7 @@ BOOL PlayerLoadoutMatchesCurrentEquipment(
         }
     }
 
-    for (int32 i = 0; i < 3; ++i)
+    for (int32 i = 0; i < 4; ++i)
     {
         GBID gbidCurrentLegendaryPower = tPlayer.tHeroStateData.tSavedData.gbidLegendaryPowers[i];
         if (gbidCurrentLegendaryPower != tLoadout.gbidLegendaryPowers[i])
@@ -4333,10 +4332,11 @@ BOOL PlayerLoadoutMatchesCurrentEquipment(
         }
     }
 
-    // Inference: an unspecified loadout potion falls back to the current usable-item slot, as original slot16 call.
     ACDNetworkName annLoadoutPotion = tLoadout.tEquippedPotion.annPotion;
     if (annLoadoutPotion == ANN_INVALID)
     {
+        if (PlayerGetPotionBtnAssignment(&tPlayer).m_gbidItem == GlobalGBIDGet(GLOBALGBID_ITEM_HEALTHPOTION_BOTTOMLESS))
+            return TRUE;
 
         InventoryLocation tInvLoc;
         ACDInventoryLocationSet(tInvLoc, tPlayer.idPlayerACD, SLOT_PLAYER_BASE_HEALTHPOTION, 0, 0);
@@ -4350,7 +4350,9 @@ BOOL PlayerLoadoutMatchesCurrentEquipment(
     }
 
     const HotbarButtonData & tButtonData = PlayerGetPotionBtnAssignment(&tPlayer);
-    return tButtonData.m_annItem == annLoadoutPotion;
+    if (tButtonData.m_annItem != annLoadoutPotion)
+        return FALSE;
+    return TRUE;
 
 
 

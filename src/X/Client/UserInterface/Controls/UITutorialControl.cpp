@@ -210,7 +210,10 @@ void UITutorial::SetTutorial(const Rect2D & parentRect, const RActorID idRActorO
     {
         const StringLabelHandle hLabel = StringListGetLabelHandle(sLabelBase.str());
 
-        UIChatBalloons::AddBalloon(m_idRActorOwner, snoStringList, hLabel, m_dwTimeBeforeFading, (float)pdefTutorial->vecOffset.y, ptPlayer->nControllerIndex);
+        float flOffset = (float)pdefTutorial->vecOffset.y;
+        if (snoTutorial == GlobalSNOGet(GLOBALSNO_UNK_1759))
+            flOffset = 7.0f;
+        UIChatBalloons::AddBalloon(m_idRActorOwner, snoStringList, hLabel, m_dwTimeBeforeFading, flOffset, ptPlayer->nControllerIndex);
     }
     else if (!fUsesFreestandingUI)
     {
