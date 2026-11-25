@@ -1600,6 +1600,7 @@ struct HeroInfo {
     uint32 uLevel;
     uint32 uAltLevel;
     uint32 uPlayerFlags;
+    uint32 unk_70;  // 0x70
     Act eLastAct;
     Blizzard::Time::UnixTime uDeathTime;
     SNO snoKiller;
@@ -1613,6 +1614,11 @@ struct HeroInfo {
     uint32 uSeasonCreated;
     VisualEquipment tEquipment;
 };
+static_assert(sizeof(HeroInfo) == 0x158, "HeroInfo");
+static_assert(__builtin_offsetof(HeroInfo, unk_70) == 0x70, "HeroInfo new word");
+static_assert(__builtin_offsetof(HeroInfo, eLastAct) == 0x74, "HeroInfo act");
+static_assert(__builtin_offsetof(HeroInfo, usKillerName) == 0x90, "HeroInfo killer name");
+static_assert(__builtin_offsetof(HeroInfo, tEquipment) == 0xc8, "HeroInfo equipment");
 typedef OnlineService::Callback<void (unsigned int)> FindHeroesCallback;
 void FindHeroes(int32 nUserIdx, HeroInfo * ptHeroInfoList, uint32 uMaxHeroes, FindHeroesCallback pfnCallback);  // GamerProfileNX64.cpp
 BOOL IsAccountLoaded(int32 nUserIdx);  // GamerProfileNX64.cpp
