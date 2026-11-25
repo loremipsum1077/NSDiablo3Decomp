@@ -191,6 +191,7 @@ inline void RWindow::Dispose() {  // line 160
     }
 }
 
+// NON_MATCHING: the precomputed half- and quarter-resolution dimensions spill to different stack slots.
 BOOL RWindow::PostFXGfxInit() {  // line 177
     uint32 renderTargetReduction = 1;
     IVector2D vecScreen = GetPixelDimensions();

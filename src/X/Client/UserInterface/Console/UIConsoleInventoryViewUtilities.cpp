@@ -971,6 +971,7 @@ void UpdateViewNoPlayerItemUI(const UIID & idItemUI, const ActorCommonData & tAC
 
 
 
+// NON_MATCHING: the unrolled second socket-effect test selects an array index instead of branching to the third entry.
 CRefString sGetGemEffectsString(const ActorCommonData & tACDGem, const ACDID idACDItem)
 {
     CRefString sResult;
@@ -1292,7 +1293,6 @@ void ShowItemPrimaryStats(const UIID & idParent, const ActorCommonData * ptACDIt
     UI_GetTextFromID(idStatType).SetText(sAttributeType.str(), FALSE);
 }
 
-// NON_MATCHING: original computes bShouldShow && bItemIsEquipped into w21 before UI_GetWindowFromID (4 bytes longer)
 
 void ShowItemStatusIndicators(
     const UIID & idParent,
@@ -1367,7 +1367,8 @@ void ShowItemStatusIndicators(
         UIID idEquippedIndicator = UIIDCreateFromParent(idParent, ".EquippedIndicator");
         UI_GetTextFromID(idEquippedIndicator).SetText(StringListFetch("ConsoleInventory:Equipped").str(), FALSE);
         BOOL bShouldShow = eFilterType != FILTER_DAMAGED || bIsDetailedView;
-        UI_GetWindowFromID(idEquippedIndicator).SetActive(bShouldShow && bItemIsEquipped);
+        BOOL bShowEquipped = bShouldShow && bItemIsEquipped;
+        UI_GetWindowFromID(idEquippedIndicator).SetActive(bShowEquipped);
 
         UIID idJunkIndicator = UIIDCreateFromParent(idParent, ".JunkIndicator");
         UI_GetWindowFromID(idJunkIndicator).SetActive(bShouldShow && ItemIsJunk(tACDItem));

@@ -140,10 +140,10 @@ static int32 LabelComparatorForTagParsing(const void * elem1, const void * elem2
     const CHAR * label1 = (const CHAR *)elem1;
     const CHAR * label2 = ((const LabelTableEntry *)elem2)->uszLabel;
     for (int32 index = 0;; index++) {
-        CHAR c1 = ((uint8)label1[index] >= 'A' && (uint8)label1[index] <= 'Z') ? (uint8)label1[index] + ('a' - 'A') : (uint8)label1[index];
-        CHAR c2 = ((uint8)label2[index] >= 'A' && (uint8)label2[index] <= 'Z') ? (uint8)label2[index] + ('a' - 'A') : (uint8)label2[index];
-
-
+        CHAR c1 = label1[index];
+        CHAR c2 = label2[index];
+        if ((uint8)c1 >= 'A' && (uint8)c1 <= 'Z') c1 += 'a' - 'A';
+        if ((uint8)c2 >= 'A' && (uint8)c2 <= 'Z') c2 += 'a' - 'A';
         if ((uint8)c1 == '}' || (uint8)c1 == ',') {
             c1 = '\0';
         }

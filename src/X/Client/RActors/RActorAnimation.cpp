@@ -2675,15 +2675,15 @@ void RActorAnimTreeSetOutroAnim(const RActor & tRActor, OutroAnimationType eOutr
 
     switch (eOutroAnim)
     {
-    case 0:
-    case 1:
-    case 4:
-        ptAnimTreeControl->eRunOutro = eOutroAnim;
-        break;
     case 2:
     case 3:
     case 5:
         ptAnimTreeControl->eWalkOutro = eOutroAnim;
+        break;
+    case 0:
+    case 1:
+    case 4:
+        ptAnimTreeControl->eRunOutro = eOutroAnim;
         break;
     }
 }

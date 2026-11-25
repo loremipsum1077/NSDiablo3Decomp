@@ -2143,7 +2143,7 @@ ACDID ACDFromANN(const ACDNetworkName ann)
 
         ActorCommonData * ptACD = ACDTryToGet(idACD);
         if (ptACD == NULL || ptACD->ann != ann)
-            return ACDID_INVALID;
+            idACD = ACDID_INVALID;
     }
 
 

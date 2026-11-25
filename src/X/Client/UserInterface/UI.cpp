@@ -1763,13 +1763,13 @@ void UI_DisposeForGame()
 #line 2723
         UI_SendMessage(cgUIIDRoot, UI_DISPOSE_FOR_GAME, 0);
 #line 2743
+        UILeaderboardInspect::Console::DisposeForGame();
         UI_StoryboardsDisposeForGame();
         CPlayerUIDisposeForGame();
         UIQuestLore::DisposeForGame();
         UIQuests::DisposeForGame();
         UIConversation::DisposeForGame();
 #line 2758
-        UILeaderboardInspect::Console::DisposeForGame();
         UIControllerLayout::Console::DisposeForGame();
         UIGammaAdjust::Console::DisposeForGame();
         UIFirstTimeFlow::Console::DisposeForGame();

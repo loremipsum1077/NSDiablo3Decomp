@@ -432,7 +432,7 @@ void ForceClose();
 void sIconSelectionChanged(const ::Console::RingWrapper &, const UIID & idIcon, const BOOL bSelected);
 
 // line 415
-UILeaderboardInspectData::~UILeaderboardInspectData()
+inline UILeaderboardInspectData::~UILeaderboardInspectData()
 {
 }
 

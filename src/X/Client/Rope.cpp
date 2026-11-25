@@ -1378,9 +1378,9 @@ void RopeSetAttachPoint(
 
     InterpTime tInterp;
     tInterp.Init();
-    tInterp.nTimeType = TICK_TIME_NON_LOOPING;
     tInterp.flTime = ptRope->flTime;
     tInterp.flScale = ptRope->flSystemDuration;
+    tInterp.nTimeType = TICK_TIME_NON_LOOPING;
 
     float flDeltaTime;  // INFERENCE: the original leaves s0 unset at the call below (uninitialized argument)
 

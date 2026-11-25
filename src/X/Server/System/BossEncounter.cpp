@@ -1410,7 +1410,8 @@ void PlayerRemoved(Player * ptPlayer, BOOL bPlayerWasDeleted)
         ptPlayer->dwBossEncounterFlags = (1 << ESF_PENDING_ACCEPT);
 
         BOOL bContinue = (pState->dwFlags >> FLAG_PROMPT_CONTINUE_WITHOUT) & 1;
-        ptPlayer->dwBossEncounterFlags |= (bContinue << ESF_CONTINUE_WITHOUT);
+        if (bContinue)
+            ptPlayer->dwBossEncounterFlags = (1 << ESF_PENDING_ACCEPT) | (1 << ESF_CONTINUE_WITHOUT);
 
         if (bContinue)
         {

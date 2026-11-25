@@ -12,6 +12,7 @@ uint32 atoh(LPCSTR sz) {
     return dwValue;
 }
 
+// NON_MATCHING: the target tests for a null or empty string before saving the frame.
 uint32 atoh(LPCSTR sz, BOOL& bSuccess) {
     uint32 dwValue;
     if (sz == NULL || sz[0] == '\0')

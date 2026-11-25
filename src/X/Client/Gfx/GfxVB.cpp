@@ -434,6 +434,7 @@ Vector3D UByte4NormalToVector3D(const UByte4 packed) {
 
 // line 1213. 8.8 fixed point through the float mantissa: biased by k, the value's low 16 mantissa
 // bits are the fixed-point pattern.
+// NON_MATCHING: the second component clamp and scale are scheduled later at +0x28.
 UByte4 Vector2DTexCoordToUByte4(const Vector2D & uv) {
     UByte4 packed;
     const float Domain = MaxUVRange;

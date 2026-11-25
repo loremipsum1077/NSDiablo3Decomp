@@ -6730,7 +6730,8 @@ void PowerSwitchDualWieldHand()
     }
     if (PowerAffectedByDualWield(AutoPowerDefinitionR(ptPower->snoPower)) && ACDIsDualWielding(*ptACDOwner, TRUE)) {
         int32 nHand = FastAttribGetValueInt(ptPower->idFastAttrib, ATTRIBUTE_DUALWIELD_HAND);
-        FastAttribSetValueInt(ptPower->idFastAttrib, ATTRIBUTE_DUALWIELD_HAND, nHand == 0);
+        BOOL bNextHand = nHand == 0;
+        FastAttribSetValueInt(ptPower->idFastAttrib, ATTRIBUTE_DUALWIELD_HAND, bNextHand);
         FastAttribSetValueInt(ptPower->idFastAttrib, ATTRIBUTE_DUALWIELD_HAND_NEXT, nHand);
         ptACDOwner->AttributesSetInt(ATTRIBUTE_DUALWIELD_HAND, ptACDOwner->AttributesGetInt(ATTRIBUTE_DUALWIELD_HAND_NEXT));
         PlayerDetermineNextDualWieldHand(ptACDOwner->id);

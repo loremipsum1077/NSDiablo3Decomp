@@ -704,6 +704,7 @@ TexAnimMatrixType TexAnimGetTexMatrix(Matrix4x4 & mTex, const TexAnimParams * pt
 
 
 
+// NON_MATCHING: the U and V scale selects at +0xcc are scheduled in reverse order.
 TexAnimMatrixType TexAnimGetTexMatrix(Matrix4x4 & mTex, const CHAR * pTexAnimCompParams, uint32 dwTexAnimCompParamsSize, const TexAnimState * ptTexAnimState, const TextureDefinition * ptTextureDef) {
     const TexAnimState & tTexAnimState = *ptTexAnimState;
     if (pTexAnimCompParams == NULL) {

@@ -180,10 +180,10 @@ const AttributeCompressor * AttributeCompressorBoundedInt::Register(int32 nMin, 
     const AttributeCompressor * ptCurrentCompressor = _FindNext(ACT_BOUNDED_INT, 0);
     while (ptCurrentCompressor) {
         const AttributeCompressorBoundedInt * ptBoundedIntCompressor = static_cast<const AttributeCompressorBoundedInt *>(ptCurrentCompressor);
-        if (ptBoundedIntCompressor->m_nMin == nMin && ptBoundedIntCompressor->m_nMax == nMax) return ptCurrentCompressor;
+        if (ptBoundedIntCompressor->m_nMin == nMin && ptBoundedIntCompressor->m_nMax == nMax) break;
         ptCurrentCompressor = _FindNext(ACT_BOUNDED_INT, ptCurrentCompressor);
     }
-    return new AttributeCompressorBoundedInt(nMin, nMax);
+    return ptCurrentCompressor ? ptCurrentCompressor : new AttributeCompressorBoundedInt(nMin, nMax);
 }
 
 

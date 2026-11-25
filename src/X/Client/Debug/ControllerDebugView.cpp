@@ -61,7 +61,6 @@ void SetControllerDebugView(int32 nControllerIndex)
 }
 void TouchPadDebugSetReferencePoint(const IVector2D & vecPoint);
 void TouchPadDebugRemoveReferencePoint();
-// NON_MATCHING: 592 vs 592 bytes; 6 instructions differ: scheduling of the 280-282 dead-zone vector math (the original multiplies vLStickIndicatorDim by 0.5 before vDim).
 #line 71
 void UpdateControllerDebugView()
 {
@@ -219,8 +218,7 @@ static void sUpdateLeftAnalogStick(const Player * ptPlayer)
         }
 #line 280
         vDim = vLStickIndicatorDim * flDeadZone;
-        vDelta = vDim * 0.5f;
-        vTL = vLStickIndicatorDim * 0.5f - vDelta;
+        vTL = vLStickIndicatorDim * 0.5f - vDim * 0.5f;
         tLStickDeadZone.SetRelativePosition(vTL, vDim);
     }
 #line 287

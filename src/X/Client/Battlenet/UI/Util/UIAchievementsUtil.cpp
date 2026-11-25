@@ -928,15 +928,19 @@ __attribute__((noinline)) OnlineService::AchievementId GetHighestUnearnedAchieve
     {
         OnlineService::AchievementId idHighestEarned = tAchievements.GetSeriesTail( idAchievement );
         OnlineService::AchievementRecord tRecord;
-        const OnlineService::AchievementDefinition * ptDefinition;
-        while ( ptAchievementsInterface && !ptAchievementsInterface->FindAwardedAchievement( idPlayer, nAchievementSet, idHighestEarned, tRecord )
-                && ( ptDefinition = tAchievements.GetAchievementDefinition( idHighestEarned ) ) != NULL )
+        if (ptAchievementsInterface && !ptAchievementsInterface->FindAwardedAchievement(idPlayer, nAchievementSet, idHighestEarned, tRecord))
         {
-            idHighestUnearned = ptDefinition->m_id;
-            if ( !tAchievements.GetAchievementDefinition( ptDefinition->m_supersedes ) )
-                break;
-
-            idHighestEarned = ptDefinition->m_supersedes;
+            const OnlineService::AchievementDefinition * ptDefinition = tAchievements.GetAchievementDefinition(idHighestEarned);
+            while (ptDefinition)
+            {
+                idHighestUnearned = ptDefinition->m_id;
+                if (!tAchievements.GetAchievementDefinition(ptDefinition->m_supersedes))
+                    break;
+                idHighestEarned = ptDefinition->m_supersedes;
+                if (ptAchievementsInterface->FindAwardedAchievement(idPlayer, nAchievementSet, idHighestEarned, tRecord))
+                    break;
+                ptDefinition = tAchievements.GetAchievementDefinition(idHighestEarned);
+            }
         }
     }
 

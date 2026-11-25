@@ -529,8 +529,8 @@ void RActorSink::Apply(
         const WorldLocation & loc = tRActor.tLocation.tWorldLocation;
         float flHeight = loc.wcylBounds.wdHeight;
         flHeight *= -1.2f;
-        flHeight *= m_flUnitSink;
-        transform.wp.z += flHeight;
+        transform.wp.z += m_flUnitSink * flHeight;
+
     }
 }
 

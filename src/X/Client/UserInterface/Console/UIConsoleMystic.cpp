@@ -940,6 +940,7 @@ int32 sGetRequiredCrafterLevelForFilterType(UIFilterType eFilterType)
 // NON_MATCHING: 380/380 bytes; four lookup and free-enchant branches skip the redundant item-ID check at line 835.
 // The panel guard, mode/selection order, material flag assignment, and combined versus nested cleanup were checked.
 #line 806 "X/Client/UserInterface/Console/UIConsoleMystic.cpp"
+// NON_MATCHING: the item ID and constant used for the flag test exchange w21 and w22.
 void PlayerMysticScreen::UpdateRequiredMaterialsUI(
     BOOL bSelectionChanged)
 {

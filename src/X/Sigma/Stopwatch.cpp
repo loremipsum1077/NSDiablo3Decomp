@@ -30,6 +30,7 @@ float Stopwatch::ToSeconds(int64 liTime) {
     return flTime;
 }
 
+// NON_MATCHING: the three reduction selects at +0x4c are scheduled in a different order.
 float Stopwatch::Check() {
     int64 liLastCheckedTime = SigmaTimingHighResTimer();
     int64 liStop = liLastCheckedTime;

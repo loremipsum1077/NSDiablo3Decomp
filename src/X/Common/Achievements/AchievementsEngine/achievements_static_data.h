@@ -116,8 +116,9 @@ private:
     OnlineService::AchievementsEngine::PartitionedCriteriaEventMap m_advanceEvents;  // 0x100
     OnlineService::AchievementsEngine::SeasonJourneyRankTailsMap m_seasonJourneyRankTails;  // 0x118
     OnlineService::AchievementsEngine::SeasonJourneyObjective m_arSeasonJourneyObjectives;  // 0x140
-    blz::string m_timestamp;  // 0x158
-    uint8 unk_180[0x40];  // 0x180 (2.7.7: 0x40 bytes before m_seasonCycleLength, read at +0x1c0; contents unknown)
+    OnlineService::AchievementsEngine::SeasonJourneyRankTailsMap unk_158;  // 0x158
+    OnlineService::AchievementsEngine::SeasonJourneyObjective unk_180;  // 0x180
+    blz::string m_timestamp;  // 0x198
     int32 m_seasonCycleLength;  // 0x1c0
 };
 static_assert(sizeof(AchievementsStaticData) == 0x1c8, "AchievementsStaticData");

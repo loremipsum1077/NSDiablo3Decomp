@@ -2822,7 +2822,7 @@ void PostFXHighlight(RWindow & tRWindow, const IRect2D & rectViewport)
 
 
 
-    SNO snoSrc = PostFXGetBuffer(GfxGetMSAAEnabled() ? EFFECTBUFFER_HIGHLIGHT : EFFECTBUFFER_SCREEN_PING);
+    SNO snoSrc = GfxGetMSAAEnabled() ? PostFXGetBuffer(EFFECTBUFFER_HIGHLIGHT) : PostFXGetBuffer(EFFECTBUFFER_SCREEN_PING);
     SNO snoDstH = PostFXGetBuffer(EFFECTBUFFER_SCREEN_PING_LDR);
     SNO snoDstV = PostFXGetBuffer(EFFECTBUFFER_SCREEN_PONG_LDR);
 

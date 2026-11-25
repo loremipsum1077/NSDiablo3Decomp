@@ -2321,7 +2321,8 @@ BOOL sCheckAndApplyShatter(PowerID idPower, const ActorCommonData & tACDTarget, 
         {
             flChance *= flProcCoefficient;
             float flHPUnitVal = tACDTarget.GetHitpointPercent();
-            flChance *= Math::Pin(1.0f - flHPUnitVal * flHPUnitVal, 0.0f, 1.0f);
+            flHPUnitVal *= flHPUnitVal;
+            flChance *= Math::Pin(1.0f - flHPUnitVal, 0.0f, 1.0f);
             if (!tACDTarget.IsElite())
             {
                 ScopedGlobalDefinitionLockR pdefGlobal;

@@ -468,6 +468,7 @@ void MarkerLoadQuestForServerGame(
 
 enum { MAX_NODES_IN_DISTRIBUTION_ARRAY = 45000 };
 // NON_MATCHING: 340 = 340, 8/85 words: only the order of the four zero-initialising movs before each unswitched loop copy (original sets nNodes first). Bit test is `(mask >> nBitIndex) & 1` (instcombine creates the shl at 499:15, t04); tried return instead of break.
+// NON_MATCHING: zero initialization of the node and bit counters is scheduled differently at +0x4c and +0xc8.
 static int32 sMarkerFillValidNodeArrayForDistribution(
     SSceneID idSScene,
     LevelAreaID idLevelArea,

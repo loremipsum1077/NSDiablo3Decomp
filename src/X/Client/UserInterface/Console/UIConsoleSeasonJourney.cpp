@@ -677,6 +677,7 @@ void OpenForController(const int32 nControllerIndex)
 
     SeasonJourneyProgressionView eSeasonJourneyProgressionView;
     OnlineService::AchievementId idAchDefinitionToDisplay = 0;
+    sgtUISeasonJourneyData.m_arChapters.clear();
     sgtUISeasonJourneyData.m_arAdvancedAchievementIds.clear();
     sgtUISeasonJourneyData.m_arCasualAchievementIds.clear();
     SeasonJourney_GetAchievementsToDisplay(idAchDefinitionToDisplay, eSeasonJourneyProgressionView, sgtUISeasonJourneyData.m_arCasualAchievementIds, sgtUISeasonJourneyData.m_arAdvancedAchievementIds, sgtUISeasonJourneyData.idPlayer);
@@ -727,7 +728,7 @@ void OpenForController(const int32 nControllerIndex)
     if (sgtUISeasonJourneyData.m_nHighestCompletedChapter > NUM_CHAPTERS)
         sgtUISeasonJourneyData.m_nHighestCompletedChapter = NUM_CHAPTERS;
 
-    sgtUISeasonJourneyData.tRingUI.WrapUsingContainerControl(UIWND_CONSOLE_SEASON_JOURNEY_RING, UIWND_CONSOLE_SEASON_JOURNEY_RING_CURSOR, RingIncludeControlPredicate, FALSE);
+    sgtUISeasonJourneyData.tRingUI.WrapUsingContainerControl(UIWND_CONSOLE_SEASON_JOURNEY_RING, UIWND_CONSOLE_SEASON_JOURNEY_RING_CURSOR, RingIncludeControlPredicate, TRUE);
     sgtUISeasonJourneyData.tRingUI.SelectControl(GetElementUIIDForCategory(Math::Min(sgtUISeasonJourneyData.m_nHighestCompletedChapter, (int32)NUM_CHAPTERS - 1)), NULL);
     UI_GetWindowFromID(UIWND_CONSOLE_SEASON_JOURNEY).SetActive(TRUE);
     UI_GetWindowFromID(UIWND_CONSOLE_SEASON_JOURNEY_REWARDS_WRAPPER).SetActive(FALSE);
