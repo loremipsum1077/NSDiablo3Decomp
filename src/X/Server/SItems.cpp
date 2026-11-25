@@ -1663,3 +1663,45 @@ CRefString SItemGetDisplayName(const ActorCommonData & tACD, const BOOL, const B
 
     return sItemName;
 }
+
+extern "C" BOOL sub_71004f7280(const ActorCommonData & tACDItem);
+extern "C" BOOL sub_710050eb80(const ActorCommonData & tACDItem);
+extern "C" ACDID sub_7100887500(ActorCommonData & tACDItem, Player & tPlayer, BOOL bUnk3, BOOL bForcePrimal);
+extern "C" GBID sub_7100894480(const ActorCommonData & tACDItem, PlayerClass eClass);
+extern "C" void sub_710050ea40(ActorCommonData & tACDItem, BOOL bSanctified);
+
+extern "C" ACDID sub_71007e0990(ActorCommonData & tACDItem, Player & tPlayer, BOOL bUnk3)
+{
+    if (!sub_710050eb80(tACDItem))
+        return ACDID_INVALID;
+    return sub_7100887500(tACDItem, tPlayer, bUnk3, TRUE);
+}
+
+extern "C" BOOL sub_71007e07f0(ActorCommonData & tACDTarget, ActorCommonData & tACDUser, ActorCommonData & tACDItem)
+{
+    if (!sub_71004f7280(tACDTarget))
+        return FALSE;
+    Player * ptPlayer = PlayerGetByACD(tACDUser.id);
+    ACDID idNewItem = sub_71007e0990(tACDTarget, *ptPlayer, TRUE);
+    if (idNewItem == ACDID_INVALID)
+        return FALSE;
+    ActorCommonData * ptNewItem = ACDTryToGet(idNewItem);
+    GBID gbidAffix = sub_7100894480(tACDItem, PlayerGetPlayerClass(PlayerGetByACD(tACDUser.id)->idPlayerACD));
+    if (gbidAffix == GBID_NONE)
+        return FALSE;
+
+    D3::Items::Generator tGenerator;
+    ItemGeneratorPopulateFromACDID(*ptNewItem, tGenerator, TRUE);
+    uint32 dwFlags = tGenerator.flags() & (1 << IGF_IDENTIFIED_BIT);
+    ItemQualityLevel eQuality = tGenerator.item_quality_level();
+    RNG tRNG;
+    if (!ptNewItem->ptRNG)
+    {
+        RandInit(tRNG);
+        RandSetSeed_Internal(tRNG, tGenerator.seed());
+        ptNewItem->ptRNG = &tRNG;
+    }
+    ItemsAddItemAffixGBID(*ptNewItem, gbidAffix, dwFlags, eQuality, FALSE, NULL);
+    sub_710050ea40(*ptNewItem, TRUE);
+    return TRUE;
+}

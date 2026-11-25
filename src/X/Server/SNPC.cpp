@@ -31,6 +31,9 @@
 #include "AI/AIStates.h"
 #include "AI/BrainComponents.h"
 
+extern "C" BOOL sub_710051b9d0(const ActorCommonData & tACD);  // NPC.cpp
+extern "C" BOOL sub_710051b060();  // NephalemRiftCommon.cpp
+
 // Declared here from their definitions elsewhere (headers not adopted yet).
 void DeleteLastHeadstone(ActorCommonData & tACD); void SHirelingMoveToStable(ACDID idACDPlayer, ActorCommonData & tACDHireling, BOOL bPlayerDismissed); void PlayerRemovePet(ACDID idACDPlayer, ACDID idACDPet, BOOL bDisplayChatMessage);
 ACDID PlayerGetHirelingProxy(ACDID idACDPlayer, HirelingClass eClass); void DismissPet(ActorCommonData & tACDPlayer, ActorCommonData & tACDPet, BOOL bPlayerDismissed); void NPCHandleDismissal(ActorCommonData & tACDHireling, BOOL bPlayerDismissed, BOOL bDisplayChatMessage);
@@ -349,6 +352,10 @@ static void sNPCGetInteractOptions(ActorCommonData & tACDPlayer, ActorCommonData
     else if (NPCIsEquipmentManagerVendor(tACDNPC))
     {
         sNPCAddInteractOption(tACDNPC, NIT_EQUIPMENT_MANAGER, (uint32)-1, (uint32)-1, TRUE, FALSE, ptNPCInteractions, dwNumInteractions);
+    }
+    else if (sub_710051b9d0(tACDNPC))
+    {
+        sNPCAddInteractOption(tACDNPC, 11, (uint32)-1, (uint32)-1, sub_710051b060() == TRUE, FALSE, ptNPCInteractions, dwNumInteractions);
     }
 
 

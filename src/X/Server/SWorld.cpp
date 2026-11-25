@@ -3426,8 +3426,9 @@ void SWorldSpawnPylonOverridesForRift(SWorld * ptSWorld)
                 if (snoPylon != SNO_NONE)
                 {
                     ActorAddStruct tActorAdd;
-                    tActorAdd.tPlace.idSWorld = ptSWorld->id; tActorAdd.tPlace.wp.z = 0.0f;
+                    tActorAdd.tPlace.idSWorld = ptSWorld->id;
                     tActorAdd.tPlace.wp.As2D() = ptOverrides->arPylonOverrides[i].wpPos;
+                    tActorAdd.tPlace.wp.z = 0.0f;
 
 
                     if (ScenesCommonNavMeshNodeFromPlace(tActorAdd.tPlace, &tActorAdd.tNavMeshHandle, TRUE, FALSE))

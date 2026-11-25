@@ -7404,7 +7404,7 @@ static BOOL sStackItems(ActorCommonData & tACDSrcItem, ActorCommonData & tACDDes
 
 
 
-// NON_MATCHING: 2 insns in the inlined sACDInventorySwap: at line 4338 the original compares the two eSlot values before the two fItemNIsLarge flags, ours the other way round; tried nested vs one three-term condition and both != operand orders.
+// NON_MATCHING: In the inlined swap at +0x11c, clang tests the item sizes before the inventory slots.
 static BOOL sSSwapItem(
     ActorCommonData & tACDSrc,
     ActorCommonData & tACDDest,
@@ -13636,6 +13636,41 @@ void ACDInventoryUpdateOnUpscalingChanged(ActorCommonData & tACDOwner)
 
 
 
+
+extern "C" BOOL sub_71004f8950(GBID gbidItem);  // Items.cpp
+
+extern "C" BOOL sub_710048bed0(ACDID idItem)
+{
+    ActorCommonData * ptItem = ACDTryToGet(idItem);
+    if (!ptItem || !ItemHasSockets(*ptItem))
+        return FALSE;
+    GBID sockets[3];
+    int32 count = ItemGetSocketedUniqueEquipped(*ptItem, sockets, 3);
+    for (int32 i = 0; i < count; ++i)
+        if (sub_71004f8950(sockets[i]))
+            return TRUE;
+    return FALSE;
+}
+
+// NON_MATCHING: The target inlines sub_710048bed0 while checking the opposite hand. Clang emits a call with either definition order.
+extern "C" BOOL sub_710048bfd0(InventorySlotType eSlot, const ActorCommonData & tOwner, ACDID idSkipped)
+{
+    InventorySlotType opposite;
+    switch (eSlot)
+    {
+    case SLOT_PLAYER_RIGHT_HAND: opposite = SLOT_PLAYER_LEFT_HAND; break;
+    case SLOT_PLAYER_LEFT_HAND: opposite = SLOT_PLAYER_RIGHT_HAND; break;
+    case SLOT_HIRELING_RIGHT_HAND: opposite = SLOT_HIRELING_LEFT_HAND; break;
+    case SLOT_HIRELING_LEFT_HAND: opposite = SLOT_HIRELING_RIGHT_HAND; break;
+    default: return TRUE;
+    }
+    InventoryLocation location;
+    ACDInventoryLocationSet(location, tOwner.id, opposite, 0, 0);
+    ACDID idItem = ACDInventoryGetItemInSlot(location);
+    if (idItem == idSkipped)
+        return TRUE;
+    return !sub_710048bed0(idItem);
+}
 
 int32 GetSeasonalRewardStashTabsCountFromAttributeValue(int32 nAttribute)
 {

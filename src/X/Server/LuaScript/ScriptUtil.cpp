@@ -2334,7 +2334,7 @@ void GameFlagSet(LPCSTR szFlagLabel, BOOL bValue)
     }
 }
 
-BOOL sub_71007d5160();  // unnamed 2.7.7 function (0x71007d5160)
+extern "C" BOOL sub_71007d5160();  // unnamed 2.7.7 function (0x71007d5160)
 
 void GameFlagSendSyncedFlags()
 {
@@ -3486,8 +3486,8 @@ void ConductorStop()
     }
 }
 
-void sub_71007c2140(ConductorInstance & tConductor);  // unnamed 2.7.7 function (0x71007c2140)
-void sub_71007c2240(ConductorInstance & tConductor);  // unnamed 2.7.7 function (0x71007c2240)
+extern "C" void sub_71007c2140(ConductorInstance & tConductor);  // unnamed 2.7.7 function (0x71007c2140)
+extern "C" void sub_71007c2240(ConductorInstance & tConductor);  // unnamed 2.7.7 function (0x71007c2240)
 
 // 2.7.7 command (0x7100938e10, unnamed)
 void ConductorLogActorRefs()
@@ -3509,7 +3509,7 @@ void ConductorClearActorRefs()
         sub_71007c2240(*ptConductor);
 }
 
-void sub_710077c8b0();  // unnamed 2.7.7 function (0x710077c8b0)
+extern "C" BOOL sub_710077c8b0();  // SNephalemRift.cpp
 
 // 2.7.7 command (0x7100940ac0, unnamed)
 void GameTieredRiftClose()
@@ -4375,7 +4375,7 @@ void GreedRealmClosingTriggered(float flSeconds)
     SWorldResetGreedRealm(flSeconds);
 }
 
-void sub_71007d4d70(float flSeconds);  // unnamed 2.7.7 function (0x71007d4d70)
+extern "C" void sub_71007d4d70(float flSeconds);  // unnamed 2.7.7 function (0x71007d4d70)
 
 // 2.7.7 command (0x710093f170, unnamed)
 void SwarmRiftClosingTriggered(float flSeconds)
@@ -4405,7 +4405,7 @@ void WarningCountdownNotification(float flSeconds, LPCSTR szMessage)
     MessageSendToClient(listDestPlayers, SMSG_WARNING_COUNTDOWN_NOTIFY, &tMessage, sizeof(tMessage));
 }
 
-void sub_71007d4840(uint32 nIndex, float flSeconds);  // unnamed 2.7.7 function (0x71007d4840)
+extern "C" void sub_71007d4840(uint32 nIndex, float flSeconds);  // unnamed 2.7.7 function (0x71007d4840)
 
 // 2.7.7 command (0x710093f540, unnamed)
 void UberBossClosingTriggered(uint32 nIndex, float flSeconds)
@@ -4574,7 +4574,7 @@ BOOL ActorIsInPostBossTieredLootRun(VACDID idActor)
 
 // 0x7100779460 (unnamed, next to NephalemRiftManager::RiftPlayerCount): looks the hero id up in the
 // hash map at SGameGlobals+0x738 and returns the entry's uint32 at +0x10 (0 when absent).
-uint32 sub_7100779460(OnlineService::HeroId uHeroId);
+extern "C" uint32 sub_7100779460(OnlineService::HeroId uHeroId);
 
 void GamePostChallengeRiftTime(int32 nMillisecondsElapsed)
 {

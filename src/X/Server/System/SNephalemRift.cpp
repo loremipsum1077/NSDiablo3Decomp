@@ -2721,6 +2721,24 @@ void PlayerSendRiftEndScreenInfo(const Player & tDestPlayer, BOOL bSuccess, int3
 
 
 
+extern "C" BOOL sub_710051b060();  // NephalemRiftCommon.cpp
+
+extern "C" BOOL sub_710077c8b0()
+{
+    if (!sub_710051b060())
+        return FALSE;
+    Player * ptPlayer = PlayerGetFirstInGame();
+    if (!ptPlayer)
+        return FALSE;
+    if (!PlayersAreStillChoosingRewards(ptPlayer))
+        SendPlayersDoneChoosingRewardsEvent(ptPlayer->idPlayerACD);
+    if (IsTieredRiftOrphaned(ptPlayer))
+        SendTieredRiftOrphanedEvent(ptPlayer->idPlayerACD);
+    if (PlayerPaidForRift(ptPlayer) && GetActiveRiftLevel() >= 0)
+        PlayerSetLeaverHash(ptPlayer);
+    return TRUE;
+}
+
 void PlayerManuallyPortIntoRift(Player * ptPlayer)
 {
     if (ptPlayer != NULL)

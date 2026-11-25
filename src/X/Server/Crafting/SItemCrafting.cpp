@@ -3249,3 +3249,10 @@ void SItemCrafting_UpgradeJewel(Player & tPlayer, ActorCommonData & tACDItem)
     tMessage.nNumRanksGained = nUpgradeRanks;
     MessageSendToClient(listDestPlayers, SMSG_UPGRADE_JEWEL_RESULTS, &tMessage, sizeof(tMessage));
 }
+
+extern "C" ACDID sub_7100887500(ActorCommonData & tACDItem, Player & tPlayer, BOOL bUnk3, BOOL bForcePrimal)
+{
+    ScopedItemDefinitionLockR ptItem(tACDItem.hGB.gbid);
+    ConsoleScopedOverrideRNG overrideRNG(tACDItem.AttributesGetInt(ATTRIBUTE_SEED), 666, RNGOutOfScopeCallback());
+    return SItemReforge(tACDItem, tPlayer, bUnk3, bForcePrimal);
+}

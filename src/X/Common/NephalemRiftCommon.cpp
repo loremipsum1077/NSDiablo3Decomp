@@ -5,6 +5,7 @@
 #include "ActorCommonData.h"
 #include "ActorInventory.h"
 #include "Attributes/FastAttribConstantsSwig.h"
+#include "Attributes/FastAttribute.h"
 #include "Definitions/GameBalanceDefinition.h"
 #include "Game.h"
 #include "GameBalance.h"
@@ -160,12 +161,21 @@ ACDID GetKeyForGreaterRift(Player * ptPlayer, int32 & nCount)
 }
 
 
+extern "C" int32 sub_710051abb0(Player * ptPlayer)
+{
+    ActorCommonData * ptACD = ACDTryToGet(ptPlayer->idPlayerACD);
+    return ptACD ? static_cast<int32>(ptACD->GetCurrencyAmount(20)) : 0;
+}
+
+extern "C" BOOL sub_710051ac90(Player * ptPlayer)
+{
+    ActorCommonData * ptACD = ACDTryToGet(ptPlayer->idPlayerACD);
+    return ptACD ? ptACD->ModifyCurrencyAmount(-1, 20, GMR_PURCHASE, TRUE) : FALSE;
+}
+
 BOOL HasKeyForGreaterRift(Player * ptPlayer)
 {
-
-    const int32 ENTRY_COST = 1;
-    int32 nItemCount;
-    return GetKeyForGreaterRift(ptPlayer, nItemCount) != ACDID_INVALID && nItemCount >= ENTRY_COST;
+    return sub_710051abb0(ptPlayer) > 0;
 }
 
 
@@ -278,6 +288,28 @@ uint64 GetEmpoweredRiftCost(int32 nRiftLevel)
     const TieredLootRunLevel & tTieredLootRunLevel = pdefGB->tTieredLootRunLevelTable.ptTieredLootRunLevels[nRiftLevel];
 
     return tTieredLootRunLevel.tLootRunValues.nEmpowerCost;
+}
+
+extern "C" BOOL sub_710051b100();
+
+extern "C" BOOL sub_710051b060()
+{
+    if (!IsTieredRiftActive() || PlayersGetCount() > 1)
+        return FALSE;
+    if (IsTieredRiftActive() && sub_710051b100())
+        return FALSE;
+    return TRUE;
+}
+
+extern "C" BOOL sub_710051b100()
+{
+    for (Player * ptPlayer = PlayerGetFirstInGame(); ptPlayer; ptPlayer = PlayerGetNextInGame(ptPlayer))
+    {
+        ActorCommonData * ptACD = ACDTryToGet(ptPlayer->idPlayerACD);
+        if (ptACD && FastAttribGetValueInt(ptACD->idFastAttrib, ATTRIBUTE_TIERED_LOOT_RUN_REWARD_CHOICE_STATE) == RIFT_GEM_UPGRADE)
+            return TRUE;
+    }
+    return FALSE;
 }
 
 }  // namespace NephalemRift

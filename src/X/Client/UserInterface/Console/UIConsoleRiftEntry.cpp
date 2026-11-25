@@ -32,6 +32,8 @@
 #include "../../../Common/UserInterface/UITextControl.h"
 #include "../../../Sigma/RefString.h"
 #include "../../../Sigma/UnicodeText.h"
+extern "C" int32 sub_710051abb0(Player * ptPlayer);  // NephalemRiftCommon.cpp
+
 // Declared here because their headers are not adopted yet; each comment names the defining file.
 extern UIID UIDLG_RIFT_ENTRY_MAIN, UIWND_RIFT_ENTRY_LIST_VIEW, UILIST_RIFT_ENTRY_TYPE_SELECTION, UIWND_RIFT_ENTRY_RIGHT_REGULAR_RIFT_ROOT, UIWND_RIFT_ENTRY_RIGHT_GRIFT_ROOT, UIWND_RIFT_ENTRY_RIGHT_GRIFT_MODE_PANEL, UIWND_RIFT_ENTRY_RIGHT_GRIFT_LEVEL_LIST, UITEXT_RIFT_ENTRY_RIGHT_GRIFT_LEVEL_INFO, UITEXT_RIFT_ENTRY_RIGHT_GRIFT_EMPOWER_COST;  // X/Client/UserInterface/UIGlobals.cpp
 extern UIID UITEXT_RIFT_ENTRY_RIGHT_GRIFT_KEYSTONES_AVAILABLE, UITEXT_RIFT_ENTRY_RIGHT_GRIFT_NO_KEYSTONES_AVAILABLE, UITEXT_RIFT_ENTRY_RIGHT_TITLE, UIWND_RIFT_ENTRY_RIGHT_GRIFT_LEVEL_SELECTION, UILIST_RIFT_ENTRY_RIGHT_GRIFT_LEVEL_SELECTION, UISCROLL_RIFT_ENTRY_GREATER_RIFT_EMPOWERED, UISCROLL_RIFT_ENTRY_REGULAR_RIFT_DESCRIPTION, UISCROLL_RIFT_ENTRY_GREATER_RIFT_DESCRIPTION, UITXT_CONSOLE_BUTTON_LEGEND_TEXT;  // X/Client/UserInterface/UIGlobals.cpp
@@ -463,6 +465,21 @@ void UIConsoleRiftEntry::GreaterRiftLevelSelectionDataSource::UpdateItemUI(const
             UnicodeText::FormatNumber(nRiftLevelToDisplay, TRUE, FNS_NORMAL, 0).str());
         break;
 
+    case 65:
+        sTierNumber = LocalizedSprintf(StringListFetch("NephalemRift:TieredRiftLevelSelectionEntryTorment14Console").str(),
+            UnicodeText::FormatNumber(nRiftLevelToDisplay, TRUE, FNS_NORMAL, 0).str());
+        break;
+
+    case 70:
+        sTierNumber = LocalizedSprintf(StringListFetch("NephalemRift:TieredRiftLevelSelectionEntryTorment15Console").str(),
+            UnicodeText::FormatNumber(nRiftLevelToDisplay, TRUE, FNS_NORMAL, 0).str());
+        break;
+
+    case 75:
+        sTierNumber = LocalizedSprintf(StringListFetch("NephalemRift:TieredRiftLevelSelectionEntryTorment16Console").str(),
+            UnicodeText::FormatNumber(nRiftLevelToDisplay, TRUE, FNS_NORMAL, 0).str());
+        break;
+
     default:
         sTierNumber = LocalizedSprintf(StringListFetch("ConsoleRifts:p_ConsoleTieredRiftLevelSelectEntry").str(),
             UnicodeText::FormatNumber(nRiftLevelToDisplay, TRUE, FNS_NORMAL, 0).str());
@@ -743,8 +760,7 @@ void UIConsoleRiftEntry::OnUpdate(const UIID & id)
             else
             {
 
-                int32 nTotalKeys;
-                NephalemRift::GetKeyForGreaterRift(ptPlayer, nTotalKeys);
+                int32 nTotalKeys = sub_710051abb0(ptPlayer);
                 if (nTotalKeys > 0)
                 {
                     UI_GetTextFromID(UITEXT_RIFT_ENTRY_RIGHT_GRIFT_KEYSTONES_AVAILABLE).SetActive(TRUE);
@@ -1286,13 +1302,9 @@ static void sConfirmSelection()
 
 
 
-        IntDataMessage tMessage;
-        tMessage.nData = sgptRiftEntryGlobals->nSelectedRiftLevel;
-
-        if (sgptRiftEntryGlobals->nSelectedRiftLevel != -1 && sgptRiftEntryGlobals->bEmpower)
-        {
-            tMessage.nData |= 0x40000000;
-        }
+        RiftStartAcceptedMessage tMessage;
+        tMessage.unk_08 = sgptRiftEntryGlobals->nSelectedRiftLevel;
+        tMessage.unk_0c = sgptRiftEntryGlobals->bEmpower && tMessage.unk_08 != -1;
 
         MessageSendToServer(CMSG_RIFT_START_ACCEPTED, &tMessage, sizeof(tMessage), ptPlayer);
 

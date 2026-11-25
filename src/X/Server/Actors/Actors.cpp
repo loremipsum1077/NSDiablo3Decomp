@@ -2154,7 +2154,7 @@ static void sApplyMonsterAttributesFromSpreadSheet(
 
 
 
-BOOL sub_71007d5020(SWorldID idSWorld);  // unnamed 2.7.7 function (0x71007d5020)
+extern "C" BOOL sub_71007d5020(SWorldID idSWorld);  // unnamed 2.7.7 function (0x71007d5020)
 void ActorGetMonsterHPData(SNO snoMonster, int32 nLevel, MonsterRarity eMonsterRarity, float & flHP, float & flHPDelta, const BOOL bAvenger, const BOOL bIsTieredLootRunMonster, const BOOL bIsSetDungeon, const BOOL bUnknown9)
 {
 

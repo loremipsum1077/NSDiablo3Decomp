@@ -4486,6 +4486,8 @@ void PlayerInventoryIterateLoadoutEquipmentSlots(
 
 
 
+extern "C" BOOL sub_71004f8950(GBID gbidItem);  // Items.cpp
+
 static BOOL sPlayerLoadoutItemUpdateSockets(const InventoryLocation & tInvLoc, void * pCallBackData)
 {
     LoadoutItemData * ptLoadoutItem = (LoadoutItemData *)pCallBackData;
@@ -4495,6 +4497,8 @@ static BOOL sPlayerLoadoutItemUpdateSockets(const InventoryLocation & tInvLoc, v
     {
         ptLoadoutItem->gbidSockets[ptLoadoutItem->nSocketsCount] = ptACDItem->hGB.gbid;
         ptLoadoutItem->nSocketsCount++;
+        if (sub_71004f8950(ptACDItem->hGB.gbid) && GameActiveGameCommonDataIsServer())
+            ptLoadoutItem->uSoulShardIdLow = ItemGenerateConsoleEquipmentManagerID(*ptACDItem);
     }
 
     return TRUE;

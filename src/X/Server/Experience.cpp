@@ -42,7 +42,7 @@ BOOL LootDropLootForEligiblePlayers(ActorCommonData & tACDLootee, PlayerList & l
 BOOL sExperienceGrantToACD(ActorCommonData & tACD, const uint64 nExp, BOOL bNotifyClient, BOOL bApplyRestXPBonus);
 // 0x71004b8ae0 (unnamed, 100 bytes, in the ActorCommonData accessor range): takes the player ACD in x0
 // and returns a BOOL; when it holds, rest XP is refilled to the XP still needed for the level.
-BOOL sub_71004b8ae0(const ActorCommonData & tACD);
+extern "C" BOOL sub_71004b8ae0(const ActorCommonData * ptACD);
 void SHirelingLevelUp(ActorCommonData & tACDHireling, int32 nLevel);  // X/Server/SHireling.cpp:525
 uint32 PlayerGetPlayedSeconds(const Player & tPlayer);  // X/Common/Player.cpp:3593
 PlayerClass PlayerGetPlayerClass(const ACDID idACD);  // X/Common/Player.cpp:2292
@@ -644,7 +644,7 @@ BOOL sExperienceGrantToACD(
             sExperienceGrantToACD(tACD, nRestXPToGrant, bNotifyClient, FALSE);
 
             // 2.7.7: see GrantRestExperience; sub_71004b8ae0 refills rest XP to the full level.
-            if (sub_71004b8ae0(tACD))
+            if (sub_71004b8ae0(&tACD))
             {
                 tACD.SetRestExperience(tACD.ShouldUseAltLevels() ? tACD.GetAltExperienceNext() : tACD.GetExperienceNext());
             }
@@ -654,7 +654,7 @@ BOOL sExperienceGrantToACD(
                 tACD.SetRestExperience(nCurrentRestXP);
             }
         }
-        else if (nCurrentRestXP > 0 && sub_71004b8ae0(tACD))
+        else if (nCurrentRestXP > 0 && sub_71004b8ae0(&tACD))
         {
             tACD.SetRestExperience(tACD.ShouldUseAltLevels() ? tACD.GetAltExperienceNext() : tACD.GetExperienceNext());
         }
@@ -844,7 +844,7 @@ void GrantRestExperience(ActorCommonData & tACDPlayer)
         uint64 nRestXP = Math::Min(nNewRestXP, nRestXPCap);
 
         // 2.7.7: when sub_71004b8ae0 holds, rest XP is set to the full XP still needed for the level.
-        if (sub_71004b8ae0(tACDPlayer))
+        if (sub_71004b8ae0(&tACDPlayer))
             nRestXP = tACDPlayer.ShouldUseAltLevels() ? tACDPlayer.GetAltExperienceNext() : tACDPlayer.GetExperienceNext();
 
         tACDPlayer.SetRestExperience(nRestXP);

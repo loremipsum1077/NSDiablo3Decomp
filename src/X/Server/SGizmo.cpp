@@ -3551,3 +3551,21 @@ void SGizmoAddStaticGizmoPing(ActorCommonData & tACDGizmo)
         Minimap::AddStaticGizmoMarker(tACDGizmo);
     }
 }
+
+extern "C" void sub_71007d4890(TimerID, DataID, void *);
+extern "C" void sub_71007d4db0(TimerID, DataID, void *);
+
+// NON_MATCHING: Clang schedules the indexed owner load and tick conversion differently after SGameGlobalsGet.
+extern "C" void sub_71007d4840(uint32 nIndex, float flSeconds)
+{
+    uint32 dwDelay = (int32)flSeconds * 60;
+    TimerRegister(SGameGlobalsGet().unk_2128[nIndex], TIMER_OWNER_ACD, dwDelay,
+                  reinterpret_cast<void *>(static_cast<uintptr_t>(nIndex)), sub_71007d4890);
+}
+
+// NON_MATCHING: Clang schedules the tick calculation and callback address differently before the TimerRegister tail call.
+extern "C" void sub_71007d4d70(float flSeconds)
+{
+    uint32 dwDelay = (int32)flSeconds * 60;
+    TimerRegister(SGameGlobalsGet().unk_2124, TIMER_OWNER_ACD, dwDelay, NULL, sub_71007d4db0);
+}

@@ -137,7 +137,7 @@ int32 GetSelectedLoadout();
 bool LoadoutCanFindItem(ACDID idACDItem);
 BOOL LoadoutCanEquipItemInSlot(const Player & tPlayer, int32 nLoadoutIndex, InventorySlotType eSlot);
 void UpdateLoadoutPreview(const Player & tPlayer, const LoadoutSavedData & tLoadout, UIRActor & tRActor, bool bUnused);
-void AssignLoadoutItemSocketables(ACDID * arLoadoutEquipmentSockets, int32 & nLoadoutEquipmentSocketsCount, blz::unordered_map<ACDID, int> & arConsumedSocketables, const LoadoutItemData & tLoadoutItem, const XPooledDataIDList & listACDIDSocketables);
+void AssignLoadoutItemSocketables(ACDID * arLoadoutEquipmentSockets, int32 & nLoadoutEquipmentSocketsCount, blz::unordered_map<ACDID, int> & arConsumedSocketables, const LoadoutItemData & tLoadoutItem, XPooledDataIDList & listACDIDSocketables);
 }  // namespace UIEquipmentManager
 // X/Client/UserInterface/Interface/UISkillsCommon.cpp
 namespace UISkills {

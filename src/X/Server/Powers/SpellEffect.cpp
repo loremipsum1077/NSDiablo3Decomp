@@ -16678,7 +16678,7 @@ void sSpellEffect_Console_Teleport(const PowerID idPower, void *)
 
 
 BOOL sub_71007d50c0(SNO snoWorld);  // unnamed 2.7.7 function (0x71007d50c0)
-BOOL sub_71007d5160();  // unnamed 2.7.7 function (0x71007d5160)
+extern "C" BOOL sub_71007d5160();  // unnamed 2.7.7 function (0x71007d5160)
 // NON_MATCHING: 404 vs 412 bytes; the original compares snoWorld and the two realm SNOs from
 // registers although their addresses go to SWorldFindBySNO, ours reloads them.
 BOOL sDeathPortalDestinationCanCreateWorld(SNO snoPortal, BOOL * bWorldExists)

@@ -35,7 +35,7 @@ RActorID UI_CreateHeroUIRActor(const SNO snoActor, const SNO snoIrradianceTex, c
 typedef int32 AttachmentID; AttachmentID RActorAttachExistingRActor(const RActorID idRActorMain, const RActorID idRActorAttachment, HardpointHash szHardpointName);  /* RActors.cpp:2348 */ void VisualInventoryClearAttachments(RActor * ptRActor); void VisualInventoryApply(RActor * ptRActor, VisualInventory & tVisualInventory, const VisualInventoryType eVisualInventoryType, const PlayerClass ePlayerClass, const BOOL fFemale);  // X/Client/CVisualInventory.cpp
 BOOL ItemMeetsOwnerClassRestrictions(const GBID gbidItem, const PlayerClass ePlayerClass, BOOL bCheckLegendaryClassDropWeight);  /* Items.cpp:1883 */ void ACDGetItemEffectTypeAndLevel(const ActorCommonData & tACD, ItemEffectType & eItemEffectType, int32 & nEffectLevel, const BOOL bWantOverrides, const BOOL bForTooltip);  // ActorCommonData.cpp:877
 namespace UIEquipmentManager {
-bool LoadoutCanFindItem(ACDID idACDItem); void AssignLoadoutItemSocketables(ACDID * arLoadoutEquipmentSockets, int32 & nLoadoutEquipmentSocketsCount, ConsumedSocketablesMap & arConsumedSocketables, const LoadoutItemData & tLoadoutItem, const XPooledDataIDList & listACDIDSocketables); void InitializeForGame(); void DisposeForGame(); int32 GetSelectedLoadout(); void SetSelectedLoadout(int32 nSelectedLoadout);
+bool LoadoutCanFindItem(ACDID idACDItem); void AssignLoadoutItemSocketables(ACDID * arLoadoutEquipmentSockets, int32 & nLoadoutEquipmentSocketsCount, ConsumedSocketablesMap & arConsumedSocketables, const LoadoutItemData & tLoadoutItem, XPooledDataIDList & listACDIDSocketables); void InitializeForGame(); void DisposeForGame(); int32 GetSelectedLoadout(); void SetSelectedLoadout(int32 nSelectedLoadout);
 void EquipLoadoutInternal(const Player * ptPlayer); void SaveLoadoutInternal(BOOL bSuccessful, CRefString sInput, Player * ptPlayer); void RenameLoadoutInternal(BOOL bSuccessful, CRefString sInput, Player * ptPlayer); BOOL LoadoutGetLoadoutEquipError(const Player & tPlayer, int32 nLoadoutIndex, CRefString & sError, BOOL bDetailedError); BOOL LoadoutCanEquipItemInSlot(const Player & tPlayer, int32 nLoadoutIndex, InventorySlotType eSlot); void PromptForLoadoutName(const Player & tPlayer, CRefString sDialogTitle, CRefString sMessage, UITextInputPrompt::DialogCallback pfnCallback);
 void ShowErrorMsg(const Player * ptPlayer, CRefString sMessage);  /* UIConsoleEquipmentManager.cpp */ void UpdateLoadoutPreview(const Player & tPlayer, const LoadoutSavedData & tLoadout, UIRActor & tRActor, bool bShowWaypoint);
 }
@@ -89,11 +89,14 @@ bool UIEquipmentManager::LoadoutCanFindItem(ACDID idACDItem)
 
 
 
+extern "C" BOOL sub_71004f8950(GBID gbidItem);
+extern "C" void sub_71005285b0(const LoadoutItemData & tLoadoutItem, XPooledDataIDList & listACDIDSocketables);
+
 void UIEquipmentManager::AssignLoadoutItemSocketables(ACDID * arLoadoutEquipmentSockets,
     int32 & nLoadoutEquipmentSocketsCount,
     ConsumedSocketablesMap & arConsumedSocketables,
     const LoadoutItemData & tLoadoutItem,
-    const XPooledDataIDList & listACDIDSocketables)
+    XPooledDataIDList & listACDIDSocketables)
 
 {
     if (!LoadoutCanFindItem(ACDFromANN(tLoadoutItem.annItem)))
@@ -104,6 +107,9 @@ void UIEquipmentManager::AssignLoadoutItemSocketables(ACDID * arLoadoutEquipment
     for (int32 nSocket = 0; nSocket < tLoadoutItem.nSocketsCount; nSocket++)
     {
         GBID gbidSocketable = tLoadoutItem.gbidSockets[nSocket];
+
+        if (sub_71004f8950(gbidSocketable))
+            sub_71005285b0(tLoadoutItem, listACDIDSocketables);
 
         POS posSocketables = listACDIDSocketables.GetHeadPosition();
         while (posSocketables)

@@ -11766,15 +11766,18 @@ RActorIDListPooled & RActorGetMainList()
 BOOL RActorIsHostile(const RActor * ptRActor)
 {
     RActorID idRActorTopmost = RActorGetTopmostOwner(ptRActor->id, TRUE, FALSE);
+    ActorCommonData * ptACD;
     if (idRActorTopmost != RACTORID_INVALID)
     {
-        const RActor * ptRActorTopMost = RActorTryToGet(idRActorTopmost);
-        ptRActor = ptRActorTopMost;
+        const RActor * ptOwner = RActorTryToGet(idRActorTopmost);
+        if (!ptOwner)
+            return FALSE;
+        ptACD = ACDTryToGet(ptOwner->idACD);
     }
-    if (!ptRActor)
-        return FALSE;
-
-    ActorCommonData * ptACD = ACDTryToGet(ptRActor->idACD);
+    else
+    {
+        ptACD = ACDTryToGet(ptRActor->idACD);
+    }
     if (!ptACD)
         return FALSE;
 
@@ -11786,7 +11789,9 @@ BOOL RActorIsHostile(const RActor * ptRActor)
 
 
 
-    if (ptACD->IsNecroCorpse() || ptACD->IsDueling())
+    if (ptACD->IsNecroCorpse())
+        return TRUE;
+    if (ptACD->IsDueling())
         return TRUE;
 
 
@@ -11820,21 +11825,19 @@ BOOL RActorIsHostile(const RActor * ptRActor)
 BOOL RActorIsNecroCorpse(const RActor * ptRActor)
 {
     RActorID idRActorTopmost = RActorGetTopmostOwner(ptRActor->id, TRUE, FALSE);
+    ActorCommonData * ptACD;
     if (idRActorTopmost != RACTORID_INVALID)
     {
-        const RActor * ptRActorTopMost = RActorTryToGet(idRActorTopmost);
-        ptRActor = ptRActorTopMost;
+        const RActor * ptOwner = RActorTryToGet(idRActorTopmost);
+        if (!ptOwner)
+            return FALSE;
+        ptACD = ACDTryToGet(ptOwner->idACD);
     }
-    if (!ptRActor)
-        return FALSE;
-
-
-
-    ActorCommonData * ptACD = ACDTryToGet(ptRActor->idACD);
-    if (ptACD)
-        return ptACD->IsNecroCorpse();
-
-    return FALSE;
+    else
+    {
+        ptACD = ACDTryToGet(ptRActor->idACD);
+    }
+    return ptACD ? ptACD->IsNecroCorpse() : FALSE;
 }
 
 
@@ -14142,7 +14145,7 @@ void RActorComponentsSetSlot(
 
 
 
-                        SubObjectAppearance & tAppearance = AppearanceGetSubObjectAppearance(pdefAppearance, nSubObjectLookToUse, i, eGeoSetType);
+                        SubObjectAppearance & tAppearance = AppearanceGetSubObjectAppearance(pdefAppearance, tSubObjectState.nSubObjectLook, i, eGeoSetType);
                         if (tAppearance.tCompositeUberMaterial.snoShaderMap != SNO_NONE)
                         {
                             ScopedShaderMapDefinitionLockR pdefShaderMap(tAppearance.tCompositeUberMaterial.snoShaderMap);

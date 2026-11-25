@@ -3789,7 +3789,7 @@ int32 ItemGetLevelRequirement(const ItemDefinition * ptItemDef, BOOL bCrafted)
 
 
 
-// NON_MATCHING: 628 bytes both, 2 instructions differ: the original selects a folded constant 61 (mov #0x3d) at 3839 where ours computes override - 3 (sub); writing the constant 61 instead (ternary or if) lets clang if-convert the > 0 test (5 differ).
+// NON_MATCHING: At +0x104 the target compares against 64 and selects the constant 61. Clang emits override - 3, or folds the positive-override branch into another select when given the constant.
 int32 ItemGetLevelRequirement(
     const GBID gbidItem,
     const ActorCommonData * ptACDItem,
@@ -9248,34 +9248,37 @@ GameError IsSocketAddable(const ActorCommonData & tACDItemTarget, const Attrib e
         return GAMEERROR_ITEMUSE_NOT_ON_UNIDENTIFIED_ITEMS;
     if (!tACDItemTarget.IsItem() || ItemGetMaxNumberOfSockets(tACDItemTarget) == 0)
         return GAMEERROR_IARESULT_CANNOT_SOCKET;
-    BOOL bCorrectItemType = FALSE;
     switch (eAttribAddSocketsType)
     {
     case ATTRIBUTE_ADD_SOCKETS_TYPE_WEAPON:
-        bCorrectItemType = ACDInventoryItemAllowedInThisSlotType(tACDItemTarget.hGB.gbid, SLOT_PLAYER_LEFT_HAND);
+        if (!ACDInventoryItemAllowedInThisSlotType(tACDItemTarget.hGB.gbid, SLOT_PLAYER_LEFT_HAND))
+            return GAMEERROR_IARESULT_CANNOT_ADD_SOCKETS_WITH_THIS_ITEM;
         break;
     case ATTRIBUTE_ADD_SOCKETS_TYPE_OFFHAND:
-        if (ACDInventoryItemAllowedInThisSlotType(tACDItemTarget.hGB.gbid, SLOT_PLAYER_RIGHT_HAND))
-            bCorrectItemType = ItemHasLabel(tACDItemTarget.hGB.gbid, ITL_OFFHAND);
+        if (!ACDInventoryItemAllowedInThisSlotType(tACDItemTarget.hGB.gbid, SLOT_PLAYER_RIGHT_HAND) || !ItemHasLabel(tACDItemTarget.hGB.gbid, ITL_OFFHAND))
+            return GAMEERROR_IARESULT_CANNOT_ADD_SOCKETS_WITH_THIS_ITEM;
         break;
     case ATTRIBUTE_ADD_SOCKETS_TYPE_LEGS:
-        bCorrectItemType = ACDInventoryItemAllowedInThisSlotType(tACDItemTarget.hGB.gbid, SLOT_PLAYER_LEGS);
+        if (!ACDInventoryItemAllowedInThisSlotType(tACDItemTarget.hGB.gbid, SLOT_PLAYER_LEGS))
+            return GAMEERROR_IARESULT_CANNOT_ADD_SOCKETS_WITH_THIS_ITEM;
         break;
     case ATTRIBUTE_ADD_SOCKETS_TYPE_TORSO:
-        bCorrectItemType = ACDInventoryItemAllowedInThisSlotType(tACDItemTarget.hGB.gbid, SLOT_PLAYER_TORSO);
+        if (!ACDInventoryItemAllowedInThisSlotType(tACDItemTarget.hGB.gbid, SLOT_PLAYER_TORSO))
+            return GAMEERROR_IARESULT_CANNOT_ADD_SOCKETS_WITH_THIS_ITEM;
         break;
     case ATTRIBUTE_ADD_SOCKETS_TYPE_HEAD:
-        bCorrectItemType = ACDInventoryItemAllowedInThisSlotType(tACDItemTarget.hGB.gbid, SLOT_PLAYER_HEAD);
+        if (!ACDInventoryItemAllowedInThisSlotType(tACDItemTarget.hGB.gbid, SLOT_PLAYER_HEAD))
+            return GAMEERROR_IARESULT_CANNOT_ADD_SOCKETS_WITH_THIS_ITEM;
         break;
     case ATTRIBUTE_ADD_SOCKETS_TYPE_JEWELRY:
-        if (ACDInventoryItemAllowedInThisSlotType(tACDItemTarget.hGB.gbid, SLOT_PLAYER_RIGHT_FINGER) ||
-            ACDInventoryItemAllowedInThisSlotType(tACDItemTarget.hGB.gbid, SLOT_PLAYER_LEFT_FINGER) ||
-            ACDInventoryItemAllowedInThisSlotType(tACDItemTarget.hGB.gbid, SLOT_PLAYER_NECK))
-            bCorrectItemType = TRUE;
+        if (!ACDInventoryItemAllowedInThisSlotType(tACDItemTarget.hGB.gbid, SLOT_PLAYER_RIGHT_FINGER) &&
+            !ACDInventoryItemAllowedInThisSlotType(tACDItemTarget.hGB.gbid, SLOT_PLAYER_LEFT_FINGER) &&
+            !ACDInventoryItemAllowedInThisSlotType(tACDItemTarget.hGB.gbid, SLOT_PLAYER_NECK))
+            return GAMEERROR_IARESULT_CANNOT_ADD_SOCKETS_WITH_THIS_ITEM;
         break;
-    }
-    if (!bCorrectItemType)
+    default:
         return GAMEERROR_IARESULT_CANNOT_ADD_SOCKETS_WITH_THIS_ITEM;
+    }
     if (ItemHasSockets(tACDItemTarget))
         return GAMEERROR_IARESULT_ALREADY_SOCKETED;
     return GAMEERROR_NONE;
@@ -9310,22 +9313,21 @@ GameError IsSocketAddable(const ActorCommonData & tACDItemTarget, const Attrib e
 
 GameError IsSocketAddable(const ActorCommonData & tACDItemTarget, const ActorCommonData & tACDItemToUse)
 {
-    Attrib eAttribAddSocketsType;
     if (tACDItemToUse.AttributesGetInt(ATTRIBUTE_ADD_SOCKETS_TYPE_WEAPON))
-        eAttribAddSocketsType = ATTRIBUTE_ADD_SOCKETS_TYPE_WEAPON;
+        return IsSocketAddable(tACDItemTarget, ATTRIBUTE_ADD_SOCKETS_TYPE_WEAPON);
     else if (tACDItemToUse.AttributesGetInt(ATTRIBUTE_ADD_SOCKETS_TYPE_OFFHAND))
-        eAttribAddSocketsType = ATTRIBUTE_ADD_SOCKETS_TYPE_OFFHAND;
+        return IsSocketAddable(tACDItemTarget, ATTRIBUTE_ADD_SOCKETS_TYPE_OFFHAND);
     else if (tACDItemToUse.AttributesGetInt(ATTRIBUTE_ADD_SOCKETS_TYPE_TORSO))
-        eAttribAddSocketsType = ATTRIBUTE_ADD_SOCKETS_TYPE_TORSO;
+        return IsSocketAddable(tACDItemTarget, ATTRIBUTE_ADD_SOCKETS_TYPE_TORSO);
     else if (tACDItemToUse.AttributesGetInt(ATTRIBUTE_ADD_SOCKETS_TYPE_HEAD))
-        eAttribAddSocketsType = ATTRIBUTE_ADD_SOCKETS_TYPE_HEAD;
+        return IsSocketAddable(tACDItemTarget, ATTRIBUTE_ADD_SOCKETS_TYPE_HEAD);
     else if (tACDItemToUse.AttributesGetInt(ATTRIBUTE_ADD_SOCKETS_TYPE_LEGS))
-        eAttribAddSocketsType = ATTRIBUTE_ADD_SOCKETS_TYPE_LEGS;
+        return IsSocketAddable(tACDItemTarget, ATTRIBUTE_ADD_SOCKETS_TYPE_LEGS);
     else if (tACDItemToUse.AttributesGetInt(ATTRIBUTE_ADD_SOCKETS_TYPE_JEWELRY))
-        eAttribAddSocketsType = ATTRIBUTE_ADD_SOCKETS_TYPE_JEWELRY;
+        return IsSocketAddable(tACDItemTarget, ATTRIBUTE_ADD_SOCKETS_TYPE_JEWELRY);
     else
         return GAMEERROR_IARESULT_CANNOT_ADD_SOCKETS_WITH_THIS_ITEM;
-    return IsSocketAddable(tACDItemTarget, eAttribAddSocketsType);
+
 }
 
 
@@ -13960,6 +13962,25 @@ extern "C" BOOL sub_710050e800(GBID gbidItem)
     return (ptItem->dwFlags >> ITEM_UNK_26) & 1;
 }
 
+extern "C" BOOL sub_71004f8890(const ActorCommonData & tACDItem)
+{
+    return tACDItem.hGB.eType == GB_ITEMS && tACDItem.AttributesGetInt(ATTRIBUTE_SOCKETS) == 0;
+}
+
+extern "C" BOOL sub_71004f8950(GBID gbidItem)
+{
+    ScopedItemDefinitionLockR ptItem(gbidItem);
+    return (ptItem->dwFlags >> ITEM_UNK_30) & 1;
+}
+
+extern "C" BOOL sub_71004f89b0(const ActorCommonData & tACDItem)
+{
+    if (tACDItem.hGB.eType != GB_ITEMS)
+        return FALSE;
+    ScopedItemDefinitionLockR ptItem(tACDItem.hGB.gbid);
+    return ptItem->unk_24 & 1;
+}
+
 extern "C" BOOL sub_71004f88d0(const ActorCommonData * ptACDItem)
 {
     if (!ptACDItem || ptACDItem->hGB.eType != GB_ITEMS)
@@ -14243,4 +14264,49 @@ CRefString ItemGetRareName(
     }
     return LanguageRules::BuildItemName(sAffixName, sName1, "", INC_RARE_ITEM, FALSE);
 
+}
+
+extern "C" BOOL sub_71004f7280(const ActorCommonData & tACDItem)
+{
+    if (!ItemIsLegendary(tACDItem.hGB.gbid) || !ItemIsEquippable(tACDItem) || ItemIsCrafted(tACDItem))
+        return FALSE;
+    int32 nItemLevel = ItemGetItemLevel(tACDItem.hGB.gbid);
+    int32 nOverride = tACDItem.AttributesGetInt(ATTRIBUTE_ITEM_LEGENDARY_ITEM_LEVEL_OVERRIDE);
+    return (nOverride ? nOverride : nItemLevel) >= 70;
+}
+
+extern "C" void sub_710050ea40(ActorCommonData & tACDItem, BOOL bSanctified)
+{
+    sSetItemAttribute(tACDItem, ATTRIBUTE_ITEM_WAS_SANCTIFIED, bSanctified);
+}
+
+extern "C" BOOL sub_710050eaa0(const ActorCommonData & tACDItem)
+{
+    if (!tACDItem.IsItem())
+        return FALSE;
+    return sub_710050eb20(tACDItem.hGB.gbid);
+}
+
+extern "C" BOOL sub_710050eb80(const ActorCommonData & tACDItem)
+{
+    if (!ItemIsLegendary(tACDItem.hGB.gbid) || !ItemIsEquippable(tACDItem) || ItemIsCrafted(tACDItem))
+        return FALSE;
+    int32 nItemLevel = ItemGetItemLevel(tACDItem.hGB.gbid);
+    int32 nOverride = tACDItem.AttributesGetInt(ATTRIBUTE_ITEM_LEGENDARY_ITEM_LEVEL_OVERRIDE);
+    return (nOverride ? nOverride : nItemLevel) >= 70;
+}
+
+extern "C" BOOL sub_710050ecb0(const ActorCommonData * ptACDItem)
+{
+    return ptACDItem && ptACDItem->AttributesGetInt(ATTRIBUTE_ITEM_WAS_PRIMALIZED) != 0;
+}
+
+extern "C" BOOL sub_710050ece0(const ActorCommonData & tACDItem)
+{
+    return tACDItem.AttributesGetInt(ATTRIBUTE_ITEM_WAS_PRIMALIZED) != 0;
+}
+
+extern "C" void sub_710050ed00(ActorCommonData & tACDItem, BOOL bPrimalized)
+{
+    sSetItemAttribute(tACDItem, ATTRIBUTE_ITEM_WAS_PRIMALIZED, bPrimalized);
 }

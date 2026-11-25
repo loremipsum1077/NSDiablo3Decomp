@@ -220,6 +220,11 @@ BOOL NPCIsEquipmentManagerVendor(const ActorCommonData & tACD)
 
 
 
+extern "C" BOOL sub_710051b9d0(const ActorCommonData & tACD)
+{
+    return ActorDefinitionGetTagMapValueInt(0x109a3, tACD.snoActor);
+}
+
 BOOL NPCCanIdentify(const ActorCommonData & tACD)
 {
 

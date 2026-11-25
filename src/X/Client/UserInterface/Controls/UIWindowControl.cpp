@@ -511,6 +511,8 @@ void WindowCreationParams::Load(const SNO snoUI, const UIControlDataExt * pContr
         pfnConsoleButtonDown[i] = UIConsoleFunction_Lookup(pControlData->GetAttributeValue(sgtConsoleButtonAttributes[i]));
         pfnConsoleButtonHeld[i] = UIConsoleFunction_Lookup(pControlData->GetAttributeValue(sgtConsoleButtonHeldAttributes[i]));
     }
+    if (pfnConsoleButtonDown[13] == UIConsoleFunction_Lookup("UIConsole_MainMenu_Accept"))
+        pfnConsoleButtonDown[13] = NULL;
     pfnLStickHandler = UIConsoleFunction_Lookup(pControlData->GetAttributeValue(ATT_LSTICKHANDLER));
     pfnRStickHandler = UIConsoleFunction_Lookup(pControlData->GetAttributeValue(ATT_RSTICKHANDLER));
 
@@ -572,11 +574,11 @@ void WindowCreationParams::Load(const SNO snoUI, const UIControlDataExt * pContr
             // The original loads the character zero-extended (ldrb), so the switch is on an unsigned value.
             switch ((uint8)szAnchorEdges[i])
             {
-            case 'B':
-                dwParentAnchorFlags |= (1 << PARENT_ANCHOR_BOTTOM_BIT);
-                break;
             case 'L':
                 dwParentAnchorFlags |= (1 << PARENT_ANCHOR_LEFT_BIT);
+                break;
+            case 'B':
+                dwParentAnchorFlags |= (1 << PARENT_ANCHOR_BOTTOM_BIT);
                 break;
             case 'T':
                 dwParentAnchorFlags |= (1 << PARENT_ANCHOR_TOP_BIT);
@@ -594,7 +596,7 @@ void WindowCreationParams::Load(const SNO snoUI, const UIControlDataExt * pContr
                 }
                 return;
             default:
-                DisplayInternalError(NULL, "", 736, ERROR_INTERNAL_FATAL);
+                DisplayInternalError(NULL, "", 847, ERROR_INTERNAL_FATAL);
                 ExitProgram(ERROR_INTERNAL_FATAL);
             }
         }
