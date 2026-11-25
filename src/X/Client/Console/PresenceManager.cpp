@@ -2564,7 +2564,7 @@ void PresenceFriend::ParsePresence(const bdUByte8 * abBuffer, uint32 uDataSize)
         // (2575)
         bdBitBufferRef ptBitBuffer = ::new bdBitBuffer(abBuffer, uDataSize * 8, true);
         uint32 uVersion;
-        bdBool bOk = ptBitBuffer->readUInt32(uVersion) && uVersion == 0x109;
+        bdBool bOk = ptBitBuffer->readUInt32(uVersion) && uVersion == 0x115;
         PartyConnectionInfo tConnectionInfo;
 
         // (2583)
@@ -3294,7 +3294,7 @@ void PresenceManagerInternal::UpdateUser()
 
                 // (3397)
                 ptPresenceBitBuffer = ::new bdBitBuffer(0, false);
-                ptPresenceBitBuffer->writeUInt32(0x109);
+                ptPresenceBitBuffer->writeUInt32(0x115);
                 ms_tConnectionInfo.Serialize(ptPresenceBitBuffer);
                 ms_tGamePresence.Serialize(*ptPresenceBitBuffer);
                 m_tUserPresence.Serialize(*ptPresenceBitBuffer);
