@@ -76,8 +76,8 @@ the 2.6.2 build does.
   lining up address computations, through GOT slots, in matched functions).
 - `tools/check` then promoted every `M` that matches. All-7.1.0 build: 20,222 O. Mixed
   build: 22,632 O. Mixed build with the mapping repairs below: 23,427 O. After the first
-  shared-cause fixes and the GlobalSNO renumbering: **23,786 O**, 8,134 M, 2,906 U, 2,175 L,
-  4 W (of 37,005 functions).
+  shared-cause fixes and the GlobalSNO renumbering: 23,786 O. After the protobuf
+  regeneration: **24,292 O**, 7,628 M, 2,906 U, 2,175 L, 4 W (of 37,005 functions).
 
 ### Mapping repairs (look-alike functions)
 
@@ -126,6 +126,46 @@ registrations of `sno_calls.inc` exactly.
 Result: **+301 O** (23,485 → 23,786), none lost. `generated-game-data/sno_calls.inc` and
 `gbid_rows.inc` still hold the 2.6.2 registrations, so `GlobalSNOListRefresh` and the GBID
 table do not match yet.
+
+## Protobuf bindings: `tools/bootstrap_protobuf.py`
+
+The `.pb.cc`/`.pb.h` files under `src/X/Common/Protobuf/` are generated from the game, so
+they stay ignored by git. Each checkout must generate them once:
+
+    python3 tools/bootstrap_protobuf.py             # writes the 2.7.7 bindings
+    python3 tools/bootstrap_protobuf.py --check     # 0 of 48 differ when up to date
+
+- `tools/game_descriptors.py` finds every function that calls
+  `DescriptorPool::InternalAddGeneratedFile(data, size)`, named or not, decodes the
+  ADRP/ADD and MOVZ/MOVK arguments, and reads each serialized FileDescriptorProto from
+  `main.elf`. No `.nss` is needed.
+- The descriptors are compiled with the pinned protoc 2.6.0 and adapted as
+  `bootstrap_game_data.py` does for 2.6.2 (`adapt()`, now with the 2.7.7 build-server path
+  in `#line`). `--version 2.6.2` reproduces the 2.6.2 bindings exactly.
+- A header keeps its 2.6.2 `layout/<Name>.inc` size checks only if its descriptor is
+  unchanged. 35 of 48 files changed. Ten messages grew, which changes the layout of the
+  game structs that embed them:
+
+  | Message | 2.6.2 | 2.7.7 |
+  |---|---|---|
+  | `Account::ConsolePartitionData` | 0x48 | 0x58 |
+  | `Account::DeliveredAchievementReward` | 0x20 | 0x28 |
+  | `GameMessage::AchievementsCriteriaUpdateConsole` | 0x30 | 0x38 |
+  | `Hero::Digest` | 0xa0 | 0xa8 |
+  | `Hero::LoadoutItem` | 0x30 | 0x38 |
+  | `Items::Generator` | 0xd8 | 0xf0 |
+  | `Leaderboard::Member` | 0x78 | 0x80 |
+  | `OnlineService::ContentHandle` | 0x30 | 0x38 |
+  | `Profile::HeroMiniProfile` | 0x38 | 0x40 |
+  | `Client::GameAccountSettings` | 0xe8 | 0xf8 |
+
+- Fixes needed to build: `InactiveItemMarker` is 0x1b8 (holds a `Generator`),
+  `PartyMember` 0x1d8 (holds a `Digest`), `PartyDisplayData` 0xdef0. Some `Digest_Flags_*`
+  values were renamed `*_DEPRECATED` (same values).
+- The mapping had put `Items::Generator::{Get,Set}CachedSize` on another message's
+  accessors (`_cached_size_` at 0xd4). They now sit at 0x60d4a0 and 0x619240 (offset 0xec).
+
+Result: **+506 O** (23,786 → 24,292), 489 of them protobuf functions; no function lost.
 
 ## Finding new code: `tools/string_anchors.py`
 

@@ -420,7 +420,7 @@ class LocalCommunicationsDataSource : public ConsoleListBoxDataSource { public: 
 
 
 
-struct PartyDisplayData {  // size 0xded0
+struct PartyDisplayData {  // size 0xdef0
     UIPartyDisplay::Console::PartyDataSource tPartyList;  // 0x00
     UIPartyDisplay::Console::OnlineFriendsDataSource tFriendList;  // 0x08
     UIPartyDisplay::Console::LocalCommunicationsDataSource tLocalCommList;  // 0x1318
@@ -428,18 +428,18 @@ struct PartyDisplayData {  // size 0xded0
     uint32 nNumPartyMembers;  // 0xd768
     uint32 nNumLocalPartyMembers;  // 0xd76c
     ::Console::Online::PartyMember arPartyMembers[4];  // 0xd770
-    UIUtils::Console::PartyVoiceChatStateListener * ptVoiceListener;  // 0xdeb0
-    BOOL bNamePlatesEnabled;  // 0xdeb8
-    int32 nFocusedNameplate;  // 0xdebc
-    EffectGroupID idHighlightEffect;  // 0xdec0
+    UIUtils::Console::PartyVoiceChatStateListener * ptVoiceListener;  // 0xded0
+    BOOL bNamePlatesEnabled;  // 0xded8
+    int32 nFocusedNameplate;  // 0xdedc
+    EffectGroupID idHighlightEffect;  // 0xdee0
 
 
 
 
 
 
-    int32 nPlayerInfoPartyMember;  // 0xdec4
-    OnlineUserId tPlayerInfoFriendId;  // 0xdec8
+    int32 nPlayerInfoPartyMember;  // 0xdee4
+    OnlineUserId tPlayerInfoFriendId;  // 0xdee8
 
     PartyDisplayData()
         : nNumPartyMembers(0),
@@ -458,7 +458,7 @@ struct PartyDisplayData {  // size 0xded0
     ~PartyDisplayData()
     {
     }
-};  static_assert(sizeof(PartyDisplayData) == 0xded0, "PartyDisplayData");
+};  static_assert(sizeof(PartyDisplayData) == 0xdef0, "PartyDisplayData");
 PartyDisplayData sgtPartyDisplayData;
 
 

@@ -7038,9 +7038,9 @@ void SGameAdvanceActs()
         for (Player * ptPlayer = PlayerGetFirstInGame(); ptPlayer; ptPlayer = PlayerGetNextInGame(ptPlayer))
         {
             BOOL bHardcore = ptPlayer->tHeroStateData.uPlayerFlags & (1 << PLAYERFLAG_HARDCORE);
-            if (!bHardcore && !(ptPlayer->tAccount.uDigestFlags & (1 << D3::Account::Digest_Flags_MASTER_DIFFICULTY_UNLOCKED)))
+            if (!bHardcore && !(ptPlayer->tAccount.uDigestFlags & (1 << D3::Account::Digest_Flags_MASTER_DIFFICULTY_UNLOCKED_DEPRECATED)))
             {
-                ptPlayer->tAccount.uDigestFlags |= (1 << D3::Account::Digest_Flags_MASTER_DIFFICULTY_UNLOCKED);
+                ptPlayer->tAccount.uDigestFlags |= (1 << D3::Account::Digest_Flags_MASTER_DIFFICULTY_UNLOCKED_DEPRECATED);
                 SPlayerAddToSaveList(*ptPlayer, 0, PlayerSaveReason_AcctFlags, PLAYER_SAVE_MODE_END_OF_FRAME);
                 DWordDataMessage tMessage;
                 tMessage.dwData = ptPlayer->tAccount.uDigestFlags;
@@ -7051,9 +7051,9 @@ void SGameAdvanceActs()
 
 
 
-            else if (bHardcore && !(ptPlayer->tAccount.uDigestFlags & (1 << D3::Account::Digest_Flags_HARDCORE_MASTER_DIFFICULTY_UNLOCKED)))
+            else if (bHardcore && !(ptPlayer->tAccount.uDigestFlags & (1 << D3::Account::Digest_Flags_HARDCORE_MASTER_DIFFICULTY_UNLOCKED_DEPRECATED)))
             {
-                ptPlayer->tAccount.uDigestFlags |= (1 << D3::Account::Digest_Flags_HARDCORE_MASTER_DIFFICULTY_UNLOCKED);
+                ptPlayer->tAccount.uDigestFlags |= (1 << D3::Account::Digest_Flags_HARDCORE_MASTER_DIFFICULTY_UNLOCKED_DEPRECATED);
                 SPlayerAddToSaveList(*ptPlayer, 0, PlayerSaveReason_AcctFlags, PLAYER_SAVE_MODE_END_OF_FRAME);
                 DWordDataMessage tMessage;
                 tMessage.dwData = ptPlayer->tAccount.uDigestFlags;

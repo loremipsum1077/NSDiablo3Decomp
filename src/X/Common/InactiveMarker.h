@@ -143,7 +143,7 @@ struct InactiveMonsterMarker : public InactiveBaseMarker {  // size 0xd8
 };
 static_assert(sizeof(InactiveMonsterMarker) == 0xd8, "InactiveMonsterMarker");
 
-struct InactiveItemMarker {  // size 0x1a0
+struct InactiveItemMarker {  // size 0x1b8
     OnlineService::ItemId tItemId;  // 0x00
     DataID tUpdateId;  // 0x10
     Vector3D wp;  // 0x14
@@ -153,24 +153,24 @@ struct InactiveItemMarker {  // size 0x1a0
     uint32 uUnlockTime;  // 0x38
     PingID idPing;  // 0x3c
     D3::Items::Generator tItemGenerator;  // 0x40
-    int32 nGoldAmount;  // 0x118
-    uint8 nSocketedItemCount;  // 0x11c
-    uint8 bSoulbound : 1;  // 0x11d
-    uint8 bPersisted : 1;  // 0x11d
-    uint8 bCheated : 1;  // 0x11d
-    int8 nPlayerOwner;  // 0x11e
-    uint8 nPad;  // 0x11f
-    InactiveItemMarker * arSocketedItems[3];  // 0x120
-    OnlineService::HeroId idAssignedHero;  // 0x138
-    uint32 dwSeasonCreated;  // 0x140
-    uint32 uTradeEndTime;  // 0x144
-    uint64 idTradablePlayers[4];  // 0x148
-    uint64 idSourcePlayer;  // 0x168
-    GameConnectionID idAssignedGameConnectionID;  // 0x170
-    uint64 idPlayerGiftRecipient;  // 0x178
-    char szPlayerName[32];  // 0x180
+    int32 nGoldAmount;  // 0x130
+    uint8 nSocketedItemCount;  // 0x134
+    uint8 bSoulbound : 1;  // 0x135
+    uint8 bPersisted : 1;  // 0x135
+    uint8 bCheated : 1;  // 0x135
+    int8 nPlayerOwner;  // 0x136
+    uint8 nPad;  // 0x137
+    InactiveItemMarker * arSocketedItems[3];  // 0x138
+    OnlineService::HeroId idAssignedHero;  // 0x150
+    uint32 dwSeasonCreated;  // 0x158
+    uint32 uTradeEndTime;  // 0x15c
+    uint64 idTradablePlayers[4];  // 0x160
+    uint64 idSourcePlayer;  // 0x180
+    GameConnectionID idAssignedGameConnectionID;  // 0x188
+    uint64 idPlayerGiftRecipient;  // 0x190
+    char szPlayerName[32];  // 0x198
 };
-static_assert(sizeof(InactiveItemMarker) == 0x1a0, "InactiveItemMarker");
+static_assert(sizeof(InactiveItemMarker) == 0x1b8, "InactiveItemMarker");
 
 typedef XListMemoryPool<InactiveItemMarker *> TInactiveItemMarkerListPool;
 

@@ -1435,28 +1435,28 @@ static void _AccountMigrate_107_108_ConvertHeroes(
     if (nHighestNormalLevel >= 60)
     {
         uint32 dwFlags = tWriteData.account_data().flags();
-        dwFlags |= (1u << D3::Account::Digest_Flags_MASTER_DIFFICULTY_UNLOCKED);
-        dwFlags |= (1u << D3::Account::Digest_Flags_TORMENT_DIFFICULTY_UNLOCKED);
+        dwFlags |= (1u << D3::Account::Digest_Flags_MASTER_DIFFICULTY_UNLOCKED_DEPRECATED);
+        dwFlags |= (1u << D3::Account::Digest_Flags_TORMENT_DIFFICULTY_UNLOCKED_DEPRECATED);
         tWriteData.mutable_account_data()->set_flags(dwFlags);
     }
     else if (bCompletedNormal)
     {
         uint32 dwFlags = tWriteData.account_data().flags();
-        dwFlags |= (1u << D3::Account::Digest_Flags_MASTER_DIFFICULTY_UNLOCKED);
+        dwFlags |= (1u << D3::Account::Digest_Flags_MASTER_DIFFICULTY_UNLOCKED_DEPRECATED);
         tWriteData.mutable_account_data()->set_flags(dwFlags);
     }
     // Inference: the same threshold independently enables hardcore difficulty flags.
     if (nHighestHardcoreLevel >= 60)
     {
         uint32 dwFlags = tWriteData.account_data().flags();
-        dwFlags |= (1u << D3::Account::Digest_Flags_HARDCORE_MASTER_DIFFICULTY_UNLOCKED);
-        dwFlags |= (1u << D3::Account::Digest_Flags_HARDCORE_TORMENT_DIFFICULTY_UNLOCKED);
+        dwFlags |= (1u << D3::Account::Digest_Flags_HARDCORE_MASTER_DIFFICULTY_UNLOCKED_DEPRECATED);
+        dwFlags |= (1u << D3::Account::Digest_Flags_HARDCORE_TORMENT_DIFFICULTY_UNLOCKED_DEPRECATED);
         tWriteData.mutable_account_data()->set_flags(dwFlags);
     }
     else if (bCompletedHardcore)
     {
         uint32 dwFlags = tWriteData.account_data().flags();
-        dwFlags |= (1u << D3::Account::Digest_Flags_HARDCORE_MASTER_DIFFICULTY_UNLOCKED);
+        dwFlags |= (1u << D3::Account::Digest_Flags_HARDCORE_MASTER_DIFFICULTY_UNLOCKED_DEPRECATED);
         tWriteData.mutable_account_data()->set_flags(dwFlags);
     }
 }

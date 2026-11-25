@@ -2957,16 +2957,16 @@ void SPlayerUnlockAdventureMode(
 
     BOOL bUnlocked = FALSE;
     if (!(tPlayer.tHeroStateData.uPlayerFlags & (1 << PLAYERFLAG_HARDCORE)) &&
-        !(tPlayer.tAccount.uDigestFlags & (1 << D3::Account::Digest_Flags_ADVENTURE_MODE_UNLOCKED)))
+        !(tPlayer.tAccount.uDigestFlags & (1 << D3::Account::Digest_Flags_ADVENTURE_MODE_UNLOCKED_DEPRECATED)))
     {
-        tPlayer.tAccount.uDigestFlags |= (1 << D3::Account::Digest_Flags_ADVENTURE_MODE_UNLOCKED);
+        tPlayer.tAccount.uDigestFlags |= (1 << D3::Account::Digest_Flags_ADVENTURE_MODE_UNLOCKED_DEPRECATED);
         SPlayerAddToSaveList(tPlayer, 0, PlayerSaveReason_Adventure, PLAYER_SAVE_MODE_END_OF_FRAME);
         bUnlocked = TRUE;
     }
     if ((tPlayer.tHeroStateData.uPlayerFlags & (1 << PLAYERFLAG_HARDCORE)) &&
-        !(tPlayer.tAccount.uDigestFlags & (1 << D3::Account::Digest_Flags_HARDCORE_ADVENTURE_MODE_UNLOCKED)))
+        !(tPlayer.tAccount.uDigestFlags & (1 << D3::Account::Digest_Flags_HARDCORE_ADVENTURE_MODE_UNLOCKED_DEPRECATED)))
     {
-        tPlayer.tAccount.uDigestFlags |= (1 << D3::Account::Digest_Flags_HARDCORE_ADVENTURE_MODE_UNLOCKED);
+        tPlayer.tAccount.uDigestFlags |= (1 << D3::Account::Digest_Flags_HARDCORE_ADVENTURE_MODE_UNLOCKED_DEPRECATED);
         SPlayerAddToSaveList(tPlayer, 0, PlayerSaveReason_Adventure, PLAYER_SAVE_MODE_END_OF_FRAME);
         bUnlocked = TRUE;
     }

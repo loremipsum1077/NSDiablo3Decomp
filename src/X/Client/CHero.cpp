@@ -1760,7 +1760,7 @@ void CHero::OnAdventureModeUnlocked(Player * ptPlayer)
     uint32 flags = tDigest->flags();
 
     BOOL bHardcore = ptPlayer->tHeroStateData.uPlayerFlags & 1;
-    flags |= bHardcore ? (1 << D3::Account::Digest_Flags_HARDCORE_ADVENTURE_MODE_UNLOCKED) : (1 << D3::Account::Digest_Flags_ADVENTURE_MODE_UNLOCKED);
+    flags |= bHardcore ? (1 << D3::Account::Digest_Flags_HARDCORE_ADVENTURE_MODE_UNLOCKED_DEPRECATED) : (1 << D3::Account::Digest_Flags_ADVENTURE_MODE_UNLOCKED_DEPRECATED);
     tDigest->set_flags(flags);
 }
 

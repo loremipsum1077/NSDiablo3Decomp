@@ -27,8 +27,14 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def adapt(path, text):
-    """Apply the checked Hydra ABI, original diagnostic lines and project layout checks."""
+SOURCE_DIR_2_6_2 = "D:/BuildServer/2/work/code/branches/2_6_2/X/Common/Protobuf/"
+
+
+def adapt(path, text, source_dir=SOURCE_DIR_2_6_2, layout_checks=True):
+    """Apply the checked Hydra ABI, original diagnostic lines and project layout checks.
+
+    source_dir is the build-server directory the #line directive names; layout_checks
+    appends layout/<Name>.inc (2.6.2 DWARF sizes) to the header."""
     text = re.sub(r'#include <(google/protobuf/[^>]+)>', rf'#include "{PROTO_INCLUDE}\1"', text)
     text = re.sub(r'(?:::)?std::(pair|string)\b', r'::blz::\1', text)
     if path.suffix == ".h":
@@ -44,12 +50,14 @@ def adapt(path, text):
         if path.name == "Hero.pb.h":
             marker = "// @@protoc_insertion_point(field_set_allocated:D3.Hero.Digest.original_hero_id)\n}"
             text = text.replace(marker, marker + "\n")
+        if not layout_checks:
+            return text
         checks = (BINDINGS / "layout" / (path.name.split(".")[0] + ".inc")).read_text()
         end = text.rindex("#endif")
         return text[:end] + "\n" + checks + "\n" + text[end:]
 
     lines = text.splitlines(keepends=True)
-    lines[2] = f'#line 4 "D:/BuildServer/2/work/code/branches/2_6_2/X/Common/Protobuf/{path.name}"\n'
+    lines[2] = f'#line 4 "{source_dir}{path.name}"\n'
     name = path.name.split(".")[0]
     check = next(i for i, line in enumerate(lines, 1) if "GOOGLE_CHECK(file != NULL)" in line) + 5
     if name == "Console":

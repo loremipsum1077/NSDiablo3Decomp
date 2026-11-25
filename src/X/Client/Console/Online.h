@@ -271,7 +271,7 @@ enum PartySwitchOnlineResult {
 PartyOnlineState PartyGetOnlineState();  // Online.cpp:4628
 PartySwitchOnlineResult PartyCanSwitchOnlineState(PartyOnlineState eState);  // Online.cpp:4659
 void PartySwitchPreferredOnlineState(PartyOnlineState eState);  // Online.cpp:4763
-struct PartyMember {  // size 0x1d0
+struct PartyMember {  // size 0x1d8
     PartyMember();
     uint8 idPlayer;  // 0x00
     OnlineUserId idOnlineUser;  // 0x08
@@ -282,10 +282,10 @@ struct PartyMember {  // size 0x1d0
     BOOL bIsInGame;  // 0x9c
     int32 nControllerIndex;  // 0xa0
     blz::optional<D3::Hero::Digest> tHeroDigest;  // 0xa8
-    blz::optional<D3::Account::Digest> tAccountDigest;  // 0x150
+    blz::optional<D3::Account::Digest> tAccountDigest;  // 0x158
     void Copy(Console::Online::PartyMember & tOther, BOOL bDigests) const;  // Online.h:685
 };
-static_assert(sizeof(PartyMember) == 0x1d0, "PartyMember");
+static_assert(sizeof(PartyMember) == 0x1d8, "PartyMember");
 
 // Online.h:673. The body is not in the DWARF; written from the copies inlined into
 // X/Client/CGame.cpp (sConnectedToGameServer), lines 674-682.

@@ -269,17 +269,17 @@ static void sUpdateAccountFlagsForNewLevel(Player * ptPlayer, int32 nLevel)
     {
         if (!(ptPlayer->tHeroStateData.uPlayerFlags & (1 << PLAYERFLAG_HARDCORE)))
         {
-            if (!(ptPlayer->tAccount.uDigestFlags & (1 << D3::Account::Digest_Flags_TORMENT_DIFFICULTY_UNLOCKED)))
+            if (!(ptPlayer->tAccount.uDigestFlags & (1 << D3::Account::Digest_Flags_TORMENT_DIFFICULTY_UNLOCKED_DEPRECATED)))
             {
-                ptPlayer->tAccount.uDigestFlags |= (1 << D3::Account::Digest_Flags_MASTER_DIFFICULTY_UNLOCKED) | (1 << D3::Account::Digest_Flags_TORMENT_DIFFICULTY_UNLOCKED);
+                ptPlayer->tAccount.uDigestFlags |= (1 << D3::Account::Digest_Flags_MASTER_DIFFICULTY_UNLOCKED_DEPRECATED) | (1 << D3::Account::Digest_Flags_TORMENT_DIFFICULTY_UNLOCKED_DEPRECATED);
                 bSendFlagsSyncMessage = TRUE;
             }
         }
 
 
-        else if (!(ptPlayer->tAccount.uDigestFlags & (1 << D3::Account::Digest_Flags_HARDCORE_TORMENT_DIFFICULTY_UNLOCKED)))
+        else if (!(ptPlayer->tAccount.uDigestFlags & (1 << D3::Account::Digest_Flags_HARDCORE_TORMENT_DIFFICULTY_UNLOCKED_DEPRECATED)))
         {
-            ptPlayer->tAccount.uDigestFlags |= (1 << D3::Account::Digest_Flags_HARDCORE_MASTER_DIFFICULTY_UNLOCKED) | (1 << D3::Account::Digest_Flags_HARDCORE_TORMENT_DIFFICULTY_UNLOCKED);
+            ptPlayer->tAccount.uDigestFlags |= (1 << D3::Account::Digest_Flags_HARDCORE_MASTER_DIFFICULTY_UNLOCKED_DEPRECATED) | (1 << D3::Account::Digest_Flags_HARDCORE_TORMENT_DIFFICULTY_UNLOCKED_DEPRECATED);
             bSendFlagsSyncMessage = TRUE;
         }
     }
