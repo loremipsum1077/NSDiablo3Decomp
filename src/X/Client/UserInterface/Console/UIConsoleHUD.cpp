@@ -138,7 +138,7 @@ private:
     UIID m_idTarget;  // 0x10
 };
 
-struct DisplayInfo {  // size 0x4d0
+struct DisplayInfo {  // size 0x4d8
     static const int32 SKILL_BUTTON_COUNT = 6;
     struct SkillButtonInfo {  // size 0x30
         InputButton eControllerButton;  // 0x00
@@ -266,18 +266,19 @@ LocalHUD()
 
         void FillDisplayInfo(const UIID & idRoot);
     };
-    struct OnlineHUD {  // size 0x58
+    struct OnlineHUD {  // size 0x60
         UIID idMain;  // 0x00
         UIID idNameRegion;  // 0x08
         UIID idPortrait;  // 0x10
-        UIID idHirelingPortrait;  // 0x18
-        UIID idHirelingHealthBar;  // 0x20
-        UIID idHirelingName;  // 0x28
-        UIID idLevel;  // 0x30
-        UIID idHealthBar;  // 0x38
-        UIID idLabelRegion;  // 0x40
-        UIID idLevelRegion;  // 0x48
-        uint32 nTimeLastSpoke;  // 0x50
+        UIID unk_18;  // 0x18: .OnlinePortraitFrame.CheatDeath
+        UIID idHirelingPortrait;  // 0x20
+        UIID idHirelingHealthBar;  // 0x28
+        UIID idHirelingName;  // 0x30
+        UIID idLevel;  // 0x38
+        UIID idHealthBar;  // 0x40
+        UIID idLabelRegion;  // 0x48
+        UIID idLevelRegion;  // 0x50
+        uint32 nTimeLastSpoke;  // 0x58
 
 
 
@@ -318,6 +319,12 @@ DisplayInfo()
     LocalHUD tLocal;  // 0x08
     OnlineHUD tOnline;  // 0x478
 };
+
+static_assert(sizeof(DisplayInfo::LocalHUD) == 0x470, "LocalHUD");
+static_assert(sizeof(DisplayInfo::OnlineHUD) == 0x60, "OnlineHUD");
+static_assert(__builtin_offsetof(DisplayInfo::OnlineHUD, unk_18) == 0x18, "OnlineHUD cheat-death control");
+static_assert(__builtin_offsetof(DisplayInfo::OnlineHUD, nTimeLastSpoke) == 0x58, "OnlineHUD timestamp");
+static_assert(sizeof(DisplayInfo) == 0x4d8, "DisplayInfo");
 
 struct BuffInfo {  // size 0x10
     SNO snoPower;  // 0x00
@@ -445,6 +452,7 @@ void DisplayInfo::OnlineHUD::FillDisplayInfo(const UIID & idRoot) {
     idMain = idRoot;
     idNameRegion = UIIDCreateFromParent(idRoot, ".Name");
     idPortrait = UIIDCreateFromParent(idRoot, ".OnlinePortraitFrame");
+    unk_18 = UIIDCreateFromParent(idPortrait, ".CheatDeath");
     idHirelingPortrait = UIIDCreateFromParent(idRoot, ".Portrait");
     idHirelingHealthBar = UIIDCreateFromParent(idRoot, ".FollowerHealth");
     idHirelingName = UIIDCreateFromParent(idRoot, ".FollowerName");
