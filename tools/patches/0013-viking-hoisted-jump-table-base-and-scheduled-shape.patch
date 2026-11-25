@@ -1,0 +1,266 @@
+diff --git a/viking/src/jump_tables.rs b/viking/src/jump_tables.rs
+index 6cfd080..4db4e05 100644
+--- a/viking/src/jump_tables.rs
++++ b/viking/src/jump_tables.rs
+@@ -181,33 +181,89 @@ struct Proof {
+ 
+ // Structural recognition is deliberately narrow. Other branch expressions remain
+ // unresolved, including absolute pointer loads and all tail-call hypotheses.
+-fn shape(code: &[u32], branch: usize) -> Option<(usize, usize)> {
++// The LDRSW/ADD/BR triple may be interleaved with up to four scheduled
++// instructions that neither branch nor write any of the three registers.
++fn neutral(word: u32, regs: &[usize]) -> bool {
++    // Reject any control flow (branch, exception and system classes).
++    if word & 0x1c00_0000 == 0x1400_0000 {
++        return false;
++    }
++    let rd = (word & 31) as usize;
++    let rn = ((word >> 5) & 31) as usize;
++    let rt2 = ((word >> 10) & 31) as usize;
++    let load_store = word & 0x0a00_0000 == 0x0800_0000;
++    if load_store {
++        // Writeback forms modify Rn: never let a tracked register be a base.
++        if regs.contains(&rn) {
++            return false;
++        }
++        let single = word & 0x3a00_0000 == 0x3800_0000;
++        let pair = word & 0x3a00_0000 == 0x2800_0000;
++        if (single || pair) && word & (1 << 22) == 0 {
++            return true; // store: writes only memory (and Rn, checked above)
++        }
++        if pair && regs.contains(&rt2) {
++            return false;
++        }
++    }
++    !regs.contains(&rd)
++}
++
++fn shape(code: &[u32], branch: usize) -> Option<(usize, usize, usize)> {
+     if branch < 2 {
+         return None;
+     }
+     let br = code[branch];
+-    let add = code[branch - 1];
+-    let load = code[branch - 2];
+-    if br & 0xffff_fc1f != 0xd61f_0000
+-        || add & 0xffe0_fc00 != 0x8b00_0000
+-        || load & 0xffe0_fc00 != 0xb8a0_7800
+-    {
++    if br & 0xffff_fc1f != 0xd61f_0000 {
+         return None;
+     }
+     let target = ((br >> 5) & 31) as usize;
+-    let entry = (load & 31) as usize;
+-    let base = ((load >> 5) & 31) as usize;
++    let mut at = branch;
++    let mut skipped = 0;
++    let add_at = loop {
++        at = at.checked_sub(1)?;
++        let word = code[at];
++        if word & 0xffe0_fc00 == 0x8b00_0000 && (word & 31) as usize == target {
++            break at;
++        }
++        if skipped == 4 || !neutral(word, &[target]) {
++            return None;
++        }
++        skipped += 1;
++    };
++    let add = code[add_at];
++    let entry = ((add >> 5) & 31) as usize;
++    let base = ((add >> 16) & 31) as usize;
++    let load_at = loop {
++        at = at.checked_sub(1)?;
++        let word = code[at];
++        if word & 0xffe0_fc00 == 0xb8a0_7800 {
++            break at;
++        }
++        if skipped == 4 || !neutral(word, &[target, entry, base]) {
++            return None;
++        }
++        skipped += 1;
++    };
++    let load = code[load_at];
+     if target == 31
+         || entry == 31
+         || base == 31
+         || entry == base
+-        || (add & 31) as usize != target
+-        || ((add >> 5) & 31) as usize != entry
+-        || ((add >> 16) & 31) as usize != base
++        || (load & 31) as usize != entry
++        || ((load >> 5) & 31) as usize != base
++    {
++        return None;
++    }
++    // Between the load and the BR the base and index sources must stay intact
++    // too, otherwise ADD would combine a different base.
++    if (load_at + 1..branch)
++        .filter(|&i| i != add_at)
++        .any(|i| !neutral(code[i], &[target, entry, base]))
+     {
+         return None;
+     }
+-    Some((base, ((load >> 16) & 31) as usize))
++    Some((base, ((load >> 16) & 31) as usize, load_at))
+ }
+ 
+ fn predecessors(nodes: &[FlowNode]) -> Vec<Vec<usize>> {
+@@ -346,18 +402,113 @@ fn table_targets(function: &elf::Function, table: u64, count: usize) -> Option<V
+         .collect()
+ }
+ 
++fn same(a: Value, b: Value) -> bool {
++    match (a, b) {
++        (Value::Page(x), Value::Page(y)) | (Value::Address(x), Value::Address(y)) => x == y,
++        _ => false,
++    }
++}
++
++/// Forward must-analysis of ADRP pages and page+offset addresses over the
++/// whole direct CFG. Only Page/Address facts are kept. A predecessor that is
++/// not reachable from the entry (landing pads, unresolved targets) contributes
++/// Unknown, so flow the CFG does not model can only remove facts.
++fn global_entry(
++    function: &elf::Function,
++    code: &[u32],
++    nodes: &[FlowNode],
++    incoming: &[Vec<usize>],
++    at: usize,
++    optimistic: bool,
++) -> [Value; 31] {
++    let count = nodes.len();
++    let mut reached = vec![false; count];
++    let mut work = if count == 0 { vec![] } else { vec![0] };
++    while let Some(n) = work.pop() {
++        if reached[n] {
++            continue;
++        }
++        reached[n] = true;
++        work.extend(nodes[n].successors.iter().copied().filter(|&t| t < count));
++    }
++    let unknown = [Value::Unknown; 31];
++    if at >= count || !reached[at] {
++        return unknown;
++    }
++    let mut output: Vec<Option<[Value; 31]>> = vec![None; count];
++    let entry_of = |n: usize, output: &Vec<Option<[Value; 31]>>| -> [Value; 31] {
++        let mut result: Option<[Value; 31]> = if n == 0 { Some(unknown) } else { None };
++        for &p in &incoming[n] {
++            let incoming_values = if reached[p] {
++                match output[p] {
++                    Some(v) => v,
++                    None => continue, // not yet computed in this fixpoint
++                }
++            } else if optimistic {
++                // First pass only: table edges are not installed yet, so a block
++                // behind this very table looks unreachable. The second pass over
++                // the complete CFG re-proves without this assumption.
++                continue;
++            } else {
++                unknown
++            };
++            result = Some(match result {
++                None => incoming_values,
++                Some(mut acc) => {
++                    for r in 0..31 {
++                        if !same(acc[r], incoming_values[r]) {
++                            acc[r] = Value::Unknown;
++                        }
++                    }
++                    acc
++                }
++            });
++        }
++        let mut values = result.unwrap_or(unknown);
++        for v in values.iter_mut() {
++            if !matches!(v, Value::Page(_) | Value::Address(_)) {
++                *v = Value::Unknown;
++            }
++        }
++        values
++    };
++    let mut queue: std::collections::VecDeque<usize> = (0..count).filter(|&n| reached[n]).collect();
++    let mut rounds = 0usize;
++    while let Some(n) = queue.pop_front() {
++        rounds += 1;
++        if rounds > count.saturating_mul(64).max(4096) {
++            return unknown;
++        }
++        let mut values = entry_of(n, &output);
++        step(&mut values, code[n], function.addr + n as u64 * 4, &nodes[n]);
++        let changed = match &output[n] {
++            None => true,
++            Some(old) => (0..31).any(|r| !same(old[r], values[r]) && !matches!((old[r], values[r]), (Value::Unknown, Value::Unknown))),
++        };
++        if changed {
++            output[n] = Some(values);
++            for &t in &nodes[n].successors {
++                if t < count && reached[t] {
++                    queue.push_back(t);
++                }
++            }
++        }
++    }
++    entry_of(at, &output)
++}
++
+ fn prove(
+     function: &elf::Function,
+     code: &[u32],
+     nodes: &[FlowNode],
+     incoming: &[Vec<usize>],
+     branch: usize,
++    optimistic: bool,
+ ) -> Option<Proof> {
+-    let (base, index) = shape(code, branch)?;
+-    if index == 31 {
++    let (base, index, load) = shape(code, branch)?;
++    if index == 31 || index == base {
+         return None;
+     }
+-    let load = branch - 2;
+     // Search one adjacent CMP/B.HI or CMP/B.LS guard. No union-of-guards,
+     // flag-neutral gaps, loop-carried copies or arbitrary reaching definitions.
+     for guard in (1..load).rev().take(128) {
+@@ -437,6 +588,17 @@ fn prove(
+         if !matches!(values[index], Value::Bounded(true)) {
+             continue;
+         }
++        // A loop-invariant base is materialised before the loop header; take it
++        // from the whole-function must-analysis instead of the local walk.
++        if !matches!(values[base], Value::Address(_)) {
++            let mut global = global_entry(function, code, nodes, incoming, start, optimistic);
++            for at in start..load {
++                step(&mut global, code[at], function.addr + at as u64 * 4, &nodes[at]);
++            }
++            if let Value::Address(_) = global[base] {
++                values[base] = global[base];
++            }
++        }
+         let Value::Address(table) = values[base] else {
+             continue;
+         };
+@@ -468,10 +630,10 @@ pub(super) fn resolve(
+             continue;
+         }
+         let result = (|| {
+-            let a = prove(original, &left, nodes, &incoming, branch).ok_or(
++            let a = prove(original, &left, nodes, &incoming, branch, true).ok_or(
+                 "original jump table lacks a supported guard, base or readable target list",
+             )?;
+-            let b = prove(rebuilt, &right, nodes, &incoming, branch).ok_or(
++            let b = prove(rebuilt, &right, nodes, &incoming, branch, true).ok_or(
+                 "rebuilt jump table lacks a supported guard, base or readable target list",
+             )?;
+             if a.count != b.count || a.targets != b.targets {
+@@ -493,8 +655,8 @@ pub(super) fn resolve(
+     let incoming = predecessors(nodes);
+     for (branch, result) in &mut candidates {
+         if result.is_ok() {
+-            let a = prove(original, &left, nodes, &incoming, *branch);
+-            let b = prove(rebuilt, &right, nodes, &incoming, *branch);
++            let a = prove(original, &left, nodes, &incoming, *branch, false);
++            let b = prove(rebuilt, &right, nodes, &incoming, *branch, false);
+             if a.as_ref().map(|p| &p.targets) != result.as_ref().ok().map(|p| &p.targets)
+                 || b.as_ref().map(|p| &p.targets) != result.as_ref().ok().map(|p| &p.targets)
+             {
