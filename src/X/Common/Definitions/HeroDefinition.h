@@ -16,6 +16,7 @@
 #include "Definitions.h"
 #include "../GameBalance.h"
 #include "../HotbarButton.h"
+#include "../HirelingSwig.h"
 #include "../Protobuf/Hero.pb.h"
 #include "../SNO/SNOFiles.h"
 #include "../../Sigma/DataStructures/XPtr64.h"
@@ -380,7 +381,7 @@ struct HirelingSavedData {  // size 0x88
         dwAvailableHirelings = tSavedData.available_hirelings_bitfield();
     }
 
-    HirelingInfo tHireling[4];  // 0x00
+    HirelingInfo tHireling[NUM_HIRELING_CLASSES];  // 0x00
     HirelingClass eActiveHireling;  // 0x80
     uint32 dwAvailableHirelings;  // 0x84
 };

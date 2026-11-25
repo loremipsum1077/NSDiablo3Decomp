@@ -12192,7 +12192,7 @@ Address,File,Compiler
 0x0000007100477f20,X/Common/ActorCommonData.cpp,7.1.0
 0x0000007100477f90,X/Common/ActorCommonData.cpp,7.1.0
 0x0000007100477fb0,X/Common/ActorCommonData.cpp,7.1.0
-0x0000007100477fc0,,
+0x0000007100477fc0,X/Common/ActorCommonData.cpp,7.1.0
 0x0000007100477fd0,X/Common/ActorCommonData.cpp,7.1.0
 0x0000007100477ff0,X/Common/ActorCommonData.cpp,7.1.0
 0x0000007100478050,X/Common/ActorCommonData.cpp,7.1.0
@@ -12307,7 +12307,7 @@ Address,File,Compiler
 0x000000710047e7e0,X/Common/ActorCommonData.cpp,7.1.0
 0x000000710047ea60,X/Common/ActorCommonData.cpp,7.1.0
 0x000000710047ead0,X/Common/ActorCommonData.cpp,7.1.0
-0x000000710047eb10,X/Common/Items.cpp,7.1.0
+0x000000710047eb10,,
 0x000000710047eb20,X/Common/ActorCommonData.cpp,7.1.0
 0x000000710047ebd0,X/Common/ActorCommonData.cpp,7.1.0
 0x000000710047ed30,X/Common/ActorCommonData.cpp,7.1.0
@@ -12437,8 +12437,8 @@ Address,File,Compiler
 0x0000007100485570,X/Common/ActorCommonData.cpp,7.1.0
 0x00000071004855e0,X/Common/ActorCommonData.cpp,7.1.0
 0x0000007100485650,X/Common/ActorCommonData.cpp,7.1.0
-0x00000071004856c0,,
-0x0000007100485730,,
+0x00000071004856c0,X/Common/ActorCommonData.cpp,7.1.0
+0x0000007100485730,X/Common/ActorCommonData.cpp,7.1.0
 0x00000071004857a0,X/Common/ActorCommonData.cpp,7.1.0
 0x0000007100485810,X/Common/ActorCommonData.cpp,7.1.0
 0x0000007100485880,X/Common/ActorCommonData.cpp,7.1.0
@@ -13489,7 +13489,7 @@ Address,File,Compiler
 0x00000071004f5900,X/Common/Items.cpp,7.1.0
 0x00000071004f59d0,X/Common/Items.cpp,7.1.0
 0x00000071004f5a50,X/Common/Items.cpp,7.1.0
-0x00000071004f5a70,,
+0x00000071004f5a70,X/Common/Items.cpp,7.1.0
 0x00000071004f5a80,X/Common/Items.cpp,7.1.0
 0x00000071004f5af0,X/Common/Items.cpp,7.1.0
 0x00000071004f5be0,X/Common/Items.cpp,7.1.0

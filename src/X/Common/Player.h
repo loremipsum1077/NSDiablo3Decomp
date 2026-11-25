@@ -70,7 +70,7 @@ struct LoadoutSavedData {  // size 0x318
     void Initialize()
     {
 
-        for (int32 i = 0; i < 13; i++)
+        for (int32 i = 0; i < NUM_PLAYER_BODYSLOTS; i++)
         {
             tEquipment[i].annItem = ANN_INVALID;
             tEquipment[i].uOriginalItemIdLow = 0;
@@ -104,7 +104,7 @@ struct LoadoutSavedData {  // size 0x318
         bEmpty = TRUE;
     }
 #line 88
-    LoadoutItemData tEquipment[13];  // 0x00
+    LoadoutItemData tEquipment[NUM_PLAYER_BODYSLOTS];  // 0x00
     LoadoutPotionData tEquippedPotion;  // 0x270
     LoadoutSkillData tActiveSkills[6];  // 0x288
     SNO snoTraits[4];  // 0x2b8
@@ -617,7 +617,7 @@ struct Player {  // size 0xebf8
     CheckpointData tLastCheckpoint;  // 0xb354
     HearthPortalData tHearthPortalInfo;  // 0xb374
     uint8 arGameFlags[128];  // 0xb38c
-    PlayerPet tPets[64];  // 0xb40c
+    PlayerPet tPets[MAX_PETS];  // 0xb40c
     int32 nMaxUsedPetIndex;  // 0xb60c
     BOOL bCosmeticPetMissing;  // 0xb610
     HirelingStable tHirelingStable;  // 0xb614
@@ -1138,7 +1138,7 @@ static_assert(offsetof(PlayerQuestRewardHistoryUpdateMessage, tQuestRewardHistor
 struct PlayerLoadoutDataMessage {  // size 0x328
     RequiredMessageHeader tHeader;  // 0x00
     int32 nLoadoutIndex;  // 0x08
-    LoadoutItemData tEquipment[13];  // 0x10
+    LoadoutItemData tEquipment[NUM_PLAYER_BODYSLOTS];  // 0x10
     LoadoutPotionData tEquippedPotion;  // 0x280
     LoadoutSkillData tActiveSkills[6];  // 0x298
     SNO snoTraits[4];  // 0x2c8

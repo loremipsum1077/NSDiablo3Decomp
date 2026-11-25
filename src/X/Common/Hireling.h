@@ -7,6 +7,8 @@
 
 #include "../../BlizzardCore/Include/Blizzard/Types.h"
 #include "CommonTypes.h"
+#include "HirelingSwig.h"
+#include "ItemsSwig.h"
 #include "Definitions/HeroDefinition.h"
 
 class ActorCommonData;
@@ -24,7 +26,7 @@ enum {
 typedef int32 HirelingTrainReason;
 
 struct HirelingItemStore {  // size 0x38
-    ACDID idACDItems[14];  // 0x00
+    ACDID idACDItems[NUM_HIRELING_SLOTS];  // 0x00
 };
 static_assert(sizeof(HirelingItemStore) == 0x38, "HirelingItemStore");
 
@@ -35,7 +37,7 @@ struct HirelingData {  // size 0x58
 static_assert(sizeof(HirelingData) == 0x58, "HirelingData");
 
 struct HirelingStable {  // size 0x168
-    HirelingData tHireling[4];  // 0x00
+    HirelingData tHireling[NUM_HIRELING_CLASSES];  // 0x00
     HirelingClass eActiveHireling;  // 0x160
     HirelingClass eTypeToCreate;  // 0x164
 };
@@ -68,7 +70,7 @@ struct HirelingInfoUpdateMessage {  // size 0x68
     GBID gbidName;  // 0x10
     int32 eValidClass;  // 0x14
     int32 arnPowerKeyParam[5];  // 0x18
-    ACDNetworkName annItems[14];  // 0x2c
+    ACDNetworkName annItems[NUM_HIRELING_SLOTS];  // 0x2c
     int32 nPlayerIndex;  // 0x64
 };
 static_assert(sizeof(HirelingInfoUpdateMessage) == 0x68, "HirelingInfoUpdateMessage");
