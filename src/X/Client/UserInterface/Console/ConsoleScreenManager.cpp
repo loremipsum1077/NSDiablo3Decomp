@@ -348,7 +348,7 @@ inline void sInitBannerScreenSet(); inline void sInitAchievementsScreenSet(); in
 extern "C" void sub_7100178a10(int32 nControllerIndex);
 extern "C" void sub_71001794e0(int32 nControllerIndex);
 extern "C" void sub_7100370440(int32 nControllerIndex);
-static void sub_710016cae0(int32 nControllerIndex) { UIInventory::Console::Close(); }
+extern "C" __attribute__((visibility("hidden"))) void sub_710016cae0(int32 nControllerIndex) { UIInventory::Console::Close(); }
 inline void sInitDesignerMenuScreenSet(); inline void sInitTradeScreenSet(); inline void sInitTradeItemSelectScreenSet(); inline void sInitLeaderboardScreenSet();
 
 Console::Screens::ScreenSets sGetScreenSet( const Console::ScreenSet * ptScreenSet )

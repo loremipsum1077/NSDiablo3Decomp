@@ -23,6 +23,7 @@
 #include "../../Gfx/GfxVB.h"
 #include "../../Console/ControllerUtils.h"
 #include "../../Console/Online.h"
+#include "../../Console/GamerProfile.h"
 #include "../../Sound/Sound.h"
 #include "../../../Common/Game.h"
 #include "../../../Common/Leaderboard.h"
@@ -56,6 +57,10 @@ XLocale GetSystemLanguage();  // X/Client/Console/UtilitiesNX64.cpp
 namespace UIGameSettings { namespace Console {
 void OnReturnFromLeaderboard(const int32 nControllerIndex);
 } }
+
+extern UIID unk_7101860958, unk_7101860960;
+extern UIID unk_7101860a08, unk_7101860a00, unk_7101860940, unk_7101860948;
+extern UIID unk_7101860968, unk_7101860970, unk_7101860978;
 
 namespace UILeaderboards { namespace Console {
 enum CurrentTab {
@@ -354,6 +359,10 @@ void OnClose(const UIID & id, const int32 nControllerIndex)
     }
 }
 
+extern "C" void sub_710018df60();
+extern "C" void sub_710018e020();
+
+// NON_MATCHING: Four instructions use different registers for the UIID comparison.
 void OnButton3(const UIID & id, const int32 nControllerIndex)
 {
     if (sgtUILeaderboardData.eUINavigationState == UISTATE_FILTERS_NAVIGATION)
@@ -365,18 +374,68 @@ void OnButton3(const UIID & id, const int32 nControllerIndex)
             SoundManager::PlaySound(GlobalSNOGet(GLOBALSNO_SOUND_SELECT_GENERIC), cgtPSODefaults);
         }
     }
+    else if (sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS)
+    {
+        sgtUILeaderboardData.unk_b8 = !sgtUILeaderboardData.unk_b8;
+        UIID control = sgtUILeaderboardData.tRingUI.GetSelectedControlID();
+        sub_710018e020();
+        if (sgtUILeaderboardData.unk_b8 && (unk_7101860968 == control ||
+            unk_7101860970 == control || unk_7101860978 == control))
+            sub_710018df60();
+        else
+            sgtUILeaderboardData.tRingUI.SelectControl(control, IconSelectionChanged);
+        SoundManager::PlaySound(GlobalSNOGet(GLOBALSNO_SOUND_CLICK_GENERIC), cgtPSODefaults);
+    }
 }
 
+extern "C" BOOL sub_7100192320(int32 nCategory);
+extern "C" void sub_7100192290(int32 nCategory);
+extern "C" void sub_71001921f0(int32 nCategory);
+
+extern "C" void sub_710018d220(BOOL forward)
+{
+    if (!sub_7100192320(sgtUILeaderboardData.nSelectedCategory))
+        return;
+    static ::Console::InputSpeedLimiter limiter;
+    if (!limiter.HasWaitTimeExpired(250))
+        return;
+    if (forward)
+        sub_7100192290(sgtUILeaderboardData.nSelectedCategory);
+    else
+        sub_71001921f0(sgtUILeaderboardData.nSelectedCategory);
+    LoadLeaderboards();
+    sub_7100191f20(sgtUILeaderboardData.nSelectedCategory);
+    limiter.UpdateLastInputTime();
+}
+
+// NON_MATCHING: Clang combines the navigation and outstanding-request branches (116 versus 120 bytes).
 void OnL2(const UIID & id, const int32 nControllerIndex)
 {
     if (UILeaderboardInspect::Console::InspectActive())
         UILeaderboardInspect::Console::OnL2(id, nControllerIndex);
+    if (sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS &&
+        sgtUILeaderboardData.eUINavigationState == UISTATE_FILTERS_NAVIGATION)
+    {
+        for (int32 i = 0; i < LEADERBOARD_FILTER_COUNT; ++i)
+            if (sgtUILeaderboardData.bLeaderboardRequestIssued[i] == TRUE)
+                return;
+        sub_710018d220(TRUE);
+    }
 }
 
+// NON_MATCHING: Clang combines the navigation and outstanding-request branches (116 versus 120 bytes).
 void OnR2(const UIID & id, const int32 nControllerIndex)
 {
     if (UILeaderboardInspect::Console::InspectActive())
         UILeaderboardInspect::Console::OnR2(id, nControllerIndex);
+    if (sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS &&
+        sgtUILeaderboardData.eUINavigationState == UISTATE_FILTERS_NAVIGATION)
+    {
+        for (int32 i = 0; i < LEADERBOARD_FILTER_COUNT; ++i)
+            if (sgtUILeaderboardData.bLeaderboardRequestIssued[i] == TRUE)
+                return;
+        sub_710018d220(FALSE);
+    }
 }
 
 BOOL IsVisible()
@@ -399,8 +458,25 @@ void Close()
     }
 }
 
+// NON_MATCHING: The team-control comparisons use different registers and instruction ordering (280 bytes).
 BOOL RingIncludeControlPredicate(const UIID & idControl)
 {
+    BOOL team = (unk_7101860968 == idControl) | (unk_7101860970 == idControl) | (unk_7101860978 == idControl);
+    if (sgtUILeaderboardData.unk_b8)
+    {
+        if (team)
+        {
+            UI_GetButtonFromID(idControl).SetButtonState(BS_NORMAL, FALSE, FALSE);
+            UI_GetButtonFromID(idControl).SetEnabled(FALSE);
+            UI_GetButtonFromID(idControl).SetShader(GlobalSNOGet(GLOBALSNO_SHADER_SPRITE_TRANSPARENT_INACTIVE));
+            return FALSE;
+        }
+    }
+    else if (team)
+    {
+        UI_GetButtonFromID(idControl).SetEnabled(TRUE);
+        UI_GetButtonFromID(idControl).SetShader(SNO_NONE);
+    }
     return UI_GetControlFromID(idControl).IsType(UIT_BUTTON);
 }
 
@@ -484,7 +560,7 @@ void OnL1(const UIID & id, const int32 nControllerIndex)
         sgtUILeaderboardData.tLeaderboardData.SetFilter(eFilter);
         UpdateLeaderboardDisplay(eFilter, FALSE, 0);
         UpdateControllerActions(FALSE);
-        SoundManager::PlaySound(GlobalSNOGet((GlobalSNO)0x38f), cgtPSODefaults);
+        SoundManager::PlaySound(GlobalSNOGet(GLOBALSNO_SOUND_PANEL_GENERIC_OPEN), cgtPSODefaults);
     }
 }
 
@@ -511,7 +587,7 @@ void OnR1(const UIID & id, const int32 nControllerIndex)
         sgtUILeaderboardData.tLeaderboardData.SetFilter(eFilter);
         UpdateLeaderboardDisplay(eFilter, FALSE, 0);
         UpdateControllerActions(FALSE);
-        SoundManager::PlaySound(GlobalSNOGet((GlobalSNO)0x38f), cgtPSODefaults);
+        SoundManager::PlaySound(GlobalSNOGet(GLOBALSNO_SOUND_PANEL_GENERIC_OPEN), cgtPSODefaults);
     }
 }
 
@@ -797,13 +873,38 @@ void OnButton1(const UIID & id, const int32 nControllerIndex)
 void ToggleHardcoreGreaterRifts()
 {
     sgtUILeaderboardData.bHardcoreGreaterRifts = !sgtUILeaderboardData.bHardcoreGreaterRifts;
-    UI_GetWindowFromID(UIWND_CONSOLE_LEADERBOARDS_HARDCORE).SetActive(sgtUILeaderboardData.bHardcoreGreaterRifts);
-    if (sgtUILeaderboardData.bHardcoreGreaterRifts)
-    {
-        UIStoryboard & tStoryboard = UI_GetStoryboardFromID(UISTORYBOARD_CONSOLE_LEADERBOARDS_HARDCORE_STORYBOARD);
-        tStoryboard.Stop();
-        tStoryboard.Play(FALSE, 0.0f);
-    }
+    sub_710018e020();
+}
+
+extern "C" void sub_710018e020()
+{
+    UI_GetWindowFromID(UIWND_CONSOLE_LEADERBOARDS_HARDCORE).SetActive(sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS &&
+        sgtUILeaderboardData.bHardcoreGreaterRifts && !sgtUILeaderboardData.unk_b8);
+    UI_GetWindowFromID(unk_7101860940).SetActive(sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS &&
+        !sgtUILeaderboardData.bHardcoreGreaterRifts && sgtUILeaderboardData.unk_b8);
+    UI_GetWindowFromID(unk_7101860948).SetActive(sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS &&
+        sgtUILeaderboardData.bHardcoreGreaterRifts && sgtUILeaderboardData.unk_b8);
+    UIID hardcoreID = UISTORYBOARD_CONSOLE_LEADERBOARDS_HARDCORE_STORYBOARD;
+    BOOL hardcore = sgtUILeaderboardData.bHardcoreGreaterRifts && !sgtUILeaderboardData.unk_b8;
+    UIStoryboard &hardcoreStoryboard = UI_GetStoryboardFromID(hardcoreID);
+    hardcoreStoryboard.Stop();
+    if (hardcore)
+        hardcoreStoryboard.Play(FALSE, 0.0f);
+
+    UIID soloID = unk_7101860958;
+    BOOL solo = !sgtUILeaderboardData.bHardcoreGreaterRifts && sgtUILeaderboardData.unk_b8;
+    UIStoryboard &soloStoryboard = UI_GetStoryboardFromID(soloID);
+    soloStoryboard.Stop();
+    if (solo)
+        soloStoryboard.Play(FALSE, 0.0f);
+
+    UIID soloHardcoreID = unk_7101860960;
+    BOOL soloHardcore = sgtUILeaderboardData.bHardcoreGreaterRifts && sgtUILeaderboardData.unk_b8;
+    UIStoryboard &soloHardcoreStoryboard = UI_GetStoryboardFromID(soloHardcoreID);
+    soloHardcoreStoryboard.Stop();
+    if (soloHardcore)
+        soloHardcoreStoryboard.Play(FALSE, 0.0f);
+
     if (sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS)
     {
         const UIID & idControl = sgtUILeaderboardData.tRingUI.GetSelectedControlID();
@@ -819,7 +920,9 @@ void ToggleHardcoreGreaterRifts()
             UI_GetWindowFromID(UIWND_CONSOLE_LEADERBOARDS_GREATER_RIFTS_RING_CURSOR).SetActive(!sgtUILeaderboardData.bHardcoreGreaterRifts);
             UI_GetWindowFromID(UIWND_CONSOLE_LEADERBOARDS_GREATER_RIFTS_RING_CURSOR_HARDCORE).SetActive(sgtUILeaderboardData.bHardcoreGreaterRifts);
         }
-        UI_GetWindowFromID(UIWND_CONSOLE_LEADERBOARDS_GREATER_RIFTS_RING_LEAF_HARDCORE).SetActive(sgtUILeaderboardData.bHardcoreGreaterRifts);
+        UI_GetWindowFromID(UIWND_CONSOLE_LEADERBOARDS_GREATER_RIFTS_RING_LEAF_HARDCORE).SetActive(sgtUILeaderboardData.bHardcoreGreaterRifts && !sgtUILeaderboardData.unk_b8);
+        UI_GetWindowFromID(unk_7101860a00).SetActive(!sgtUILeaderboardData.bHardcoreGreaterRifts && sgtUILeaderboardData.unk_b8);
+        UI_GetWindowFromID(unk_7101860a08).SetActive(sgtUILeaderboardData.bHardcoreGreaterRifts && sgtUILeaderboardData.unk_b8);
     }
 }
 
@@ -1179,6 +1282,30 @@ void EnableSeasonChallengeScreen(BOOL bEnable, BOOL bWasActiveAlready)
     UpdateRingIcons(UIWND_CONSOLE_LEADERBOARDS_CHALLENGES_RING, sgtUILeaderboardData.eUINavigationState == UISTATE_RING_NAVIGATION);
 }
 
+extern "C" void sub_710018df60()
+{
+    const D3::Hero::SavedDefinition &hero = ::Console::GamerProfile::GetHero(sgtUILeaderboardData.nControllerIndex);
+    int32 category;
+    switch (PlayerClassFromGBID(hero.digest().gbid_class()))
+    {
+    case PLAYER_CLASS_DEMONHUNTER: category = 5; break;
+    case PLAYER_CLASS_WIZARD: category = 9; break;
+    case PLAYER_CLASS_WITCHDOCTOR: category = 8; break;
+    case PLAYER_CLASS_MONK: category = 6; break;
+    case PLAYER_CLASS_CRUSADER: category = 4; break;
+    case PLAYER_CLASS_NECROMANCER: category = 7; break;
+    default: category = 3; break;
+    }
+    if (sgtUILeaderboardData.bOpenedFromRiftComplete && sgtUILeaderboardData.nParticipants >= 2)
+    {
+        uint32 team = (uint32)sgtUILeaderboardData.nParticipants - 2;
+        if (team < 3)
+            category = team;
+    }
+    sgtUILeaderboardData.bOpenedFromRiftComplete = FALSE;
+    sgtUILeaderboardData.tRingUI.SelectControl(GetElementUIIDForGreaterRiftsCategory(category), IconSelectionChanged);
+}
+
 void EnableGreaterRiftsScreen(BOOL bEnable, BOOL bWasActiveAlready)
 {
     UI_GetWindowFromID(UIWND_CONSOLE_LEADERBOARDS_GREATER_RIFTS_NAVIGATION).SetActive(bEnable);
@@ -1189,7 +1316,9 @@ void EnableGreaterRiftsScreen(BOOL bEnable, BOOL bWasActiveAlready)
     UI_GetWindowFromID(UIWND_CONSOLE_LEADERBOARDS_GREATER_RIFTS_RING_GLOW).SetActive(bEnable && !sgtUILeaderboardData.bHardcoreGreaterRifts);
     UI_GetWindowFromID(UIWND_CONSOLE_LEADERBOARDS_GREATER_RIFTS_RING_GLOW_HARDCORE).SetActive(bEnable && sgtUILeaderboardData.bHardcoreGreaterRifts);
     UI_GetWindowFromID(UIWND_CONSOLE_LEADERBOARDS_HARDCORE).SetActive(bEnable && sgtUILeaderboardData.bHardcoreGreaterRifts);
-    UI_GetWindowFromID(UIWND_CONSOLE_LEADERBOARDS_GREATER_RIFTS_RING_LEAF_HARDCORE).SetActive(bEnable && sgtUILeaderboardData.bHardcoreGreaterRifts);
+    UI_GetWindowFromID(UIWND_CONSOLE_LEADERBOARDS_GREATER_RIFTS_RING_LEAF_HARDCORE).SetActive(bEnable && sgtUILeaderboardData.bHardcoreGreaterRifts && !sgtUILeaderboardData.unk_b8);
+    UI_GetWindowFromID(unk_7101860a08).SetActive(bEnable && sgtUILeaderboardData.bHardcoreGreaterRifts && sgtUILeaderboardData.unk_b8);
+    UI_GetWindowFromID(unk_7101860a00).SetActive(bEnable && !sgtUILeaderboardData.bHardcoreGreaterRifts && sgtUILeaderboardData.unk_b8);
 
     if (bEnable)
     {
@@ -1200,40 +1329,23 @@ void EnableGreaterRiftsScreen(BOOL bEnable, BOOL bWasActiveAlready)
         sgtUILeaderboardData.tRingUI.SetEnabled(TRUE);
         if (!bWasActiveAlready)
         {
-            int32 defaultCategory = 0;
-            Player * ptPlayer = PlayerGetByControllerIndex(sgtUILeaderboardData.nControllerIndex);
-            if (ptPlayer)
-            {
-                PlayerClass playerClass = PlayerGetPlayerClass(ptPlayer);
-                switch (playerClass)
-                {
-                case PLAYER_CLASS_DEMONHUNTER: defaultCategory = 5; break;
-                case PLAYER_CLASS_BARBARIAN: defaultCategory = 3; break;
-                case PLAYER_CLASS_WIZARD: defaultCategory = 8; break;
-                case PLAYER_CLASS_WITCHDOCTOR: defaultCategory = 7; break;
-                case PLAYER_CLASS_MONK: defaultCategory = 6; break;
-                case PLAYER_CLASS_CRUSADER: defaultCategory = 4; break;
-                default: break;
-                }
-            }
-            if (sgtUILeaderboardData.bOpenedFromRiftComplete && sgtUILeaderboardData.nParticipants > 1)
-            {
-                uint32 nTeamCategory = sgtUILeaderboardData.nParticipants - 2;
-                if (nTeamCategory <= 2)
-                    defaultCategory = nTeamCategory;
-            }
-            sgtUILeaderboardData.bOpenedFromRiftComplete = FALSE;
-            UIID idControl = GetElementUIIDForGreaterRiftsCategory(defaultCategory);
-            sgtUILeaderboardData.tRingUI.SelectControl(idControl, IconSelectionChanged);
+            sub_710018df60();
         }
         else
         {
             sgtUILeaderboardData.tRingUI.SelectControl(sgtUILeaderboardData.tRingUI.GetSelectedControlID(), IconSelectionChanged);
         }
+        sub_710018e020();
         sgtUILeaderboardData.tFilterSelector.SetSelectedIndex(-1, FALSE);
         UI_GetWindowFromID(UIWND_CONSOLE_LEADERBOARDS_COLUMN_HEADERS).SetActive(FALSE);
         sgtUILeaderboardData.eUINavigationState = UISTATE_RING_NAVIGATION;
     }
+    UI_GetWindowFromID(UIWND_CONSOLE_LEADERBOARDS_HARDCORE).SetActive(sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS &&
+        sgtUILeaderboardData.bHardcoreGreaterRifts && !sgtUILeaderboardData.unk_b8);
+    UI_GetWindowFromID(unk_7101860940).SetActive(sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS &&
+        !sgtUILeaderboardData.bHardcoreGreaterRifts && sgtUILeaderboardData.unk_b8);
+    UI_GetWindowFromID(unk_7101860948).SetActive(sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS &&
+        sgtUILeaderboardData.bHardcoreGreaterRifts && sgtUILeaderboardData.unk_b8);
     UpdateRingIcons(UIWND_CONSOLE_LEADERBOARDS_GREATER_RIFTS_RING, sgtUILeaderboardData.eUINavigationState == UISTATE_RING_NAVIGATION);
 }
 

@@ -434,7 +434,7 @@ XVarBool s_varCommunityEventPerkDoubleBountyBags(s_scopePerk, "CommunityEventDou
 bool sub_71007b7080();  // 0x71007b7080 (unnamed, SGame.cpp): tStartParams.dwCreationFlags bit 20
 static XVarScope s_scopeDashingStrikeStuck("DashingStrikeStuck", NULL);  // line 199
 XVarBool s_varDashingStrikeStuckMaxDurSpew(s_scopeDashingStrikeStuck, "EnableMaxDurationSpew", false);
-BOOL sub_71007d50c0(SNO snoWorld);  // 0x71007d50c0 (unnamed 2.7.7 function, also declared in SpellEffect.cpp)
+extern "C" BOOL sub_71007d50c0(SNO snoWorld);  // 0x71007d50c0 (unnamed 2.7.7 function, also declared in SpellEffect.cpp)
 static XVarScope s_scopeSave("SaveMode", NULL);  // line 202
 XVarBool s_varParallelEnabled(s_scopeSave, "ParallelEnabled", false);
 
