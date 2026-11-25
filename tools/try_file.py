@@ -21,7 +21,8 @@ A file under tests/ (not part of the build) checks templates: explicitly
 instantiate a template with arguments the binary uses, e.g.
 `template class blz::list<unsigned int>;`, and each emitted function whose
 mangled name is in functions.csv is compared.
-The flags come from build/2.6.2/compile_commands.json (run tools/build.py once).
+The flags come from build/<version>/compile_commands.json (run tools/build.py once);
+the version and compiler come from tools/config.toml.
 """
 import argparse
 import csv
@@ -42,15 +43,28 @@ from pathlib import Path
 from validation import elf as elf_reader
 from validation import scoring
 
+import project_version
+
 ROOT = Path(__file__).resolve().parent.parent
-DATA = ROOT / "data/2.6.2"
+DATA = project_version.DATA
 NSS = ROOT / "build/romfs/DiabloIIINX64r.nss"
+# --diff/--asm disassemble the original from the 2.6.2 .nss (it has symbols); other
+# versions ship none, so they use their main.elf (same addresses, fewer names).
+ORIGINAL = NSS if project_version.VERSION == "2.6.2" and NSS.is_file() else DATA / "main.elf"
+
+
+def legacy(src):
+    """Prebuilt-library sources keep the 2.6.2 recipe in a mixed build (project_version)."""
+    try:
+        return project_version.is_legacy(src.relative_to(ROOT).as_posix())
+    except ValueError:
+        return False
 
 
 def compile_command(src):
-    db = ROOT / "build/2.6.2/compile_commands.json"
+    db = (project_version.LEGACY_BUILD if legacy(src) else project_version.BUILD) / "compile_commands.json"
     if not db.is_file():
-        sys.exit("build/2.6.2/compile_commands.json not found: run python3 tools/build.py first")
+        sys.exit(f"{db.relative_to(ROOT)} not found: run python3 tools/build.py first")
     entries = json.loads(db.read_text())
     wanted = "/work/" + src.relative_to(ROOT).as_posix()
     same_dir = [e for e in entries if Path(e["file"]).parent == Path(wanted).parent]
@@ -106,9 +120,11 @@ def objdump(*args):
 INSN = re.compile(r"^\s*([0-9a-f]+):\s+(?:(?:[0-9a-f]{2} ){4})?\s*(.*)$")
 
 
-def clean(text, base):
+def clean(text, base, size=None):
     """Instruction lines without addresses (branch targets become offsets from
-    the function start), so the two listings line up. Operands a relocation fills in (adrp pages, call
+    the function start), so the two listings line up. With size, a target inside
+    [base, base + size) is made relative by address, for listings whose symbols
+    do not mark the function (a stripped main.elf). Operands a relocation fills in (adrp pages, call
     targets, :lo12: offsets) still differ; they are not what you are looking for."""
     out = []
     for line in text.splitlines():
@@ -116,6 +132,10 @@ def clean(text, base):
         if not m:
             continue
         ins = re.sub(r"\s+", " ", m.group(2).strip())
+        if size is not None:
+            ins = re.sub(r"0x([0-9a-f]+) <[^>]*>",
+                         lambda t: f"<+{int(t.group(1), 16) - base:#x}>"
+                         if 0 <= int(t.group(1), 16) - base < size else t.group(0), ins)
         ins = re.sub(r"0x[0-9a-f]+ <[^>+]*\+(0x[0-9a-f]+)>", r"<+\1>", ins)   # branch inside the function
         ins = re.sub(r"0x[0-9a-f]+ <([^>]*)>", r"<\1>", ins)
         # Operands the linker fills in are never comparable here: hide them so the
@@ -185,8 +205,15 @@ def _run(args):
             import fast_compile
             run = fast_compile.compile(ROOT, cmd, obj)
         else:
-            run = subprocess.run(lua_command(cmd) if is_lua(src) else
-                                 ["docker", "compose", "run", "--rm", "-T", "build", *cmd],
+            stock = project_version.CLANG == "5.0.1" or legacy(src)
+            if is_lua(src) and stock:
+                container = lua_command(cmd)
+            elif stock:
+                container = ["docker", "compose", "run", "--rm", "-T", "build", *cmd]
+            else:
+                container = ["docker", "run", "--rm", "--pull", "never", "--network", "none",
+                             "-v", f"{ROOT}:/work", "-w", "/work", project_version.IMAGE, *cmd]
+            run = subprocess.run(container,
                                  cwd=ROOT, capture_output=True, text=True, stdin=subprocess.DEVNULL)
     except OSError as error:
         sys.stderr.write(f"Could not start compile command: {error}\n")
@@ -218,7 +245,7 @@ def _run(args):
     if args.diff:
         vaddr, size = known[one]
         ours = clean(objdump(f"--disassemble-symbols={one}", str(obj)), 0)
-        theirs = clean(objdump(f"--start-address=0x{vaddr:x}", f"--stop-address=0x{vaddr + size:x}", str(NSS)), vaddr)
+        theirs = clean(objdump(f"--start-address=0x{vaddr:x}", f"--stop-address=0x{vaddr + size:x}", str(ORIGINAL)), vaddr, size)
         for line in difflib.unified_diff(theirs, ours, "original", "ours", n=3, lineterm=""):
             print(line)
         if theirs == ours:
@@ -229,7 +256,7 @@ def _run(args):
         print("=== ours")
         print(objdump(f"--disassemble-symbols={args.asm}", str(obj)))
         print("=== original")
-        print(objdump(f"--start-address=0x{vaddr:x}", f"--stop-address=0x{vaddr + size:x}", str(NSS)))
+        print(objdump(f"--start-address=0x{vaddr:x}", f"--stop-address=0x{vaddr + size:x}", str(ORIGINAL)))
         return
 
     orig = elf_reader.Elf(DATA / "main.elf")

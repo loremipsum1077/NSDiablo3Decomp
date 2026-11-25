@@ -3001,7 +3001,9 @@ UIIDArray UI_FindControl(
     return arMatches;
 }
 
-#line 5283
+// Switch 2.7.7: the fatal diagnostic in this template uses line 5324
+// (for example main.elf 0x3300e4), 21 lines after the baseline location.
+#line 5304
 template <class T, class TCreationParams> T & sGetControlFromID(const UIID & id, const UIType eType)
 {
 

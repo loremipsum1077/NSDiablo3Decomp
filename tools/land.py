@@ -42,7 +42,10 @@ import claim
 import proof_debt
 
 MAIN = claim.MAIN
-FUNCTIONS = MAIN / "data/2.6.2/functions.csv"
+import project_version
+
+VERSION = project_version.VERSION
+FUNCTIONS = MAIN / f"data/{VERSION}/functions.csv"
 FAILED = MAIN / "build/land-failed.txt"
 # Checker verdicts that mean "could not prove this reference", not "the code differs".
 PROOF_GAPS = {"got-original-unknown", "got-rebuilt-undefined", "got-original-undefined",
@@ -85,7 +88,7 @@ def inventory():
 
 
 def owners():
-    with (MAIN / "data/2.6.2/function_files.csv").open(newline="") as f:
+    with (MAIN / f"data/{VERSION}/function_files.csv").open(newline="") as f:
         return {r["Address"]: r["File"] for r in csv.DictReader(f)}
 
 
@@ -173,7 +176,7 @@ def commit(files, summary, extra):
         body += "\n\n" + extra
     claim.git("add", "-A", "--", "src", "tests", "include", cwd=MAIN)
     # data/ is ignored, but this generated inventory is already tracked.
-    claim.git("add", "-u", "--", "data/2.6.2/functions.csv", cwd=MAIN)
+    claim.git("add", "-u", "--", f"data/{VERSION}/functions.csv", cwd=MAIN)
     if claim.git("diff", "--cached", "--name-only", cwd=MAIN):
         claim.git("commit", "-q", "-m", body, cwd=MAIN)
 

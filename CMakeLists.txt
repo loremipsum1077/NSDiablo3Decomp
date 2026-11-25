@@ -3,6 +3,24 @@ project(d3 CXX C)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 option(D3_LUA_COMPILER "Use the pinned experimental LLVM backend for Lua only" OFF)
+# Late-GlobalOpt plugin (D3_USE_LATEPIPE): needed by clang 5.0.1 (2.6.2) only; LLVM 6.0+ runs the step itself.
+# tools/build.py sets it from tools/config.toml's clang_version.
+option(D3_USE_LATEPIPE "Load the clang 5.0.1 late-GlobalOpt plugin (toolchain/latepipe)" ON)
+# Weak-provider link (toolchain/weak-providers.json): the COMDAT providers observed in the
+# 2.6.2 / clang 5.0.1 build. Other versions link directly with lld (first copy wins).
+option(D3_WEAK_PROVIDERS "Link through toolchain/weak_provider_link.py (2.6.2 only)" ON)
+# Mixed-compiler builds (2.7.7). Lua, BlizzardProtoBuf, DemonWare and OggVorbis are
+# byte-identical between 2.6.2 and 2.7.7: Blizzard linked them prebuilt, so they keep the
+# 2.6.2 recipe (clang 5.0.1, LatePipe, the Lua backend). tools/build.py builds them first
+# with D3_LIBRARY_SET=legacy-only into build/<version>-legacy, then the main build uses
+# exclude-legacy and links those objects from D3_LEGACY_OBJECT_DIR.
+set(D3_LIBRARY_SET "all" CACHE STRING "all | legacy-only | exclude-legacy")
+set_property(CACHE D3_LIBRARY_SET PROPERTY STRINGS all legacy-only exclude-legacy)
+set(D3_LEGACY_OBJECT_DIR "" CACHE PATH "legacy-only build directory (exclude-legacy only)")
+set(D3_LEGACY_REGEX "/src/Contrib/Contrib/(DemonWare|BlizzardProtoBuf|lua|OggVorbis)/")
+if(NOT D3_LIBRARY_SET MATCHES "^(all|legacy-only|exclude-legacy)$")
+    message(FATAL_ERROR "D3_LIBRARY_SET must be all, legacy-only or exclude-legacy")
+endif()
 option(D3_LUA_OWNER_RECIPE "Use the reviewed experimental recipe for lstate/lgc only" OFF)
 set(D3_LUA_OWNER_PACKET "" CACHE FILEPATH "Explicit fixed owner recipe packet")
 set(D3_LUA_OWNER_LLC "" CACHE FILEPATH "Explicit pinned diagnostic owner backend")
@@ -85,6 +103,23 @@ file(GLOB_RECURSE GAME_SOURCES CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/src/X/*.c
 file(GLOB_RECURSE ALL_SOURCES CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/src/*.cpp ${PROJECT_SOURCE_DIR}/src/*.cc ${PROJECT_SOURCE_DIR}/src/*.c)
 set(MIDDLEWARE_SOURCES ${ALL_SOURCES})
 list(FILTER MIDDLEWARE_SOURCES EXCLUDE REGEX "/src/X/")
+if(D3_LIBRARY_SET STREQUAL "legacy-only")
+    list(FILTER MIDDLEWARE_SOURCES INCLUDE REGEX "${D3_LEGACY_REGEX}")
+    set(GAME_SOURCES "")
+elseif(D3_LIBRARY_SET STREQUAL "exclude-legacy")
+    list(FILTER MIDDLEWARE_SOURCES EXCLUDE REGEX "${D3_LEGACY_REGEX}")
+    if(NOT IS_DIRECTORY "${D3_LEGACY_OBJECT_DIR}")
+        message(FATAL_ERROR "D3_LIBRARY_SET=exclude-legacy needs D3_LEGACY_OBJECT_DIR (a legacy-only build)")
+    endif()
+    file(GLOB_RECURSE D3_LEGACY_OBJECTS
+        "${D3_LEGACY_OBJECT_DIR}/CMakeFiles/d3_middleware_obj.dir/src/Contrib/Contrib/*.obj")
+    list(FILTER D3_LEGACY_OBJECTS INCLUDE REGEX "${D3_LEGACY_REGEX}")
+    if(NOT D3_LEGACY_OBJECTS)
+        message(FATAL_ERROR "no legacy objects under ${D3_LEGACY_OBJECT_DIR}: build it first")
+    endif()
+    list(LENGTH D3_LEGACY_OBJECTS D3_LEGACY_COUNT)
+    message(STATUS "Linking ${D3_LEGACY_COUNT} legacy (clang 5.0.1) objects from ${D3_LEGACY_OBJECT_DIR}")
+endif()
 # Upstream LibTomCrypt fragments that aes.c / sha256.c #include; not compile units.
 list(FILTER MIDDLEWARE_SOURCES EXCLUDE REGEX "/external/libtomcrypt/src/(ciphers/aes/aes_tab|hashes/sha2/sha224)\\.c$")
 
@@ -214,12 +249,17 @@ if(GAME_SOURCES)
     target_compile_definitions(d3_game_obj PRIVATE NON_MATCHING MATCHING_HACK_NX_CLANG NDEBUG)
     list(APPEND ALL_OBJECTS $<TARGET_OBJECTS:d3_game_obj>)
 endif()
+if(D3_LEGACY_OBJECTS)
+    list(APPEND ALL_OBJECTS ${D3_LEGACY_OBJECTS})
+endif()
 
 # Late GlobalOpt (docs/late_globalopt.md). The original compiler behaves as if GlobalOpt and
 # GlobalDCE also ran after the inliner, where LLVM 6.0 runs them; stock clang 5.0.1 runs them
 # only before. The LatePipe plugin (toolchain/latepipe/) adds that step, at LLVM 6.0's position,
 # to every C and C++ unit except the exclusions below. Its binary is pinned by SHA-256 and the
 # flag names the pinned file, so a different plugin is a different command line.
+# clang 7.1.0 (2.7.7) already runs the step, so D3_USE_LATEPIPE is OFF there.
+if(D3_USE_LATEPIPE)
 find_program(D3_LATEPIPE_PYTHON python3 REQUIRED)
 execute_process(COMMAND ${D3_LATEPIPE_PYTHON} ${PROJECT_SOURCE_DIR}/toolchain/latepipe/latepipe.py --path
     RESULT_VARIABLE D3_LATEPIPE_STATUS OUTPUT_VARIABLE D3_LATEPIPE
@@ -254,22 +294,35 @@ foreach(stock_source ${D3_STOCK_PIPELINE_SOURCES})
 endforeach()
 # Appended last so the per-source COMPILE_OPTIONS set above (which replace) cannot drop it.
 set_property(SOURCE ${D3_LATEPIPE_SOURCES} APPEND PROPERTY COMPILE_OPTIONS "-fplugin=${D3_LATEPIPE}")
+endif()
 
 # Link as a shared ELF (no entry point needed, undefined imports allowed) so
 # tools/check gets a real ELF with a symbol table, at build/<version>/d3.
 # -Bsymbolic binds calls to our own definitions (main.elf is statically linked;
 # check compares call targets and must not see PLT stubs). -Map is the link
 # map tools/check can use to resolve name@file entries.
-if(ALL_OBJECTS)
+if(D3_LIBRARY_SET STREQUAL "legacy-only")
+    message(STATUS "legacy-only: building objects for the main build to link; no d3 link here")
+elseif(ALL_OBJECTS)
     find_program(LLD_PATH ld.lld REQUIRED)
     find_program(D3_LINK_PYTHON python3 REQUIRED)
+    if(D3_WEAK_PROVIDERS)
+        set(D3_LINK_PREFIX ${D3_LINK_PYTHON} ${PROJECT_SOURCE_DIR}/toolchain/weak_provider_link.py
+            --manifest ${PROJECT_SOURCE_DIR}/toolchain/weak-providers.json
+            --build-root ${CMAKE_BINARY_DIR} --evidence ${CMAKE_BINARY_DIR}/d3.order.json --)
+        set(D3_LINK_EVIDENCE ${CMAKE_COMMAND} -E true)
+    else()
+        set(D3_LINK_PREFIX "")
+        # No provider plan: record an empty one so the output set is the same.
+        set(D3_LINK_EVIDENCE ${D3_LINK_PYTHON} -c
+            "open(__import__('sys').argv[1], 'w').write('{}')" ${CMAKE_BINARY_DIR}/d3.order.json)
+    endif()
     add_custom_command(
         OUTPUT ${CMAKE_BINARY_DIR}/d3 ${CMAKE_BINARY_DIR}/d3.map ${CMAKE_BINARY_DIR}/d3.map.provenance ${CMAKE_BINARY_DIR}/d3.order.json
         COMMAND ${CMAKE_COMMAND} -E remove -f ${CMAKE_BINARY_DIR}/d3.map.provenance ${CMAKE_BINARY_DIR}/d3.order.json
-        COMMAND ${D3_LINK_PYTHON} ${PROJECT_SOURCE_DIR}/toolchain/weak_provider_link.py
-                --manifest ${PROJECT_SOURCE_DIR}/toolchain/weak-providers.json
-                --build-root ${CMAKE_BINARY_DIR} --evidence ${CMAKE_BINARY_DIR}/d3.order.json --
+        COMMAND ${D3_LINK_PREFIX}
                 ${LLD_PATH} -shared -Bsymbolic --no-demangle -Map=${CMAKE_BINARY_DIR}/d3.map ${ALL_OBJECTS} -o ${CMAKE_BINARY_DIR}/d3
+        COMMAND ${D3_LINK_EVIDENCE}
         COMMAND ${CMAKE_COMMAND} -DELF=${CMAKE_BINARY_DIR}/d3 -P ${PROJECT_SOURCE_DIR}/toolchain/RecordLinkProvenance.cmake
         DEPENDS ${ALL_OBJECTS} ${PROJECT_SOURCE_DIR}/toolchain/RecordLinkProvenance.cmake
                 ${PROJECT_SOURCE_DIR}/toolchain/weak_provider_link.py ${PROJECT_SOURCE_DIR}/toolchain/weak-providers.json

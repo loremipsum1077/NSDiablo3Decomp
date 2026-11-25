@@ -448,6 +448,15 @@ class MainOutcomeTests(unittest.TestCase):
 
 
 class BuildRoutingTests(unittest.TestCase):
+    # These cover the clang 5.0.1 (2.6.2) routing: compose, the Lua backend and LatePipe.
+    # Pin it so the tests do not follow tools/config.toml's current compiler.
+    def setUp(self):
+        import build
+        for target, value in ((build, 'STOCK_501'), (build.project_version, 'LATEPIPE')):
+            patcher = patch.object(target, value, True)
+            patcher.start()
+            self.addCleanup(patcher.stop)
+
     def test_build_modes_have_distinct_outputs_and_always_reconfigure(self):
         import build
         with tempfile.TemporaryDirectory() as temp, patch.object(build, 'ROOT', Path(temp)), \

@@ -5,6 +5,10 @@
 #include <cmath>
 #undef isfinite
 #undef isnan
+// clang 7's libc++ (2.7.7 build) already has float overloads of isnan/isfinite that
+// call __libcpp_isnan/__libcpp_isfinite on the float itself; specializing them after
+// that instantiation is an error, so these specializations are for libc++ 5 only.
+#if _LIBCPP_VERSION < 7000
 // The build container already defines these global primary templates through
 // <cmath>, but promotes float to double. Explicit float specializations avoid
 // redefining those templates while preserving the original names and bodies.
@@ -29,3 +33,4 @@ template <> inline bool isnan<float>(float __lcpp_x) noexcept
 {
     return __libcpp_isnan(__lcpp_x);
 }
+#endif

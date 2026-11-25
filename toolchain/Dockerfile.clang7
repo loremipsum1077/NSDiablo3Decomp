@@ -1,0 +1,41 @@
+# Build container for game version 2.7.7: upstream clang 7.1.0.
+#
+# 2.7.7 (NintendoSDK 8.2.0) was compiled with a clang 7.x. Upstream 7.1.0
+# reproduces 100% of the functions unchanged since 2.6.2 and most of the rest
+# in tools/compiler_scan.py; 8.0.0 and 9.0.0 score lower.
+#
+# Same base and packages as toolchain/Dockerfile (the 5.0.1 / 2.6.2 image), so
+# glibc headers and CMake/Ninja are identical. The LLVM archive is not fetched
+# here: it is supplied as the build context and must match the pinned SHA-256.
+#
+#   docker build --platform linux/arm64 -t d3-build:7.1.0 \
+#       -f toolchain/Dockerfile.clang7 build/toolchains/downloads
+#
+# (tools/build.py --setup-image does exactly this.) The archive is the official
+# release asset, fetched over HTTPS on 2026-11-24:
+#   https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/clang%2Bllvm-7.1.0-aarch64-linux-gnu.tar.xz
+#   274,473,812 bytes. The SHA-256 below is the observed hash of that download,
+#   not a vendor-published checksum.
+FROM --platform=linux/arm64 ubuntu:20.04
+
+ARG CLANG_ARCHIVE=clang+llvm-7.1.0-aarch64-linux-gnu.tar.xz
+ARG CLANG_SHA256=b7369d91279cfc470f82528c23318b902adea8e345b7d64a59332c7f6900acfe
+ENV CLANG_VERSION=7.1.0
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        python3 xz-utils ca-certificates libtinfo5 libc6-dev \
+        cmake ninja-build lld \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY ${CLANG_ARCHIVE} /tmp/llvm.tar.xz
+RUN set -eu; \
+    echo "${CLANG_SHA256}  /tmp/llvm.tar.xz" | sha256sum -c -; \
+    mkdir -p "/opt/llvm-${CLANG_VERSION}"; \
+    tar -xJf /tmp/llvm.tar.xz -C "/opt/llvm-${CLANG_VERSION}" --strip-components=1; \
+    ln -s "/opt/llvm-${CLANG_VERSION}" /opt/llvm; \
+    rm /tmp/llvm.tar.xz; \
+    /opt/llvm/bin/clang --version | grep -q "clang version 7.1.0"
+
+ENV PATH="/opt/llvm/bin:${PATH}"
+
+WORKDIR /work

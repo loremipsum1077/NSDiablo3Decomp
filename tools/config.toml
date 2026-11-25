@@ -1,10 +1,16 @@
-# Single game version (2.6.2). tools/check looks for:
-#   data/2.6.2/main.elf        the target (tools/setup.py)
-#   data/2.6.2/functions.csv   the function list (tools/gen_functions_csv.py)
-#   build/2.6.2/d3             our compiled output (tools/build.py)
-default_version = "2.6.2"
+# Game version this checkout targets. tools/check looks for:
+#   data/<version>/main.elf        the target (2.7.7: nx2elf of your exefs/main)
+#   data/<version>/functions.csv   the function list (2.7.7: tools/port_version.py)
+#   build/<version>/d3             our compiled output (tools/build.py)
+# 2.6.2 data stays in data/2.6.2 and is still checked with `tools/check --version 2.6.2`.
+default_version = "2.7.7"
 functions_csv = "data/{version}/functions.csv"
 build_target = "d3"
+
+# Compiler for default_version (read by tools/project_version.py, ignored by tools/check).
+# 2.6.2 = 5.0.1 (toolchain/Dockerfile); 2.7.7 = 7.1.0 (toolchain/Dockerfile.clang7),
+# chosen by tools/compiler_scan.py.
+clang_version = "7.1.0"
 
 [decomp_me]
 preset_id = ""
