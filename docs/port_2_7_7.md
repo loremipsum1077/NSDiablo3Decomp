@@ -77,7 +77,7 @@ the 2.6.2 build does.
 - `tools/check` then promoted every `M` that matches. All-7.1.0 build: 20,222 O. Mixed
   build: 22,632 O. Mixed build with the mapping repairs below: 23,427 O. After the first
   shared-cause fixes and the GlobalSNO renumbering: 23,786 O. After the protobuf
-  regeneration: 24,292 O. After the first struct-layout fixes (branch `structs/2.7.7`: ActorCommonData, HeroInfo/UserRuntime, HUD): **25,790 O**, 6,130 M, 2,906 U, 2,175 L, 4 W (of 37,005 functions).
+  regeneration: 24,292 O. After the first struct-layout fixes (branch `structs/2.7.7`: ActorCommonData, HeroInfo/UserRuntime, HUD): 25,790 O. After the SWIG enum renumbering: **26,584 O**, 5,339 M, 2,903 U, 2,175 L, 4 W (of 37,005 functions).
 
 ### Mapping repairs (look-alike functions)
 
@@ -166,6 +166,38 @@ they stay ignored by git. Each checkout must generate them once:
   accessors (`_cached_size_` at 0xd4). They now sit at 0x60d4a0 and 0x619240 (offset 0xec).
 
 Result: **+506 O** (23,786 → 24,292), 489 of them protobuf functions; no function lost.
+
+## SWIG enum renumbering: `tools/game_lua_constants.py`
+
+The enums exported to Lua (attributes, inventory slots, pet types, AI states, handicap
+levels, open-world statuses, gizmo types) were renumbered in 2.7.7. Their values are in the
+SWIG constant table `swig_constants` (48-byte entries; the name pointer is a RELATIVE
+relocation), so the tool reads both tables from `main.elf` and compares them by name:
+
+    python3 tools/game_lua_constants.py            # report
+    python3 tools/game_lua_constants.py --apply    # rewrite the *Swig.h headers
+
+- 3,329 → 3,371 constants: 1,270 changed value, 42 are new, none were removed. Examples:
+  five `ATTRIBUTE_DAMAGE_PERCENT_BONUS_<class>` attributes at 245 (+5 for every attribute
+  after), twelve new attributes near the end (`NUM_ATTRIBUTES` 1,468 → 1,485), eight hireling
+  armour slots (`SLOT_HIRELING_END` 26 → 35, `SLOT_PLAYER_LEGENDARY_HEALTHPOTION`), and the
+  matching `PETTYPE_ITEM_PROC_PET_SLOT_HIRELING_*`.
+- The table keeps header order, so each new name goes after its predecessor in the table.
+  The tool refuses to write unless every table name ends up defined exactly once with its
+  2.7.7 value. All enumerators in the six headers are in the table, and no source casts a
+  literal to these enums.
+- Arrays sized by these enums grow with them (for example anything indexed by inventory
+  slot or attribute), so struct layouts that embed such arrays change too.
+- Renumbering exposed look-alike mapping errors where 2.6.2 and 2.7.7 code differed only in
+  an attribute key:
+  - `ItemGetAncientRank` is 0x4f5a70, not 0x47eb10 (a `DYE_TYPE` getter with no 2.6.2 name);
+  - `PvP{Get,Set}NormalExperienceGainedThisGame` are 0x4856c0/0x485730;
+  - 0x485500/0x485570 are `{Get,Set}PvPExperienceNext`;
+  - `ActorCommonData::IsAlive` is 0x477fc0. Clang 7.1.0 loads the bitfield as a halfword,
+    so its hash changed; 146 functions failed first at their call to it.
+- `generated-game-data/lua_tables.inc` still holds the 2.6.2 table (part of task A1).
+
+Result: **+794 O** (25,790 → 26,584), none lost.
 
 ## Finding new code: `tools/string_anchors.py`
 
