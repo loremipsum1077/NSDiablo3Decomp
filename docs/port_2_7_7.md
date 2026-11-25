@@ -77,7 +77,7 @@ the 2.6.2 build does.
 - `tools/check` then promoted every `M` that matches. All-7.1.0 build: 20,222 O. Mixed
   build: 22,632 O. Mixed build with the mapping repairs below: 23,427 O. After the first
   shared-cause fixes and the GlobalSNO renumbering: 23,786 O. After the protobuf
-  regeneration: 24,292 O. After the first struct-layout fixes (branch `structs/2.7.7`: ActorCommonData, HeroInfo/UserRuntime, HUD): 25,790 O. After the SWIG enum renumbering: **26,584 O**, 5,339 M, 2,903 U, 2,175 L, 4 W (of 37,005 functions).
+  regeneration: 24,292 O. After the first struct-layout fixes (branch `structs/2.7.7`: ActorCommonData, HeroInfo/UserRuntime, HUD): 25,790 O. After the SWIG enum renumbering: 26,584 O. After struct round 2 (Player, definition arrays, inventory slots, float classification): 27,257 O. After the position-based mapping repairs: **28,208 O**, 4,512 M, 2,106 U, 2,175 L, 4 W (of 37,005 functions).
 
 ### Mapping repairs (look-alike functions)
 
@@ -105,6 +105,35 @@ addresses are still `O` under the corrected names.
   linker took a 7.1.0 BlizzardProtoBuf copy); their owners are game files
   (`OnlineServiceClientBase.cpp`, `OnlineService.cpp`), which do not emit them yet. They
   are `M` until those files do.
+
+### Position-based mapping repairs
+
+The hash and call-graph matching misses functions whose code changed a lot (no hash
+match) and mislabels look-alikes whose bytes are identical but whose meaning moved (a
+struct field or enum value shifted). Function order inside a compile unit is mostly
+preserved, so position repairs both:
+
+- **Sandwiched unnamed functions.** A run of `sub_` functions in 2.7.7 whose two named
+  neighbours bracket exactly the same number of functions in 2.6.2, in the same source
+  file, where none of those 2.6.2 names exist in 2.7.7, takes those names in order. 754
+  were accepted with a size ratio of 0.5–2.5 (504 match outright, e.g.
+  `CTargetCache::GetTarget` at 0x8286b0, 15,908 → 18,824 bytes); of the 100 outside that
+  ratio, the 37 the checker passes were kept. +797 O.
+- **Named functions in another name's slot**, checked by code:
+  - `UIInventoryScreen`: 0x1f7030 is `GetPrimaryView`, 0x1f7190 `GetFocusedView`. The
+    members moved by +0x10 (primary 0x138, secondary 0x140, focused 0x148, filter 0x150);
+    0x1f7030 passed as `GetFocusedView` only because both load +0x138. Matches once the
+    layout is fixed.
+  - `XDecoder::Get` is 0xa3bbe0 and `XEncoder::Put` 0xa3c200 (same order as 2.6.2).
+  - `PowerAPI_BuffFindOnACD`: the reference overload is 0x98fe10, the pointer overload
+    (null check first) 0x98ff60.
+  - `Items::Generator()` is 0x60ccc0 and `Generator::New` 0x60d4f0;
+    `GeneratorList` D1/D0/`New` are 0x6109c0/0x610a40/0x610ae0.
+  - `GfxTextureLock` 0x29c840 and `GfxCubeMapLock` 0x29c890 were swapped.
+
+  +154 O. About 50 more slot conflicts remain (look-alike protobuf accessors, marker
+  `GetActorForEdit`s, callback templates, a few changed signatures); many are O because
+  their bytes are identical, so they need the code, not just the position, to decide.
 
 ## GlobalSNO / GlobalGBID renumbering: `tools/global_sno_map.py`
 
