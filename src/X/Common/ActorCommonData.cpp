@@ -848,6 +848,7 @@ void ActorCommonData::Initialize(
             UpdateCollision();
         }
     }
+    unk_2c0.clear();
 }
 
 
@@ -1203,6 +1204,7 @@ void ACDDelete(
             ServerQueueClientUpdate();
         }
     }
+    tACD.unk_2c0.clear();
 }
 
 BOOL PlayerClassCanDualWield(const PlayerClass ePlayerClass);  // Player.cpp:2332

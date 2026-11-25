@@ -77,7 +77,7 @@ the 2.6.2 build does.
 - `tools/check` then promoted every `M` that matches. All-7.1.0 build: 20,222 O. Mixed
   build: 22,632 O. Mixed build with the mapping repairs below: 23,427 O. After the first
   shared-cause fixes and the GlobalSNO renumbering: 23,786 O. After the protobuf
-  regeneration: **24,292 O**, 7,628 M, 2,906 U, 2,175 L, 4 W (of 37,005 functions).
+  regeneration: 24,292 O. After the first struct-layout fixes (branch `structs/2.7.7`: ActorCommonData, HeroInfo/UserRuntime, HUD): **25,790 O**, 6,130 M, 2,906 U, 2,175 L, 4 W (of 37,005 functions).
 
 ### Mapping repairs (look-alike functions)
 

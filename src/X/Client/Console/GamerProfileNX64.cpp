@@ -166,7 +166,7 @@ enum SignInMode {
 
 
 
-struct HeroInfo {  // size 0x150
+struct HeroInfo {  // size 0x158
     HeroInfo();
     void Import(const D3::Hero::SavedDefinition & tDefinition);
     void Import(const D3::Console::HeroInfo & tHeroInfo);
@@ -179,19 +179,25 @@ struct HeroInfo {  // size 0x150
     uint32 uLevel;  // 0x64
     uint32 uAltLevel;  // 0x68
     uint32 uPlayerFlags;  // 0x6c
-    Act eLastAct;  // 0x70
-    Blizzard::Time::UnixTime uDeathTime;  // 0x74
-    SNO snoKiller;  // 0x78
-    MonsterRarity eKillerRarity;  // 0x7c
-    GBID arKillerRareNameGBIDs[2];  // 0x80
-    CRefString usKillerName;  // 0x88
-    uint64 uMonstersKilled;  // 0xa0
-    uint64 uElitesKilled;  // 0xa8
-    uint64 uGoldCollected;  // 0xb0
-    uint32 uTimePlayed;  // 0xb8
-    uint32 uSeasonCreated;  // 0xbc
-    VisualEquipment tEquipment;  // 0xc0
+    uint32 unk_70;  // 0x70
+    Act eLastAct;  // 0x74
+    Blizzard::Time::UnixTime uDeathTime;  // 0x78
+    SNO snoKiller;  // 0x7c
+    MonsterRarity eKillerRarity;  // 0x80
+    GBID arKillerRareNameGBIDs[2];  // 0x84
+    CRefString usKillerName;  // 0x90
+    uint64 uMonstersKilled;  // 0xa8
+    uint64 uElitesKilled;  // 0xb0
+    uint64 uGoldCollected;  // 0xb8
+    uint32 uTimePlayed;  // 0xc0
+    uint32 uSeasonCreated;  // 0xc4
+    VisualEquipment tEquipment;  // 0xc8
 };
+static_assert(sizeof(HeroInfo) == 0x158, "HeroInfo");
+static_assert(__builtin_offsetof(HeroInfo, unk_70) == 0x70, "HeroInfo new word");
+static_assert(__builtin_offsetof(HeroInfo, eLastAct) == 0x74, "HeroInfo act");
+static_assert(__builtin_offsetof(HeroInfo, usKillerName) == 0x90, "HeroInfo killer name");
+static_assert(__builtin_offsetof(HeroInfo, tEquipment) == 0xc8, "HeroInfo equipment");
 typedef OnlineService::Callback<void (unsigned int)> FindHeroesCallback;
 enum LoadHeroResult {
     LOAD_HERO_FAILED = 0,
@@ -260,7 +266,7 @@ enum {
 
 namespace Console {
 namespace GamerProfile {
-struct UserRuntime {  // size 0x1e10
+struct UserRuntime {  // size 0x1e98
     UserRuntime();
     void Clear();
     nn::account::Uid m_idUser;  // 0x00
@@ -284,6 +290,8 @@ struct UserRuntime {  // size 0x1e10
     uint32 m_uNumHeroes;  // 0x7b8
     Console::GamerProfile::HeroInfo m_atHeroes[17];  // 0x7c0
 };
+static_assert(sizeof(UserRuntime) == 0x1e98, "UserRuntime");
+static_assert(__builtin_offsetof(UserRuntime, m_atHeroes) == 0x7c0, "UserRuntime heroes");
 
 
 struct LoadAccountTask : public Console::GamerProfile::Internal::SaveLoadTask {  // size 0x20

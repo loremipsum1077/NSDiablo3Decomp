@@ -1,13 +1,12 @@
 // Adopted from tools/gen_headers.py output; hand-maintained from here on.
 // Original file: X/Common/ActorCommonData.h
-// Subset: ActorLocation, the leading members of ActorCommonData, ACDGlobals' ACD array and the
-// ACD lookups. ActorCommonData's members from 0xb8 on are not adopted yet; an invented
-// placeholder array keeps the class its original size, which the ACD array's indexing needs.
+// Layout recovered against the Switch 2.7.7 binary, including the new map at 0x2c0.
 
 #pragma once
 
 #include "../../BlizzardCore/Include/Blizzard/Types.h"
 #include "../../Contrib/Contrib/blz/include/blz/vector.h"
+#include "../../Contrib/Contrib/blz/include/blz/unordered_map.h"
 #include "CommonTypes.h"
 #include "GameBalance.h"
 #include "GameCommonData.h"
@@ -629,7 +628,13 @@ public:
     XSphereNode * ptCollBlockerSphereNode;  // 0x2b0
     SWorldID idCollSWorld;  // 0x2b8
     uint32 uHeroTagBitfield;  // 0x2bc
-    XGrowableMap<int, int, int, int> tClientEffects;  // 0x2c0
+    // Target map operator[] at 0x2c5f40 uses an int32 key and two 32-bit values.
+    struct Unk2c0Value {
+        int32 unk_0;
+        BOOL unk_4;
+    };
+    blz::unordered_map<int32, Unk2c0Value> unk_2c0;  // 0x2c0
+    XGrowableMap<int, int, int, int> tClientEffects;  // 0x2e0
 private:
     SNO WhichAttackIsBetter(SNO snoAttackPower0, SNO snoAttackPower1) const;  // ActorAttributes.cpp:187
     ResourceType sResolveResourceType(Attrib eAttrib, ResourceType eResourceType) const;
@@ -637,7 +642,10 @@ private:
     void sSetAttrib64(Attrib eAttribHi, Attrib eAttribLo, int nParam, uint64 uValue);
     PickupResponse AutoPickup(const ActorCommonData & tACDItem);
 };
-static_assert(sizeof(ActorCommonData) == 0x340, "ActorCommonData");
+static_assert(sizeof(ActorCommonData) == 0x360, "ActorCommonData");
+static_assert(sizeof(ActorCommonData::Unk2c0Value) == 8, "ACD map value");
+static_assert(__builtin_offsetof(ActorCommonData, unk_2c0) == 0x2c0, "ACD new map");
+static_assert(__builtin_offsetof(ActorCommonData, tClientEffects) == 0x2e0, "ACD client effects");
 static_assert(__builtin_offsetof(ActorCommonData, idFastAttrib) == 0xb8, "idFastAttrib");
 static_assert(__builtin_offsetof(ActorCommonData, listIdentifiedAffixGBIDs) == 0xe8, "listIdentifiedAffixGBIDs");
 static_assert(__builtin_offsetof(ActorCommonData, listUnidentifiedAffixGBIDs) == 0x110, "listUnidentifiedAffixGBIDs");

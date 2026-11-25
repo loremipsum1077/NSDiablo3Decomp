@@ -965,7 +965,7 @@ void HeroDefinition_Init(D3::Hero::SavedDefinition & tSavedDefinition);
 namespace Console {
 namespace GamerProfile {
 // Owner-local recovery of the original GamerProfile.h:363 HeroInfo layout.
-struct HeroInfo {  // size 0x150
+struct HeroInfo {  // size 0x158
     HeroInfo();
     void Import(const D3::Hero::SavedDefinition & tDefinition);
     void Import(const D3::Console::HeroInfo & tHeroInfo);
@@ -978,20 +978,26 @@ struct HeroInfo {  // size 0x150
     uint32 uLevel;  // 0x64
     uint32 uAltLevel;  // 0x68
     uint32 uPlayerFlags;  // 0x6c
-    Act eLastAct;  // 0x70
-    Blizzard::Time::UnixTime uDeathTime;  // 0x74
-    SNO snoKiller;  // 0x78
-    MonsterRarity eKillerRarity;  // 0x7c
-    GBID arKillerRareNameGBIDs[2];  // 0x80
-    CRefString usKillerName;  // 0x88
-    uint64 uMonstersKilled;  // 0xa0
-    uint64 uElitesKilled;  // 0xa8
-    uint64 uGoldCollected;  // 0xb0
-    uint32 uTimePlayed;  // 0xb8
-    uint32 uSeasonCreated;  // 0xbc
-    VisualEquipment tEquipment;  // 0xc0
+    uint32 unk_70;  // 0x70
+    Act eLastAct;  // 0x74
+    Blizzard::Time::UnixTime uDeathTime;  // 0x78
+    SNO snoKiller;  // 0x7c
+    MonsterRarity eKillerRarity;  // 0x80
+    GBID arKillerRareNameGBIDs[2];  // 0x84
+    CRefString usKillerName;  // 0x90
+    uint64 uMonstersKilled;  // 0xa8
+    uint64 uElitesKilled;  // 0xb0
+    uint64 uGoldCollected;  // 0xb8
+    uint32 uTimePlayed;  // 0xc0
+    uint32 uSeasonCreated;  // 0xc4
+    VisualEquipment tEquipment;  // 0xc8
 };
-static_assert(sizeof(HeroInfo) == 0x150, "HeroInfo");
+static_assert(sizeof(HeroInfo) == 0x158, "HeroInfo");
+static_assert(__builtin_offsetof(HeroInfo, unk_70) == 0x70, "HeroInfo new word");
+static_assert(__builtin_offsetof(HeroInfo, eLastAct) == 0x74, "HeroInfo act");
+static_assert(__builtin_offsetof(HeroInfo, usKillerName) == 0x90, "HeroInfo killer name");
+static_assert(__builtin_offsetof(HeroInfo, tEquipment) == 0xc8, "HeroInfo equipment");
+
 
 
 // Inferred structured uniqueness loop reproduces original low32-bit comparisons and zero-ID exit.
@@ -1059,7 +1065,7 @@ void CreateRandomHero(int32 nUserIdx, PlayerClass eRequiredClass)
 }
 #line 314
 HeroInfo::HeroInfo()
-    : uCreationTime(0), eClass((PlayerClass)-1), uLevel(0), uAltLevel(0), uPlayerFlags(0),
+    : uCreationTime(0), eClass((PlayerClass)-1), uLevel(0), uAltLevel(0), uPlayerFlags(0), unk_70(0),
       eLastAct((Act)-1), uDeathTime(0), snoKiller(SNO_NONE), eKillerRarity((MonsterRarity)-1),
       uMonstersKilled(0), uElitesKilled(0), uGoldCollected(0), uTimePlayed(0), uSeasonCreated(0)
 {

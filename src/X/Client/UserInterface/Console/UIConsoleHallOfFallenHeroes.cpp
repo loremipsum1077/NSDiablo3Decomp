@@ -38,8 +38,13 @@
 #include "../../../Sigma/UnicodeText.h"
 // X/Client/Console/GamerProfile.h; declared here because adding it there would pull VisualInventory.h into every includer.
 namespace Console { namespace GamerProfile {
-struct HeroInfo { HeroInfo(); void Import(const D3::Console::HeroInfo & tHeroInfo); void Export(D3::Console::HeroInfo & tHeroInfo) const; OnlineService::HeroId uHeroId; Blizzard::Time::UnixTime uCreationTime; char szFilename[32]; char szName[49]; PlayerClass eClass; uint32 uLevel; uint32 uAltLevel; uint32 uPlayerFlags; Act eLastAct; Blizzard::Time::UnixTime uDeathTime; SNO snoKiller; MonsterRarity eKillerRarity; GBID arKillerRareNameGBIDs[2]; CRefString usKillerName; uint64 uMonstersKilled; uint64 uElitesKilled; uint64 uGoldCollected; uint32 uTimePlayed; uint32 uSeasonCreated; VisualEquipment tEquipment; };
-static_assert(sizeof(HeroInfo) == 0x150, "HeroInfo");
+struct HeroInfo { HeroInfo(); void Import(const D3::Console::HeroInfo & tHeroInfo); void Export(D3::Console::HeroInfo & tHeroInfo) const; OnlineService::HeroId uHeroId; Blizzard::Time::UnixTime uCreationTime; char szFilename[32]; char szName[49]; PlayerClass eClass; uint32 uLevel; uint32 uAltLevel; uint32 uPlayerFlags; uint32 unk_70; Act eLastAct; Blizzard::Time::UnixTime uDeathTime; SNO snoKiller; MonsterRarity eKillerRarity; GBID arKillerRareNameGBIDs[2]; CRefString usKillerName; uint64 uMonstersKilled; uint64 uElitesKilled; uint64 uGoldCollected; uint32 uTimePlayed; uint32 uSeasonCreated; VisualEquipment tEquipment; };
+static_assert(sizeof(HeroInfo) == 0x158, "HeroInfo");
+static_assert(__builtin_offsetof(HeroInfo, unk_70) == 0x70, "HeroInfo new word");
+static_assert(__builtin_offsetof(HeroInfo, eLastAct) == 0x74, "HeroInfo act");
+static_assert(__builtin_offsetof(HeroInfo, usKillerName) == 0x90, "HeroInfo killer name");
+static_assert(__builtin_offsetof(HeroInfo, tEquipment) == 0xc8, "HeroInfo equipment");
+
 const HeroInfo * GetHeroList(int32 nUserIdx, uint32 & uNumHeroes); } }  // GamerProfileNX64.cpp:1202
 extern UIID UWND_CONSOLE_HOFH, URACTOR_CONSOLE_HOFH_HERO, UTEXT_CONSOLE_HOFH_NAME, UTEXT_CONSOLE_HOFH_SLAIN_BY_LABEL, UTEXT_CONSOLE_HOFH_SLAIN_BY, UTEXT_CONSOLE_HOFH_GOLD, UTEXT_CONSOLE_HOFH_MONSTERS, UTEXT_CONSOLE_HOFH_TIME, UTEXT_CONSOLE_HOFH_LEVEL, USTACK_CONSOLE_HOFH_HEROES;  // UIIDs.h
 namespace UIInventory { namespace Console { void UpdatePlayerActorUI(const UIID & idRActorControl, VisualInventory & tVisualInventory, PlayerClass eClass, BOOL bIsFemale, uint32 dwAnimTag); } }  // UIConsoleInventoryViewUtilities.cpp:1834
