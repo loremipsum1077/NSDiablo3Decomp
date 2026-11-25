@@ -12,6 +12,9 @@
 #include "Online.h"
 #include "../../../Contrib/Contrib/DemonWare/bdLobby/bdStorage/bdContextUserStorageFileInfo.h"
 #include "SaveMigration.h"
+#include "../../Common/Crafting/ItemCrafting.h"
+
+extern "C" const CrafterSavedData & sub_71006b3690();
 #include "GamerProfile.h"
 #include "../../Common/Protobuf/Account.pb.h"
 #include "../../Common/Protobuf/Console.pb.h"
@@ -763,6 +766,24 @@ BOOL IsMigrationRequired(const D3::Account::SavedDefinition & tDefinition)
 
 
 
+extern "C" void sub_71000b0300(int32, D3::Console::MigrationData & tMigrationData)
+{
+    D3::Account::SavedDefinition & tAccount = *tMigrationData.mutable_account();
+    for (uint32 i = tAccount.partitions_size(); i < ACCOUNT_PARTITION_COUNT; ++i)
+    {
+        D3::Account::AccountPartition * ptPartition = tAccount.add_partitions();
+        ptPartition->set_partition_id(i);
+        D3::AttributeSerializer::SavedAttribute * ptAttribute = ptPartition->mutable_saved_attributes()->add_attributes();
+        ptAttribute->set_key(1);
+        ptAttribute->set_value(0);
+        *ptPartition->mutable_saved_attributes() = D3::AttributeSerializer::SavedAttributes::default_instance();
+        ptPartition->mutable_saved_attributes()->mutable_gb_handle()->set_game_balance_type(D3::GameBalance::Handle::default_instance().game_balance_type());
+        ptPartition->mutable_saved_attributes()->mutable_gb_handle()->set_gbid(D3::GameBalance::Handle::default_instance().gbid());
+        ptPartition->clear_items();
+        sub_71006b3690().Export(*ptPartition->mutable_crafter_data(), NULL);
+    }
+}
+
 BOOL HealMigrationData(int32 nUserIndex, D3::Console::MigrationData & tMigrationData)
 {
     BOOL bDidHeal = FALSE;
@@ -848,6 +869,12 @@ BOOL HealMigrationData(int32 nUserIndex, D3::Console::MigrationData & tMigration
     if (tMigrationData.title_version() < 260)
     {
         _Migrate_250a_to_260(nUserIndex, tMigrationData);
+        bDidHeal = TRUE;
+    }
+
+    if (tMigrationData.title_version() < 277)
+    {
+        sub_71000b0300(nUserIndex, tMigrationData);
         bDidHeal = TRUE;
     }
 

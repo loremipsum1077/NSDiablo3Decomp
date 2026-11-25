@@ -176,6 +176,7 @@ void SetShoulderButtonVisibility();
 void EnableInspectMode(BOOL bEnable);
 void UpdateRingIcons(const UIID & idRing, BOOL bFocus);
 void LoadLeaderboards();
+extern "C" void sub_7100191f20(int32 nCategory);
 BOOL RingIncludeControlPredicate(const UIID & idControl);
 void OnClose(const UIID & id, const int32 nControllerIndex);
 void ActivateScreen(CurrentTab eTab);
@@ -454,6 +455,9 @@ void LoadLeaderboards()
     UI_GetConsoleListBoxFromID(UILIST_CONSOLE_LEADERBOARDS_ENTRY_LIST_TOP_GLOBAL).SetDataSource(sgtUILeaderboardData.tLeaderboardData);
     UI_GetWindowFromID(UITEXT_CONSOLE_LEADERBOARDS_MESSAGE).SetActive(TRUE);
     UI_GetTextFromID(UITEXT_CONSOLE_LEADERBOARDS_MESSAGE).SetText(StringListFetch("ConsoleLeaderboards:RetrievingData"), FALSE);
+    UI_GetConsoleListBoxFromID(UILIST_CONSOLE_LEADERBOARDS_ENTRY_LIST_FRIENDS).SetActive(FALSE);
+    UI_GetConsoleListBoxFromID(UILIST_CONSOLE_LEADERBOARDS_ENTRY_LIST_GLOBAL).SetActive(FALSE);
+    UI_GetConsoleListBoxFromID(UILIST_CONSOLE_LEADERBOARDS_ENTRY_LIST_TOP_GLOBAL).SetActive(FALSE);
     IssueLeaderboardRequest();
 }
 
@@ -766,12 +770,14 @@ void OnButton1(const UIID & id, const int32 nControllerIndex)
         sgtUILeaderboardData.eUINavigationState = UISTATE_FILTERS_NAVIGATION;
         SetShoulderButtonVisibility();
         LoadLeaderboards();
+        if (sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS)
+            sub_7100191f20(sgtUILeaderboardData.nSelectedCategory);
         SoundManager::PlaySound(GlobalSNOGet(GLOBALSNO_SOUND_SELECT_GENERIC), cgtPSODefaults);
         break;
     case UISTATE_FILTERS_NAVIGATION:
         if (sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS)
         {
-            if (!sgtUILeaderboardData.bLeaderboardRequestIssued[LEADERBOARD_FILTER_FRIENDS] && !sgtUILeaderboardData.bLeaderboardRequestIssued[LEADERBOARD_FILTER_GLOBAL_POSITION] && !sgtUILeaderboardData.bLeaderboardRequestIssued[LEADERBOARD_FILTER_TOP_GLOBAL])
+            if (sgtUILeaderboardData.bLeaderboardRequestIssued[LEADERBOARD_FILTER_FRIENDS] != TRUE && sgtUILeaderboardData.bLeaderboardRequestIssued[LEADERBOARD_FILTER_GLOBAL_POSITION] != TRUE && sgtUILeaderboardData.bLeaderboardRequestIssued[LEADERBOARD_FILTER_TOP_GLOBAL] != TRUE)
                 EnableInspectMode(TRUE);
         }
         break;

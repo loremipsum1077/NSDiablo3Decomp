@@ -11915,12 +11915,20 @@ void ACDInventoryWhereCanThisGoHireling(const GBID gbidItem, int32 & nNumSlots, 
         SLOT_HIRELING_LEFT_FINGER,
         SLOT_HIRELING_RIGHT_FINGER,
         SLOT_HIRELING_NECK,
+        SLOT_HIRELING_HEAD,
+        SLOT_HIRELING_TORSO,
+        SLOT_HIRELING_HANDS,
+        SLOT_HIRELING_WAIST,
+        SLOT_HIRELING_FEET,
+        SLOT_HIRELING_SHOULDERS,
+        SLOT_HIRELING_LEGS,
+        SLOT_HIRELING_BRACERS,
     };
 
 
 
 
-    for (int32 i = 0; i < 6; i++)
+    for (int32 i = 0; i < SLOT_HIRELING_END - SLOT_HIRELING_START; i++)
     {
         if (ACDInventoryItemAllowedInThisSlotType(gbidItem, sgePaperDollSlots[i]))
         {
@@ -11929,14 +11937,6 @@ void ACDInventoryWhereCanThisGoHireling(const GBID gbidItem, int32 & nNumSlots, 
         }
     }
 }
-
-
-
-
-
-
-
-
 
 
 

@@ -1611,7 +1611,7 @@ void PlayerMysticScreen::UpdateTransmogPreviewVisualInventory(const Player & tPl
         }
     }
 }
-
+// NON_MATCHING: At +0x1c8 the target recomputes the visual-item offset for the invisible-dye GBID store.
 void PlayerMysticScreen::UpdateDyeItemPreviewVisualInventory(const Player & tPlayer, const ACDID idACDItem, const GBID gbidSelectedDye)
 {
     PlayerClass eClass = PlayerGetPlayerClass(&tPlayer);

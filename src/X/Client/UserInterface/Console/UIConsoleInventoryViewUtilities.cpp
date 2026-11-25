@@ -116,6 +116,7 @@ namespace Console {
 extern "C" int32 sub_71004b8900(const ActorCommonData * ptACD, int32 nLevel);
 extern "C" BOOL sub_7100505c00(const ActorCommonData & tACDItem);
 extern "C" BOOL sub_710050e880(const ActorCommonData * ptACD);
+extern "C" BOOL sub_71005274e0(const ActorCommonData & tACDPlayer);
 extern "C" BOOL sub_710050e910(GBID gbidItem);
 extern "C" RGBAColor sub_710050e7e0();
 CRefString sGetGemEffectsString(const ActorCommonData & tACDGem, const ACDID idACDItem); void GetSocketedEffects(const ActorCommonData & tACDSocketedItem, SocketEffectInfo * arEffects); ACDID sGetEquippedItemBySlotType(const Player * ptPlayer, const UIFilterType eFilterType, const BOOL fFallbackTo2HMainHand);
@@ -553,9 +554,9 @@ inline void SetUpPortraitFrameButton(const UIID & idItemUI, const ActorCommonDat
     tItemButton.SetAllTextureFrames(tImageTexFrame);
 }
 
-// NON_MATCHING: 1524 vs 1520: the original jump-threads the paragon-frame path straight to the bEquipped test; ours re-tests bKnown (one extra cbz). Lines 612-627 re-laid on DWARF rows/columns (613:59 call, 615:16 ||, 617:20 &&), no byte change.
 
 
+// NON_MATCHING: 1644 versus 1640 bytes. Clang retests bKnown where the target branches directly to the bEquipped test.
 void UpdateViewCosmeticItemUI(
     const UIID & idItemUI,
     const ActorCommonData & tACDItem,
@@ -686,6 +687,9 @@ void UpdateViewCosmeticItemUI(
 
     UI_GetWindowFromID(UIIDCreateFromParent(idRoot, ".Ancient")).SetActive(FALSE);
     UI_GetWindowFromID(UIIDCreateFromParent(idRoot, ".PrimalAncient")).SetActive(FALSE);
+    UI_GetWindowFromID(UIIDCreateFromParent(idRoot, ".Ethereal")).SetActive(FALSE);
+    UI_GetWindowFromID(UIIDCreateFromParent(idRoot, ".Sanctified")).SetActive(FALSE);
+    UI_GetWindowFromID(UIIDCreateFromParent(idRoot, ".Primalized")).SetActive(FALSE);
 
 
     UI_GetWindowFromID(UIIDCreateFromParent(idRoot, ".ItemRepairCost")).SetActive(FALSE);
@@ -773,6 +777,9 @@ void UpdateViewCraftingMaterialUI(const UIID & idItemUI, const ActorCommonData &
 
     UI_GetWindowFromID(UIIDCreateFromParent(idRoot, ".Ancient")).SetActive(FALSE);
     UI_GetWindowFromID(UIIDCreateFromParent(idRoot, ".PrimalAncient")).SetActive(FALSE);
+    UI_GetWindowFromID(UIIDCreateFromParent(idRoot, ".Ethereal")).SetActive(FALSE);
+    UI_GetWindowFromID(UIIDCreateFromParent(idRoot, ".Sanctified")).SetActive(FALSE);
+    UI_GetWindowFromID(UIIDCreateFromParent(idRoot, ".Primalized")).SetActive(FALSE);
 
 
     UI_GetWindowFromID(UIIDCreateFromParent(idRoot, ".ItemRepairCost")).SetActive(FALSE);
@@ -2047,7 +2054,7 @@ void UpdateNavBarTabState(
         idBlinkerScoped.SetFromParent(idRoot, CRefString().Format("%s.New3", szNavigationContainerID));
         UIBlinker & tBlinker = UI_GetBlinkerFromID(idBlinkerScoped);
 
-        BOOL bActive = UIParagonBonuses::Console::HasLeveledSinceLastVisit(ptPlayer);
+        BOOL bActive = UIParagonBonuses::Console::HasLeveledSinceLastVisit(ptPlayer) && !sub_71005274e0(*ptACDPlayer);
         tBlinker.SetActive(bActive);
 
 

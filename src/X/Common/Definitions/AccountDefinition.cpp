@@ -394,3 +394,8 @@ void AccountDefinition_ToDefaults_ForConsoleClient(D3::Account::SavedDefinition 
         ptPartition->clear_items();
     }
 }
+
+extern "C" const CrafterSavedData & sub_71006b3690()
+{
+    return stDefaultCrafterSavedData;
+}

@@ -505,6 +505,8 @@ void UITransmuteRecipes::CanCompleteCallback(ACDID idACDSquare, InventorySlotTyp
     nCount = nCount > 1 ? nCount : 1;
     if (ptIngredient->eType == TRIT_SPECIFIC_GBID) {
         if (ptACDItem->hGB.gbid == ptIngredient->nTypeValue &&
+            (ptIngredient->unk_0c == -1 || ptIngredient->unk_0c <= ItemGetAncientRank(*ptACDItem)) &&
+            (ptIngredient->unk_10 == -1 || ptIngredient->unk_10 == ItemGetAncientRank(*ptACDItem)) &&
             (ptCallbackData->nSpecificGBIDCount += nCount) >= ptIngredient->nQuantity)
             ptCallbackData->bCanComplete = TRUE;
     } else {

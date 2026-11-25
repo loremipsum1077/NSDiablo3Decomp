@@ -2548,7 +2548,7 @@ static OggPageState sOggGetPage(
 
 
 
-
+// NON_MATCHING: The inlined page loop hoists stream and sync-state addresses in a different order and assigns them different registers.
 OggPageState CutsceneOggGetPacketBlocking(
     Cutscene * ptCutscene,
     ogg_stream_state * pOggStream,

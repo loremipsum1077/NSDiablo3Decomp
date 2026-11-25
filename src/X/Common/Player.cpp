@@ -5485,24 +5485,24 @@ int32 PlayerGetNumberPlayersSharingGameConnection(const Player * ptPlayer)
 
 
 
+extern "C" int32 sub_71004b8980(const ActorCommonData * ptACDPlayer, int32 nTicks);
 float PlayerGetStreakTimerTolerance(const Player & tPlayer)
 {
-
+    ActorCommonData * ptACDPlayer = ACDTryToGet(tPlayer.idPlayerACD);
     ScopedGlobalDefinitionLockR pdefGlobals;
+    float flTolerance;
     if (PlayerGetNumPlayers() > 1)
-    {
-        return pdefGlobals->flMassacreStreakTimerCoop;
-    }
+        flTolerance = pdefGlobals->flMassacreStreakTimerCoop;
+    else if (ptACDPlayer)
+        flTolerance = HeroIsRanged(ptACDPlayer->id) ? pdefGlobals->flMassacreStreakTimerRanged : pdefGlobals->flMassacreStreakTimerMelee;
     else
-    {
-        BOOL bIsRanged = FALSE;
-        ActorCommonData * ptACDPlayer = ACDTryToGet(tPlayer.idPlayerACD);
-        if (ptACDPlayer)
-        {
-            bIsRanged = HeroIsRanged(ptACDPlayer->id);
-        }
-        return bIsRanged ? pdefGlobals->flMassacreStreakTimerRanged : pdefGlobals->flMassacreStreakTimerMelee;
-    }
+        return pdefGlobals->flMassacreStreakTimerMelee;
+    if (ptACDPlayer)
+        flTolerance = sub_71004b8980(ptACDPlayer, (int32)(flTolerance * 60.0f)) / 60.0f;
+    return flTolerance;
+
+
+
 }
 
 

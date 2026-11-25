@@ -31,6 +31,7 @@
 #include "../../../Sigma/UnicodeText.h"
 
 // Declared here because their headers are not adopted yet; each comment names the defining file.
+extern "C" BOOL sub_7100527370(const ActorCommonData & tACD);  // Player.cpp
 ACDID LocalPlayerACDGet();  // X/Client/CPlayer.cpp
 CRefString CPlayerGetLevelString(const int32 nLevel, const int32 nAltLevel);  // X/Client/CPlayer.cpp
 float HirelingGetDiminishedAttribute(ACDID idACDPlayer, Attrib eAttrib);  // X/Common/Hireling.cpp
@@ -748,7 +749,8 @@ void sDetailsMovementSpeed(const UIID & id, const ActorCommonData & tACD)
     CRefString usStat = CRefString(flStat >= 0.0f ? "+" : "") + UnicodeText::FormatNumber(flStat, TRUE, FNS_PERCENT, 2, 2, XLOCALE_INVALID);
     float flStatPlus100 = flStat + 1.0f;
     CRefString usStatPlus100 = UnicodeText::FormatNumber(flStatPlus100, TRUE, FNS_PERCENT, 2, 2, XLOCALE_INVALID);
-    CRefString usTip = LocalizedSprintf(StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_HERO_DETAILS), "TipMovementSpeed"), usStat.str(), usStatPlus100.str());
+    const char * szTip = sub_7100527370(tACD) ? "TipMovementSpeedParagonCap" : "TipMovementSpeed";
+    CRefString usTip = LocalizedSprintf(StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_HERO_DETAILS), szTip), usStat.str(), usStatPlus100.str());
     gtTooltipMgr.SetTextToolTip(id, usTip, 1, FALSE, TRUE);
 }
 

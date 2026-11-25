@@ -3045,7 +3045,7 @@ static float sGetOneOfModifierWeightForSinglePlayer(const LootDropModifier & tLo
 
 
 
-        if (Console::Online::GetGBIDBlacklistData(gbidItemToDrop, NULL))
+        if ((pdefItem && !sub_7100897970(gbidItemToDrop, ptACDLooter)) || Console::Online::GetGBIDBlacklistData(gbidItemToDrop, NULL))
         {
             return 0.0f;
         }

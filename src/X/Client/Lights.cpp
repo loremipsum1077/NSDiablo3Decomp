@@ -1580,7 +1580,7 @@ template <> void Math::Lerp<LightInterpState>(const LightInterpState & tState1, 
 
 
 
-
+// NON_MATCHING: During color interpolation the target keeps two products in s17 and s19. Clang reuses s0 and s4.
 static void sEvaluateLightPaths(Light * ptLight, const LightDefinition * pdefLight)
 
 {

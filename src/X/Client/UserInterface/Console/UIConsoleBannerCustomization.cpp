@@ -1615,9 +1615,10 @@ void UpdateButton1Legend()
         int32 nSelectedIndex = UI_GetConsoleListBoxFromID(UILIST_CONSOLE_BANNER_CUSTOMIZATION_CHOICES).GetSelectedIndex();
         if (nSelectedIndex >= 0)
         {
+            int32 nDataIndex = Console::sgtBannerCustomizationGlobals.tBannerListSource.GetDataIndex(nSelectedIndex);
             ::Console::ControllerActionManager & tActionManager = ::Console::Screens::GetActionManager();
             if (UI_GetControllerFocus() == UILIST_CONSOLE_BANNER_CUSTOMIZATION_CHOICES &&
-                IsBannerPieceLocked(eSelectedType, nSelectedIndex))
+                IsBannerPieceLocked(eSelectedType, nDataIndex))
             {
                 tActionManager.ClearAction(::Console::CONTROLLER_INPUT_BUTTON_1);
             }

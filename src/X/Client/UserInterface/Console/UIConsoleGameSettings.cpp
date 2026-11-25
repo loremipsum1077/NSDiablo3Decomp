@@ -1243,6 +1243,8 @@ BOOL IsResumeFromSave(Act eAct, SNO snoInitialQuest, int32 nInitialQuestStepUID)
 }
 
 // Original line 2062.
+extern "C" BOOL sub_710072e0b0(uint32 uSeasonCreated, uint32 uFlags);
+// NON_MATCHING: Clang lays out the warning paths differently and splits a paired stack store.
 void ConfirmGameParams(BOOL bSkipWarning, BOOL bCloseScreen)
 {
     ::Console::Online::GameParams tGameParams;
@@ -1274,6 +1276,7 @@ void ConfirmGameParams(BOOL bSkipWarning, BOOL bCloseScreen)
         }
         const D3::Hero::Digest & tDigest = sgtGameSettingsGlobals.tHeroDefinition.digest();
         tGameParams.m_bIsHardcore = tDigest.player_flags() & (1 << PLAYERFLAG_HARDCORE);
+        tGameParams.unk_14 = sub_710072e0b0(tDigest.season_created(), tDigest.player_flags2());
         tGameParams.m_eGameType = 1;
         tGameParams.m_bResumeFromSave = IsResumeFromSave(eAct, snoInitialQuest, nInitialQuestStepUID);
         tGameParams.m_eAct = eAct;
@@ -1287,6 +1290,7 @@ void ConfirmGameParams(BOOL bSkipWarning, BOOL bCloseScreen)
     } else {
         const D3::Hero::Digest & tDigest = sgtGameSettingsGlobals.tHeroDefinition.digest();
         tGameParams.m_bIsHardcore = tDigest.player_flags() & (1 << PLAYERFLAG_HARDCORE);
+        tGameParams.unk_14 = sub_710072e0b0(tDigest.season_created(), tDigest.player_flags2());
         tGameParams.m_eGameType = 1;
         tGameParams.m_bResumeFromSave = FALSE;
         tGameParams.m_eAct = ACT_OPEN_WORLD;
@@ -1861,7 +1865,7 @@ BOOL IsDifficultyLocked(
             }
 
             BOOL bIsSetDungeonActive = GameGetActiveGameCommonData().tGameSyncedData.bSetDungeonActive;
-            if (bIsSetDungeonActive)
+            if (bIsSetDungeonActive || GameGetActiveGameCommonData().tGameSyncedData.unk_4c)
                 bDifficultyIsLocked = TRUE;
 
 

@@ -679,7 +679,7 @@ static void sOnUpdateCategoryUI(const UIID & idItemUI, const UIInventory::Consol
 namespace UIInventory {
 namespace Console {
 
-// NON_MATCHING: register allocation only (the original keeps &m_tListView in a callee-saved register across the provider memsets; 4 bytes larger frame)
+// NON_MATCHING: the target keeps &m_tListView in x25 across the provider initialization and reserves 0x100 stack bytes. Clang reserves 0xf0.
 PlayerMailScreen::PlayerMailScreen()
     : m_tItemsProvider(InventoryItems::PROVIDERMODE_BACKPACK)
     , m_tListView(m_tUnmailedItemProvider, UIDLG_INVENTORY_CONSOLE_LIST, TRUE)

@@ -2188,6 +2188,7 @@ BOOL UIGame::IsShowingNotification()
 
 
 
+extern "C" BOOL sub_71005274e0(const ActorCommonData & tACDPlayer);
 void UIGame::ShowAltLevelUpButton(ACDID idACDPlayer)
 {
     ActorCommonData & tACDPlayer = ACDGet(idACDPlayer);
@@ -2222,7 +2223,7 @@ void UIGame::ShowAltLevelUpButton(ACDID idACDPlayer)
         }
     }
     // ...
-    sgptUIGameGlobals->fShowParagonPointsButton = TRUE;
+    sgptUIGameGlobals->fShowParagonPointsButton = !sub_71005274e0(tACDPlayer);
 }
 
 void UIGame::ShowLevelUpButton(

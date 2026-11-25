@@ -9067,7 +9067,7 @@ int32 GetXPReward(
 }
 
 
-
+extern "C" float sub_71004b89f0(const ActorCommonData * ptACDPlayer, float flMultiplier);
 void SPlayerUpdateKillCounter(
     Player & tPlayer,
     KillCounterType eType)
@@ -9169,7 +9169,7 @@ void SPlayerUpdateKillCounter(
                     switch (eType)
                     {
                     case KILLCOUNTER_MONSTER:
-                        tMessage.flXPMultiplier = Callouts::GetMassacreXPMultiplier(tCounter.uTotalCount);
+                        tMessage.flXPMultiplier = sub_71004b89f0(ptACDPlayer, Callouts::GetMassacreXPMultiplier(tCounter.uTotalCount));
                         tCounter.bStartingTimerActive = FALSE;
                         break;
                     case KILLCOUNTER_OBJECT_DESTRUCTION:
@@ -9219,7 +9219,7 @@ void SPlayerUpdateKillCounter(
                     if (eType == KILLCOUNTER_MONSTER)
                     {
 
-                        uXPRewarded = (uint32)(tCounter.nTotalXP * (tMessage.flXPMultiplier - 1.0f));
+                        uXPRewarded = (uint32)(tCounter.nTotalXP * (tMessage.flXPMultiplier - sub_71004b89f0(ptACDPlayer, 1.0f)));
                         tCounter.nTotalXP = 0;
                     }
                     else

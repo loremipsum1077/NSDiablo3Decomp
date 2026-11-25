@@ -300,11 +300,6 @@ void GamePerfDisposePerfCtrList(POS* posList, const uint32 dwNumListEntries,
                                 XMemoryAllocatorInterface* ptMemoryInterface);
 
 void GamePerfInitialize() {
-    static const PerfCtrParams tPerfCtrList[NUM_INTERNALPERFCTRS] = {
-        {INTERNALPERFCTR_FULLFRAME, FALSE, "Full Frame"},
-        {INTERNALPERFCTR_UNACCOUNTED, FALSE, "Other"},
-    };
-
     sInitGamePerfThread(&sGamePerfThreadData);
 
     SigmaGlobals& tSigmaGlobals = gtSigmaGlobals;
@@ -318,6 +313,10 @@ void GamePerfInitialize() {
     ptGamePerfGlobals->tPerfCtrList.SetBlockCount_Tracked(MAX_COUNTERS);
     ptGamePerfGlobals->tPerfCtrStack.SetBlockCount_Tracked(MAX_COUNTERS);
 
+    PerfCtrParams tPerfCtrList[NUM_INTERNALPERFCTRS] = {
+        {INTERNALPERFCTR_FULLFRAME, FALSE, "Full Frame"},
+        {INTERNALPERFCTR_UNACCOUNTED, FALSE, "Other"},
+    };
     GamePerfInitializePerfCtrList(ptGamePerfGlobals->posPerfCtrInternal, tPerfCtrList, NUM_INTERNALPERFCTRS, NULL);
 }
 

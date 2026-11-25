@@ -1661,10 +1661,15 @@ void sCheckForSeasonalHero(int32 nControllerIndex)
 }
 
 
-// NON_MATCHING: 3372 bytes both, on DWARF lines; only the two zeroing stores of idCosmeticsList (vector _init, sp+0x30/sp+0x38) are scheduled in the opposite order; declaration order and line layout did not change it.
+extern "C" BOOL sub_710072e0b0(uint32 uSeasonCreated, uint32 uFlags);
+extern "C" void sub_71000b4c10(int32 nMode);
+
+// NON_MATCHING: Clang uses cmp/cset to normalize the mode and reverses the two idCosmeticsList zero stores.
 void OpenForController(
     int32 nControllerIndex)
 {
+    const D3::Hero::Digest & tHero = ::Console::GamerProfile::GetHero(nControllerIndex).digest();
+    sub_71000b4c10(sub_710072e0b0(tHero.season_created(), tHero.player_flags2()) ? 1 : 0);
     UI_GetControlFromID(UIWND_CONSOLE_MAIN_MENU).SetActive(TRUE);
 
     if (::Console::Online::IsSeasonsInitialized() && OnlineService::GetSeasonState() == OnlineService::SEASON_STATE_ACTIVE)

@@ -1599,6 +1599,9 @@ float Weather::GetIntensity(const WeatherRWindowData & tData) {
 
 void Weather::Warped(RWindow & tRWindow) {
     WeatherRWindowData & tData = tRWindow.GetWeatherRWindowData();
+    if (tData.idFogParticle != PARTICLESYSTEMID_INVALID)
+        sParticleSystemDeleteOrOutro(tData.idFogParticle, TRUE);
+    tData.snoFogParticle = SNO_NONE;
     Update(tRWindow, 0.0f, TRUE);
     tData.tState = tData.tTargetState;
     tData.flIntensity = tData.flTargetIntensity;

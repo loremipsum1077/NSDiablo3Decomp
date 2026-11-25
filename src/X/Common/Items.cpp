@@ -11100,7 +11100,8 @@ private:
     FindUpgradeableJewelsCallbackData(FindUpgradeableJewelsCallbackData &);
     FindUpgradeableJewelsCallbackData & operator=(FindUpgradeableJewelsCallbackData &);
 };
-
+extern "C" BOOL sub_71004f8950(GBID gbidItem);
+// NON_MATCHING: Clang reuses the item GBID address where the target repeats the multiply-add.
 static void sFindUpgradeableJewelsCallback(ACDID idACDSquare, InventorySlotType eSlot, void * pUserData)
 {
     FindUpgradeableJewelsCallbackData * ptData = (FindUpgradeableJewelsCallbackData *)pUserData;
@@ -11108,7 +11109,7 @@ static void sFindUpgradeableJewelsCallback(ACDID idACDSquare, InventorySlotType 
     if (ptACDItem == NULL)
         return;
 
-    if (!ItemIsUpgradeableJewel(*ptACDItem))
+    if (!ptACDItem->IsItem() || sub_71004f8950(ptACDItem->hGB.gbid) || !ItemIsUpgradeableJewel(*ptACDItem))
         return;
     if (ptData->bExcludeUnidentified && ItemIsUnidentified(*ptACDItem))
         return;
