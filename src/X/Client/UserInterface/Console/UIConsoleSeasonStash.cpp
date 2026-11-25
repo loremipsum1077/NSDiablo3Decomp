@@ -61,7 +61,7 @@ enum ButtonActions {
     ACTION_UPGRADE_STASH = 12,
 };
 
-class SeasonStashItemProvider : public UIInventory::Console::UIInventoryViewItemsProvider {  // size 0x7d8
+class SeasonStashItemProvider : public UIInventory::Console::UIInventoryViewItemsProvider {  // size 0x8c8
 public:
     SeasonStashItemProvider();
     virtual ~SeasonStashItemProvider() {}
@@ -86,12 +86,12 @@ public:
 private:
     D3::Account::ConsolePartitionData * m_ptSeasonRolloverItems;  // 0x20
     blz::vector<UISeasonStash::Console::SeasonStashItemProvider::StashItemData, blz::allocator<UISeasonStash::Console::SeasonStashItemProvider::StashItemData> > m_arrAllItems;  // 0x28
-    ACDIDArray m_arrFilteredItems[80];  // 0x40
-    ACDIDArray m_arrEmpty;  // 0x7c0
+    ACDIDArray m_arrFilteredItems[FILTER_COUNT];  // 0x40
+    ACDIDArray m_arrEmpty;  // 0x8b0
 };
-static_assert(sizeof(SeasonStashItemProvider) == 0x7d8, "SeasonStashItemProvider");
+static_assert(sizeof(SeasonStashItemProvider) == 0x8c8, "SeasonStashItemProvider");
 
-class SeasonStashScreen : public UIInventory::Console::UIInventoryScreen {  // size 0xbf0
+class SeasonStashScreen : public UIInventory::Console::UIInventoryScreen {  // size 0xcf0 (UISeasonStash InitializeForGame: new(0xcf0))
     enum StashState {
         BROWSE_CATEGORY_STATE = 0,
         BROWSE_SUBCATEGORY_STATE = 1,
@@ -99,20 +99,20 @@ class SeasonStashScreen : public UIInventory::Console::UIInventoryScreen {  // s
         BROWSE_ITEMS_STATE = 3,
     };
 public:
-    UISeasonStash::Console::SeasonStashItemProvider m_tItemsProvider;  // 0x1f0
-    UIInventory::Console::UIInventoryListView m_tListView;  // 0x9c8
-    UIInventory::Console::UIInventoryDetailsView m_tRightDetailsView;  // 0xa50
-    UIInventory::Console::UIInventoryCategoryView m_tCategoriesView;  // 0xac8
-    UIInventory::Console::UIInventoryCategorySummaryView m_tCategorySummaryView;  // 0xb60
-    UISeasonStash::Console::SeasonStashScreen::StashState m_eStashState;  // 0xbc8
-    UIInventory::Console::ItemCategory m_eCurrentCategory;  // 0xbcc
-    int32 m_nSelectedIndex;  // 0xbd0
-    ACDID m_idSelectedItem;  // 0xbd4
-    BOOL m_bWaitingOnItem;  // 0xbd8
-    int32 m_nIndexOfItemBeingRetrieved;  // 0xbdc
-    int32 m_nStashSpaceUsed;  // 0xbe0
-    int32 m_nInventorySpaceUsed;  // 0xbe4
-    BOOL m_bWaitingOnSpaceUpdate;  // 0xbe8
+    UISeasonStash::Console::SeasonStashItemProvider m_tItemsProvider;  // 0x200
+    UIInventory::Console::UIInventoryListView m_tListView;  // 0xac8
+    UIInventory::Console::UIInventoryDetailsView m_tRightDetailsView;  // 0xb50
+    UIInventory::Console::UIInventoryCategoryView m_tCategoriesView;  // 0xbc8
+    UIInventory::Console::UIInventoryCategorySummaryView m_tCategorySummaryView;  // 0xc60
+    UISeasonStash::Console::SeasonStashScreen::StashState m_eStashState;  // 0xcc8
+    UIInventory::Console::ItemCategory m_eCurrentCategory;  // 0xccc
+    int32 m_nSelectedIndex;  // 0xcd0
+    ACDID m_idSelectedItem;  // 0xcd4
+    BOOL m_bWaitingOnItem;  // 0xcd8
+    int32 m_nIndexOfItemBeingRetrieved;  // 0xcdc
+    int32 m_nStashSpaceUsed;  // 0xce0
+    int32 m_nInventorySpaceUsed;  // 0xce4
+    BOOL m_bWaitingOnSpaceUpdate;  // 0xce8
     virtual void OnSetActive(BOOL bActive);  // vtable slot 16
     virtual void InitializeRingWrapper(::Console::RingWrapper & tRingWrapper);  // vtable slot 17
     virtual void OnFilterTypeChanged(const UIFilterType eOldFilterType, const UIFilterType eNewFilterType);  // vtable slot 22
@@ -148,7 +148,7 @@ public:
     SeasonStashScreen();
     virtual ~SeasonStashScreen() {}
 };
-static_assert(sizeof(SeasonStashScreen) == 0xbf0, "SeasonStashScreen");
+static_assert(sizeof(SeasonStashScreen) == 0xcf0, "SeasonStashScreen");
 
 }  // namespace Console
 }  // namespace UISeasonStash
@@ -207,7 +207,7 @@ BOOL SeasonStashItemProvider::IdentifyIsAllowed() { return FALSE; }
 
 const ACDIDArray & SeasonStashItemProvider::GetItemsWithFilter(const UIFilterType eFilterType) const
 {
-    if (eFilterType >= 0 && eFilterType < 80) return m_arrFilteredItems[eFilterType];
+    if (eFilterType >= 0 && eFilterType < FILTER_COUNT) return m_arrFilteredItems[eFilterType];
     return m_arrEmpty;
 }
 
@@ -223,7 +223,7 @@ void SeasonStashItemProvider::CleanupACDs()
 {
     for (int32 i = 0; i < m_arrAllItems.size(); ++i) ACDDelete(m_arrAllItems[i].idItem, FALSE);
     m_arrAllItems.clear();
-    for (int32 i = 0; i < 80; ++i) m_arrFilteredItems[i].clear();
+    for (int32 i = 0; i < FILTER_COUNT; ++i) m_arrFilteredItems[i].clear();
 }
 
 void SeasonStashItemProvider::Refresh()
@@ -231,7 +231,7 @@ void SeasonStashItemProvider::Refresh()
     CleanupACDs();
     Player * ptPlayer = GetPlayer();
     if (!ptPlayer) return;
-    for (int32 n = 0; n < 80; ++n) m_arrFilteredItems[n].clear();
+    for (int32 n = 0; n < FILTER_COUNT; ++n) m_arrFilteredItems[n].clear();
     D3::Account::SavedDefinition & tAccountDefinition = ::Console::GamerProfile::GetAccount(ptPlayer->nControllerIndex);
     BOOL bIsHardcore = (ptPlayer->tHeroStateData.uPlayerFlags & 1) != 0;
     int32 nPartition = bIsHardcore ? 1 : 0;

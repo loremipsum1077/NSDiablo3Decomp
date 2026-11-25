@@ -243,7 +243,7 @@ void UIItemButton::DrawItemSockets(const ActorCommonData * ptACD, const Rect2D &
         flZ -= UIDC_CONTROL_Z_INCREMENT;
 
         IVector2D tPoint(0, nSocket);
-        ACDID idACDSocketedItem = ACDInventoryGetSquareItem(*ptACD, 19, tPoint);
+        ACDID idACDSocketedItem = ACDInventoryGetSquareItem(*ptACD, SLOT_ITEM_SOCKETS, tPoint);
         ActorCommonData * ptACDSocketedItem = ACDTryToGet(idACDSocketedItem);
         if (ptACDSocketedItem != NULL) {
             ImageTextureFrame tImageTexFrame = cgtImageTextureFrameNull;

@@ -50,10 +50,10 @@ extern AppGlobals sgtAppGlobals;
 enum {
     POWER_XML_VERSION = 44,
     POWER_SNO_COMMON_VERSION = 1706,
-    POWER_SNO_PC_VERSION = 1707,
-    POWER_SNO_CONSOLE_VERSION = 1721,
+    POWER_SNO_PC_VERSION = 1712,
+    POWER_SNO_CONSOLE_VERSION = 1726,
     POWER_SNO_AXE_VERSION = 1714,
-    POWER_SNO_PS4_VERSION = 1723,
+    POWER_SNO_PS4_VERSION = 1728,
 };
 
 
@@ -109,7 +109,7 @@ PowerGroupDef * gptGroupDefPower;
 
 PowerGroupDef::PowerGroupDef()
     : GroupDefinition("Power", POWER_SNO,
-                      SNOVersions(POWER_SNO_PC_VERSION, 1716, POWER_SNO_CONSOLE_VERSION, POWER_SNO_PS4_VERSION, 1722),
+                      SNOVersions(POWER_SNO_PC_VERSION, 1721, POWER_SNO_CONSOLE_VERSION, POWER_SNO_PS4_VERSION, 1727),
                       SNODATATYPE_TITLE, sizeof(PowerDefinition), DT_POWER_DEFINITION, 0x5441, 0x500e) {
 }
 

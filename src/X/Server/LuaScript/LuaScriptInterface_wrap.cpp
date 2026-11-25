@@ -5056,8 +5056,51 @@ fail:
     return -1;
 }
 
-// Original LuaScriptInterface_wrap.cpp:6679.
-static int _wrap_ActorItemGetOwner(lua_State *L)
+// 2.7.7: ActorItemGetOwner gained a BOOL parameter with a default value (the
+// default-argument call passes TRUE), so SWIG emits two overloads and a dispatcher.
+ACDID ActorItemGetOwner(VACDID idItemActor, BOOL bUnk);  // ScriptUtil.cpp
+
+static int _wrap_ActorItemGetOwner__SWIG_0(lua_State *L)
+{
+    int SWIG_arg = 0;
+    VACDID arg1;
+    BOOL arg2;
+    ACDID result;
+    if (!lua_isnumber(L, 1)) {
+        lua_pushfstring(L, "argument %d incorrect/missing", 1);
+        goto fail;
+    }
+    {
+        ACDID idACD = (ACDID)lua_tointeger(L, 1);
+        if (!sCheckACDID(idACD)) {
+            {
+                CRefString sError;
+                sError.Format("Argument %d (0x%08X) is an invalid actor ID", 1, idACD);
+                lua_pushstring(L, sError.str());
+            }
+            goto fail;
+        }
+        arg1 = idACD;
+    }
+    if (lua_type(L, 2) == LUA_TBOOLEAN) {
+        arg2 = lua_toboolean(L, 2);
+    } else {
+        if (!lua_isnumber(L, 2)) {
+            lua_pushfstring(L, "argument %d incorrect/missing", 2);
+            goto fail;
+        }
+        arg2 = (BOOL)lua_tonumber(L, 2);
+    }
+    result = ActorItemGetOwner(arg1, arg2);
+    lua_pushnumber(L, (lua_Number)result);
+    SWIG_arg++;
+    return SWIG_arg;
+fail:
+    lua_error(L);
+    return -1;
+}
+
+static int _wrap_ActorItemGetOwner__SWIG_1(lua_State *L)
 {
     int SWIG_arg = 0;
     VACDID arg1;
@@ -5078,13 +5121,48 @@ static int _wrap_ActorItemGetOwner(lua_State *L)
         }
         arg1 = idACD;
     }
-    result = ActorItemGetOwner(arg1);
+    result = ActorItemGetOwner(arg1, TRUE);
     lua_pushnumber(L, (lua_Number)result);
     SWIG_arg++;
     return SWIG_arg;
 fail:
     lua_error(L);
     return -1;
+}
+
+// Original LuaScriptInterface_wrap.cpp:6679.
+static int _wrap_ActorItemGetOwner(lua_State *L)
+{
+    int argv[3];
+    int argc;
+
+    argc = lua_gettop(L);
+    if (argc == 1) {
+        int _v;
+        {
+            _v = lua_isnumber(L, 1);
+        }
+        if (_v) {
+            return _wrap_ActorItemGetOwner__SWIG_1(L);
+        }
+    }
+    if (argc == 2) {
+        int _v;
+        {
+            _v = lua_isnumber(L, 1);
+        }
+        if (_v) {
+            {
+                _v = lua_isboolean(L, 2);
+            }
+            if (_v) {
+                return _wrap_ActorItemGetOwner__SWIG_0(L);
+            }
+        }
+    }
+    lua_pushstring(L, "No matching function for overloaded 'ActorItemGetOwner'");
+    lua_error(L);
+    return 0;
 }
 
 // Original LuaScriptInterface_wrap.cpp:6717.

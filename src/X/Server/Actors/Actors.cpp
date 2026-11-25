@@ -134,10 +134,10 @@ static XVarScope s_scopeActors("Actors", NULL);
 XVarUint32 s_varAttributeUpdateTicks(s_scopeActors, "AttributeUpdateTicks", DEFAULT_ATTRIBUTE_UPDATE_INTERVAL);
 XVarFloat s_varGarbageCollectionThresholdPercent(s_scopeActors, "GarbageCollectionThresholdPercent", DEFAULT_GARBAGE_COLLECTION_THRESHOLD_PCT);
 XVarFloat s_varGarbageCollectionSevereThresholdPercent(s_scopeActors, "GarbageCollectionSevereThresholdPercent", DEFAULT_GARBAGE_COLLECTION_SEVERE_THRESHOLD_PCT);
-XVarUint32 s_varGarbageCollectionEmergencyCleanupAmount(s_scopeActors, "GarbageCollectionEmergencyCleanupAmount", 8192);
+XVarUint32 s_varGarbageCollectionEmergencyCleanupAmount(s_scopeActors, "GarbageCollectionEmergencyCleanupAmount", 11776);
 XVarUint32 s_varGarbageCollectionRaresInSceneThreshold(s_scopeActors, "GarbageCollectionRaresInSceneThreshold", DEFAULT_GARBAGE_COLLECTION_RARES_IN_SCENE_THRESHOLD);
 XVarFloat s_varThrottleScriptActorsThresholdPercent(s_scopeActors, "ThrottleScriptActorsThresholdPercent", DEFAULT_THROTTLE_SCRIPT_ACTORS_THRESHOLD_PCT);
-XVarUint32 s_varMaxActorSoftCap(s_scopeActors, "MaxActorSoftCap", 7680);
+XVarUint32 s_varMaxActorSoftCap(s_scopeActors, "MaxActorSoftCap", 11264);
 #include "../../Common/ActorCommonDataSwig.h"
 #include "../../Common/ActorCommonCollision.h"
 struct ActorSpawnSkipDistance {  // size 0x8
@@ -204,7 +204,7 @@ BOOL EncounterResolveToActorSpawnInfo(SNO snoEncounter, RNG & rng, SNOName & tSN
 #include "../SScene.h"
 #include "../System/LevelArea.h"
 #include "../../Common/Actors/ActorCollision.h"
-void ActorsIntersectFrustum(SWorldID idSWorld, const Frustum & tFrustum, XPooledDataIDList & listACDs, XBitArray<8192> * ptActorsInListBitArray, uint32 dwSphereTreeFlags); BOOL NPCShouldBeHiddenForClient(const ActorCommonData & tACD, const Player * ptPlayer);  // ActorCollision.cpp:576, X/Server/SNPC.cpp:1308
+void ActorsIntersectFrustum(SWorldID idSWorld, const Frustum & tFrustum, XPooledDataIDList & listACDs, XBitArray<11776> * ptActorsInListBitArray, uint32 dwSphereTreeFlags); BOOL NPCShouldBeHiddenForClient(const ActorCommonData & tACD, const Player * ptPlayer);  // ActorCollision.cpp:576, X/Server/SNPC.cpp:1308
 BOOL SceneCommonIsExcluded(SSceneID idSScene, int32 nPlayerIndex); void SceneCommonPlayerSees(SSceneID idSScene, int32 nPlayerIndex, BOOL bSeen, BOOL bSeenPrefetch);  // SceneCommon.cpp:2742, 2807
 BOOL ReplayIsUsingRecordedAVFrustum();  // X/Server/Replay.cpp:849
 #include "../System/SNephalemRift.h"
@@ -447,7 +447,7 @@ void ActorsInitializeForGame()
     SGame & tSGame = SGameManager::GameGet();
     tSGame.ptActorGlobals = (ActorGlobals *)SigmaMemoryNew(sizeof(ActorGlobals), 4, tSGame.ptMemoryInterface, TRUE);
     tSGame.ptActorGlobals->ptActors = TChainedDataArrayCreateTracked<Actor, ActorID>("Actors", tSGame.ptMemoryInterface, 512);
-    tSGame.ptActorGlobals->ptActors->SetGrowCap(0x2000);
+    tSGame.ptActorGlobals->ptActors->SetGrowCap(0x2e00);
 
     tSGame.ptActorGlobals->listActorsFlaggedForDeletion.Initialize(MemoryPoolsGetDATAIDListPool());
     tSGame.ptActorGlobals->listActorsSpawned.Initialize(MemoryPoolsGetDATAIDListPool());
@@ -457,10 +457,10 @@ void ActorsInitializeForGame()
     tSGame.ptActorGlobals->listInactiveWaypoints.Initialize(MemoryPoolsGetDATAIDListPool());
     tSGame.ptActorGlobals->nActorSpawnSkipDistanceNum = 0;
     tSGame.ptActorGlobals->uAttributeUpdateInterval = DEFAULT_ATTRIBUTE_UPDATE_INTERVAL;
-    tSGame.ptActorGlobals->uMaxActorSoftCap = 7680;
+    tSGame.ptActorGlobals->uMaxActorSoftCap = 11264;
     tSGame.ptActorGlobals->flGarbageCollectionThresholdPct = DEFAULT_GARBAGE_COLLECTION_THRESHOLD_PCT;
     tSGame.ptActorGlobals->flGarbageCollectionSevereThresholdPct = DEFAULT_GARBAGE_COLLECTION_SEVERE_THRESHOLD_PCT;
-    tSGame.ptActorGlobals->uGarbageCollectionEmergencyCleanupAmount = 8192;
+    tSGame.ptActorGlobals->uGarbageCollectionEmergencyCleanupAmount = 11776;
     tSGame.ptActorGlobals->uGarbageCollectionRareExploitCheckThreshold = 100;
     tSGame.ptActorGlobals->uGarbageCollectedWreckables = 0;
     tSGame.ptActorGlobals->uGarbageCollectedGold = 0;
@@ -634,7 +634,7 @@ static void sPvPPerformGarbageCollectionOverACDs()
     ActorGlobals * ptActorGlobals = SGameManager::GameGet().ptActorGlobals;
 
     uint32 dwBase = ptActorGlobals->tGarbageCollection.dwIndex;
-    uint32 dwStride = 256;
+    uint32 dwStride = 368;
 
 
 
@@ -848,7 +848,7 @@ static void sPerformGarbageCollectionOverACDs(
     ActorGlobals * ptActorGlobals = tSGame.ptActorGlobals;
 
     uint32 dwBase = ptActorGlobals->tGarbageCollection.dwIndex;
-    uint32 dwStride = 128;
+    uint32 dwStride = 184;
 
 
     BOOL bForceDeletion = FALSE;
@@ -1009,12 +1009,12 @@ static void sPerformGarbageCollectionOverACDs(
 
 
             uint32 dwTimeSinceCreation = dwNow - ptActor->dwTimeCreated;
-            if (dwTimeSinceCreation <= 3600)
-                continue;
+            if (dwTimeSinceCreation > 3600) {
             BrainAPIDoDeath(ptActor->id, ACTORID_INVALID, TRUE, TRUE, TRUE, NULL, NULL);
             tSGame.ptActorGlobals->uGarbageCollectedWreckables++;
             nWreckablesDeletedThisFrame++;
             nTotalActorsDeletedThisFrame++;
+            }
         }
 
         else if (ptACD->IsItem() &&
@@ -1214,7 +1214,7 @@ static void sPerformGarbageCollectionOverInactiveList()
 
 
 
-                        DisplayInternalError(NULL, "", 1218, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+                        DisplayInternalError(NULL, "", 1219, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
                         return;
                     }
                 }
@@ -2154,7 +2154,8 @@ static void sApplyMonsterAttributesFromSpreadSheet(
 
 
 
-void ActorGetMonsterHPData(SNO snoMonster, int32 nLevel, MonsterRarity eMonsterRarity, float & flHP, float & flHPDelta, const BOOL bAvenger, const BOOL bIsTieredLootRunMonster, const BOOL bIsSetDungeon)
+BOOL sub_71007d5020(SWorldID idSWorld);  // unnamed 2.7.7 function (0x71007d5020)
+void ActorGetMonsterHPData(SNO snoMonster, int32 nLevel, MonsterRarity eMonsterRarity, float & flHP, float & flHPDelta, const BOOL bAvenger, const BOOL bIsTieredLootRunMonster, const BOOL bIsSetDungeon, const BOOL bUnknown9)
 {
 
 
@@ -2176,7 +2177,7 @@ void ActorGetMonsterHPData(SNO snoMonster, int32 nLevel, MonsterRarity eMonsterR
         eMonsterRarity = MR_RARE;
     }
 
-    if (bIsSetDungeon)
+    if (bIsSetDungeon || bUnknown9)
     {
         nLevel = 70;
     }
@@ -2217,7 +2218,7 @@ void ActorGetMonsterHPData(SNO snoMonster, int32 nLevel, MonsterRarity eMonsterR
                 flHPDelta *= ptMonsterLevelGBDef->tMonsterLevelTable.ptMonsterLevels[nLevel - 1].flAttributesHPRange;
             }
 
-            if (!bIsSetDungeon)
+            if (!(bIsSetDungeon || bUnknown9))
             {
                 ScopedGlobalDefinitionLockR pdefGlobal;
                 const DifficultyTuningParams & tTuningParams = pdefGlobal->ptServerData->tDifficultyParams[GameGetDifficultyParamsLevel(bIsTieredLootRunMonster)];
@@ -2235,7 +2236,7 @@ void ActorGetMonsterHPData(SNO snoMonster, int32 nLevel, MonsterRarity eMonsterR
     case MR_BOSS:
         flHP = GetHirelingMonsterLevelAttribute(nLevel, snoMonster, GBA_HITPOINTS, GBA_HIRELING_HITPOINTS);
         flHPDelta = GetHirelingMonsterLevelAttribute(nLevel, snoMonster, GBA_HPRANGE, GBA_HIRELING_HPRANGE);
-        if (!bIsSetDungeon)
+        if (!(bIsSetDungeon || bUnknown9))
         {
             ScopedGlobalDefinitionLockR pdefGlobal;
             const DifficultyTuningParams & tTuningParams = pdefGlobal->ptServerData->tDifficultyParams[GameGetDifficultyParamsLevel(bIsTieredLootRunMonster)];
@@ -2251,19 +2252,23 @@ void ActorGetMonsterHPData(SNO snoMonster, int32 nLevel, MonsterRarity eMonsterR
         break;
     }
 
-    ScopedMonsterDefinitionLockR pdefMonster(snoMonster);
-    if (!(pdefMonster->dwFlags & (1 << MONSTERDEF_HIRELING_OR_PET_BIT)) && !bIsSetDungeon)
+    if (!(bIsSetDungeon || bUnknown9))
     {
-        float flHandicapScalar = bIsTieredLootRunMonster ? 1.0f : ActorGetHandicapHealthScalar();
-
-
-        flHandicapScalar *= GetMonsterLevelAttribute(nLevel, SNO_NONE, GBA_CONSOLE_HEALTH_SCALAR);
-
-
-        flHP *= flHandicapScalar;
-        flHPDelta *= flHandicapScalar;
+        ScopedMonsterDefinitionLockR pdefMonster(snoMonster);
+        if (!(pdefMonster->dwFlags & (1 << MONSTERDEF_HIRELING_OR_PET_BIT)))
+        {
+            float flHandicapScalar = bIsTieredLootRunMonster ? 1.0f : ActorGetHandicapHealthScalar();
+            flHandicapScalar *= GetMonsterLevelAttribute(nLevel, SNO_NONE, GBA_CONSOLE_HEALTH_SCALAR);
+            flHP *= flHandicapScalar;
+            flHPDelta *= flHandicapScalar;
+        }
     }
 }
+
+
+
+
+
 
 
 
@@ -2420,10 +2425,10 @@ static void sAttributesInitForMonster(
     int32 nTieredLootRunLevel = SWorldGetTieredDungeonFinderLevel(tActorAdd.tPlace.idSWorld);
     BOOL bIsTieredRift = nTieredLootRunLevel >= 0;
     BOOL bIsSetDungeon = SWorldIsSetDungeon(tActorAdd.tPlace.idSWorld);
-
+    BOOL bUnknown9 = sub_71007d5020(tActorAdd.tPlace.idSWorld);
     float flHPMin;
     float flHPDelta;
-    ActorGetMonsterHPData(snoMonster, nLevel, tActorAdd.eMonsterRarity, flHPMin, flHPDelta, tActorAdd.bAvenger, bIsTieredRift, bIsSetDungeon);
+    ActorGetMonsterHPData(snoMonster, nLevel, tActorAdd.eMonsterRarity, flHPMin, flHPDelta, tActorAdd.bAvenger, bIsTieredRift, bIsSetDungeon, bUnknown9);
 
     float flHitPoints = RandRangeFloat_Internal(SGameGlobalsGet().rng, flHPMin, flHPDelta);  // all rows of 2428 are at column 25: a macro in the original
 
@@ -2499,6 +2504,11 @@ static void sAttributesInitForMonster(
             nPlayerMult = Math::Max(nNumPlayers - 1, 0);
             flHandicapScalar = 1.0f;
             FastAttribSetValueInt(tACD.idFastAttrib, ATTRIBUTE_IN_SET_DUNGEON_WORLD, TRUE);
+        }
+        else if (bUnknown9)
+        {
+            FastAttribSetValueInt(tACD.idFastAttrib, ATTRIBUTE_IN_SWARM_RIFT_WORLD, TRUE);
+            flHandicapScalar = 1.0f;
         }
     }
 
@@ -4577,7 +4587,7 @@ void ActorsFireSpawnEvents()
                         Achievement::ACH_EVENT_MONSTER_SPAWNED,
 
                         tACD.GetActorSNO(),
-                        1);
+                        1, (uint32)sub_71007b5e70());
                 }
             }
 
@@ -4690,7 +4700,7 @@ void ActorInternalSetPosition(Actor * ptActor, const WorldPlace & tPlace)
             }
         }
 
-        DisplayInternalError(NULL, "", 4695, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 4722, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 
 
@@ -5104,7 +5114,7 @@ void ActorsDumpList()
 
 
 
-static BOOL sActorIsNonMover(const ActorDefinition * pdefActor, const SNOName & tSNOName)
+static bool sActorIsNonMover(const ActorDefinition * pdefActor, const SNOName & tSNOName)
 {
 
 
@@ -6295,7 +6305,7 @@ void ActorsMakeVisibleList(SWorldID idSWorld, const Frustum & tFrustum, const Fr
     BOOL bInEditMode = GameModeIsAnEditMode(GameGetActiveGameCommonData().GameModeGet());
 
     XPooledDataIDList listACDs(MemoryPoolsGetDATAIDListPool());
-    XBitArray<8192> tActorBitArray;
+    XBitArray<11776> tActorBitArray;
     ActorsIntersectFrustum(idSWorld, tFrustum, listACDs, &tActorBitArray, ACTOR_SPHERE_TREE_FLAGS_ALL);
     if (ptAVFrustum)
     {
@@ -6794,7 +6804,7 @@ static float sGetHandicapHealthConversionMult(const int32 nOldDifficulty, const 
     float flMult = 1.0f;
     if (nOldDifficulty != nNewDifficulty)
     {
-        if (nOldDifficulty >= 0 && nOldDifficulty <= 16 && nNewDifficulty >= 0 && nNewDifficulty <= 16)
+        if (nOldDifficulty >= 0 && nOldDifficulty <= 19 && nNewDifficulty >= 0 && nNewDifficulty <= 19)
         {
             float flOld = ActorGetHandicapHealthScalar(nOldDifficulty);
             if (flOld > 1e-06f)

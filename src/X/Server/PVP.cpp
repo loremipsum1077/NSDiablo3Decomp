@@ -1131,7 +1131,7 @@ void PVPOnDeathPvPArena(
                 Player *ptPlayerAlly = listDestPlayers.GetNext(posPlayer);
                 Achievement::EvaluationData tEvaluationDataAlly;
                 tEvaluationDataAlly.SetPlayer(ptPlayerAlly);
-                tEvaluationDataAlly.EvaluateEvent(ptPlayerAlly, Achievement::ACH_EVENT_PVP_TEAMMATE_DIED, 1);
+                tEvaluationDataAlly.EvaluateEvent(ptPlayerAlly, Achievement::ACH_EVENT_PVP_TEAMMATE_DIED, 1, (uint32)sub_71007b5e70());
 
 
 
@@ -1279,7 +1279,7 @@ void PVPOnDeathPvPArena(
 
 
                 Achievement::EvaluationData tEvaluationData;
-                tEvaluationData.EvaluateEvent(ptPlayerFirstAssist, Achievement::ACH_EVENT_PVP_PLAYER_GOT_ASSIST, 1);
+                tEvaluationData.EvaluateEvent(ptPlayerFirstAssist, Achievement::ACH_EVENT_PVP_PLAYER_GOT_ASSIST, 1, (uint32)sub_71007b5e70());
             }
         }
 
@@ -1305,7 +1305,7 @@ void PVPOnDeathPvPArena(
 
 
                 Achievement::EvaluationData tEvaluationData;
-                tEvaluationData.EvaluateEvent(ptPlayerSecondAssist, Achievement::ACH_EVENT_PVP_PLAYER_GOT_ASSIST, 1);
+                tEvaluationData.EvaluateEvent(ptPlayerSecondAssist, Achievement::ACH_EVENT_PVP_PLAYER_GOT_ASSIST, 1, (uint32)sub_71007b5e70());
             }
         }
 
@@ -1331,7 +1331,7 @@ void PVPOnDeathPvPArena(
 
 
                 Achievement::EvaluationData tEvaluationData;
-                tEvaluationData.EvaluateEvent(ptPlayerThirdAssist, Achievement::ACH_EVENT_PVP_PLAYER_GOT_ASSIST, 1);
+                tEvaluationData.EvaluateEvent(ptPlayerThirdAssist, Achievement::ACH_EVENT_PVP_PLAYER_GOT_ASSIST, 1, (uint32)sub_71007b5e70());
             }
         }
 
@@ -1363,7 +1363,7 @@ void PVPOnDeathPvPArena(
                         Achievement::ACH_EVENT_PVP_PLAYER_KILLED_PLAYER_OF_CLASS,
 
                         PlayerGetPlayerClass(ptPlayerVictim),
-                        1);
+                        1, (uint32)sub_71007b5e70());
                 }
             }
 

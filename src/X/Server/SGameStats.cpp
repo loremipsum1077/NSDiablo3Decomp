@@ -25,6 +25,7 @@ HirelingClass HirelingGetClass(const ActorCommonData & tACDHireling);  // X/Comm
 BOOL ExperiencePlayersCloseEnough(const ActorCommonData & tACDVictim, ACDID idACDOtherPlayer);  // X/Common/ExperienceCommon.cpp:50
 
 #include "Achievements/AchievementModifierEvaluationLogic.h"
+uint32 sub_71007b75d0();  // 2.7.7 only, unnamed; returns two game-flag bits (quantity of ACH_EVENT_PLAYER_DIED)
 namespace Achievement {
 typedef int32 EventID;
 
@@ -423,7 +424,7 @@ void sGameStatsRecordPlayerKilledMonster(ActorCommonData & tACDMonsterVictim, Pl
         tEvaluationData.SetACD(&tACDMonsterVictim);
         tEvaluationData.SetPlayer(ptPlayerKiller);
         tEvaluationData.SetPower(ptPowerDamage);
-        tEvaluationData.EvaluateEvent(ptPlayerKiller, 109, tACDMonsterVictim.snoActor, 1);
+        tEvaluationData.EvaluateEvent(ptPlayerKiller, 109, tACDMonsterVictim.snoActor, 1, (uint32)sub_71007b5e70());
     }
 }
 
@@ -455,7 +456,7 @@ void sGameStatsRecordMonsterKilledMonster(ActorCommonData & tACDMonsterVictim, A
             if (!TeamsAreFriendly(ptPlayer->eTeam, tACDMonsterVictim.GetTeam()) && ExperiencePlayersCloseEnough(tACDMonsterVictim, ptPlayer->idPlayerACD))
             {
                 tEvaluationData.SetPlayer(ptPlayer);
-                tEvaluationData.EvaluateEvent(ptPlayer, 104, tACDMonsterVictim.snoActor, 1);
+                tEvaluationData.EvaluateEvent(ptPlayer, 104, tACDMonsterVictim.snoActor, 1, (uint32)sub_71007b5e70());
             }
         }
     }
@@ -492,7 +493,7 @@ void sGameStatsRecordFollowerKilledMonster(ActorCommonData & tACDMonsterVictim, 
         tEvaluationData.SetPlayer(ptControllingPlayer);
         for (Player * ptPlayer = PlayerGetFirstInGame(); ptPlayer != NULL; ptPlayer = PlayerGetNextInGame(ptPlayer))
         {
-            tEvaluationData.EvaluateEvent(ptPlayer, 111, tACDMonsterVictim.snoActor, 1);
+            tEvaluationData.EvaluateEvent(ptPlayer, 111, tACDMonsterVictim.snoActor, 1, (uint32)sub_71007b5e70());
         }
     }
 }
@@ -567,7 +568,7 @@ void sGameStatsRecordPlayerKilled(
         tEvaluationData.SetACD(ptACDKiller);
         tEvaluationData.SetPower(ptPowerDamage);
 
-        tEvaluationData.EvaluateEvent(ptPlayerVictim, Achievement::ACH_EVENT_PLAYER_DIED, 1);
+        tEvaluationData.EvaluateEvent(ptPlayerVictim, Achievement::ACH_EVENT_PLAYER_DIED, 1, sub_71007b75d0(), (uint32)sub_71007b5e70());
 
 
 
@@ -658,7 +659,7 @@ void sGameStatsRecordMonsterKilled(
 				ptPlayer,
 				Achievement::ACH_EVENT_MONSTER_KILLED_BY_XP_ELIGIBLE_PLAYER,
 				tACDMonsterVictim.snoActor,
-				1);
+				1, (uint32)sub_71007b5e70());
 
 			// Inference: the original bit test accepts champion, rare, unique and boss rarities.
 
@@ -676,7 +677,7 @@ void sGameStatsRecordMonsterKilled(
 						ptPlayer,
 						Achievement::ACH_EVENT_ELITE_MONSTER_KILLED,
 						tACDMonsterVictim.snoActor,
-						1);
+						1, (uint32)sub_71007b5e70());
 
 					SGameStatsPlayerCounterIncrement(ptPlayer, STAT_COUNTER_PLAYER_ELITES_KILLED, 0, 0, 1.0f);
 
@@ -1184,7 +1185,7 @@ void SGameStatsPlayerStartedQuest(ACDID idACDPlayer, SNO snoQuest, QuestType eQu
     {
         Achievement::EvaluationData tEvaluationData;
         tEvaluationData.SetPlayer(ptPlayer);
-        tEvaluationData.EvaluateEvent(ptPlayer, 415, snoQuest, 1);
+        tEvaluationData.EvaluateEvent(ptPlayer, 415, snoQuest, 1, (uint32)sub_71007b5e70());
     }
 }
 
@@ -1255,7 +1256,7 @@ void SGameStatsPlayerCompletedQuest(ACDID idACDPlayer, SNO snoQuest, QuestType e
             bIsDungeonFinder = GlobalSNOGet(GLOBALSNO_QUEST_DUNGEONFINDER) == snoQuest;
             eEventID = bIsDungeonFinder ? 413 : 406;
         }
-        tEvaluationData.EvaluateEvent(ptPlayer, eEventID, snoQuest, 1);
+        tEvaluationData.EvaluateEvent(ptPlayer, eEventID, snoQuest, 1, (uint32)sub_71007b5e70());
     }
 }
 

@@ -191,7 +191,7 @@ enum ButtonActions {
     ACTION_TOGGLE_STAT_RANGES = 22,
 };
 
-class PlayerMysticScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x2110
+class PlayerMysticScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x23f0
 public:
     enum MysticMode {
         MYSTIC_MODE_INVALID = -1,
@@ -244,26 +244,26 @@ protected:
     virtual UIInventoryView * GetSecondaryViewForMode(const BrowsingMode);  // vtable slot 24
     virtual BOOL ShouldEnableRingIcon(const UIFilterType eFilterType);  // vtable slot 20
 private:
-    MysticMode m_eMysticMode;  // 0x1f0
-    InventoryItems m_tPlayerItemsProvider;  // 0x1f8
-    TransmogableItems m_tPlayerTransmogItemsProvider;  // 0x9f0
-    DyeableItems m_tPlayerDyeableItemsProvider;  // 0x11d8
-    TrainingItems m_tTrainingItemsProvider;  // 0x19c0
-    UIInventoryListView m_tPlayerListView;  // 0x1a10
-    UIInventoryDetailsView m_tPlayerDetailsView;  // 0x1a98
-    UIInventoryListView m_tPlayerTransmogListView;  // 0x1b10
-    UIInventoryDetailsView m_tPlayerTransmogDetailsView;  // 0x1b98
-    UIInventoryListView m_tPlayerDyeableItemsListView;  // 0x1c10
-    UIInventoryDetailsView m_tPlayerDyeableItemsDetailsView;  // 0x1c98
-    UIMystic::Console::UIEnchantView m_tEnchantView;  // 0x1d10
-    UIMystic::Console::UITransmogView m_tTransmogView;  // 0x1e48
-    UIMystic::Console::UIDyeItemView m_tDyeItemView;  // 0x1ee8
-    UIInventoryTrainingView m_tTrainingView;  // 0x1f88
-    UIInventoryListView m_tTrainingListView;  // 0x1fe8
-    ACDID m_idLastSelectedItem;  // 0x2070
-    GBID m_gbidLastViewedTransmog;  // 0x2074
-    GBID m_gbidLastViewedDye;  // 0x2078
-    VisualEquipment m_tLastDisplayedVisualEquipment;  // 0x207c
+    MysticMode m_eMysticMode;  // 0x200
+    InventoryItems m_tPlayerItemsProvider;  // 0x208
+    TransmogableItems m_tPlayerTransmogItemsProvider;  // 0xaf0
+    DyeableItems m_tPlayerDyeableItemsProvider;  // 0x13c8
+    TrainingItems m_tTrainingItemsProvider;  // 0x1ca0
+    UIInventoryListView m_tPlayerListView;  // 0x1cf0
+    UIInventoryDetailsView m_tPlayerDetailsView;  // 0x1d78
+    UIInventoryListView m_tPlayerTransmogListView;  // 0x1df0
+    UIInventoryDetailsView m_tPlayerTransmogDetailsView;  // 0x1e78
+    UIInventoryListView m_tPlayerDyeableItemsListView;  // 0x1ef0
+    UIInventoryDetailsView m_tPlayerDyeableItemsDetailsView;  // 0x1f78
+    UIMystic::Console::UIEnchantView m_tEnchantView;  // 0x1ff0
+    UIMystic::Console::UITransmogView m_tTransmogView;  // 0x2128
+    UIMystic::Console::UIDyeItemView m_tDyeItemView;  // 0x21c8
+    UIInventoryTrainingView m_tTrainingView;  // 0x2268
+    UIInventoryListView m_tTrainingListView;  // 0x22c8
+    ACDID m_idLastSelectedItem;  // 0x2350
+    GBID m_gbidLastViewedTransmog;  // 0x2354
+    GBID m_gbidLastViewedDye;  // 0x2358
+    VisualEquipment m_tLastDisplayedVisualEquipment;  // 0x235c
     void OnButton1();
     void OnButton2();
     void OnButton3();
@@ -305,7 +305,7 @@ private:
     void UpdateDyeItemPreviewVisualInventory(const Player & tPlayer, const ACDID idACDItem, const GBID gbidSelectedDye);
     void ToggleStatRangeDisplay();
 };
-static_assert(sizeof(PlayerMysticScreen) == 0x2110, "PlayerMysticScreen");
+static_assert(sizeof(PlayerMysticScreen) == 0x23f0, "PlayerMysticScreen");
 
 PlayerMysticScreen * sgptMysticGlobals;  // line 392
 static const float SCROLLBOX_SCROLLDELTA = 4.0f;
@@ -1561,7 +1561,7 @@ void PlayerMysticScreen::UpdateTransmogPreviewVisualInventory(const Player & tPl
         if (ItemMeetsOwnerClassRestrictions(ptACDTransmogItem->hGB.gbid, eClass, FALSE))
         {
             InventorySlotType eTransmogSlot = ItemCrafting_GetTransmogSlot(ptACDTransmogItem->hGB.gbid);
-            b2Handed = eTransmogSlot == 17;
+            b2Handed = eTransmogSlot == 18;
             eVisSlot = VisualInventorySlotFromInventorySlot(b2Handed ? 4 : eTransmogSlot);
         }
     }

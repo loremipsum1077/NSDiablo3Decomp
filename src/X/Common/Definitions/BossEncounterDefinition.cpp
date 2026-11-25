@@ -21,7 +21,7 @@ extern const XTypeDescriptor * DT_SNO;
 
 enum {
     BOSSENCOUNTER_XML_VERSION = 5,
-    BOSSENCOUNTER_SNO_VERSION = 23,
+    BOSSENCOUNTER_SNO_VERSION = 26,
 };
 
 // The field names are "" in the binary.
@@ -53,7 +53,7 @@ BossEncounterGroupDef * gptGroupDefBossEncounter;  // line 57
 
 // line 63
 BossEncounterGroupDef::BossEncounterGroupDef()
-    : GroupDefinition("BossEncounter", BOSS_ENCOUNTER_SNO, SNOVersions(BOSSENCOUNTER_SNO_VERSION), SNODATATYPE_TITLE,
+    : GroupDefinition("BossEncounter", BOSS_ENCOUNTER_SNO, SNOVersions(BOSSENCOUNTER_SNO_VERSION, 28, BOSSENCOUNTER_SNO_VERSION, BOSSENCOUNTER_SNO_VERSION, 27), SNODATATYPE_TITLE,
                       sizeof(BossEncounterDefinition), DT_BOSSENCOUNTERDEFINITION, 0x8005, 14) {
 }
 

@@ -161,9 +161,9 @@ inline BOOL CanAffordUpgrade(const Player & tPlayer);
 void OnStashButton3();
 void OnStashButtonR3();
 
-class PlayerStashScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x14f0
+class PlayerStashScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x16e0 (UIStash InitializeForGame: new(0x16e0))
 public:
-    uint32 m_nStashSlots;  // 0x1f0
+    uint32 m_nStashSlots;  // 0x200
 
     virtual ~PlayerStashScreen() {}
 
@@ -375,16 +375,16 @@ protected:
     };
 
 private:
-    InventoryItems m_tStashItemsProvider;  // 0x1f8
-    InventoryItems m_tPlayerItemsProvider;  // 0x9f0
-    UIInventoryListView m_tStashListView;  // 0x11e8
-    UIInventoryListView m_tPlayerListView;  // 0x1270
-    UIInventoryDetailsView m_tStashDetailsView;  // 0x12f8
-    UIInventoryDetailsView m_tPlayerDetailsView;  // 0x1370
-    UIInventoryCategoryView m_tCategoriesView;  // 0x13e8
-    UIInventoryCategorySummaryView m_tCategorySummaryView;  // 0x1480
-    StashState m_eStashState;  // 0x14e8
-    ItemCategory m_eCurrentCategory;  // 0x14ec
+    InventoryItems m_tStashItemsProvider;  // 0x208
+    InventoryItems m_tPlayerItemsProvider;  // 0xaf0
+    UIInventoryListView m_tStashListView;  // 0x13d8
+    UIInventoryListView m_tPlayerListView;  // 0x1460
+    UIInventoryDetailsView m_tStashDetailsView;  // 0x14e8
+    UIInventoryDetailsView m_tPlayerDetailsView;  // 0x1560
+    UIInventoryCategoryView m_tCategoriesView;  // 0x15d8
+    UIInventoryCategorySummaryView m_tCategorySummaryView;  // 0x1670
+    StashState m_eStashState;  // 0x16d8
+    ItemCategory m_eCurrentCategory;  // 0x16dc
 
     void UpdateRingNewItemIndicators();
     void UpdateBagItemActions(::Console::ControllerActionManager & tActionManager);
@@ -431,7 +431,7 @@ private:
         m_tStashDetailsView.SetAnalogStickInputFilter(tStickInputFilter);
     }
 };
-static_assert(sizeof(PlayerStashScreen) == 0x14f0, "PlayerStashScreen");
+static_assert(sizeof(PlayerStashScreen) == 0x16e0, "PlayerStashScreen");
 
 PlayerStashScreen * sgptStashGlobals;
 

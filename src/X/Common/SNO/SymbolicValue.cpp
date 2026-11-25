@@ -1777,8 +1777,8 @@ const SymbolicEntry gAnimBoneWeightSets[4] = {
 };
 
 // line 4390
-extern const SymbolicEntry gGameErrors[185];
-const SymbolicEntry gGameErrors[185] = {
+extern const SymbolicEntry gGameErrors[197];
+const SymbolicEntry gGameErrors[197] = {
     { GAMEERROR_POWER_UNUSABLE_IN_AREA, "PowerUnusableInArea" },
     { GAMEERROR_ITEM_NOT_READY, "ItemNotReady" },
     { GAMEERROR_POWER_INVALID_TARGET, "PowerInvalidTarget" },
@@ -1831,6 +1831,7 @@ const SymbolicEntry gGameErrors[185] = {
     { GAMEERROR_IARESULT_CANNOT_SALVAGE, "IAR_CannotSalvage" },
     { GAMEERROR_IARESULT_CANNOT_SALVAGE_GEMMED_ITEMS, "IAR_CannotSalvageGemmedItems" },
     { GAMEERROR_IARESULT_CANNOT_SALVAGE_VENDOR_ITEMS, "IAR_CannotSalvageVendorItems" },
+    { GAMEERROR_UNK_52, "IAR_CannotSacrificeItem" },
     { GAMEERROR_SKILLS_SKILLBAR_GENERIC, "Skills_Skillbar_Generic" },
     { GAMEERROR_SKILLS_NOT_ASSIGNABLE_TO_THAT_SLOT, "Skills_NotAssignableToThatSlot" },
     { GAMEERROR_SKILLS_CANT_CHANGE_WHILE_IN_COOLDOWN, "Skills_CantChangeWhileInCooldown" },
@@ -1855,6 +1856,11 @@ const SymbolicEntry gGameErrors[185] = {
     { GAMEERROR_ITEMUSE_ONLY_AT_MYSTIC, "ItemUse_OnlyAtMystic" },
     { GAMEERROR_ITEMUSE_DOESNT_MEET_ARTISAN_LEVEL, "ItemUse_DoesntMeetArtisanLevel" },
     { GAMEERROR_ITEMUSE_NOT_ENOUGH_PAGES_TO_CONVERT, "ItemUse_NotEnoughPagesToConvert" },
+    { GAMEERROR_UNK_77, "ItemUse_OnlyOnSoulShards" },
+    { GAMEERROR_UNK_78, "ItemUse_SoulShardAlreadyAtMaxRank" },
+    { GAMEERROR_UNK_79, "ItemUse_CannotBeSanctified" },
+    { GAMEERROR_UNK_80, "ItemUse_EquippedItemCannotBeSanctified" },
+    { GAMEERROR_UNK_81, "ItemUse_UnidentifiedItemCannotBeSanctified" },
     { GAMEERROR_CANNOT_DO_THIS_WHILE_DEAD, "CannotDoWhileDead" },
     { GAMEERROR_BOSS_ENCOUNTER_SOMEONE_DECLINED, "SomeoneDeclined" },
     { GAMEERROR_PICKUP_FAILED, "Pickup_Failed" },
@@ -1911,8 +1917,10 @@ const SymbolicEntry gGameErrors[185] = {
     { GAMEERROR_ITEM_UNIQUE_EQUIPPED, "ItemIsUniqueEquipped" },
     { GAMEERROR_CANNOT_DO_THAT_RIGHT_NOW, "CannotDoThatRightNow" },
     { GAMEERROR_ITEM_SOCKET_TYPE_MISMATCH, "ItemSocketTypeMismatch" },
+    { GAMEERROR_UNK_138, "ItemSocketTypeMismatch_SoulShard" },
     { GAMEERROR_ITEM_SOCKET_UNIQUE_EQUIPPED, "ItemSocketUniqueEquipped" },
     { GAMEERROR_EQUIP_ITEM_SOCKET_UNIQUE_EQUIPPED, "EquipItemSocketUniqueEquipped" },
+    { GAMEERROR_UNK_141, "CannotEquipTwoWeaponsWithSouldShards" },
     { GAMEERROR_IDENTIFY_ALL_NO_ITEMS, "IdentifyAllNoItems" },
     { GAMEERROR_ITEM_CANNOT_BE_DROPPED, "ItemCannotBeDropped" },
     { GAMEERROR_WAYPOINT_TOO_CLOSE, "WaypointTooClose" },
@@ -1947,6 +1955,9 @@ const SymbolicEntry gGameErrors[185] = {
     { GAMEERROR_EMPOWERED_RIFT_CANNOT_AFFORD, "EmpoweredRiftCannotAfford" },
     { GAMEERROR_BANNER_PLAYER_IS_IN_SET_DUNGEON, "BannerPlayerIsInSetDungeon" },
     { GAMEERROR_TRANSMUTE_FAILED_LOW_JEWEL_RANK, "TransmuteFailedLowJewelRank" },
+    { GAMEERROR_UNK_176, "TransmuteFailedItemCannotBeReforged" },
+    { GAMEERROR_UNK_177, "TransmuteFailedItemCannotBePrimalized" },
+    { GAMEERROR_UNK_178, "TransmuteFailedEquippedItemCannotBePrimalized" },
     { GAMEERROR_SET_DUNGEON_SOMEONE_DECLINED, "SetDungeonCancelled" },
     { GAMEERROR_SET_DUNGEON_CANNOT_ENTER_NOT_WORTHY, "SetDungeonCannotEnterNotWorthy" },
     { GAMEERROR_SET_DUNGEON_CANNOT_ENTER_CLOSING, "SetDungeonCannotEnterClosing" },
@@ -1963,6 +1974,7 @@ const SymbolicEntry gGameErrors[185] = {
     { GAMEERROR_AMIIBO_SCAN_FAILED, "AmiiboScanFailed" },
     { GAMEERROR_AMIIBO_NO_DEVICE, "AmiiboNoDevice" },
     { GAMEERROR_AMIIBO_ERROR, "AmiiboScanError" },
+    { GAMEERROR_UNK_195, "AmiiboBroken" },
     { 0, NULL },
 };
 

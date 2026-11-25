@@ -321,7 +321,7 @@ void SLeaderboard::FillInMemberMetadata(D3::Leaderboard::Member * into, const Pl
 #include "../Common/Networking/GameMessage.h"
 #include "../Sigma/BlzExt/fixed_vector.h"
 // DWARF: SLeaderboard.cpp:344.
-namespace SLeaderboard { void PostRiftTime(int, int, int, const Player *, bool); }
+namespace SLeaderboard { void PostRiftTime(int, int, int, const Player *, uint32, bool); }
 // DWARF: Player.cpp:2049.
 Player * PlayerGetNextInTieredRift(const Player *);
 // DWARF: Leaderboard.cpp:37.
@@ -341,11 +341,26 @@ blz::string LeaderboardCompressMessage(const google::protobuf::Message &, int);
 
 
 
+// 0x7100775990 (unnamed): the compress-and-send block that 2.6.2 inlined into PostRiftTime; in 2.7.7
+// it has two callers and stays out of line. The message type is 527 (0x20f).
+extern "C" void sub_7100775990(const D3::Leaderboard::PostScore & post, const Player & tPlayer)
+{
+    // Inference: original compression level is 9.
+    D3::Leaderboard::CompressedPostScore tCompressed;
+    tCompressed.set_data(LeaderboardCompressMessage(post, 9));
+
+    PlayerList listDestPlayers(PlayerListGetElementPool());
+    PlayerListGetSingle(listDestPlayers, tPlayer);
+
+    MessageSendToClient(listDestPlayers, SMSG_RIFT_POST_SCORE, tCompressed);
+}
+
 void SLeaderboard::PostRiftTime(
     int riftLevel,
     int millisecondsElapsed,
     int playerCount,
     const Player * firstPlayerInRift,
+    uint32 unk_categoryId,
     bool cheated)
 {
 
@@ -389,8 +404,8 @@ void SLeaderboard::PostRiftTime(
 
 
     // Inference: these booleans use the original weekly-challenge result and seasonal/hardcore bits.
-    const bool challengeGame = GameIsWeeklyChallenge();
     const bool seasonalGame = (SGameManager::GameGet().tStartParams.dwCreationFlags & (1u << GAMECREATEPARAM_SEASON)) != 0;
+    const bool challengeGame = GameIsWeeklyChallenge();
     const bool hardcoreHero = (firstPlayerInRift->tHeroStateData.uPlayerFlags & (1u << PLAYERFLAG_HARDCORE)) != 0;
 
     // Inference: normal runs require an active season; challenge runs bypass this rejection.
@@ -400,6 +415,9 @@ void SLeaderboard::PostRiftTime(
 
 
 
+
+    // 2.7.7: only the solo class categories also post under the extra category (see the loop below).
+    bool bSoloClassCategory = false;
 
     // Inference: the normal-run switch maps team size; solo maps the original seven class-table entries.
     if (!challengeGame)
@@ -412,24 +430,31 @@ void SLeaderboard::PostRiftTime(
             {
             case PLAYER_CLASS_BARBARIAN:
                 post.set_category_id(LB_RIFT_SOLO_BARBARIAN);
+                bSoloClassCategory = true;
                 break;
             case PLAYER_CLASS_CRUSADER:
                 post.set_category_id(LB_RIFT_SOLO_CRUSADER);
+                bSoloClassCategory = true;
                 break;
             case PLAYER_CLASS_DEMONHUNTER:
                 post.set_category_id(LB_RIFT_SOLO_DEMONHUNTER);
+                bSoloClassCategory = true;
                 break;
             case PLAYER_CLASS_MONK:
                 post.set_category_id(LB_RIFT_SOLO_MONK);
+                bSoloClassCategory = true;
                 break;
             case PLAYER_CLASS_WITCHDOCTOR:
                 post.set_category_id(LB_RIFT_SOLO_WITCHDOCTOR);
+                bSoloClassCategory = true;
                 break;
             case PLAYER_CLASS_WIZARD:
                 post.set_category_id(LB_RIFT_SOLO_WIZARD);
+                bSoloClassCategory = true;
                 break;
             case PLAYER_CLASS_NECROMANCER:
                 post.set_category_id(LB_RIFT_SOLO_NECROMANCER);
+                bSoloClassCategory = true;
                 break;
             default:
                 return;
@@ -573,15 +598,17 @@ void SLeaderboard::PostRiftTime(
 
 
 
-        // Inference: original compression level is 9, followed by the score-message type 526.
-        D3::Leaderboard::CompressedPostScore tCompressed;
-        tCompressed.set_data(LeaderboardCompressMessage(post, 9));
+        sub_7100775990(post, *tTeamMemberToPlayer[i]);
 
-        PlayerList listDestPlayers(PlayerListGetElementPool());
-        PlayerListGetSingle(listDestPlayers, *tTeamMemberToPlayer[i]);
-
-        MessageSendToClient(listDestPlayers, SMSG_RIFT_POST_SCORE, tCompressed);
-
+        // 2.7.7: a solo, non-challenge run with a nonzero extra category posts a second copy of the
+        // score under that category (target 0x7757c4..0x7758d4).
+        if (bSoloClassCategory && unk_categoryId != 0)
+        {
+            D3::Leaderboard::PostScore tPostCopy;
+            tPostCopy.CopyFrom(post);
+            tPostCopy.set_category_id(unk_categoryId);
+            sub_7100775990(tPostCopy, *tTeamMemberToPlayer[i]);
+        }
     }
 }
 

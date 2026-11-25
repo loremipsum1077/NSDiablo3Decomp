@@ -649,7 +649,7 @@ BOOL ACDGizmoCanOperate(const ActorCommonData & tACDGizmo, const ActorCommonData
             {
                 if (ACDIsParticipatingInTieredLootRun(tACDOperator))
                 {
-                    PlayerDisplayErrorMessage(tACDOperator.id, 145);  // GAMEERROR_LOOTRUN_TIERED_CANNOT_DO_THAT
+                    PlayerDisplayErrorMessage(tACDOperator.id, GAMEERROR_LOOTRUN_TIERED_CANNOT_DO_THAT);
                     return FALSE;
                 }
                 if (BossEncounterManager::CanTriggerEncounter(snoEncounter))
@@ -662,11 +662,11 @@ BOOL ACDGizmoCanOperate(const ActorCommonData & tACDGizmo, const ActorCommonData
                 }
                 if (BossEncounterManager::IsInProgress())
                 {
-                    PlayerDisplayErrorMessage(tACDOperator.id, 120);  // GAMEERROR_CANNOT_ENTER_ACTIVE_BOSS_ENCOUNTER
+                    PlayerDisplayErrorMessage(tACDOperator.id, GAMEERROR_CANNOT_ENTER_ACTIVE_BOSS_ENCOUNTER);
                 }
                 else
                 {
-                    PlayerDisplayErrorMessage(tACDOperator.id, 121);  // GAMEERROR_CANNOT_ENTER_QUEUED_BOSS_ENCOUNTER
+                    PlayerDisplayErrorMessage(tACDOperator.id, GAMEERROR_CANNOT_ENTER_QUEUED_BOSS_ENCOUNTER);
                 }
                 return FALSE;
             }

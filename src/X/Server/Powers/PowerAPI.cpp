@@ -533,14 +533,14 @@ void PowerAPI_DoDamage(
                 tEvaluationData.GetPlayer(),
                 Achievement::ACH_EVENT_PLAYER_BLOCKED_ATTACK,
                 snoPower,
-                1);
+                1, (uint32)sub_71007b5e70());
 
 
             tEvaluationData.EvaluateEvent(
                 tEvaluationData.GetPlayer(),
                 Achievement::ACH_EVENT_PLAYER_BLOCKED_DAMAGE,
                 snoPower,
-                Math::Max(0, Math::FloatRoundToInt(tDamage.flDamageBlocked)));
+                Math::Max(0, Math::FloatRoundToInt(tDamage.flDamageBlocked)), (uint32)sub_71007b5e70());
         }
     }
 
@@ -682,18 +682,18 @@ static void sEvaluateAppliedBuffAchievements(
                 tEvaluationData.SetPlayer(ptTargetPlayer);
 
                 Achievement::EventID eEventID = (ptTargetPlayer == ptCastingPlayer) ? Achievement::ACH_EVENT_PLAYER_BUFFED_SELF : Achievement::ACH_EVENT_PLAYER_BUFFED_PLAYER;
-                tEvaluationData.EvaluateEvent(ptCastingPlayer, eEventID, tBuff.snoPower, 1);
+                tEvaluationData.EvaluateEvent(ptCastingPlayer, eEventID, tBuff.snoPower, 1, (uint32)sub_71007b5e70());
             }
 
             tEvaluationData.SetPlayer(ptCastingPlayer);
 
             if (ACDIsHireling(tACDTarget))
             {
-                tEvaluationData.EvaluateEvent(ptCastingPlayer, Achievement::ACH_EVENT_PLAYER_BUFFED_FOLLOWER, tBuff.snoPower, 1);
+                tEvaluationData.EvaluateEvent(ptCastingPlayer, Achievement::ACH_EVENT_PLAYER_BUFFED_FOLLOWER, tBuff.snoPower, 1, (uint32)sub_71007b5e70());
             }
             else if (tACDTarget.IsMonster() && bAppliedCCEffect)
             {
-                tEvaluationData.EvaluateEvent(ptCastingPlayer, Achievement::ACH_EVENT_PLAYER_APPLIED_CC_TO_MONSTER, tBuff.snoPower, 1);
+                tEvaluationData.EvaluateEvent(ptCastingPlayer, Achievement::ACH_EVENT_PLAYER_APPLIED_CC_TO_MONSTER, tBuff.snoPower, 1, (uint32)sub_71007b5e70());
             }
         }
     }
@@ -712,7 +712,7 @@ static void sEvaluateBuffRemovedAchievements(const PowerAPIBuffInstance & tBuff)
         if (ptTargetPlayer)
         {
             tEvaluationData.SetPlayer(ptTargetPlayer);
-            tEvaluationData.EvaluateEvent(ptTargetPlayer, Achievement::ACH_EVENT_PLAYER_BUFF_REMOVED, tBuff.snoPower, 1);
+            tEvaluationData.EvaluateEvent(ptTargetPlayer, Achievement::ACH_EVENT_PLAYER_BUFF_REMOVED, tBuff.snoPower, 1, (uint32)sub_71007b5e70());
         }
         else if (ptTarget->IsMonster())
         {
@@ -720,7 +720,7 @@ static void sEvaluateBuffRemovedAchievements(const PowerAPIBuffInstance & tBuff)
             if (ptTargetPlayer)
             {
                 tEvaluationData.SetPlayer(ptTargetPlayer);
-                tEvaluationData.EvaluateEvent(ptTargetPlayer, Achievement::ACH_EVENT_MONSTER_BUFF_REMOVED, tBuff.snoPower, 1);
+                tEvaluationData.EvaluateEvent(ptTargetPlayer, Achievement::ACH_EVENT_MONSTER_BUFF_REMOVED, tBuff.snoPower, 1, (uint32)sub_71007b5e70());
             }
         }
     }
@@ -1117,7 +1117,7 @@ static void sSendHealthCostAchievementEvent(ActorCommonData * ptACDPlayer, Power
         if (tEvaluationData.GetPlayer())
         {
             tEvaluationData.SetPower(ptPower);
-            tEvaluationData.EvaluateEvent(tEvaluationData.GetPlayer(), Achievement::ACH_EVENT_SPEND_HEALTH, nNumberOfHeals);
+            tEvaluationData.EvaluateEvent(tEvaluationData.GetPlayer(), Achievement::ACH_EVENT_SPEND_HEALTH, nNumberOfHeals, (uint32)sub_71007b5e70());
         }
     }
 }
@@ -3108,10 +3108,10 @@ void sPowerAPIGetTargettingSourcePlace(
 
 
     case CTT_NO_LINE_OF_SIGHT:
-        DisplayInternalError(NULL, "", 6139, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 6197, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
         break;
     default:
-        DisplayInternalError(NULL, "", 6142, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 6200, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 }
 #line 3106
@@ -3200,7 +3200,7 @@ BOOL PowerAPI_DoChooseExplosion(const ChooseTargetGeometry & tGeometry, const XP
         }
         else
         {
-            DisplayInternalError(NULL, "", 6548, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+            DisplayInternalError(NULL, "", 6606, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
         }
         break;
     case CTT_NO_LINE_OF_SIGHT:
@@ -3220,7 +3220,7 @@ BOOL PowerAPI_DoChooseExplosion(const ChooseTargetGeometry & tGeometry, const XP
         placeExplosion = tGeometry.tBox.placeCenter;
         break;
     default:
-        DisplayInternalError(NULL, "", 6577, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 6635, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
         break;
     }
     return TRUE;
@@ -4072,7 +4072,7 @@ BuffID PowerAPI_BuffAddToACD(
 {
     if (!tBuffStartData.IsInitialized())
     {
-        DisplayInternalError(NULL, "", 8510, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 8568, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 
     Power * ptPower = PowerTryToGet(tBuffStartData.idPower);
@@ -4610,7 +4610,7 @@ BuffID PowerAPI_BuffAddToACD(
         case BUFF_STACKTYPE_EXISTING:
             return BUFFID_INVALID;
         default:
-            DisplayInternalError(NULL, "", 9118, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+            DisplayInternalError(NULL, "", 9176, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
         }
 
         if (tBuffStartData.eStackType == BUFF_STACKTYPE_ONE_PER_SOURCE_REFRESH || tBuffStartData.eStackType == BUFF_STACKTYPE_REFRESH)
@@ -4732,7 +4732,7 @@ BuffID PowerAPI_BuffAddToACD(
         {
         }
 
-        DisplayInternalError(NULL, "", 9267, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 9325, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 
     if (tBuffStartData.nMaxInstanceCount > 0)
@@ -6514,27 +6514,27 @@ void PowerAPI_BuffApplyOnGetHitWithCrowdControlEffects(
                 {
                 case CROWD_CONTROL_STUN:
                     SGameStatsPlayerCounterIncrement(ptPlayerAttacker, STAT_COUNTER_PLAYER_APPLIED_STUN_TO_PLAYER, 0, 0, 1.0f);
-                    tEvaluationData.EvaluateEvent(ptPlayerAttacker, Achievement::ACH_EVENT_PVP_PLAYER_APPLIED_STUN_TO_PLAYER, snoPowerToReport);
+                    tEvaluationData.EvaluateEvent(ptPlayerAttacker, Achievement::ACH_EVENT_PVP_PLAYER_APPLIED_STUN_TO_PLAYER, snoPowerToReport, (uint32)sub_71007b5e70());
                     break;
 
                 case CROWD_CONTROL_IMMOBILIZE:
                     SGameStatsPlayerCounterIncrement(ptPlayerAttacker, STAT_COUNTER_PLAYER_APPLIED_IMMOBILIZE_TO_PLAYER, 0, 0, 1.0f);
-                    tEvaluationData.EvaluateEvent(ptPlayerAttacker, Achievement::ACH_EVENT_PVP_PLAYER_APPLIED_IMMOBILIZE_TO_PLAYER, snoPowerToReport);
+                    tEvaluationData.EvaluateEvent(ptPlayerAttacker, Achievement::ACH_EVENT_PVP_PLAYER_APPLIED_IMMOBILIZE_TO_PLAYER, snoPowerToReport, (uint32)sub_71007b5e70());
                     break;
 
                 case CROWD_CONTROL_FEAR:
                     SGameStatsPlayerCounterIncrement(ptPlayerAttacker, STAT_COUNTER_PLAYER_APPLIED_FEAR_TO_PLAYER, 0, 0, 1.0f);
-                    tEvaluationData.EvaluateEvent(ptPlayerAttacker, Achievement::ACH_EVENT_PVP_PLAYER_APPLIED_FEAR_TO_PLAYER, snoPowerToReport);
+                    tEvaluationData.EvaluateEvent(ptPlayerAttacker, Achievement::ACH_EVENT_PVP_PLAYER_APPLIED_FEAR_TO_PLAYER, snoPowerToReport, (uint32)sub_71007b5e70());
                     break;
 
                 case CROWD_CONTROL_FREEZE:
                     SGameStatsPlayerCounterIncrement(ptPlayerAttacker, STAT_COUNTER_PLAYER_APPLIED_FREEZE_TO_PLAYER, 0, 0, 1.0f);
-                    tEvaluationData.EvaluateEvent(ptPlayerAttacker, Achievement::ACH_EVENT_PVP_PLAYER_APPLIED_FREEZE_TO_PLAYER, snoPowerToReport);
+                    tEvaluationData.EvaluateEvent(ptPlayerAttacker, Achievement::ACH_EVENT_PVP_PLAYER_APPLIED_FREEZE_TO_PLAYER, snoPowerToReport, (uint32)sub_71007b5e70());
                     break;
 
                 case CROWD_CONTROL_BLIND:
                     SGameStatsPlayerCounterIncrement(ptPlayerAttacker, STAT_COUNTER_PLAYER_APPLIED_BLIND_TO_PLAYER, 0, 0, 1.0f);
-                    tEvaluationData.EvaluateEvent(ptPlayerAttacker, Achievement::ACH_EVENT_PVP_PLAYER_APPLIED_BLIND_TO_PLAYER, snoPowerToReport);
+                    tEvaluationData.EvaluateEvent(ptPlayerAttacker, Achievement::ACH_EVENT_PVP_PLAYER_APPLIED_BLIND_TO_PLAYER, snoPowerToReport, (uint32)sub_71007b5e70());
                     break;
 
                 }

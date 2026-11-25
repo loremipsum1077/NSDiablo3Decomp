@@ -477,8 +477,8 @@ public:
     virtual void RegisterSubscription(OnlineService::AccountId, const OnlineService::GameAccountHandle &, const OnlineService::AchievementsInterface::RegistrationCallback &) = 0;  // vtable slot 4
     virtual bool CancelSubscription(const OnlineService::GameAccountHandle &, const OnlineService::AchievementsInterface::RegistrationCallback &) = 0;  // vtable slot 5
     typedef OnlineService::Callback<bool (unsigned long, unsigned long)> ModifierCallback;
-    virtual OnlineService::ErrorCode EvaluateEvent(const OnlineService::GameAccountHandle & gameAccount, uint32 eventId, uint64 quantity, OnlineService::Timestamp timestamp, const OnlineService::AchievementsInterface::ModifierCallback & cb);  // vtable slot 6
-    virtual OnlineService::ErrorCode EvaluateEvent(const OnlineService::GameAccountHandle & gameAccount, uint32 eventId, uint64 comparand, uint64 quantity, OnlineService::Timestamp timestamp, const OnlineService::AchievementsInterface::ModifierCallback & cb);  // vtable slot 7
+    virtual OnlineService::ErrorCode EvaluateEvent(const OnlineService::GameAccountHandle & gameAccount, uint32 eventId, uint64 quantity, OnlineService::Timestamp timestamp, uint32 uUnkFlags, const OnlineService::AchievementsInterface::ModifierCallback & cb);  // vtable slot 6
+    virtual OnlineService::ErrorCode EvaluateEvent(const OnlineService::GameAccountHandle & gameAccount, uint32 eventId, uint64 comparand, uint64 quantity, OnlineService::Timestamp timestamp, uint32 uUnkFlags, const OnlineService::AchievementsInterface::ModifierCallback & cb);  // vtable slot 7
     typedef OnlineService::Callback<void (int, const OnlineService::GameAccountHandle &)> SnapshotCallback;
     virtual void SetSnapshotCacheSize(uint64) = 0;  // vtable slot 8
     virtual void SetSnapshotExpireSeconds(double) = 0;  // vtable slot 9

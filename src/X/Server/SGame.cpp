@@ -849,7 +849,7 @@ SGameID SGameInitializeGame(
 			nMonsterLevel = 70;  // literal 0x46 in the binary
 		}
 
-		tGCD.tGameSyncedData.nInitialMonsterLevel = nMonsterLevel;
+
 		tGCD.tGameSyncedData.nMonsterLevel = nMonsterLevel;
 
 
@@ -893,7 +893,7 @@ SGameID SGameInitializeGame(
 			ResolvedPortalDestination tDest;
 			ActGetCurrentStartLocation(tDest);
 			SNO snoWorldStart = SGameGetStartWorld();
-			SWorldCreate(snoWorldStart, FALSE, FALSE, sStartingWorldCreated, ACDID_INVALID, ACDID_INVALID, tDest.snoWorld == snoWorldStart ? tDest.uEntranceGUID : 0, WARP_UNKNOWN, FALSE);
+			SWorldCreate(snoWorldStart, FALSE, FALSE, sStartingWorldCreated, ACDID_INVALID, ACDID_INVALID, tDest.snoWorld == snoWorldStart ? tDest.uEntranceGUID : 0, WARP_UNKNOWN, FALSE, 0);
 		}
 
 		if (CmdLineGetParams()->tBitArray.Get(CMDLINE_BLIZZCON_BIT))
@@ -3386,6 +3386,24 @@ static void sHandleConquestPosted(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 static void sProcessAccountSignals(
     ExternalGameSignals & tExternalSignals)
 {
@@ -4853,7 +4871,7 @@ void SGamePlayerJoin(
             idSWorld = WorldCommonFindBySNO(snoWorld, TRUE);
             if (idSWorld == SWORLDID_INVALID)
             {
-                idSWorld = SWorldCreate(snoWorld, TRUE, SPlayerIsLocal(tNewPlayer), NULL, ACDID_INVALID, ACDID_INVALID, uEntranceGUID, WARP_UNKNOWN, FALSE);
+                idSWorld = SWorldCreate(snoWorld, TRUE, SPlayerIsLocal(tNewPlayer), NULL, ACDID_INVALID, ACDID_INVALID, uEntranceGUID, WARP_UNKNOWN, FALSE, 0);
             }
         }
     }
@@ -4868,7 +4886,7 @@ void SGamePlayerJoin(
 
             if (idSWorld == SWORLDID_INVALID)
             {
-                idSWorld = SWorldCreate(tSGameGlobals.snoInitialWorld, FALSE, FALSE, NULL, ACDID_INVALID, ACDID_INVALID, 0, WARP_UNKNOWN, FALSE);
+                idSWorld = SWorldCreate(tSGameGlobals.snoInitialWorld, FALSE, FALSE, NULL, ACDID_INVALID, ACDID_INVALID, 0, WARP_UNKNOWN, FALSE, 0);
                 ScriptEventOnUserEvent("PVPGameStart", ACDID_INVALID, 0);
             }
         }
@@ -4877,7 +4895,7 @@ void SGamePlayerJoin(
     {
         if (idSWorld == SWORLDID_INVALID)
         {
-            idSWorld = SWorldCreate(tSGameGlobals.snoInitialWorld, FALSE, FALSE, NULL, ACDID_INVALID, ACDID_INVALID, 0, WARP_UNKNOWN, FALSE);
+            idSWorld = SWorldCreate(tSGameGlobals.snoInitialWorld, FALSE, FALSE, NULL, ACDID_INVALID, ACDID_INVALID, 0, WARP_UNKNOWN, FALSE, 0);
         }
     }
 
@@ -5103,7 +5121,7 @@ void SGamePlayerJoin(
                 if (idSWorldSavePoint == SWORLDID_INVALID)
                 {
 
-                    SWorldCreate(tHeroSavePoint.snoWorld, FALSE, FALSE, sSavepointWorldCreated, tACDNewPlayer.id, ACDID_INVALID, 0, WARP_UNKNOWN, FALSE);
+                    SWorldCreate(tHeroSavePoint.snoWorld, FALSE, FALSE, sSavepointWorldCreated, tACDNewPlayer.id, ACDID_INVALID, 0, WARP_UNKNOWN, FALSE, 0);
                 }
                 else
                 {
@@ -5225,7 +5243,7 @@ void SGamePlayerJoin(
                 ptPlayer,
                 Achievement::ACH_EVENT_BROADCAST_PLAYER_JOINED_GAME,
                 PlayerGetPlayerClass(tNewPlayer.idPlayerACD),
-                1);
+                1, (uint32)sub_71007b5e70());
 
 
             if (tNewPlayer.nPlayerIndex != ptPlayer->nPlayerIndex)
@@ -5236,7 +5254,7 @@ void SGamePlayerJoin(
                     &tNewPlayer,
                     Achievement::ACH_EVENT_JOINED_GAME_WITH_PLAYER,
                     PlayerGetPlayerClass(ptPlayer->idPlayerACD),
-                    1);
+                    1, (uint32)sub_71007b5e70());
             }
         }
 
@@ -5248,20 +5266,20 @@ void SGamePlayerJoin(
 
 
 
-        tEvaluationData.EvaluateEvent(&tNewPlayer, Achievement::ACH_EVENT_PLAYER_LEAVE_GAME, 1);
+        tEvaluationData.EvaluateEvent(&tNewPlayer, Achievement::ACH_EVENT_PLAYER_LEAVE_GAME, 1, (uint32)sub_71007b5e70());
 
 
 
 
 
-        tEvaluationData.EvaluateEvent(&tNewPlayer, Achievement::ACH_EVENT_PLAYER_JOINED_GAME, 1);
+        tEvaluationData.EvaluateEvent(&tNewPlayer, Achievement::ACH_EVENT_PLAYER_JOINED_GAME, 1, (uint32)sub_71007b5e70());
 
 
 
 
 
 
-        tEvaluationData.EvaluateEvent(&tNewPlayer, Achievement::ACH_EVENT_HAS_HERO_AT_LEVEL, nNewPlayerLevel, 1);
+        tEvaluationData.EvaluateEvent(&tNewPlayer, Achievement::ACH_EVENT_HAS_HERO_AT_LEVEL, nNewPlayerLevel, 1, (uint32)sub_71007b5e70());
 
 
 
@@ -5273,7 +5291,7 @@ void SGamePlayerJoin(
 
 
             OnlineServiceServer::LicenseId uLicenseID = iter->id;
-            tEvaluationData.EvaluateEvent(&tNewPlayer, Achievement::ACH_EVENT_PLAYER_HAS_LICENSE, uLicenseID, 1);
+            tEvaluationData.EvaluateEvent(&tNewPlayer, Achievement::ACH_EVENT_PLAYER_HAS_LICENSE, uLicenseID, 1, (uint32)sub_71007b5e70());
         }
 
 
@@ -5912,7 +5930,7 @@ BOOL SGameJoinPendingPlayer(const OnlineService::HeroId uHeroId)
 
     if (idSWorldStart == SWORLDID_INVALID)
     {
-        idSWorldStart = SWorldCreate(snoWorldStart, FALSE, FALSE, sStartingWorldCreated, ACDID_INVALID, ACDID_INVALID, 0, 0, FALSE);
+        idSWorldStart = SWorldCreate(snoWorldStart, FALSE, FALSE, sStartingWorldCreated, ACDID_INVALID, ACDID_INVALID, 0, 0, FALSE, 0);
     }
 
     SWorld * ptSWorldStart = SWorldGet(idSWorldStart);
@@ -6753,6 +6771,244 @@ void SGameOpenWorldReset()
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void SGameGetOpenWorldHubWorldForPlayer(const Player & tPlayer, ResolvedPortalDestination & tDest)
 {
     Act eAct = ACT_INVALID;
@@ -7123,7 +7379,7 @@ void SGameEvaluateActCompletedAchievement(Act eActCompleted)
 {
     Achievement::EvaluationData tEvaluationData;
     for (tEvaluationData.SetPlayer(PlayerGetFirstInGame()); tEvaluationData.GetPlayer(); tEvaluationData.SetPlayer(PlayerGetNextInGame(tEvaluationData.GetPlayer())))
-        tEvaluationData.EvaluateEvent(tEvaluationData.GetPlayer(), ACH_EVENT_COMPLETE_ACT, eActCompleted, 1);
+        tEvaluationData.EvaluateEvent(tEvaluationData.GetPlayer(), ACH_EVENT_COMPLETE_ACT, eActCompleted, 1, ((SGameManager::GameGet().tStartParams.dwCreationFlags >> GAMECREATEPARAM_SEASON) & 1) | ((SGameManager::GameGet().tStartParams.dwCreationFlags >> 19) & 2));
 }
 
 
@@ -7155,7 +7411,7 @@ BOOL DeleteAllWorldsAndTransferPlayersToLimbo()
 
     SWorldID idSWorldLimbo = WorldCommonFindBySNO(snoWorldLimbo, TRUE);
     if (idSWorldLimbo == SWORLDID_INVALID)
-        idSWorldLimbo = SWorldCreate(snoWorldLimbo, TRUE, TRUE, NULL, ACDID_INVALID, ACDID_INVALID, 0, 0, FALSE);
+        idSWorldLimbo = SWorldCreate(snoWorldLimbo, TRUE, TRUE, NULL, ACDID_INVALID, ACDID_INVALID, 0, 0, FALSE, 0);
 
     for (Player * ptPlayerCurr = PlayerGetFirstInGame(); ptPlayerCurr; ptPlayerCurr = PlayerGetNextInGame(ptPlayerCurr))
     {
@@ -7363,7 +7619,7 @@ void SGameACDChangeWorld(const ACDID idACD, const SNO snoWorld, const uint32 uEn
     SWorldID idSWorld = WorldCommonFindBySNO(snoWorld, TRUE);
     if (idSWorld == SWORLDID_INVALID)
     {
-        idSWorld = SWorldCreate(snoWorld, TRUE, ptReferencePlayer ? SPlayerIsLocal(*ptReferencePlayer) : FALSE, NULL, ACDID_INVALID, ACDID_INVALID, uEntranceGUID, 0, FALSE);
+        idSWorld = SWorldCreate(snoWorld, TRUE, ptReferencePlayer ? SPlayerIsLocal(*ptReferencePlayer) : FALSE, NULL, ACDID_INVALID, ACDID_INVALID, uEntranceGUID, 0, FALSE, 0);
         if (idSWorld == SWORLDID_INVALID)
             return;
     }
@@ -8574,8 +8830,8 @@ void SGameUpdateMonsterLevel(int32 nPossibleNewLevel, BOOL bForceDownscale)
     if (nCurrentLevel == -1 || (nPossibleNewLevel > nCurrentLevel && nPossibleNewLevel <= nCurrentLevel + MAX_LEVEL_DIFFERENCE) || (bForceDownscale && nPossibleNewLevel < nCurrentLevel))
     {
         tGCD.tGameSyncedData.nMonsterLevel = nPossibleNewLevel;
-        if (tGCD.dwServerTime < 180)
-            tGCD.tGameSyncedData.nInitialMonsterLevel = nPossibleNewLevel;
+
+
         for (Player * ptPlayer = PlayerGetFirstInGame(); ptPlayer; ptPlayer = PlayerGetNextInGame(ptPlayer))
             SGameSyncData(ptPlayer);
     }
@@ -8628,7 +8884,7 @@ void SGameUpdateDifficultyLevel(Player & tRequestingPlayer, int32 nNewDifficulty
 {
 
 
-    if (nNewDifficultyLevel >= 0 && nNewDifficultyLevel <= 16)
+    if (nNewDifficultyLevel >= 0 && nNewDifficultyLevel <= 19)
     {
         GameCommonData & tGCD = GameGetActiveGameCommonData();
         int32 nOldDifficultyLevel = tGCD.nHandicapLevel;

@@ -445,9 +445,9 @@ void sBrainEvaluateDamageDoneAchievements(PowerAPIDamage & tDamage, float flTota
         if (PowerTryToGet(tDamage.idPower))
         {
             SNO snoPower = tEvaluationData.GetPowerSNO();
-            tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_PLAYER_HIT_BY_POWER, snoPower, 1);
+            tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_PLAYER_HIT_BY_POWER, snoPower, 1, (uint32)sub_71007b5e70());
             if (flTotalDamage > 0.0f)
-                tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_PLAYER_DAMAGED_BY_POWER, snoPower, 1);
+                tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_PLAYER_DAMAGED_BY_POWER, snoPower, 1, (uint32)sub_71007b5e70());
         }
     }
     else
@@ -460,8 +460,8 @@ void sBrainEvaluateDamageDoneAchievements(PowerAPIDamage & tDamage, float flTota
             {
                 tEvaluationData.SetPlayer(ptPlayer);
                 tEvaluationData.SetACD(ptACDTarget);
-                tEvaluationData.EvaluateEvent(tEvaluationData.GetPlayer(), Achievement::ACH_EVENT_MONSTER_DAMAGED_BY_PLAYER, ptACDTarget->GetActorSNO(), 1);
-                tEvaluationData.EvaluateEvent(tEvaluationData.GetPlayer(), Achievement::ACH_EVENT_PLAYER_DEALT_DAMAGE_TO_MONSTER, ptACDTarget->GetActorSNO(), Math::Max((int32)flTotalDamage, 0));
+                tEvaluationData.EvaluateEvent(tEvaluationData.GetPlayer(), Achievement::ACH_EVENT_MONSTER_DAMAGED_BY_PLAYER, ptACDTarget->GetActorSNO(), 1, (uint32)sub_71007b5e70());
+                tEvaluationData.EvaluateEvent(tEvaluationData.GetPlayer(), Achievement::ACH_EVENT_PLAYER_DEALT_DAMAGE_TO_MONSTER, ptACDTarget->GetActorSNO(), Math::Max((int32)flTotalDamage, 0), (uint32)sub_71007b5e70());
             }
         }
     }
@@ -3155,7 +3155,7 @@ void BrainStanceDoKnockBack(
                         Achievement::EvaluationData tEvaluationData;
                         tEvaluationData.SetPlayer(ptPlayerAttacker);
                         tEvaluationData.SetPower(ptPower->snoPower);
-                        tEvaluationData.EvaluateEvent(ptPlayerAttacker, Achievement::ACH_EVENT_PVP_PLAYER_APPLIED_KNOCKBACK_TO_PLAYER, ptPower->snoPower);
+                        tEvaluationData.EvaluateEvent(ptPlayerAttacker, Achievement::ACH_EVENT_PVP_PLAYER_APPLIED_KNOCKBACK_TO_PLAYER, ptPower->snoPower, (uint32)sub_71007b5e70());
                     }
 
                     SGameStatsPlayerCounterIncrement(ptPlayerAttacker, STAT_COUNTER_PLAYER_APPLIED_KNOCKBACK_TO_PLAYER, 0, 0, 1.0f);

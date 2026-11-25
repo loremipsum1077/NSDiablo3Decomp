@@ -1253,7 +1253,7 @@ static BOOL sReadReplayMessage(
 
 	case REPLAY_MSG_TYPE_ACCOUNT_DATA:
 		{
-			uint8 auAccountDefinitionBuffer[65536];
+			uint8 auAccountDefinitionBuffer[131072];
 			uint32 uChunkSize = sReadGenericDataChunk(auAccountDefinitionBuffer, sizeof(auAccountDefinitionBuffer));
 
 
@@ -1869,7 +1869,7 @@ static void sSaveBattleNetAccountDef(
     }
 
 
-    uint8 auAccountDefinitionBuffer[65536];
+    uint8 auAccountDefinitionBuffer[131072];
     int32 nByteCount = tSavedDefinition.ByteSize();
 
     BOOL bProtoCompiled = tSavedDefinition.SerializePartialToArray(auAccountDefinitionBuffer, sizeof(auAccountDefinitionBuffer));

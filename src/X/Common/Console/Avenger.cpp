@@ -134,7 +134,7 @@ void Avenger::Console::InitializePlayerAvengerData(Player * ptPlayer, D3::Accoun
     if (ptPlayer->nControllerIndex == ::Console::GamerProfile::GetPrimaryProfileUserIndex())
         TryToGetFriendAvenger(FALSE);
 
-    MessageSendToServer(518, tAvengerAccountData, ptPlayer);
+    MessageSendToServer(519, tAvengerAccountData, ptPlayer);
 
     AvengerUpdateSourceMessage tSourceMessage;
     if (ptPlayer->tHeroStateData.uPlayerFlags & 1)
@@ -150,7 +150,7 @@ void Avenger::Console::InitializePlayerAvengerData(Player * ptPlayer, D3::Accoun
             tSourceMessage.eAvengerSource = AVENGER_SOURCE_SOLO;
     }
     ptPlayer->eAvengerSource = tSourceMessage.eAvengerSource;
-    MessageSendToServer(520, &tSourceMessage, sizeof(tSourceMessage), ptPlayer);
+    MessageSendToServer(521, &tSourceMessage, sizeof(tSourceMessage), ptPlayer);
 }
 int32 MonsterGetNumberOfRandomAffixes(int32 nLevel, int32 nFixedAffixes);  // X/Server/RandomMonster.cpp:664
 void MonsterAddAffixes(ActorID idActor, const ActorAddStruct & tActorAdd, EncounterAddStruct & tEncounterAdd);  // X/Server/RandomMonster.cpp:1197
@@ -462,7 +462,7 @@ void Avenger::Console::TryToGetFriendAvenger(
 
             if (bSendToServer)
             {
-                MessageSendToServer(519, tAvengerAccountData, ptPlayer);
+                MessageSendToServer(520, tAvengerAccountData, ptPlayer);
             }
         }
     }

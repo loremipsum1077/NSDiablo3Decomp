@@ -87,8 +87,8 @@ enum {
 
 
 enum {
-    KNOWN_LIST_ACD_BIT_ARRAY_SIZE = 1024,
-    KNOWN_LIST_ACD_BIT_ARRAY_SIZE_DWORDS = 256,
+    KNOWN_LIST_ACD_BIT_ARRAY_SIZE = 1472,
+    KNOWN_LIST_ACD_BIT_ARRAY_SIZE_DWORDS = 368,
     KNOWN_LIST_SCENE_BIT_ARRAY_SIZE = 640,
     KNOWN_LIST_SCENE_BIT_ARRAY_SIZE_DWORDS = 160,
     KNOWN_LIST_WORLD_BIT_ARRAY_SIZE = 32,
@@ -111,17 +111,17 @@ enum {
     BIT_ARRAY_BLOCK_LOW_MASK = 31,
 };
 
-struct KnownListBitArray {  // size 0xfc4
+struct KnownListBitArray {  // size 0x1344
     BitArrayBlockType arACD[KNOWN_LIST_ACD_BIT_ARRAY_SIZE_DWORDS];  // 0x00
-    BitArrayBlockType arScenes[KNOWN_LIST_SCENE_BIT_ARRAY_SIZE_DWORDS];  // 0x400
-    BitArrayBlockType arSubScenes[KNOWN_LIST_SCENE_BIT_ARRAY_SIZE_DWORDS];  // 0x680
-    BitArrayBlockType arWorldEnter[KNOWN_LIST_WORLD_BIT_ARRAY_SIZE_DWORDS];  // 0x900
-    BitArrayBlockType arWorldReveal[KNOWN_LIST_WORLD_BIT_ARRAY_SIZE_DWORDS];  // 0x920
-    BitArrayBlockType arTeams[KNOWN_LIST_TEAMS_BIT_ARRAY_SIZE_DWORDS];  // 0x940
-    BitArrayBlockType arPrefetchScenes[KNOWN_LIST_SCENE_BIT_ARRAY_SIZE_DWORDS];  // 0x944
-    BitArrayBlockType arFarACD[KNOWN_LIST_ACD_BIT_ARRAY_SIZE_DWORDS];  // 0xbc4
+    BitArrayBlockType arScenes[KNOWN_LIST_SCENE_BIT_ARRAY_SIZE_DWORDS];  // 0x5c0
+    BitArrayBlockType arSubScenes[KNOWN_LIST_SCENE_BIT_ARRAY_SIZE_DWORDS];  // 0x840
+    BitArrayBlockType arWorldEnter[KNOWN_LIST_WORLD_BIT_ARRAY_SIZE_DWORDS];  // 0xac0
+    BitArrayBlockType arWorldReveal[KNOWN_LIST_WORLD_BIT_ARRAY_SIZE_DWORDS];  // 0xae0
+    BitArrayBlockType arTeams[KNOWN_LIST_TEAMS_BIT_ARRAY_SIZE_DWORDS];  // 0xb00
+    BitArrayBlockType arPrefetchScenes[KNOWN_LIST_SCENE_BIT_ARRAY_SIZE_DWORDS];  // 0xb04
+    BitArrayBlockType arFarACD[KNOWN_LIST_ACD_BIT_ARRAY_SIZE_DWORDS];  // 0xd84
 };
-static_assert(sizeof(KnownListBitArray) == 0xfc4, "KnownListBitArray");
+static_assert(sizeof(KnownListBitArray) == 0x1344, "KnownListBitArray");
 
 struct KnownListWrapper {  // size 0x18
     KnownListID id;  // 0x00
@@ -141,20 +141,20 @@ typedef TDataArray<KnownEntryListWrapper, int> KnownEntryListDataArray;
 typedef XFixedBlockAllocator<XPooledList<KnownEntry, const KnownEntry &>, 19> XKnownListAllocator;
 typedef XFixedBlockAllocator<KnownListBitArray, 13> XKnownListBitArrayAllocator;
 
-struct KnownEntryGlobals {  // size 0xe5e0
+struct KnownEntryGlobals {  // size 0x118a0
     XKnownListAllocator tKnownListAllocator;  // 0x00
     XKnownListBitArrayAllocator tKnownListBitArrayAllocator;  // 0x330
-    KnownListDataArray * ptKnownListArray;  // 0xd060
-    KnownEntryListDataArray * ptKnownEntryListArray;  // 0xd068
-    KnownEntryPool tKnownEntryPool;  // 0xd070
-    KnownEntryMap tKnownEntryMap[KNOWNENTRY_MAP_TYPE_COUNT];  // 0xd0a0
-    KnownList tAddedList;  // 0xd1a0
-    KnownList tChangedList;  // 0xd1c8
-    KnownList tDeletedList;  // 0xd1f0
-    KnownListBitArray tDeletedBitArray;  // 0xd218
-    BitArrayBlockType arACDAddedBits[KNOWN_LIST_ACD_BIT_ARRAY_SIZE_DWORDS];  // 0xe1dc
+    KnownListDataArray * ptKnownListArray;  // 0xfde0
+    KnownEntryListDataArray * ptKnownEntryListArray;  // 0xfde8
+    KnownEntryPool tKnownEntryPool;  // 0xfdf0
+    KnownEntryMap tKnownEntryMap[KNOWNENTRY_MAP_TYPE_COUNT];  // 0xfe20
+    KnownList tAddedList;  // 0xff20
+    KnownList tChangedList;  // 0xff48
+    KnownList tDeletedList;  // 0xff70
+    KnownListBitArray tDeletedBitArray;  // 0xff98
+    BitArrayBlockType arACDAddedBits[KNOWN_LIST_ACD_BIT_ARRAY_SIZE_DWORDS];  // 0x112dc
 };
-static_assert(sizeof(KnownEntryGlobals) == 0xe5e0, "KnownEntryGlobals");
+static_assert(sizeof(KnownEntryGlobals) == 0x118a0, "KnownEntryGlobals");
 
 KnownEntryPool * KnownListEntryPoolGet();
 void sKnownListItemDeleted(KnownEntryType eType, DataID idObject);
@@ -1703,7 +1703,7 @@ static void sAddACDToKnownList(ActorCommonData & tACD,
                                const Player & tPlayer)
 {
 
-    if (!tACD.DoesPlayerMatchAssignedHeroID(&tPlayer))
+    if (!tACD.DoesPlayerMatchAssignedHeroID(&tPlayer, TRUE))
     {
         return;
     }
@@ -2517,7 +2517,7 @@ static BOOL sCanSeeACD(const ActorCommonData & tACDPlayer, const Frustum & tFrus
 
 
 
-    if (!ptACD->DoesPlayerMatchAssignedHeroID(ptPlayer))
+    if (!ptACD->DoesPlayerMatchAssignedHeroID(ptPlayer, TRUE))
     {
         return FALSE;
     }

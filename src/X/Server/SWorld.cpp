@@ -117,20 +117,20 @@ void ActorChangeWorld(const ActorID idActor, const WorldPlace & tPlace, const Qu
 ACDID SWorldGetPortalDestinationACD(const SWorldID idSWorld, const uint32 uEntranceGUID);  // X/Server/SWorld.cpp:1375
 static XVarScope s_scopeSWorld("SWorld", NULL);
 XVarUint32 s_varMaxLiveWorlds(s_scopeSWorld, "MaxLiveWorlds", 256);
-XVarUint32 s_varActorThresholdForDeletingWorlds(s_scopeSWorld, "ActorThresholdForDeletingWorlds", 7168);
+XVarUint32 s_varActorThresholdForDeletingWorlds(s_scopeSWorld, "ActorThresholdForDeletingWorlds", 10304);
 
 
 static BOOL sfWorldPreloadingSuspended;
-
-struct WorldCreateData {  // size 0x18
+struct WorldCreateData {  // size 0x1c
     SWorldID idSWorld;  // 0x00
     ACDID idACDPortalOperator;  // 0x04
     ACDID idACDPortal;  // 0x08
     uint32 uEntranceGUID;  // 0x0c
     PlayerWarpReason eWarpReason;  // 0x10
-    Blizzard::Time::Millisecond uTimeFinalized;  // 0x14
+    uint32 unk_14 = 0;  // 0x14 (ORed into SWorld::dwFlags by SWorldCreateUpdate; the target zeroes it when a list node is built)
+    Blizzard::Time::Millisecond uTimeFinalized;  // 0x18
 };
-static_assert(sizeof(WorldCreateData) == 0x18, "WorldCreateData");
+static_assert(sizeof(WorldCreateData) == 0x1c, "WorldCreateData");
 
 struct SWorldGlobals {  // size 0x5f0
     NoSpawnCirclePool tNoSpawnCirclePool;  // 0x00
@@ -837,7 +837,7 @@ BOOL SWorldPlayerWarpToWaypoint(const ACDID idACDPlayer, const ACDID idACDWaypoi
         SPlayerWorldCreatingBuffApplyToLocalPlayers(tACDPlayer);
 
         Player * ptPlayer = PlayerGetByACD(idACDPlayer);
-        SWorldCreate(tInfo.snoWorld, FALSE, ptPlayer ? SPlayerIsLocal(*ptPlayer) : FALSE, sWaypointWorldCreated, idACDPlayer, idACDWaypoint, tInfo.snoLevelArea, 2, FALSE);
+        SWorldCreate(tInfo.snoWorld, FALSE, ptPlayer ? SPlayerIsLocal(*ptPlayer) : FALSE, sWaypointWorldCreated, idACDPlayer, idACDWaypoint, tInfo.snoLevelArea, 2, FALSE, 0);
     }
     else
     {
@@ -1140,7 +1140,7 @@ SWorldID SWorldCreate(
     ACDID idACDPortal,
     uint32 uEntranceGUID,
     PlayerWarpReason eWarpReason,
-    BOOL fCreateWhenLoadingScreenIsDone)
+    BOOL fCreateWhenLoadingScreenIsDone, uint32 unk_14)
 {
 
 
@@ -1243,7 +1243,7 @@ SWorldID SWorldCreate(
     tWorldCreateData.idACDPortalOperator = idACDPortalOperator;
     tWorldCreateData.idACDPortal = idACDPortal;
     tWorldCreateData.uEntranceGUID = uEntranceGUID;
-    tWorldCreateData.eWarpReason = eWarpReason;
+    tWorldCreateData.eWarpReason = eWarpReason; tWorldCreateData.unk_14 = unk_14;
     tSGame.ptSWorldGlobals->listWorldsToCreate.AddTail_Tracked(tWorldCreateData);
 
     ptSWorld->eCreateStage = SWORLD_CREATE_PRELOADING;
@@ -2308,7 +2308,7 @@ void SWorldCreateUpdate(
                 {
                     SNOPreload::AddServerWorldLoading(ptSWorld->tWCD.snoDungeonFinderSourceWorld, TRUE);
                 }
-
+                ptSWorld->dwFlags |= tData.unk_14;
                 ptSWorld->fPreloadingDungeonFinderStarted = TRUE;
             }
 
@@ -2468,6 +2468,13 @@ void SWorldCreateUpdate(
 
 
 }
+
+
+
+
+
+
+
 
 
 
@@ -3185,8 +3192,8 @@ void SWorldResetDungeonFinder()
 
         if (BossEncounterManager::IsAnyEncounterActive() && BossEncounterManager::GetActiveEncounterSNO() == ptSWorldGlobals->snoDungeonFinderBossEncounter)
         {
-            // line 3189: an assert-style fatal error (DisplayInternalError + ExitProgram on one line)
-            DisplayInternalError(NULL, "", 3189, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+            // an assert-style fatal error (DisplayInternalError + ExitProgram on one line)
+            DisplayInternalError(NULL, "", __LINE__, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
             return;
         }
 

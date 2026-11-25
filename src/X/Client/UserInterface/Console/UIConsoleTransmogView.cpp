@@ -123,7 +123,7 @@ void UITransmogView::Transmogrify()
             TransmogItemMessage tMessage;
             tMessage.annItem = ANNFromACD(idSelectedItem);
             tMessage.gbidTransmog = gbidTransmog;
-            MessageSendToServer(0x160, &tMessage, sizeof(tMessage), GetParentScreen()->GetPlayer());
+            MessageSendToServer(0x161, &tMessage, sizeof(tMessage), GetParentScreen()->GetPlayer());  // CMSG_TRY_TRANSMOG
 
 
             SoundManager::PlaySound(GlobalSNOGet(GLOBALSNO_SOUND_TRANSMOG_ITEM), cgtPSODefaults);

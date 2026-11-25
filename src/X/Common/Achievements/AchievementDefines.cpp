@@ -12,7 +12,7 @@ namespace Achievement {
 static XVarScope s_scopeAchievement("Achievement", NULL);
 
 //@ 28
-XVarUint32 arTimestamps[10] = {
+XVarUint32 arTimestamps[12] = {
     {s_scopeAchievement, "Blizzcon2014", 1414652400},
     {s_scopeAchievement, "LegacyOfTheVoid", 1446537600},
     {s_scopeAchievement, "Blizzcon2015", 1446422400},
@@ -23,6 +23,8 @@ XVarUint32 arTimestamps[10] = {
     {s_scopeAchievement, "Blizzcon2017", 1508832000},
     {s_scopeAchievement, "StarCraft20thAnniversary", 1520323200},
     {s_scopeAchievement, "Blizzcon2018", 1540368000},
+    {s_scopeAchievement, "DiabloII20thAnniversary", 1593417600},
+    {s_scopeAchievement, "DiabloImmortalRelease", 1654153200},
 };
 
 // The heal-type and pet-type enums are not in this file's DWARF; the values are the ones the

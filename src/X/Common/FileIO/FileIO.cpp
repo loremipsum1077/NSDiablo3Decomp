@@ -1067,6 +1067,11 @@ inline bool File::FileImpl::Close()
 
 
 
+
+
+
+
+
         XASSERT( SFileCloseFile( m_hsFileHandle ) );
         m_hsFileHandle = NULL;
     }

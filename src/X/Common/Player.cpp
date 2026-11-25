@@ -103,9 +103,9 @@ extern const InventorySlotType cgarPlayerLoadoutSocketableSlotsOrder[9];  // Pla
 // Declaration placement inferred from DWARF ConsoleTargeting.cpp:1112; original header declaration line unknown.
 namespace Targeting { namespace Console { void GetTargetingInformation(const TargetingInformationInput & input, TargetingInformationOutput & output); } }
 #include "../Client/Network/CTrickle.h"
-struct StashIconStateMessage {  // size 0x14
+struct StashIconStateMessage {  // size 0x18
     RequiredMessageHeader tHeader;  // 0x00
-    uint8 bStashIcons[12];  // 0x08
+    uint8 bStashIcons[13];  // 0x08
 };
 struct LogoutContextMessage {  // size 0xc
     RequiredMessageHeader tHeader;  // 0x00
@@ -231,7 +231,7 @@ ComplexTypeDescriptor TypeDescriptor_PlayerQuestRewardHistoryUpdateMessage("Play
 
 static const TypeDescriptorField StashIconStateMessage_Fields[3] = {
     TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(StashIconStateMessage, tHeader), NULL, 1),
-    FixedArrayTypeDescriptorField("", DT_BYTE, offsetof(StashIconStateMessage, bStashIcons), NULL, 1, 0xc, 0),
+    FixedArrayTypeDescriptorField("", DT_BYTE, offsetof(StashIconStateMessage, bStashIcons), NULL, 1, 0xd, 0),
     TypeDescriptorField(NULL, DT_NULL, sizeof(StashIconStateMessage), NULL, 0),
 };
 ComplexTypeDescriptor TypeDescriptor_StashIconStateMessage("StashIconStateMessage", 0, StashIconStateMessage_Fields, 3, NULL, 0x80, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_STASH_ICON_STATE_MESSAGE = &TypeDescriptor_StashIconStateMessage;
@@ -624,6 +624,26 @@ void LoadoutSavedData::Import(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 CalloutEventType CalloutEventFromKillCounter(const KillCounterType eKillCounterType)
 {
     CalloutEventType eCalloutEventType;
@@ -976,7 +996,7 @@ void PlayerSetDefaults(
 
 
     SigmaMemoryClear(tPlayer.tSeenTutorials.GetRawBuffer(), tPlayer.tSeenTutorials.GetLength());
-    for (int32 i = 0; i < 12; i++)
+    for (int32 i = 0; i < 13; i++)
     {
         tPlayer.bStashIcons[i] = i % MAX_STASH_TABS_CONSOLE;
     }
@@ -1694,7 +1714,7 @@ static const char * sGetAnchorName(
     switch (eButton)
     {
 #include "generated-game-data/hotbar_anchors.inc"
-#line 1691
+#line 1711
     default: return NULL;
     }
 }
@@ -2375,6 +2395,16 @@ static void sSendDetachPetMessage(
     MessageSendToClient(listDestPlayer, SMSG_DETACH_PET, &tMessage, sizeof(tMessage));
 
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4108,7 +4138,7 @@ BOOL PlayerCanChangeLoadoutSkillsAndTraits(
     }
 
     const LoadoutSavedData * ptLoadout = NULL;
-    if (nLoadoutIndex >= 0 && nLoadoutIndex < 5)
+    if (nLoadoutIndex >= 0 && nLoadoutIndex < 10)
     {
         ptLoadout = &tPlayer.tLoadouts[nLoadoutIndex];
     }
@@ -4186,7 +4216,7 @@ BOOL PlayerLoadoutMatchesCurrentEquipment(
     const Player & tPlayer,
     int32 nLoadoutIndex)
 {
-    if (nLoadoutIndex < 0 || nLoadoutIndex >= 5)
+    if (nLoadoutIndex < 0 || nLoadoutIndex >= 10)
     {
         return FALSE;
     }
@@ -4525,7 +4555,7 @@ void PlayerLoadoutGetDesiredSocketables(
     const Player & tPlayer,
     int32 nLoadoutIndex)
 {
-    if (nLoadoutIndex < 0 || nLoadoutIndex >= 5)
+    if (nLoadoutIndex < 0 || nLoadoutIndex >= 10)
     {
         return;
     }

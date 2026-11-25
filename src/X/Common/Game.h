@@ -853,7 +853,7 @@ HandicapLevel * GameGetInfoForHandicapLevel(int32 nHandicapLevel);  // 3540
 float GameGetHandicapDamageScalar();  // 3567
 void GameGetPlayerHandicapValues(int32 nHandicapLevel, float & flMagicFindFromHandicap, float & flGoldFindFromHandicap, float & flXPBonusFromHandicap);  // 3587
 int32 GameGetMonsterLevel();  // 3611
-int32 GameGetInitialMonsterLevel();  // 3634
+
 BOOL GameUsesMonsterDensityModifiers();  // 3645
 BOOL GameIsStartUp();  // 3662
 BOOL GameIsServerOnly();  // 3694

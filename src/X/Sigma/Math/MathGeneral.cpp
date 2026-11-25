@@ -18,7 +18,7 @@ uint32 Math::LogBase2(uint32 dw) {
 }
 
 uint32 Math::Ceiling2Power(uint32 dw) {
-    if (dw == 0 || Is2Power(dw))
+    if (dw <= 1 || Is2Power(dw))
         return dw;
     return 2 << MostSignificantBit(dw);
 }
@@ -41,13 +41,7 @@ uint32 Math::NextLarger2Power(uint32 dw) {
 static inline Angle sFastACos(float x) {
     x = Math::Pin(x, 0.0f, 1.0f);
     float fRoot = Math::Sqrt(1.0f - x);
-    float fResult = -0.0187293f;
-    fResult *= x;
-    fResult += 0.0742610f;
-    fResult *= x;
-    fResult -= 0.2121144f;
-    fResult *= x;
-    fResult += 1.5707288f;
+    float fResult = ((-0.0187293f * x + 0.0742610f) * x - 0.2121144f) * x + 1.5707288f;
     fResult *= fRoot;
     return fResult;
 }
@@ -68,15 +62,7 @@ Angle Math::ASin(const float x) {
 
 static inline Angle sApproxATan(float fT) {
     float fTSqr = fT * fT;
-    float fResult = 0.0208351f;
-    fResult *= fTSqr;
-    fResult -= 0.085133f;
-    fResult *= fTSqr;
-    fResult += 0.180141f;
-    fResult *= fTSqr;
-    fResult -= 0.3302995f;
-    fResult *= fTSqr;
-    fResult += 0.999866f;
+    float fResult = (((0.0208351f * fTSqr - 0.085133f) * fTSqr + 0.180141f) * fTSqr - 0.3302995f) * fTSqr + 0.999866f;
     fResult *= fT;
     return fResult;
 }

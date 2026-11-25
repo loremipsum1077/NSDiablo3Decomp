@@ -289,7 +289,7 @@ BOOL CValidateSpamCheck(
     // Case lists come from the jump table. The source position of the 585 case is inferred.
     switch (eMessageType)
     {
-    // 585 is also MSG_RANGE_INGAME_END; the message name is taken to be the real one.
+    // 595 is also MSG_RANGE_INGAME_END; the message name is taken to be the real one.
     case XMSG_SAVE_BANNER_COMPLETE:
         break;
 
@@ -317,6 +317,7 @@ BOOL CValidateSpamCheck(
     case CMSG_SEND_PLAYER_PREFS:
     case CMSG_TRIED_SALVAGE:
     case CMSG_TRY_REDEEM_PVP_TOKENS:
+    case CMSG_DARK_ALCHEMY_ACTIVATE_NODE:
         nCost = 3;
         break;
 
@@ -912,7 +913,7 @@ BOOL CValidateItemIsInPlayerInventory(const Player & tPlayer, const ACDID idACDI
 
 
 
-    if (bExcludeHirelingSlots && tLocation.tInvLocation.eSlot >= 20 && tLocation.tInvLocation.eSlot <= 25)
+    if (bExcludeHirelingSlots && tLocation.tInvLocation.eSlot >= 21 && tLocation.tInvLocation.eSlot <= 34)
     {
 
         return FALSE;
@@ -1067,7 +1068,7 @@ BOOL CValidateIsInventoryLocationValidToPlayer(const Player & tPlayer, const Inv
 {
 
 
-    if (tLocation.eSlot < 0 || tLocation.eSlot >= 26)
+    if (tLocation.eSlot < 0 || tLocation.eSlot >= 35)
     {
 
         return FALSE;
@@ -1150,7 +1151,7 @@ BOOL CValidateIsInventoryLocationValidForQuickMove(const ActorCommonData & tACDI
     const ActorLocation & tLocation = tACDItem.GetLocation();
     InventorySlotType eSlotSrc = tLocation.tInvLocation.eSlot;
 
-    BOOL bFromHireling = eSlotSrc >= 20 && eSlotSrc <= 25;
+    BOOL bFromHireling = eSlotSrc >= 21 && eSlotSrc <= 34;
 
 
 

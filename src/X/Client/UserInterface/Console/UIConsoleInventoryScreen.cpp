@@ -37,6 +37,10 @@ void OnUpdate();
 void OnSeasonStashButton(const UIID &, const int32, const InputButton);
 } }
 
+extern "C" {
+static bool sub_71001f77a0(const ::Console::RingWrapper & tRingWrapper, const UIID & idIcon);
+}
+
 namespace UIInventory { namespace Console {
 // Routing entry points owned by the indicated console implementation files.
 // UIInventoryConsole.cpp
@@ -205,7 +209,7 @@ void UIInventoryScreen::OpenForController(int32 nControllerOpening)
         if (m_ptPlayer) {
             ActorCommonData * ptACDPlayer = ACDTryToGet(m_ptPlayer->idPlayerACD);
             if (ptACDPlayer) {
-                for (int32 i = 0; i < 20; ++i)
+                for (int32 i = 0; i < NUM_CURRENCY_TYPES; ++i)
                     m_uLastKnownAmount[i] = ptACDPlayer->GetCurrencyAmount(i);
             }
         }
@@ -220,6 +224,7 @@ void UIInventoryScreen::Close()
 {
     if (m_ptPrimaryView) m_ptPrimaryView->Show(FALSE);
     if (m_ptSecondaryView) m_ptSecondaryView->Show(FALSE);
+    m_eFilterType = FILTER_NONE;
     OnClose();
     SetActive(FALSE);
 }
@@ -365,7 +370,7 @@ void UIInventoryScreen::RequestUpdate(const MaintainSelectionOptions eSelectionT
 
 void UIInventoryScreen::Update()
 {
-    if (GetPlayer()) m_tRingUI.UpdateInput(m_nControllerIndex, sIconSelectionChanged);
+    if (GetPlayer()) m_tRingUI.UpdateInput(m_nControllerIndex, sIconSelectionChanged, sub_71001f77a0);
     if (m_bUpdateRequested) { OnRequestedUpdate(); m_bUpdateRequested = FALSE; }
     OnUpdate();
     if (GetPrimaryView()) GetPrimaryView()->Update();
@@ -381,6 +386,37 @@ void UIInventoryScreen::Update()
         ::Console::Screens::GetActionManager().SetActionsDirtyFlag(FALSE);
     }
 }
+
+}  // namespace Console
+}  // namespace UIInventory
+
+// 2.7.7 Console::Screens functions on the int vector at +0x1008/+0x1010 of their global (unnamed):
+// sub_710016aa70 returns whether it is non-empty, sub_710016aa90 whether it contains the value.
+extern "C" bool sub_710016aa70();
+extern "C" bool sub_710016aa90(int32 nValue);
+
+// 2.7.7 ring-icon selection filter passed to RingWrapper::UpdateInput (unnamed in the binary).
+extern "C" {
+static bool sub_71001f77a0(const ::Console::RingWrapper & tRingWrapper, const UIID & idIcon)
+{
+    const UIID idContainer = tRingWrapper.GetContainerControlID();
+    UIInventory::Console::UIInventoryScreen * ptInventoryScreen = static_cast<UIInventory::Console::UIInventoryScreen *>(UI_GetControlFromID(idContainer).GetUserData());
+    if (ptInventoryScreen && idIcon != GetUIIDNone() && sub_710016aa70()) {
+        UIFilterType eFilterType = FILTER_NONE;
+        ptInventoryScreen->GetFilterMap().Lookup(idIcon, eFilterType);
+        if (!sub_710016aa90(eFilterType)) {
+            if (eFilterType == FILTER_BAG) {
+                return sub_710016aa90(FILTER_UPGRADEABLE_JEWEL);
+            }
+            return false;
+        }
+    }
+    return true;
+}
+}
+
+namespace UIInventory {
+namespace Console {
 
 void UIInventoryScreen::HandleLeftStickInput(const int32 nControllerIndex) {}
 

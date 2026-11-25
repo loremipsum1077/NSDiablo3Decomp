@@ -519,7 +519,7 @@ public:
     void SetAssignedHeroID(const Player * ptPlayer);
     uint64 GetAssignedHeroID() const;
     BOOL HasAssignedHeroID() const;
-    BOOL DoesPlayerMatchAssignedHeroID(const Player * ptPlayer) const;
+    BOOL DoesPlayerMatchAssignedHeroID(const Player * ptPlayer, BOOL bUnk) const;
     void ClearAssignedHero();
     void SetAssignedGameConnectionID(GameConnectionID idGameConnection);
     GameConnectionID GetAssignedGameConnectionID() const;

@@ -1088,7 +1088,7 @@ void HeroInfo::Import(const D3::Hero::SavedDefinition & tDefinition)
     eClass = PlayerClassFromGBID(tDigest.gbid_class());
     uLevel = tDigest.level();
     uAltLevel = tDigest.deprecated_alt_level();
-    uPlayerFlags = tDigest.player_flags();
+    uPlayerFlags = tDigest.player_flags(); unk_70 = tDigest.player_flags2();
     if (tDefinition.console_data().has_last_played_adventure_mode_act()) eLastAct = tDefinition.console_data().last_played_adventure_mode_act(); else eLastAct = tDigest.last_played_act();  // if/else, not a ternary: the original tests at 359:9 and stores from 361/365
     tEquipment.Init();
     tEquipment.Import(tDigest.visual_equipment());
@@ -1128,7 +1128,7 @@ void HeroInfo::Import(const D3::Console::HeroInfo & tHeroInfo)
     eClass = PlayerClassFromGBID(tHeroInfo.gbid_class());
     uLevel = tHeroInfo.level();
     uAltLevel = tHeroInfo.alt_level();
-    uPlayerFlags = tHeroInfo.player_flags();
+    uPlayerFlags = tHeroInfo.player_flags(); unk_70 = tHeroInfo.player_flags2();
     eLastAct = tHeroInfo.last_played_act();
     tEquipment.Init();
     tEquipment.Import(tHeroInfo.visual_equipment());
@@ -1159,7 +1159,7 @@ void HeroInfo::Export(D3::Console::HeroInfo & tHeroInfo) const
     tHeroInfo.set_gbid_class(PlayerClassToGBID(eClass));
     tHeroInfo.set_level(uLevel);
     tHeroInfo.set_alt_level(uAltLevel);
-    tHeroInfo.set_player_flags(uPlayerFlags);
+    tHeroInfo.set_player_flags(uPlayerFlags); tHeroInfo.set_player_flags2(unk_70);
     tHeroInfo.set_last_played_act(eLastAct);
     tEquipment.Export(*tHeroInfo.mutable_visual_equipment());
     tHeroInfo.set_death_time(uDeathTime);

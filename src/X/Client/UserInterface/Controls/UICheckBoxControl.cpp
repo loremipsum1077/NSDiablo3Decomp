@@ -371,9 +371,10 @@ inline void UICheckBox::sSetCheckBoxVisualState( CheckBoxState eCheckBoxState, B
 
     if ( m_tTextureFrames[eVisualState] != cgtImageTextureFrameNull )
     {
-        UIWindow * pWindow = m_ptWndBox ? m_ptWndBox : this;
-
-        pWindow->SetTextureFrame( m_tTextureFrames[eVisualState] );
+        if ( m_ptWndBox )
+            m_ptWndBox->SetTextureFrame( m_tTextureFrames[eVisualState] );
+        else
+            SetTextureFrame( m_tTextureFrames[eVisualState] );
     }
 
 

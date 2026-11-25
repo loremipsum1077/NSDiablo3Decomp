@@ -77,7 +77,7 @@ BOOL ItemPlayerChargeTransmogCosts(ActorCommonData & tACDPlayer, const ActorComm
 BOOL ItemPlayerChargeDyeItemCosts(ActorCommonData & tACDPlayer, DyeType eDyeType);  // X/Common/Items.cpp:8512
 void VisualInventoryResetSlot(const ACDID idACD, const InventorySlotType eInventorySlot);  // X/Common/VisualInventory.cpp:589
 int32 ACDGetTieredLootRunLevel(const ActorCommonData & tACD);  // X/Common/ActorInventory.cpp:9307
-void SItemUpgradeJewel(ActorCommonData & tACDItem, int32 nUpgradeRanks);  // X/Server/SItems.cpp:1380
+BOOL SItemUpgradeJewel(ActorCommonData & tACDItem, int32 nUpgradeRanks, ActorCommonData & tACDOwner);  // X/Server/SItems.cpp:1380
 namespace NephalemRiftManager {  // X/Server/System/SNephalemRift.cpp
 void PlayerSetJewelUpgradesUsed(Player * ptPlayer, int32 nUsed);
 void PlayerSetJewelBonusUpgradesLeft(Player * ptPlayer, int32 nRemaining);

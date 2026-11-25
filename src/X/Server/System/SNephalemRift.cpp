@@ -929,7 +929,7 @@ void StartRift(
             if (ptACDPlayer->GetCurrencyAmount(CURRENCY_GOLD) < nEmpowerCost)
             {
                 ptPlayer->dwNephalemRiftFlags &= ~(1 << ESF_EMPOWERED);
-                PlayerDisplayErrorMessage(ptPlayer->idPlayerACD, 165);  // GAMEERROR_EMPOWERED_RIFT_CANNOT_AFFORD
+                PlayerDisplayErrorMessage(ptPlayer->idPlayerACD, GAMEERROR_EMPOWERED_RIFT_CANNOT_AFFORD);
             }
         }
     }
@@ -1275,7 +1275,7 @@ BOOL EnterRift(ACDID idPortalGizmo, Player * ptPlayer)
 
             if (!PlayerPaidForRift(ptCheckPlayer) && IsTieredRiftActive() && !GameGetActiveGameCommonData().tGameSyncedData.bLootRunBossDead)
             {
-                PlayerDisplayErrorMessage(ptCheckPlayer->idPlayerACD, 142);
+                PlayerDisplayErrorMessage(ptCheckPlayer->idPlayerACD, GAMEERROR_LOOTRUN_TIERED_ALREADY_STARTED);
                 bNonPayerEntering = TRUE;
             }
         }
@@ -1316,9 +1316,9 @@ BOOL EnterRift(ACDID idPortalGizmo, Player * ptPlayer)
         else
         {
             if (GameIsWeeklyChallenge())
-                PlayerDisplayErrorMessage(ptPlayer->idPlayerACD, 177);
+                PlayerDisplayErrorMessage(ptPlayer->idPlayerACD, GAMEERROR_CHALLENGE_RIFT_ALREADY_STARTED);
             else
-                PlayerDisplayErrorMessage(ptPlayer->idPlayerACD, 142);
+                PlayerDisplayErrorMessage(ptPlayer->idPlayerACD, GAMEERROR_LOOTRUN_TIERED_ALREADY_STARTED);
         }
     }
 
@@ -1922,7 +1922,7 @@ void PlayerAcceptInvite(Player * ptPlayer, BOOL bEmpowered)
             uint64 nEmpowerCost = NephalemRift::GetEmpoweredRiftCost(nRiftLevel);
             if (nEmpowerCost > ptACDPlayer->GetCurrencyAmount(CURRENCY_GOLD))
             {
-                PlayerDisplayErrorMessage(ptACDPlayer->id, 165);  // GAMEERROR_EMPOWERED_RIFT_CANNOT_AFFORD
+                PlayerDisplayErrorMessage(ptACDPlayer->id, GAMEERROR_EMPOWERED_RIFT_CANNOT_AFFORD);
                 bEmpowered = FALSE;
             }
         }
@@ -2026,7 +2026,7 @@ void PlayerAcceptStart(int32 nRiftTier, Player * ptPlayer, BOOL bEmpowered)
 
     if (nRiftTier != -1 && !NephalemRift::HasKeyForGreaterRift(ptPlayer))
     {
-        PlayerDisplayErrorMessage(ptPlayer->idPlayerACD, 140);  // GAMEERROR_LOOTRUN_TIERED_NEED_KEY
+        PlayerDisplayErrorMessage(ptPlayer->idPlayerACD, GAMEERROR_LOOTRUN_TIERED_NEED_KEY);
         PlayerDeclineStart(ptPlayer);
         return;
     }
@@ -2704,7 +2704,7 @@ void PlayerSendRiftEndScreenInfo(const Player & tDestPlayer, BOOL bSuccess, int3
         }
     }
 
-    MessageSendToClient(listDestPlayers, 553, tRiftEndScreenInfo);  // SMSG_SHOW_RIFT_END_SCREEN
+    MessageSendToClient(listDestPlayers, SMSG_SHOW_RIFT_END_SCREEN, tRiftEndScreenInfo);
 }
 
 

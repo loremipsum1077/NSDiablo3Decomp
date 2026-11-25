@@ -112,7 +112,7 @@ static void sSalvageTreasureClassInternal(SalvageResultsMessage & tResultsMessag
 
                     tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_RECOVERED_CRAFTING_MATERIAL,
 
-                        ptACDItem->hGB.gbid, 1);
+                        ptACDItem->hGB.gbid, 1, (uint32)sub_71007b5e70());
                 }
             }
         }
@@ -162,7 +162,7 @@ static void sSalvageItemInternal(ActorCommonData & tACDItem, ActorCommonData & t
 
             tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_SALVAGE_ITEM,
 
-                ItemGetQualityLevel(tACDItem), 1);
+                ItemGetQualityLevel(tACDItem), 1, (uint32)sub_71007b5e70());
 
         }
     }

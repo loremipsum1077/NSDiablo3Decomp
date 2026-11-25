@@ -80,7 +80,7 @@ void Shown(Player& tPlayer, const SNO snoTutorial)
     if (!tPlayer.tSeenTutorials.IsSet(nIndex) && GameActiveGameCommonDataIsClient() && !GameIsStartUp()) {
         SNODataMessage tMessage;
         tMessage.snoData = snoTutorial;
-        MessageSendToServer(0x17e, &tMessage, sizeof(tMessage), &tPlayer);
+        MessageSendToServer(CMSG_SHOWN_TUTORIAL, &tMessage, sizeof(tMessage), &tPlayer);
     }
     if (GameIsStartUp()) {
         if (nIndex >= 0 && nIndex < tPlayer.tSeenTutorials.GetNumBits())

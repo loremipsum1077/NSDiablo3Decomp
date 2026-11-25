@@ -119,6 +119,8 @@ extern int32 ExperienceGetPlayersEligibleForKill(ACDID idACDVictim, PlayerList &
 #include "Actors/ActorCollision.h"
 #include "../Server/SWorld.h"
 
+uint64 sub_71007b5e70();
+
 
 
 
@@ -537,7 +539,7 @@ ACDID ACDCreate()
 
 
 
-        DisplayInternalError(NULL, "", 539, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 548, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 
 
@@ -3310,7 +3312,8 @@ BOOL ActorCommonData::SpendResource(float flAmountToSpend, BOOL bIgnoreMinimumRe
                 tEvaluationData.GetPlayer(),
                 Achievement::ACH_EVENT_USE_RESOURCE,
                 eType,
-                (int32)ceilf(flAmountToSpend));
+                (int32)ceilf(flAmountToSpend),
+                (uint32)sub_71007b5e70());
         }
     }
 
@@ -5733,7 +5736,7 @@ void ActorCommonData::ResourceAttributeSetFloat(Attrib eAttrib, float flVal, Res
                 {
                     Achievement::EvaluationData tEvaluationData;
                     tEvaluationData.SetPlayer(ptPlayer);
-                    tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_MAXED_OUT_RESOURCE, eResourceType, 1);
+                    tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_MAXED_OUT_RESOURCE, eResourceType, 1, (uint32)sub_71007b5e70());
                 }
             }
         }
@@ -5753,7 +5756,7 @@ void ActorCommonData::ResourceAttributeSetFloat(Attrib eAttrib, float flVal, Res
                 {
                     Achievement::EvaluationData tEvaluationData;
                     tEvaluationData.SetPlayer(ptPlayer);
-                    tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_RESOURCE_NO_LONGER_MAXED, eResourceType, 1);
+                    tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_RESOURCE_NO_LONGER_MAXED, eResourceType, 1, (uint32)sub_71007b5e70());
                 }
             }
         }
@@ -5779,7 +5782,7 @@ void ActorCommonData::ResourceAttributeSetFloat(Attrib eAttrib, float flVal, Res
                     tEvaluationData.SetPlayer(ptPlayer);
 
                     tEvaluationData.EvaluateEvent(
-                        tEvaluationData.GetPlayer(), Achievement::ACH_EVENT_PLAYER_GAINED_RESOURCE, eResourceType, 1);
+                        tEvaluationData.GetPlayer(), Achievement::ACH_EVENT_PLAYER_GAINED_RESOURCE, eResourceType, 1, (uint32)sub_71007b5e70());
 
 
 
@@ -7541,7 +7544,7 @@ BOOL ActorCommonData::HasAssignedHeroID() const
 
 
 
-BOOL ActorCommonData::DoesPlayerMatchAssignedHeroID(const Player * ptPlayer) const
+BOOL ActorCommonData::DoesPlayerMatchAssignedHeroID(const Player * ptPlayer, BOOL bUnk) const
 {
 
     if (ptPlayer == NULL || !fHasAssignedHeroID)
@@ -7557,7 +7560,7 @@ BOOL ActorCommonData::DoesPlayerMatchAssignedHeroID(const Player * ptPlayer) con
     }
 
 
-    if (idAssignedGameConnection != -1 &&
+    if (bUnk && idAssignedGameConnection != -1 &&
         idAssignedGameConnection == ptPlayer->idGameConnection)
     {
         return TRUE;

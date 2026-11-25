@@ -2494,7 +2494,7 @@ void SQuestEvaluateGoldRewardedAchievementEvent(
 		Achievement::EvaluationData tEvaluationData;
 		tEvaluationData.SetPlayer(&tPlayer);
 
-		tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_REWARDED_GOLD, nGoldGranted);
+		tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_REWARDED_GOLD, nGoldGranted, (uint32)sub_71007b5e70());
 
 
 
@@ -2997,7 +2997,7 @@ void sEvaluateQuestStepCompletedAchievement(const QuestInstance & tQuestInstance
             {
                 Achievement::EvaluationData tEvaluationData;
                 tEvaluationData.SetPlayer(ptPlayer);
-                tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_COMPLETE_QUEST_STEP, SGameStatsEncodeSNODataToID(tQuestInstance.snoQuest, nCompletedStepUID), 1);
+                tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_COMPLETE_QUEST_STEP, SGameStatsEncodeSNODataToID(tQuestInstance.snoQuest, nCompletedStepUID), 1, (uint32)sub_71007b5e70());
             }
         }
     }
@@ -3180,7 +3180,7 @@ void SQuestHandleQuestAdvancement(
                             SWorldID idSWorld = WorldCommonFindBySNO(pdefQuest->tBountyData.snoRequiredQuestWorld, TRUE);
                             if (idSWorld == SWORLDID_INVALID)
                             {
-                                idSWorld = SWorldCreate(pdefQuest->tBountyData.snoRequiredQuestWorld, TRUE, FALSE, NULL, ACDID_INVALID, ACDID_INVALID, 0, WARP_UNKNOWN, FALSE);
+                                idSWorld = SWorldCreate(pdefQuest->tBountyData.snoRequiredQuestWorld, TRUE, FALSE, NULL, ACDID_INVALID, ACDID_INVALID, 0, WARP_UNKNOWN, FALSE, 0);
                             }
 
                             SNO snoQuest = tObjective.snoname1.snoHandle;
@@ -5886,7 +5886,7 @@ void SQuestsUpdateBountySceneActivation()
         SWorldID idSWorld = SWorldFindBySNO(tRecord.snoWorld);
         if (idSWorld == SWORLDID_INVALID)
         {
-            idSWorld = SWorldCreate(tRecord.snoWorld, TRUE, FALSE, NULL, ACDID_INVALID, ACDID_INVALID, 0, 0, FALSE);
+            idSWorld = SWorldCreate(tRecord.snoWorld, TRUE, FALSE, NULL, ACDID_INVALID, ACDID_INVALID, 0, 0, FALSE, 0);
             bActivated = TRUE;
         }
 

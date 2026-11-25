@@ -141,7 +141,7 @@ static BOOL gbFontPointSizeFallback = TRUE;  // line 171
 // line 176
 FontGroupDef::FontGroupDef()
     : GroupDefinition("Font", FONT_SNO,
-                      SNOVersions(FONT_PC_SNO_VERSION, 57, FONT_XBOXONE_SNO_VERSION, FONT_PS4_SNO_VERSION, 73),
+                      SNOVersions(FONT_PC_SNO_VERSION, 57, FONT_XBOXONE_SNO_VERSION, FONT_PS4_SNO_VERSION, 76),
                       SNODATATYPE_TITLE, sizeof(FontDefinition), DT_FONT, 0x2011, 0x1b) {
 }
 

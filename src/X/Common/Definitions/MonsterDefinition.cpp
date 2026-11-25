@@ -33,8 +33,8 @@ enum {
     MONSTER_DEFINITION_VERSION = 30,
     MONSTER_AWARENESS_VERSION = 2,
     MONSTER_COMMON_SNO_VERSION = 1486,
-    MONSTER_PC_SNO_VERSION = 1487,
-    MONSTER_CONSOLE_SNO_VERSION = 1493,
+    MONSTER_PC_SNO_VERSION = 1492,
+    MONSTER_CONSOLE_SNO_VERSION = 1498,
     MONSTER_AXE_SNO_VERSION = 1492,
 };
 
@@ -205,7 +205,7 @@ MonsterGroupDef * gptGroupDefMonster;  // line 193
 // line 198. The second and fifth versions have no named enumerator in the DWARF.
 MonsterGroupDef::MonsterGroupDef()
     : GroupDefinition("Monster", MONSTER_SNO,
-                      SNOVersions(MONSTER_PC_SNO_VERSION, 1494, MONSTER_CONSOLE_SNO_VERSION, MONSTER_CONSOLE_SNO_VERSION, 1494),
+                      SNOVersions(MONSTER_PC_SNO_VERSION, 1499, MONSTER_CONSOLE_SNO_VERSION, MONSTER_CONSOLE_SNO_VERSION, 1499),
                       SNODATATYPE_TITLE, sizeof(MonsterDefinition), DT_MONSTER_DEFINITION, 0x8641, 0x500e) {
 }
 

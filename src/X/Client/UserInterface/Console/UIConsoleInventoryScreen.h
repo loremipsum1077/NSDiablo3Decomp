@@ -24,7 +24,7 @@ namespace UIInventory {
 namespace Console {
 typedef int32 MaintainSelectionOptions;
 
-class UIInventoryScreen {  // size 0x1f0
+class UIInventoryScreen {  // size 0x200
 public:
     enum BrowsingMode {
         BROWSE_LIST = 0,
@@ -102,22 +102,22 @@ private:
     Player * m_ptPlayer;  // 0x10
     BOOL m_bIsActive;  // 0x18
     BOOL m_bUpdateRequested;  // 0x1c
-    uint64 m_uLastKnownAmount[20];  // 0x20
-    ::Console::RingWrapper m_tRingUI;  // 0xc0
-    UIInventoryView * m_ptPrimaryView;  // 0x128
-    UIInventoryView * m_ptSecondaryView;  // 0x130
-    UIInventoryView * m_ptFocusedView;  // 0x138
-    UIFilterType m_eFilterType;  // 0x140
-    BrowsingMode m_eBrowsingMode;  // 0x144
+    uint64 m_uLastKnownAmount[NUM_CURRENCY_TYPES];  // 0x20; 22 entries in 2.7.7 (constructor clears 0xb0 bytes)
+    ::Console::RingWrapper m_tRingUI;  // 0xd0
+    UIInventoryView * m_ptPrimaryView;  // 0x138
+    UIInventoryView * m_ptSecondaryView;  // 0x140
+    UIInventoryView * m_ptFocusedView;  // 0x148
+    UIFilterType m_eFilterType;  // 0x150
+    BrowsingMode m_eBrowsingMode;  // 0x154
 protected:
     // The reference header lists this as private. DetailsInvScreen::UpdateWarningIcons reads it
     // directly (no GetFilterMap() call or inline record in its DWARF), so it is protected here
     // until the original access path is known.
-    UIIDToFilterMap m_tFilterMap;  // 0x148
+    UIIDToFilterMap m_tFilterMap;  // 0x158
 private:
-    ::Console::AnalogStickInputFilter m_tRingStickInputFilter;  // 0x1c8
+    ::Console::AnalogStickInputFilter m_tRingStickInputFilter;  // 0x1d8
 };
-static_assert(sizeof(UIInventoryScreen) == 0x1f0, "UIInventoryScreen");
+static_assert(sizeof(UIInventoryScreen) == 0x200, "UIInventoryScreen");
 
 // UIInventoryView inlines from UIConsoleInventoryView.h. They need UIInventoryScreen complete,
 // which that header only forward-declares, so their bodies are here.

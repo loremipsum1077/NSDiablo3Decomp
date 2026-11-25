@@ -347,7 +347,7 @@ private:
 };
 static_assert(sizeof(MysteryItem) == 0x40, "MysteryItem");
 
-class PlayerBloodShardVendorScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x568
+class PlayerBloodShardVendorScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x578
 public:
     virtual ~PlayerBloodShardVendorScreen() {}  // line 312
 
@@ -381,16 +381,16 @@ private:
         PURCHASING_STATE_DONE = 4,
         PURCHASING_STATE_SHOW_RESULTS = 5,
     };
-    PurchasingState m_ePurchasingState;  // 0x1f0
-    uint32 m_dwPurchasingEndTime;  // 0x1f4
-    ACDNetworkName m_annPurchaseResult;  // 0x1f8
-    BloodShardVendorItems m_tVendorItemsProvider;  // 0x200
-    MysteryItem m_tPurchasedItemProvider;  // 0x370
-    EquippedItem m_tEquippedItemProvider;  // 0x3b0
-    UIInventoryListView m_tVendorListView;  // 0x3e8
-    UIInventoryDetailsView m_tPurchaseView;  // 0x470
-    UIInventoryDetailsView m_tEquippedItemView;  // 0x4e8
-    ACDID m_idPurchasedItem;  // 0x560
+    PurchasingState m_ePurchasingState;  // 0x200
+    uint32 m_dwPurchasingEndTime;  // 0x204
+    ACDNetworkName m_annPurchaseResult;  // 0x208
+    BloodShardVendorItems m_tVendorItemsProvider;  // 0x210
+    MysteryItem m_tPurchasedItemProvider;  // 0x380
+    EquippedItem m_tEquippedItemProvider;  // 0x3c0
+    UIInventoryListView m_tVendorListView;  // 0x3f8
+    UIInventoryDetailsView m_tPurchaseView;  // 0x480
+    UIInventoryDetailsView m_tEquippedItemView;  // 0x4f8
+    ACDID m_idPurchasedItem;  // 0x570
     void BuyItem();
     void ViewPurchasedItem();
     void OnButton1();
@@ -406,7 +406,7 @@ private:
     void CancelPurchase();
     void HidePurchasingProgress();
 };
-static_assert(sizeof(PlayerBloodShardVendorScreen) == 0x568, "PlayerBloodShardVendorScreen");
+static_assert(sizeof(PlayerBloodShardVendorScreen) == 0x578, "PlayerBloodShardVendorScreen");
 
 PlayerBloodShardVendorScreen * sgptBloodShardVendorGlobals;  // line 445
 

@@ -1951,9 +1951,9 @@ static void sAddWaypointControls(
                 SNO snoActKeyWardenBossEncounter = QuestsOpenWorldGetKeyWardenBossEncounter(nBossEncounterAct);
                 if (snonameFile.snoHandle == snoActKeyWardenBossEncounter)
                 {
-                    // Inference: original retains key wardens only at handicap >=4 and initial level >=60.
+                    // Inference: original retains key wardens only at handicap >=4 and monster level >=60 (2.7.7: GameGetMonsterLevel, 0x24fd1c).
                     if (GameGetHandicapLevel() >= HC_TORMENT_1 &&
-                        GameGetInitialMonsterLevel() >= HERO_LEVEL_MAX_VANILLA)
+                        GameGetMonsterLevel() >= HERO_LEVEL_MAX_VANILLA)
                     {
 #line 565
 // Inference: the surviving key-warden branch sets TRUE; other qualifying bosses keep FALSE.

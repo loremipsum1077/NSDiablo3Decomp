@@ -185,9 +185,13 @@ enum ItemFlags {
     ITEM_TIERED_LOOT_RUN_ONLY_BIT = 22,
     ITEM_ACCOUNT_WIDE_TRANSMOG = 23,
     ITEM_CANNOT_EXTRACT_POWER = 24,
-    ITEM_IS_CURRENCY_BIT = 25,
-    ITEM_FORCE_EXTRACT_POWER_MINIMUM = 26,
-    ITEM_IS_NOT_TRASH_BIT = 27,
+    ITEM_UNK_25 = 25,
+    ITEM_UNK_26 = 26,
+    ITEM_IS_CURRENCY_BIT = 27,
+    ITEM_FORCE_EXTRACT_POWER_MINIMUM = 28,
+    ITEM_IS_NOT_TRASH_BIT = 29,
+    ITEM_UNK_30 = 30,
+    ITEM_UNK_31 = 31,
 };
 
 enum {
@@ -293,49 +297,51 @@ struct RecipeIngredient {  // size 0x8
 };
 static_assert(sizeof(RecipeIngredient) == 0x8, "RecipeIngredient");
 
-struct ItemDefinition {  // size 0x2b8
+// 2.7.7 layout, from the 2.7.7 ItemDefinition_Fields descriptor construction in
+// _GLOBAL__sub_I_GameBalanceDefinition.cpp (0x71006cd580) and SItemUpgradeJewel (0x71007df9b0).
+struct ItemDefinition {  // size 0x320
     GBHeader tHeader;  // 0x00
     SNO snoActor;  // 0x18
     GBID gbidItemType;  // 0x1c
     uint32 dwFlags;  // 0x20
-    SavedDyeType eSavedDyeType;  // 0x24
-    int32 nItemLevel;  // 0x28
-    Act eMinAct;  // 0x2c
-    int32 nAffixLevelBonus;  // 0x30
-    int32 nBonusRandomAffixes;  // 0x34
-    int32 nBonusMajorAffixes;  // 0x38
-    int32 nBonusMinorAffixes;  // 0x3c
-    int32 nMaxSockets;  // 0x40
-    int32 nMaxStackSize;  // 0x44
-    int32 nBaseCostGold;  // 0x48
-    int32 nBaseCostSpecialCurrency;  // 0x4c
-    int32 nIdentifyCost;  // 0x50
-    int32 nSellOverrideCost;  // 0x54
-    int32 nRemoveGemCost;  // 0x58
-    int32 nNormalRequiredLevel;  // 0x5c
-    int32 nCrafterRequiredLevel;  // 0x60
-    int32 nBaseDurability;  // 0x64
-    int32 nDurabilityVariance;  // 0x68
-    int32 nEnchantAffixCost;  // 0x6c
-    int32 nEnchantAffixCostX1;  // 0x70
-    int32 nTransmogUnlockCrafterLevel;  // 0x74
-    int32 nTransmogCost;  // 0x78
-    GBID gbidBaseItem;  // 0x7c
-    GBID gbidSet;  // 0x80
-    SNO snoRandomItemTreasureClass;  // 0x84
-    SNO snoSalvageTreasureClassNormal;  // 0x88
-    SNO snoSalvageTreasureClassMagic;  // 0x8c
-    SNO snoSalvageTreasureClassRare;  // 0x90
-    SNO snoRareNamePrefixStringList;  // 0x94
-    SNO snoRareNameSuffixStringList;  // 0x98
-    SNO snoStartEffect;  // 0x9c
-    SNO snoEndEffect;  // 0xa0
-    ImageHandle hPortraitBkgrnd;  // 0xa4
-    ImageHandle hPortraitHPBar;  // 0xa8
-    ImageHandle hPortraitBanner;  // 0xac
-    ImageHandle hPortraitFrame;  // 0xb0
-    uint32 dwItemLabelMask[5];  // 0xb4
-    uint32 dwPad;  // 0xc8
+    uint32 unk_24;  // 0x24 (flag word: descriptors for bits 0 and 1)
+    SavedDyeType eSavedDyeType;  // 0x28
+    int32 nItemLevel;  // 0x2c
+    Act eMinAct;  // 0x30
+    int32 nAffixLevelBonus;  // 0x34
+    int32 nBonusRandomAffixes;  // 0x38
+    int32 nBonusMajorAffixes;  // 0x3c
+    int32 nBonusMinorAffixes;  // 0x40
+    int32 nMaxSockets;  // 0x44
+    int32 nMaxStackSize;  // 0x48
+    int32 nBaseCostGold;  // 0x4c
+    int32 nBaseCostSpecialCurrency;  // 0x50
+    int32 nIdentifyCost;  // 0x54
+    int32 nSellOverrideCost;  // 0x58
+    int32 nRemoveGemCost;  // 0x5c
+    int32 nNormalRequiredLevel;  // 0x60
+    int32 nCrafterRequiredLevel;  // 0x64
+    int32 nBaseDurability;  // 0x68
+    int32 nDurabilityVariance;  // 0x6c
+    int32 nEnchantAffixCost;  // 0x70
+    int32 nEnchantAffixCostX1;  // 0x74
+    int32 nTransmogUnlockCrafterLevel;  // 0x78
+    int32 nTransmogCost;  // 0x7c
+    GBID gbidBaseItem;  // 0x80
+    GBID gbidSet;  // 0x84
+    SNO snoRandomItemTreasureClass;  // 0x88
+    SNO snoSalvageTreasureClassNormal;  // 0x8c
+    SNO snoSalvageTreasureClassMagic;  // 0x90
+    SNO snoSalvageTreasureClassRare;  // 0x94
+    SNO snoRareNamePrefixStringList;  // 0x98
+    SNO snoRareNameSuffixStringList;  // 0x9c
+    SNO snoStartEffect;  // 0xa0
+    SNO snoEndEffect;  // 0xa4
+    ImageHandle hPortraitBkgrnd;  // 0xa8
+    ImageHandle hPortraitHPBar;  // 0xac
+    ImageHandle hPortraitBanner;  // 0xb0
+    ImageHandle hPortraitFrame;  // 0xb4
+    uint32 dwItemLabelMask[5];  // 0xb8
     float flAttributesDamage;  // 0xcc
     float flAttributesDamageRange;  // 0xd0
     float flAttributesDamageVarianceMin;  // 0xd4
@@ -355,35 +361,47 @@ struct ItemDefinition {  // size 0x2b8
     GBID gbidLegendaryAffixFamily[6];  // 0x188
     int32 nLegendaryAffixFamilyLevel[6];  // 0x1a0
     BOOL bUseLegendaryAllowedTypes[6];  // 0x1b8
-    GBID gbidLegendaryFamily;  // 0x1d0
-    int32 eGemType;  // 0x1d4 (GemType)
-    int32 nCraftingTier;  // 0x1d8
-    int32 eCraftingQualityLevel;  // 0x1dc (CraftingQualityLevel)
-    SNO snoActorPageOfFatePortal;  // 0x1e0
-    SNO snoWorldPageOfFate[2];  // 0x1e4
-    SNO snoLevelAreaPageOfFatePortal;  // 0x1ec
-    int32 nEnchantAffixIngredientsCount;  // 0x1f0
-    RecipeIngredient arEnchantAffixIngredients[6];  // 0x1f4
-    int32 nEnchantAffixIngredientsCountX1;  // 0x224
-    RecipeIngredient arEnchantAffixIngredientsX1[6];  // 0x228
-    GBID gbidLegendaryPowerItemReplacement;  // 0x258
-    int32 nSeasonRequiredToDrop;  // 0x25c
-    AttributeSpecifier tJewelUpgradeAttribute;  // 0x260
-    AttributeSpecifier tJewelSecondaryEffectAttribute;  // 0x278
-    int32 nJewelSecondaryEffectUnlockRank;  // 0x290
-    int32 nJewelMaxRank;  // 0x294
-    SNO snoMainEffect;  // 0x298
-    int32 nBaseCostSpecialCurrency2;  // 0x29c
-    uint32 nDateReleased;  // 0x2a0
-    int32 eVacuumPickup;  // 0x2a4 (ItemVacuumPickupType)
-    int32 nDynamicCraftCostMagic;  // 0x2a8
-    int32 nDynamicCraftCostRare;  // 0x2ac
-    int32 nDynamicCraftAffixCount;  // 0x2b0
-    SNO snoSeasonCache;  // 0x2b4
+    int32 unk_1d0[6];  // 0x1d0
+    GBID gbidLegendaryFamily;  // 0x1e8
+    GBID unk_1ec;  // 0x1ec
+    int32 unk_1f0;  // 0x1f0
+    int32 eGemType;  // 0x1f4 (GemType)
+    int32 nCraftingTier;  // 0x1f8
+    int32 eCraftingQualityLevel;  // 0x1fc (CraftingQualityLevel)
+    SNO snoActorPageOfFatePortal;  // 0x200
+    SNO snoWorldPageOfFate[2];  // 0x204
+    SNO snoLevelAreaPageOfFatePortal;  // 0x20c
+    int32 nEnchantAffixIngredientsCount;  // 0x210
+    RecipeIngredient arEnchantAffixIngredients[6];  // 0x214
+    int32 nEnchantAffixIngredientsCountX1;  // 0x244
+    RecipeIngredient arEnchantAffixIngredientsX1[6];  // 0x248
+    GBID gbidLegendaryPowerItemReplacement;  // 0x278
+    int32 nSeasonRequiredToDrop;  // 0x27c
+    AttributeSpecifier tJewelUpgradeAttribute;  // 0x280
+    AttributeSpecifier tJewelSecondaryEffectAttribute;  // 0x298
+    int32 nJewelSecondaryEffectUnlockRank;  // 0x2b0
+    AttributeSpecifier unk_2b8;  // 0x2b8
+    int32 unk_2d0;  // 0x2d0 (unlock rank of unk_2b8)
+    AttributeSpecifier unk_2d8;  // 0x2d8
+    int32 unk_2f0;  // 0x2f0 (unlock rank of unk_2d8)
+    int32 nJewelMaxRank;  // 0x2f4
+    int32 unk_2f8;  // 0x2f8
+    SNO snoMainEffect;  // 0x2fc
+    int32 nBaseCostSpecialCurrency2;  // 0x300
+    uint32 nDateReleased;  // 0x304
+    int32 eVacuumPickup;  // 0x308 (ItemVacuumPickupType)
+    int32 nDynamicCraftCostMagic;  // 0x30c
+    int32 nDynamicCraftCostRare;  // 0x310
+    int32 nDynamicCraftAffixCount;  // 0x314
+    SNO snoSeasonCache;  // 0x318
 };
-static_assert(sizeof(ItemDefinition) == 0x2b8, "ItemDefinition");
+static_assert(sizeof(ItemDefinition) == 0x320, "ItemDefinition");
 static_assert(__builtin_offsetof(ItemDefinition, tSkills) == 0xe8, "ItemDefinition::tSkills");
-static_assert(offsetof(ItemDefinition, snoMainEffect) == 0x298, "ItemDefinition");
+static_assert(offsetof(ItemDefinition, nTransmogCost) == 0x7c, "ItemDefinition");
+static_assert(offsetof(ItemDefinition, gbidLegendaryFamily) == 0x1e8, "ItemDefinition");
+static_assert(offsetof(ItemDefinition, unk_2b8) == 0x2b8, "ItemDefinition");
+static_assert(offsetof(ItemDefinition, snoMainEffect) == 0x2fc, "ItemDefinition");
+static_assert(offsetof(ItemDefinition, snoSeasonCache) == 0x318, "ItemDefinition");
 
 struct MonsterLevelDefinition {  // size 0xf0
     int32 nLevel;  // 0x00

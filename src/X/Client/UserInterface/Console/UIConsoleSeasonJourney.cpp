@@ -958,7 +958,7 @@ void OnUpdate(const UIID &)
 {
     if (sgtUISeasonJourneyData.tRingUI.IsEnabled())
     {
-        sgtUISeasonJourneyData.tRingUI.UpdateInput(sgtUISeasonJourneyData.m_nControllerIndex, IconSelectionChanged);
+        sgtUISeasonJourneyData.tRingUI.UpdateInput(sgtUISeasonJourneyData.m_nControllerIndex, IconSelectionChanged, NULL);
     }
 }
 

@@ -301,7 +301,7 @@ static const char * REWARD_ITEM = "Reward Mailed Item";  // line 1162
 // REWARD_STASH_TAB (line 1164): its value is not used by any matched code yet.
 
 // AchievementDefines.cpp:28, 158, 170.
-extern XVarUint32 arTimestamps[10];
+extern XVarUint32 arTimestamps[12];
 BOOL IsHealTypeEvaluable(uint32 eHealType);
 BOOL IsPetTypeEvaluable(uint32 ePetType);
 

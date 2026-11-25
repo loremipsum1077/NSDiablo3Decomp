@@ -77,7 +77,7 @@ the 2.6.2 build does.
 - `tools/check` then promoted every `M` that matches. All-7.1.0 build: 20,222 O. Mixed
   build: 22,632 O. Mixed build with the mapping repairs below: 23,427 O. After the first
   shared-cause fixes and the GlobalSNO renumbering: 23,786 O. After the protobuf
-  regeneration: 24,292 O. After the first struct-layout fixes (branch `structs/2.7.7`: ActorCommonData, HeroInfo/UserRuntime, HUD): 25,790 O. After the SWIG enum renumbering: 26,584 O. After struct round 2 (Player, definition arrays, inventory slots, float classification): 27,257 O. After the position-based mapping repairs: **28,208 O**, 4,512 M, 2,106 U, 2,175 L, 4 W (of 37,005 functions).
+  regeneration: 24,292 O. After the first struct-layout fixes (branch `structs/2.7.7`: ActorCommonData, HeroInfo/UserRuntime, HUD): 25,790 O. After the SWIG enum renumbering: 26,584 O. After struct round 2 (Player, definition arrays, inventory slots, float classification): 27,257 O. After the position-based mapping repairs: 28,208 O. After phase D round 1 (Astra): 28,321 O. After phase D wave 1 (see "Phase D wave 1" below): **29,849 O**, 3,004 M, 1,973 U, 2,175 L, 4 W (of 37,005 functions).
 
 ### Mapping repairs (look-alike functions)
 
@@ -245,6 +245,49 @@ pointer slots from `.rela.dyn`, and pointer tables whose start code references):
 
 Results are leads: confirm the function's behaviour before naming it. `--json` gives
 machine-readable output.
+
+## Phase D wave 1: changed game code, by file
+
+Parallel agents, each owning a disjoint set of files and verifying with `tools/try_file.py`;
+one full build and `tools/check` at the end. **28,321 → 29,849 O (+1,528).** Shared causes
+fixed from tables in the binary rather than per function:
+
+- **Game messages** (`GameMessage.h`): every opcode read from the
+  `GetGameMessageTypeAndSize` jump table of both binaries (585 → 595 cases, names as
+  strings in each case). New: 332 `CMSG_TIERED_RIFT_CLOSE_REQUESTED`, 580–582, 589–594;
+  `MSG_NUM_MESSAGES` 596.
+- **GameError** (`Player.h`): read from the `gGameErrors` label tables (184 → 196); new
+  values are `GAMEERROR_UNK_<v>` with the label as a comment.
+- **ItemDefinition** 0x2b8 → 0x320 and **ItemFlags** (bits 25/26 new) from the
+  `ItemDefinition_Fields` descriptor (148 → 172 entries).
+- **GlobalDefinition**: one new `int32 unk_1c8` (default 1) and +4 after it, found by
+  emulating both `_GLOBAL__sub_I_GlobalDefinition.cpp` initialisers; GlobalServerData
+  arrays 0x11 → 0x14 and 0xd → 0x10.
+- **UIID globals**: 1,950 globals decoded from `sUIGlobalsInit2..4` (`UIIDCreate` string +
+  GOT store); `UIGlobals.cpp` in 2.7.7 address order, 431 `data_symbols.csv` labels fixed
+  and 351 added (new UIIDs are `unk_<address>`).
+- **Actor capacity** 8192 → 11776 (KnownList bit array, Actors, ActorCollision,
+  `ACDNetworkName` ranges); loadouts 5 → 10; follower slots 6 → 14.
+- **Signatures**: `SWorldCreate` (10th arg), `EvaluationData::EvaluateEvent` (flags from
+  `sub_71007b5e70`), `DoesPlayerMatchAssignedHeroID`, `ItemGetAssignedACDID`,
+  `SItemUpgradeJewel`, `ActorGetMonsterHPData`, `RingWrapper::UpdateInput`.
+- **`AutoDefinitionR(SNO)`** stores per branch in 2.7.7 (inlined in 292 functions).
+- **Mapping**: 274 renames (swaps, rotations, unnamed functions), each with caller,
+  table or code evidence.
+
+Three baseline `O` addresses are no longer `O`, all by renames: 0x16b150 is
+`GetFrontendBackgroundCameraManager` (in 2.7.7 both getters return +0x10, the old name
+matched by accident; it returns once `NUM_SCREEN_SETS` is 33), and 0x50f280 / 0x77d810
+lost names their callers contradict.
+
+Two functions stay marked `O` although the checker now rejects them (known, next work):
+- `_GLOBAL__sub_I_UIFunctions.cpp`: the code is right, but it calls
+  `__cxx_global_var_init.265` where the original has `.263`. The rebuilt table creates two
+  more unique string literals between the two table initialisers than the original does.
+  The rebuild made `__cxx_global_var_init.17` (27,980 bytes) and both `*_InitializeMap`
+  functions match.
+- `pcre_fullinfo`: no source change; the checker now pairs its jump table (original
+  0xeaf8c4) with `crc_table`. Under investigation (data labels).
 
 ## Known gaps (next work)
 

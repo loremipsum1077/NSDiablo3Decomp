@@ -75,7 +75,7 @@ public:
     virtual void Flush(const OnlineService::GameAccountHandle & gameAccount);  // vtable slot 3
     OnlineService::ErrorCode RegisterPlayer(const OnlineService::GameAccountHandle & gameAccount, const D3::Account::SavedDefinition & tDefinition);
     virtual bool CancelSubscription(const OnlineService::GameAccountHandle & gameAccount, const OnlineService::AchievementsInterface::RegistrationCallback & cb);  // vtable slot 5
-    virtual OnlineService::ErrorCode EvaluateEvent(const OnlineService::GameAccountHandle & gameAccount, uint32 eventId, uint64 comparand, uint64 quantity, OnlineService::Timestamp timestamp, const OnlineService::AchievementsInterface::ModifierCallback & cb);  // vtable slot 7
+    virtual OnlineService::ErrorCode EvaluateEvent(const OnlineService::GameAccountHandle & gameAccount, uint32 eventId, uint64 comparand, uint64 quantity, OnlineService::Timestamp timestamp, uint32 uUnkFlags, const OnlineService::AchievementsInterface::ModifierCallback & cb);  // vtable slot 7
     virtual bool FindAwardedAchievement(const OnlineService::GameAccountHandle & gameAccount, OnlineService::AchievementId id, OnlineService::AchievementRecord & record);  // vtable slot 13
     virtual bool FindAwardedAchievements(const OnlineService::GameAccountHandle & gameAccount, blz::vector<OnlineService::AchievementRecord, blz::allocator<OnlineService::AchievementRecord> > & list);  // vtable slot 14
     virtual bool FindCriteriaRecord(const OnlineService::GameAccountHandle & gameAccount, OnlineService::CriteriaId criteriaId, OnlineService::CriteriaRecord & record);  // vtable slot 15

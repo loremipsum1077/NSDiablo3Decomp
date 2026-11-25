@@ -756,7 +756,7 @@ void SaveMigrationUpdateStatus(int32 nUserIndex, Status eStatus)
 
 BOOL IsMigrationRequired(const D3::Account::SavedDefinition & tDefinition)
 {
-    return tDefinition.version() < 115 || tDefinition.console_data().version_required() < 265;
+    return tDefinition.version() < 115 || tDefinition.console_data().version_required() < 277;
 }
 
 
@@ -873,7 +873,7 @@ void _Migrate_Vanilla_RoS(
 
     D3::Account::SavedDefinition & tAccount = *tMigrationData.mutable_account();
 
-    tAccount.mutable_console_data()->set_version_required(265);
+    tAccount.mutable_console_data()->set_version_required(277);
 
     tAccount.mutable_console_data()->mutable_achievement_snapshot()->Clear();
 
@@ -1394,7 +1394,7 @@ void _Migrate_221_to_243(D3::Console::MigrationData & tMigrationData)
 
 void _Migrate_243_to_250a(D3::Console::MigrationData & tMigrationData)
 {
-    tMigrationData.mutable_account()->mutable_console_data()->set_version_required(265);
+    tMigrationData.mutable_account()->mutable_console_data()->set_version_required(277);
 
     // Seasons restarted with 2.5.0a; nothing carries over.
     for (D3::Hero::SavedDefinition & tHero : *tMigrationData.mutable_heroes())
@@ -1433,7 +1433,7 @@ void _Migrate_243_to_250a(D3::Console::MigrationData & tMigrationData)
 void _Migrate_250a_to_260(int32 nUserIndex, D3::Console::MigrationData & tMigrationData)
 {
     D3::Account::SavedDefinition * tAccount = tMigrationData.mutable_account();
-    tAccount->mutable_console_data()->set_version_required(265);
+    tAccount->mutable_console_data()->set_version_required(277);
 
     // Challenge rift progress is reset by this update.
     tMigrationData.mutable_account()->mutable_digest()->clear_challenge_rift_account_data();
@@ -1472,7 +1472,7 @@ void _Migrate_250a_to_260(int32 nUserIndex, D3::Console::MigrationData & tMigrat
 void _Migrate_RoS_RoS212(D3::Console::MigrationData & tMigrationData)
 {
     D3::Account::SavedDefinition * tAccount = tMigrationData.mutable_account();
-    tAccount->mutable_console_data()->set_version_required(265);
+    tAccount->mutable_console_data()->set_version_required(277);
 
     // Two console items were corrected in 2.1.2; swap any old copies for the corrected ones.
     int32 arOldItems[2] = { StringToGBID("Unique_Shield_009_x1"), StringToGBID("Unique_Amulet_003_x1") };

@@ -536,7 +536,7 @@ void ACDsIntersectCapsule(SWorldID idSWorld, const Capsule & capsule, XPooledDat
 
 
 
-static void sActorsIntersectFrustum(ActorSphereTree * ptActorSphereTree, const Frustum & tFrustum, XPooledDataIDList & listACDs, XBitArray<8192> * ptActorsInListBitArray)
+static void sActorsIntersectFrustum(ActorSphereTree * ptActorSphereTree, const Frustum & tFrustum, XPooledDataIDList & listACDs, XBitArray<11776> * ptActorsInListBitArray)
 {
 
 
@@ -573,7 +573,7 @@ static void sActorsIntersectFrustum(ActorSphereTree * ptActorSphereTree, const F
 
 
 
-void ActorsIntersectFrustum(SWorldID idSWorld, const Frustum & tFrustum, XPooledDataIDList & listACDs, XBitArray<8192> * ptActorsInListBitArray, uint32 dwSphereTreeFlags)
+void ActorsIntersectFrustum(SWorldID idSWorld, const Frustum & tFrustum, XPooledDataIDList & listACDs, XBitArray<11776> * ptActorsInListBitArray, uint32 dwSphereTreeFlags)
 {
 
 

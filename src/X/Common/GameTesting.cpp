@@ -1016,7 +1016,7 @@ void sQuit(LPCSTR szEmailSubject)
         SimpleMessage tMessage;
         PlayerList listDestPlayers(PlayerListGetElementPool());
         PlayerListGetAllConnected(listDestPlayers, -1, FALSE);
-        MessageSendToClient(listDestPlayers, (GameMessageType)378 /* SMSG_GAME_TESTING_DONE */, &tMessage, sizeof(tMessage));
+        MessageSendToClient(listDestPlayers, (GameMessageType)379 /* SMSG_GAME_TESTING_DONE */, &tMessage, sizeof(tMessage));
         SGameGlobalsGet().dwFlags |= 4;
     }
 }
@@ -1430,7 +1430,7 @@ void StopSampling()
         SimpleMessage tMessage;
         PlayerList listDestPlayers(PlayerListGetElementPool());
         PlayerListGetAllConnected(listDestPlayers, -1, FALSE);
-        MessageSendToClient(listDestPlayers, (GameMessageType)381 /* SMSG_GAME_TESTING_STOP_SAMPLING */, &tMessage, sizeof(tMessage));
+        MessageSendToClient(listDestPlayers, (GameMessageType)382 /* SMSG_GAME_TESTING_STOP_SAMPLING */, &tMessage, sizeof(tMessage));
     }
 }
 
@@ -2672,7 +2672,7 @@ void SetupPerfSkillTest()
 
     DeleteAllWorldsAndTransferPlayersToLimbo();
 
-    SWorldID idSWorldNew = SWorldCreate(GlobalSNOGet(GLOBALSNO_WORLD_FLATWORLD), TRUE, TRUE, NULL, ACDID_INVALID, ACDID_INVALID, 0, 0, 0);
+    SWorldID idSWorldNew = SWorldCreate(GlobalSNOGet(GLOBALSNO_WORLD_FLATWORLD), TRUE, TRUE, NULL, ACDID_INVALID, ACDID_INVALID, 0, 0, 0, 0);
 
 
     for (Player * ptPlayerCurr = PlayerGetFirstInGame(); ptPlayerCurr; ptPlayerCurr = PlayerGetNextInGame(ptPlayerCurr))

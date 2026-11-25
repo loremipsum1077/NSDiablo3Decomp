@@ -669,7 +669,7 @@ void OnUpdate(const UIID &)
 {
     if (sgtUIAchievementsData.tRingUI.IsEnabled())
     {
-        sgtUIAchievementsData.tRingUI.UpdateInput(UI_GetPrimaryUIController(), IconSelectionChanged);
+        sgtUIAchievementsData.tRingUI.UpdateInput(UI_GetPrimaryUIController(), IconSelectionChanged, NULL);
     }
 }
 

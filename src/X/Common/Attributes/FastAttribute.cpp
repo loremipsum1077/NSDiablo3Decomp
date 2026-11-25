@@ -57,7 +57,7 @@ uint8 KeyGetSyncFlags(FastAttribKey tKey) { Attrib eAttrib = KeyGetAttrib(tKey);
 
 int32 StringToAttrib(LPCSTR szAttrib) {
     if (*szAttrib) {
-        for (int32 i = 0; i < 1468; ++i)
+        for (int32 i = 0; i < 1485; ++i)
             if (!strcmp(cgarAttribDefs[i].pszName, szAttrib)) return cgarAttribDefs[i].eAttrib;
     }
     return 0;
@@ -85,7 +85,7 @@ static Attrib sCompileAttrib_GetAttrib(const CRefString & sIdentifier) {
 int32 AttribStringToParam(Attrib eAttrib, LPCSTR szParam) {
     if (!*szParam) return -1;
     if (uint32(*szParam - '0') <= 9) return atoi(szParam);
-    if (uint32(eAttrib) >= 1468) return -1;
+    if (uint32(eAttrib) >= 1485) return -1;
     const AttribDef * ptAttribDef = sGetAttribDef(eAttrib);
     switch (ptAttribDef->eParameterType) {
     case APT_ELEMENT: return NameToSymbol(szParam, gDamageTypes);
@@ -104,7 +104,7 @@ int32 AttribStringToParam(Attrib eAttrib, LPCSTR szParam) {
 
 CRefString AttribParamToString(Attrib eAttrib, int32 nParam) {
     if (nParam == -1) return CRefString("");
-    if (uint32(eAttrib) >= 1468) return CRefString("");
+    if (uint32(eAttrib) >= 1485) return CRefString("");
     const AttribDef * ptAttribDef = sGetAttribDef(eAttrib);
     switch (ptAttribDef->eParameterType) {
     case APT_ELEMENT: return CRefString(SymbolToName(nParam, gDamageTypes));
@@ -211,38 +211,38 @@ void FastAttribAggregate(FastAttribValue & tRunningTotal, FastAttribValue tValue
         switch (eDataType) {
         case ATTRIBUTEDT_FLOAT: tRunningTotal.flValue = Math::Max(tRunningTotal.flValue, tValue.flValue); break;
         case ATTRIBUTEDT_INT: tRunningTotal.nValue = Math::Max(tRunningTotal.nValue, tValue.nValue); break;
-        default: DisplayInternalError(0, "", 3368, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        default: DisplayInternalError(0, "", 3390, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
         }
         break;
     case ATTRIBUTEOP_MIN:
         switch (eDataType) {
         case ATTRIBUTEDT_FLOAT: tRunningTotal.flValue = Math::Min(tRunningTotal.flValue, tValue.flValue); break;
         case ATTRIBUTEDT_INT: tRunningTotal.nValue = Math::Min(tRunningTotal.nValue, tValue.nValue); break;
-        default: DisplayInternalError(0, "", 3381, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        default: DisplayInternalError(0, "", 3403, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
         }
         break;
     case ATTRIBUTEOP_PLUS:
         switch (eDataType) {
         case ATTRIBUTEDT_FLOAT: tRunningTotal.flValue += tValue.flValue; break;
         case ATTRIBUTEDT_INT: tRunningTotal.nValue += tValue.nValue; break;
-        default: DisplayInternalError(0, "", 3394, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        default: DisplayInternalError(0, "", 3416, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
         }
         break;
     case ATTRIBUTEOP_MULTIPLY:
         switch (eDataType) {
         case ATTRIBUTEDT_FLOAT: tRunningTotal.flValue *= tValue.flValue; break;
         case ATTRIBUTEDT_INT: tRunningTotal.nValue *= tValue.nValue; break;
-        default: DisplayInternalError(0, "", 3407, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        default: DisplayInternalError(0, "", 3429, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
         }
         break;
     case ATTRIBUTEOP_MULTIPLY_INVERSE:
         switch (eDataType) {
         case ATTRIBUTEDT_FLOAT: tRunningTotal.flValue = 1.0f - ((1.0f - tRunningTotal.flValue) * (1.0f - tValue.flValue)); break;
         case ATTRIBUTEDT_INT: tRunningTotal.nValue = 1 - ((1 - tRunningTotal.nValue) * (1 - tValue.nValue)); break;
-        default: DisplayInternalError(0, "", 3421, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        default: DisplayInternalError(0, "", 3443, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
         }
         break;
-    default: DisplayInternalError(0, "", 3436, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+    default: DisplayInternalError(0, "", 3458, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 }
 
@@ -261,7 +261,7 @@ BOOL FastAttribValueWentAboveZero(FastAttribKey tKey, FastAttribValue tLastValue
         if (nLastValue > 0 || nValue <= 0) break;  // original 0x71005f45e8: cmp #1, b.lt (lines 5098/5099 test the exits)
         return TRUE;
     }
-    default: DisplayInternalError(0, "", 5108, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+    default: DisplayInternalError(0, "", 5130, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
     return FALSE;
 }
@@ -612,7 +612,7 @@ static void sRecalcAttrib(FastAttribGroup & tGroup, FastAttribKey tKey, BOOL fRe
         ptBBEFormulaToUse = tData.ptBBEFormulaItem;
         nSize = tData.nFormulaItemSize;
         break;
-    default: DisplayInternalError(0, "", 3793, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+    default: DisplayInternalError(0, "", 3815, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 
     FastAttribValue tTotal;
@@ -632,7 +632,7 @@ static void sRecalcAttrib(FastAttribGroup & tGroup, FastAttribKey tKey, BOOL fRe
         switch (KeyGetDataType(tKey)) {
         case ATTRIBUTEDT_FLOAT: tTotal.flValue = flRetval; break;
         case ATTRIBUTEDT_INT: tTotal.nValue = Math::FloatToInt(flRetval); break;
-        default: DisplayInternalError(0, "", 3880, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        default: DisplayInternalError(0, "", 3902, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
         }
     } else {
         sFastAttribGroupAggregate(tGroup, tKey, tTotal);
@@ -1164,7 +1164,7 @@ float FastAttributeEvaluateBBEIdentifier(int32 nIdentifier, int32 nParam0, int32
     case ATTRIBVALUE_TOTAL:
         tTotal = sFastAttribGroupGetValue(tGroup, tKey);
         break;
-    default: DisplayInternalError(0, "", 4067, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+    default: DisplayInternalError(0, "", 4089, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
     float flRetval;
     switch (KeyGetDataType(tKey)) {
@@ -1174,7 +1174,7 @@ float FastAttributeEvaluateBBEIdentifier(int32 nIdentifier, int32 nParam0, int32
     case ATTRIBUTEDT_INT:
         flRetval = (float)tTotal.nValue;
         break;
-    default: DisplayInternalError(0, "", 4080, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+    default: DisplayInternalError(0, "", 4102, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
     return flRetval;
 }

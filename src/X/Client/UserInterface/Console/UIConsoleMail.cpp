@@ -274,7 +274,7 @@ private:
 };
 static_assert(sizeof(MailItemProvider) == 0x38, "MailItemProvider");
 
-class UnmailedItemProvider : public UIInventoryViewItemsProvider {  // size 0xf70
+class UnmailedItemProvider : public UIInventoryViewItemsProvider {  // size 0x1150
 public:
     virtual ~UnmailedItemProvider() {}
     UnmailedItemProvider() : m_ptMailItemProvider(NULL) {}  // line 824
@@ -290,11 +290,11 @@ protected:
     virtual void OnPlayerChanged();  // vtable slot 14
 private:
     FilteredInventoryView m_tView;  // 0x20
-    MailItemProvider * m_ptMailItemProvider;  // 0x7e8
-    ACDIDArray m_arDisplayItems[80];  // 0x7f0
+    MailItemProvider * m_ptMailItemProvider;  // 0x8d8
+    ACDIDArray m_arDisplayItems[FILTER_COUNT];  // 0x8e0
     friend class PlayerMailScreen;
 };
-static_assert(sizeof(UnmailedItemProvider) == 0xf70, "UnmailedItemProvider");
+static_assert(sizeof(UnmailedItemProvider) == 0x1150, "UnmailedItemProvider");
 
 class UnmailedCraftingMatItemsProvider : public CraftingMatItemsProvider {  // size 0x70
 public:
@@ -306,34 +306,34 @@ public:
 };
 static_assert(sizeof(UnmailedCraftingMatItemsProvider) == 0x70, "UnmailedCraftingMatItemsProvider");
 
-class PlayerMailScreen : public UIInventoryScreen {  // size 0xa3c0
+class PlayerMailScreen : public UIInventoryScreen {  // size 0xa6a0
 public:
-    InventoryItems m_tItemsProvider;  // 0x1f0
-    EquippedItem m_tEquippedItemProvider;  // 0x9e8
-    UnmailedCraftingMatItemsProvider m_tCraftingMatItemsProvider;  // 0xa20
-    SingleItemProvider m_tRightSingleItemProvider;  // 0xa90
-    MailItemProvider m_tMailItemProvider;  // 0xac8
-    UnmailedItemProvider m_tUnmailedItemProvider;  // 0xb00
-    UIInventoryListView m_tListView;  // 0x1a70
-    UIInventoryListView m_tCraftingMatListView;  // 0x1af8
-    UIMailListView m_tMailListView;  // 0x1b80
-    UIInventoryListView m_tMailItemsView;  // 0x2288
-    UIInventoryDetailsView m_tLeftDetailsView;  // 0x2310
-    UIInventoryDetailsView m_tRightDetailsView;  // 0x2388
-    UIInventoryDetailsView m_tEquippedView;  // 0x2400
-    UIInventoryCategoryView m_tCategoriesView;  // 0x2478
-    FriendListViewDataSource m_tFriendsListDataSource;  // 0x2510
-    VisualInventory m_tVisualInventory;  // 0xa220
-    int32 m_nMailItemCount;  // 0xa340
-    int32 m_nCurrentMailIndex;  // 0xa344
-    int32 m_nFriendCount;  // 0xa348
-    bdOnlineUserID m_idBDUser;  // 0xa350
-    CRefString m_szFriendName;  // 0xa358
-    BOOL m_bHaveFriend;  // 0xa370
-    BOOL m_bShowingGift;  // 0xa374
-    BOOL m_bShowingGold;  // 0xa378
-    BOOL m_bShowingCraftingMaterial;  // 0xa37c
-    uint64 m_nGoldToSend;  // 0xa380
+    InventoryItems m_tItemsProvider;  // 0x200
+    EquippedItem m_tEquippedItemProvider;  // 0xae8
+    UnmailedCraftingMatItemsProvider m_tCraftingMatItemsProvider;  // 0xb20
+    SingleItemProvider m_tRightSingleItemProvider;  // 0xb90
+    MailItemProvider m_tMailItemProvider;  // 0xbc8
+    UnmailedItemProvider m_tUnmailedItemProvider;  // 0xc00
+    UIInventoryListView m_tListView;  // 0x1d50
+    UIInventoryListView m_tCraftingMatListView;  // 0x1dd8
+    UIMailListView m_tMailListView;  // 0x1e60
+    UIInventoryListView m_tMailItemsView;  // 0x2568
+    UIInventoryDetailsView m_tLeftDetailsView;  // 0x25f0
+    UIInventoryDetailsView m_tRightDetailsView;  // 0x2668
+    UIInventoryDetailsView m_tEquippedView;  // 0x26e0
+    UIInventoryCategoryView m_tCategoriesView;  // 0x2758
+    FriendListViewDataSource m_tFriendsListDataSource;  // 0x27f0
+    VisualInventory m_tVisualInventory;  // 0xa500
+    int32 m_nMailItemCount;  // 0xa620
+    int32 m_nCurrentMailIndex;  // 0xa624
+    int32 m_nFriendCount;  // 0xa628
+    bdOnlineUserID m_idBDUser;  // 0xa630
+    CRefString m_szFriendName;  // 0xa638
+    BOOL m_bHaveFriend;  // 0xa650
+    BOOL m_bShowingGift;  // 0xa654
+    BOOL m_bShowingGold;  // 0xa658
+    BOOL m_bShowingCraftingMaterial;  // 0xa65c
+    uint64 m_nGoldToSend;  // 0xa660
     PlayerMailScreen();
     virtual ~PlayerMailScreen();
     virtual void HandleButtonInput(const int32 nControllerIndex, const InputButton eInputButton);  // vtable slot 9
@@ -411,17 +411,17 @@ public:
     };
 public:
     // Private in the original; the module's free functions are its friends there.
-    MailState m_eMailState;  // 0xa388
-    CategoryState m_eCategoryState;  // 0xa38c
-    ItemCategory m_eCurrentCategory;  // 0xa390
-    int32 m_nLastGiftMailIndex;  // 0xa394
-    UIFilterType m_eCachedRingSelection;  // 0xa398
-    ACDID m_idLastSelectedItem;  // 0xa39c
-    ACDID m_idACDCurrentItem;  // 0xa3a0
-    ACDID m_idACDSocketed[3];  // 0xa3a4
-    int32 m_nSocketsFilled;  // 0xa3b0
-    BOOL m_bCurrentItemIsEquippable;  // 0xa3b4
-    BOOL m_bNewMailAvailable;  // 0xa3b8
+    MailState m_eMailState;  // 0xa668
+    CategoryState m_eCategoryState;  // 0xa66c
+    ItemCategory m_eCurrentCategory;  // 0xa670
+    int32 m_nLastGiftMailIndex;  // 0xa674
+    UIFilterType m_eCachedRingSelection;  // 0xa678
+    ACDID m_idLastSelectedItem;  // 0xa67c
+    ACDID m_idACDCurrentItem;  // 0xa680
+    ACDID m_idACDSocketed[3];  // 0xa684
+    int32 m_nSocketsFilled;  // 0xa690
+    BOOL m_bCurrentItemIsEquippable;  // 0xa694
+    BOOL m_bNewMailAvailable;  // 0xa698
     BOOL CanOpenSelectedCategory();
     void UpdateInboxActions(::Console::ControllerActionManager & tActionManager);
     void UpdateCompareActions(::Console::ControllerActionManager & tActionManager);
@@ -461,7 +461,7 @@ public:
     BOOL PlayerIsOnline();
     void UpdatePlayerGold();
 };
-static_assert(sizeof(PlayerMailScreen) == 0xa3c0, "PlayerMailScreen");
+static_assert(sizeof(PlayerMailScreen) == 0xa6a0, "PlayerMailScreen");
 
 static ModalNotificationId s_idModal = -1;
 }  // namespace Console
@@ -1130,7 +1130,7 @@ void PlayerMailScreen::OnButtonL3(int32 nControllerIndex)
     switch (idAction)
     {
     case ACTION_CHANGE:
-        SoundManager::PlaySound(GlobalSNOGet(0x740), cgtPSODefaults);
+        SoundManager::PlaySound(GlobalSNOGet(GLOBALSNO_SOUND_MAIL_BACK), cgtPSODefaults);
         m_eCategoryState = BROWSE_CATEGORY_STATE;
         SwitchToFriendSelectMode(TRUE);
         break;
@@ -1256,7 +1256,7 @@ inline BOOL PlayerMailScreen::CanOpenSelectedCategory()
 
 void sGiveGold(const ACDID idACDPlayerDst, const uint64 uAmount)
 {
-    SoundManager::PlaySound(GlobalSNOGet(0x745), cgtPSODefaults);
+    SoundManager::PlaySound(GlobalSNOGet(GLOBALSNO_SOUND_MAIL_GOLD_SEND), cgtPSODefaults);
     PlayerMailScreen * ptScreen = sgptMailGlobals;
     if (ptScreen->m_eMailState == PlayerMailScreen::MAILSTATE_SENDING_MAIL)
     {
@@ -1323,7 +1323,7 @@ void PlayerMailScreen::OnButton3(int32 nControllerIndex)
     case ACTION_COMPARE:
         if (!m_bShowingGift && !m_bShowingGold && !m_bShowingCraftingMaterial)
         {
-            SoundManager::PlaySound(GlobalSNOGet(0x391), cgtPSODefaults);
+            SoundManager::PlaySound(GlobalSNOGet(GLOBALSNO_SOUND_SELECT_GENERIC), cgtPSODefaults);
             UpdateCompareItem();
             SwitchToCompareMode();
         }

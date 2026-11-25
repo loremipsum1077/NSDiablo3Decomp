@@ -489,7 +489,7 @@ void PlayerLoreGlobals::sUpdateButtonLegend()
 inline void PlayerLoreGlobals::OnUpdate()
 {
     if (ptPlayer != NULL && m_eSelectionMode == SLOT_SELECTION_MODE)
-        m_tRingUI.UpdateInput(ptPlayer->nControllerIndex, IconSelectionChanged);
+        m_tRingUI.UpdateInput(ptPlayer->nControllerIndex, IconSelectionChanged, NULL);
 
     sUpdateButtonLegend();
     UpdateRingIcons();

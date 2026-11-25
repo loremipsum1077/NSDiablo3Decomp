@@ -244,7 +244,7 @@ void ServerMessageSendForceInterfaceClose(const ACDID idACDPlayer);  // ServerMe
 namespace Tutorial { BOOL SendTutorialToClient(SNO snoTutorial, Player * ptPlayer, const char * szUIAnchorName, const ACDID idACDTarget); }
 
 // X/Server/Actors/Actors.h, X/Server/Powers/Powers.h
-void ActorGetMonsterHPData(SNO snoMonster, int32 nLevel, MonsterRarity eMonsterRarity, float & flHP, float & flHPDelta, const BOOL bAvenger, const BOOL bIsTieredLootRunMonster, const BOOL bIsSetDungeon);  // Actors.cpp:2157
+void ActorGetMonsterHPData(SNO snoMonster, int32 nLevel, MonsterRarity eMonsterRarity, float & flHP, float & flHPDelta, const BOOL bAvenger, const BOOL bIsTieredLootRunMonster, const BOOL bIsSetDungeon, const BOOL bUnknown9);  // Actors.cpp:2157
 BOOL PowerComputeDestination(SNO snoPower, const ActorMovement & tMovement, const WorldPlace & placeTarget, WorldPlace & placeResult, BOOL bActivateTriggers, float flSearchRadiusMax);  // Powers.cpp:5481
 #include "../../Common/Definitions/MonsterDefinition.h"
 static void sSpellEffect_ResurrectCorpse(PowerID idPower, void *)  // line 123
@@ -4641,6 +4641,7 @@ static void sRoot_ImmobilizeTarget(PowerID idPower)
             // 
             // 
             // 
+            // 
             DisplayInternalError(NULL, "", __LINE__, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
         }
         PowerAPIBuffStartData tBuffStartDataRooter(idPower);
@@ -5483,7 +5484,7 @@ static void sSpellEffect_Doppelganger_Clone(PowerID idPower, void *)
 
         ptACD->IsAvenger();
 
-    ActorGetMonsterHPData(pdefActor->snoMonster, nLevel, ptACD->eMonsterRarity, flHPMin, flHPDelta, bAvenger, FALSE, FALSE);
+    ActorGetMonsterHPData(pdefActor->snoMonster, nLevel, ptACD->eMonsterRarity, flHPMin, flHPDelta, bAvenger, FALSE, FALSE, FALSE);
 
     float flHitPoints = RandRangeFloat_Internal(SGameGlobalsGet().rng, flHPMin, flHPDelta);
 
@@ -7808,7 +7809,7 @@ static void sSpellEffect_RecallEnterOnEnd(PowerID idPower, void * pData)
 
     if (idSWorldHub == SWORLDID_INVALID)
     {
-        idSWorldHub = SWorldCreate(snoHub, TRUE, SPlayerIsLocal(*ptPlayer), NULL, ACDID_INVALID, ACDID_INVALID, 0, 0, 0);
+        idSWorldHub = SWorldCreate(snoHub, TRUE, SPlayerIsLocal(*ptPlayer), NULL, ACDID_INVALID, ACDID_INVALID, 0, 0, 0, 0);
 
 
         if (idSWorldHub == SWORLDID_INVALID)
@@ -12709,7 +12710,7 @@ static void sEvaluateBrickhouseDestroyedDoorAchievementEvent(
                 ptPlayer,
                 Achievement::ACH_EVENT_BRICKHOUSE_DESTROYED_DOOR,
                 tBrickhouse.snoActor,
-                1);
+                1, (uint32)sub_71007b5e70());
         }
     }
 }
@@ -16676,26 +16677,40 @@ void sSpellEffect_Console_Teleport(const PowerID idPower, void *)
 
 
 
+BOOL sub_71007d50c0(SNO snoWorld);  // unnamed 2.7.7 function (0x71007d50c0)
+BOOL sub_71007d5160();  // unnamed 2.7.7 function (0x71007d5160)
+// NON_MATCHING: 404 vs 412 bytes; the original compares snoWorld and the two realm SNOs from
+// registers although their addresses go to SWorldFindBySNO, ours reloads them.
 BOOL sDeathPortalDestinationCanCreateWorld(SNO snoPortal, BOOL * bWorldExists)
-
-
 {
     if (bWorldExists)
     {
         *bWorldExists = FALSE;
     }
-
-
-
-
-
-
     if (snoPortal != SNO_NONE)
     {
         ScopedActorDefinitionLockR pdefActorPortal(snoPortal);
         SNO snoWorld = TagMapGetSNO(pdefActorPortal->hTagMap, TAG_ACTOR_GIZMO_PORTAL_SPECIFIED_WORLD);
         if (snoWorld != SNO_NONE)
         {
+            if (!sub_71007d50c0(snoWorld))
+            {
+                SNO snoGreedRealm = GlobalSNOGet(GLOBALSNO_WORLD_GREED_REALM);
+                SNO snoAncientRealm = GlobalSNOGet(GLOBALSNO_UNK_686);
+                SWorldID idSWorldGreedRealm = SWorldFindBySNO(snoGreedRealm);
+                SWorldID idSWorldAncientRealm = SWorldFindBySNO(snoAncientRealm);
+                if ((snoWorld == snoGreedRealm && idSWorldAncientRealm != SWORLDID_INVALID) ||
+                    (snoWorld == snoAncientRealm && idSWorldGreedRealm != SWORLDID_INVALID))
+                {
+                    if (bWorldExists) { *bWorldExists = TRUE; }
+                    return FALSE;
+                }
+            }
+            else if (sub_71007d5160())
+            {
+                if (bWorldExists) { *bWorldExists = TRUE; }
+                return FALSE;
+            }
             SWorldID idSWorld = SWorldFindBySNO(snoWorld);
             if (idSWorld != SWORLDID_INVALID)
             {
@@ -16720,6 +16735,8 @@ BOOL sDeathPortalDestinationCanCreateWorld(SNO snoPortal, BOOL * bWorldExists)
 
 static const int32 scgDeathPortalNumPortals = 4;
 
+// NON_MATCHING: 676 vs 672 bytes; the weighted pick keeps a found flag (cset/csel) and the
+// weight across the definition unlock in the original; register/stack assignment differs.
 SNO sDeathPortalChoosePortal(const PowerID idPower)
 {
 
@@ -16740,12 +16757,50 @@ SNO sDeathPortalChoosePortal(const PowerID idPower)
 
         if (nPortalCount > 0)
         {
-            for (int32 i = 0; i < scgDeathPortalNumPortals; i++)
+            if (ptPower->snoPower == SNOFileLookupGUID(POWER_SNO, "p1_TreasureGoblin_OnDeathGreedPortal"))
             {
-                SNO snoPortal = PowerContactTagGetSNO(idPower, TAG_POWER_DEATH_PORTAL_ACTOR_0 + i * 16);
+                // Name invented: the 2.7.7 table at 0x7100eb2420 has no symbol.
+                const uint32 arTags[scgDeathPortalNumPortals] = {
+                    TAG_POWER_DEATH_PORTAL_ACTOR_0,
+                    TAG_POWER_DEATH_PORTAL_ACTOR_0 + 16,
+                    TAG_POWER_DEATH_PORTAL_ACTOR_0 + 32,
+                    TAG_POWER_DEATH_PORTAL_ACTOR_0 + 48,
+                };
+                float arWeights[scgDeathPortalNumPortals];
+                float flTotalWeight = 0.0f;
+                for (int32 i = 0; i < nPortalCount; i++)
+                {
+                    SNO snoPortal = PowerContactTagGetSNO(idPower, arTags[i]);
+                    ScopedActorDefinitionLockR pdefActorPortal(snoPortal);
+                    arWeights[i] = TagMapGetFloat(pdefActorPortal->hTagMap, TAG_ACTOR_POWER_INSTEAD_OF_DEATH_CHANCE);
+                    flTotalWeight += arWeights[i];
+                }
+                float flRoll = RandFloat_Internal(SGameGlobalsGet().rng) * (flTotalWeight - EPSILON);
+                int32 nChosen = 0;
+                for (int32 i = 0; i < nPortalCount; i++)
+                {
+                    if (flRoll < arWeights[i])
+                    {
+                        nChosen = i;
+                        break;
+                    }
+                    flRoll -= arWeights[i];
+                }
+                SNO snoPortal = PowerContactTagGetSNO(idPower, arTags[nChosen]);
                 if (sDeathPortalDestinationCanCreateWorld(snoPortal, NULL))
                 {
                     return snoPortal;
+                }
+            }
+            else
+            {
+                for (int32 i = 0; i < scgDeathPortalNumPortals; i++)
+                {
+                    SNO snoPortal = PowerContactTagGetSNO(idPower, TAG_POWER_DEATH_PORTAL_ACTOR_0 + i * 16);
+                    if (sDeathPortalDestinationCanCreateWorld(snoPortal, NULL))
+                    {
+                        return snoPortal;
+                    }
                 }
             }
         }
@@ -16860,7 +16915,7 @@ BOOL SpellEffect_DeathPortalCreate(
 
                         if (snoWorld != SNO_NONE)
                         {
-                            SWorldID idSWorld = SWorldCreate(snoWorld, FALSE, FALSE, NULL, ACDID_INVALID, tACDPortal.id, 0, WARP_UNKNOWN, FALSE);
+                            SWorldID idSWorld = SWorldCreate(snoWorld, FALSE, FALSE, NULL, ACDID_INVALID, tACDPortal.id, 0, WARP_UNKNOWN, FALSE, (1 << FLAG_SWORLD_FROM_DEATH_PORTAL));
                             SWorld * ptSWorldScoped = SWorldTryToGet(idSWorld);
                             if (ptSWorldScoped)
                             {
@@ -16898,7 +16953,7 @@ BOOL SpellEffect_DeathPortalCreate(
                                     }
                                 }
 
-                                ptSWorldScoped->dwFlags |= (1 << FLAG_SWORLD_FROM_DEATH_PORTAL);
+
                                 bSuccess = TRUE;
                             }
                         }
@@ -18924,7 +18979,7 @@ static void sSpellEffect_AmiiboPortalTreasureGoblin_Begin(
     }
 
 
-    BOOL bWorldExists;
+    BOOL bWorldExists = FALSE;
     SNO snoPortal = PowerContactTagGetSNO(idPower, TAG_POWER_DEATH_PORTAL_ACTOR_0);
     if (!sDeathPortalDestinationCanCreateWorld(snoPortal, &bWorldExists))
     {

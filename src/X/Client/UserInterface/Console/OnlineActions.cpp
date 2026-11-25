@@ -59,7 +59,7 @@ namespace Console { namespace Utilities { void ShowSystemOnlineErrorDialog(); vo
 namespace UIHeroCreate { namespace Console { BOOL CreateHero(int32 nControllerIndex, PlayerClass eClass, uint32 uFlags, CRefString sString); } }  // UIConsoleHeroCreate.cpp:1496
 int32 UI_GetPrimaryUIController(); void UI_SetPrimaryUIController(int32 nPrimaryController);
 namespace Console { namespace SaveMigration { void PerformSeasonMigration(); BOOL HealMigrationData(int32 nUserIndex, D3::Console::MigrationData & tMigrationData); } }
-namespace Console { enum { TITLE_VERSION_CURRENT = 265 }; namespace GamerProfile { BOOL IsActive(int32 nUserIdx); void ImportSave(int32 nUserIdx, D3::Console::MigrationData * ptMigrationData, BOOL bDestructive, ImportSaveCallback pfnCallback); } }  // TitleVersion.h, GamerProfileNX64.cpp:1736
+namespace Console { enum { TITLE_VERSION_CURRENT = 277 }; namespace GamerProfile { BOOL IsActive(int32 nUserIdx); void ImportSave(int32 nUserIdx, D3::Console::MigrationData * ptMigrationData, BOOL bDestructive, ImportSaveCallback pfnCallback); } }  // TitleVersion.h, GamerProfileNX64.cpp:1736
 float SNOPackChunkGetActLoadPercentComplete(Act eAct); void SNOPackChunkRequestLoad(Act eAct); BOOL SNOPackChunkLoadAct(Act eAct);  // SNOFiles.cpp
 typedef int32 X1HandicapLevel; bool PlayerCanPlayHandicap(int32 nLevel, int32 nHighestRiftLevel, X1HandicapLevel eHandicap, bool bPublicGame);
 namespace Console { namespace UIOnlineActions {

@@ -84,7 +84,7 @@ struct HirelingTrainSkillMessage {  // size 0x10
 };
 enum {
     CMSG_HIRELING_TRAIN_SKILL = 117,
-    CMSG_HIRELING_DISMISS = 398,
+    CMSG_HIRELING_DISMISS = 399,
 };
 // X/Client/Network/CGameMessage.cpp
 void MessageSendToServer(GameMessageType eType, void * pMessage, uint32 dwMessageSize, const Player * ptPlayer);
@@ -154,6 +154,11 @@ extern const UIID UIWND_FOLLOWER_CONSOLE_RING, UIWND_FOLLOWER_CONSOLE_RING_CURSO
 extern const UIID UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_1, UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_2,
     UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_3, UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_4,
     UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_5, UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_6;
+// 2.7.7 follower equipment slots ("...FollowerRing.LoadedInventorySlot7".."14"); defined in UIGlobals.cpp
+extern const UIID UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_7, UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_8,
+    UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_9, UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_10,
+    UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_11, UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_12,
+    UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_13, UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_14;
 extern const UIID UIBTN_FOLLOWER_CONSOLE_SKILL_SLOT_1, UIBTN_FOLLOWER_CONSOLE_SKILL_SLOT_2,
     UIBTN_FOLLOWER_CONSOLE_SKILL_SLOT_3, UIBTN_FOLLOWER_CONSOLE_SKILL_SLOT_4;
 extern const UIID UITEXT_FOLLOWER_CONSOLE_SKILL_NAME, UITEXT_FOLLOWER_CONSOLE_SKILL_DESCRIPTION,
@@ -195,7 +200,7 @@ void OnFollowerScrollUp();
 void OnFollowerScrollDown();
 SNO GetSkillForSlot(const ActorCommonData & tACDHireling, const int32 nSlot);
 
-class PlayerFollowerScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x1500
+class PlayerFollowerScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x16f0
     enum SelectionState {
         SELECTING_RING = 0,
         SELECTING_INVENTORY_ITEM = 1,
@@ -233,8 +238,8 @@ public:
     // Read directly by the anonymous-namespace UpdateRingNewItemIndicators; the original access
     // path is unknown.
     using UIInventoryScreen::m_tFilterMap;
-    VisualInventory m_tVisualInventory;  // 0x1f0
-    BOOL m_bNewSkillFlag;  // 0x310
+    VisualInventory m_tVisualInventory;  // 0x200
+    BOOL m_bNewSkillFlag;  // 0x320
 protected:
     virtual BOOL CanOpenForController(int32 nControllerOpening) const;  // vtable slot 15
     virtual void OnOpen();  // vtable slot 10
@@ -255,17 +260,17 @@ protected:
     void UpdateSkillRing();
     void UpdateSkillSlotIcon(const int32 nSlot);
 private:
-    UIInventory::Console::InventoryItems m_tRingItemsProvider;  // 0x318
-    UIInventory::Console::InventoryItems m_tItemsProvider;  // 0xb10
-    UIInventory::Console::EquippedItem m_tEquippedItemProvider;  // 0x1308
-    UIInventory::Console::UIInventoryListView m_tListView;  // 0x1340
-    UIInventory::Console::UIInventoryDetailsView m_tDetailsView;  // 0x13c8
-    UIInventory::Console::UIInventoryDetailsView m_tEquippedView;  // 0x1440
-    ::Console::RadioSelectorWrapper m_tSkillSelector;  // 0x14b8
-    SNO m_snoSkillToLearn;  // 0x14f0
-    BOOL m_bSkillsDirtyFlag;  // 0x14f4
-    SelectionState m_eState;  // 0x14f8
-    ACDID m_idLastKnownEquippedItem;  // 0x14fc
+    UIInventory::Console::InventoryItems m_tRingItemsProvider;  // 0x328
+    UIInventory::Console::InventoryItems m_tItemsProvider;  // 0xc10
+    UIInventory::Console::EquippedItem m_tEquippedItemProvider;  // 0x14f8
+    UIInventory::Console::UIInventoryListView m_tListView;  // 0x1530
+    UIInventory::Console::UIInventoryDetailsView m_tDetailsView;  // 0x15b8
+    UIInventory::Console::UIInventoryDetailsView m_tEquippedView;  // 0x1630
+    ::Console::RadioSelectorWrapper m_tSkillSelector;  // 0x16a8
+    SNO m_snoSkillToLearn;  // 0x16e0
+    BOOL m_bSkillsDirtyFlag;  // 0x16e4
+    SelectionState m_eState;  // 0x16e8
+    ACDID m_idLastKnownEquippedItem;  // 0x16ec
     ACDID GetSelectedItem();
     void EquipSkill();
     void OnConfirmEquipSkill(ACDID idACDFollower, SNO snoPower, const UIID &);
@@ -293,7 +298,7 @@ private:
     friend void OnDPadLeft(const UIID & id, const int32 nControllerIndex);
     friend void OnDPadRight(const UIID & id, const int32 nControllerIndex);
 };
-static_assert(sizeof(PlayerFollowerScreen) == 0x1500, "PlayerFollowerScreen");
+static_assert(sizeof(PlayerFollowerScreen) == 0x16f0, "PlayerFollowerScreen");
 
 inline void PlayerFollowerScreen::SetSelectionState(const SelectionState eState)
 {
@@ -1185,6 +1190,14 @@ void PlayerFollowerScreen::InitRingFilters(UIIDToFilterMap & tFilterMap)
     tFilterMap.SetAt_Tracked(UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_4, FILTER_FOLLOWER_NECK);
     tFilterMap.SetAt_Tracked(UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_5, FILTER_FOLLOWER_SPECIAL);
     tFilterMap.SetAt_Tracked(UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_6, FILTER_FOLLOWER_OFF_HAND);
+    tFilterMap.SetAt_Tracked(UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_7, FILTER_FOLLOWER_BELT);
+    tFilterMap.SetAt_Tracked(UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_8, FILTER_FOLLOWER_LEGS);
+    tFilterMap.SetAt_Tracked(UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_9, FILTER_FOLLOWER_FEET);
+    tFilterMap.SetAt_Tracked(UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_10, FILTER_FOLLOWER_HANDS);
+    tFilterMap.SetAt_Tracked(UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_11, FILTER_FOLLOWER_SHOULDERS);
+    tFilterMap.SetAt_Tracked(UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_12, FILTER_FOLLOWER_CHEST);
+    tFilterMap.SetAt_Tracked(UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_13, FILTER_FOLLOWER_HEAD);
+    tFilterMap.SetAt_Tracked(UIBTN_FOLLOWER_CONSOLE_INVENTORY_SLOT_14, FILTER_FOLLOWER_WRIST);
     tFilterMap.SetAt_Tracked(UIBTN_FOLLOWER_CONSOLE_SKILL_SLOT_1, FILTER_FOLLOWER_SKILL_1);
     tFilterMap.SetAt_Tracked(UIBTN_FOLLOWER_CONSOLE_SKILL_SLOT_2, FILTER_FOLLOWER_SKILL_2);
     tFilterMap.SetAt_Tracked(UIBTN_FOLLOWER_CONSOLE_SKILL_SLOT_3, FILTER_FOLLOWER_SKILL_3);

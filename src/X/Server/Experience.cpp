@@ -40,6 +40,9 @@ uint64 ExperienceGetCurrentLevelXP(const ActorCommonData & tACD, const BOOL bUse
 BOOL ExperiencePlayersCloseEnough(const ActorCommonData & tACDVictim, ACDID idACDOtherPlayer);  // X/Common/ExperienceCommon.cpp:78
 BOOL LootDropLootForEligiblePlayers(ActorCommonData & tACDLootee, PlayerList & listEligiblePlayers, const ACDID idACDPrimaryLooter, uint32 dwGameEventNumber, BOOL fAutoIdentify, float flCameraBiasDist, BOOL bSuppressUnluckyBonus);  // X/Server/Loot/Loot.cpp:698
 BOOL sExperienceGrantToACD(ActorCommonData & tACD, const uint64 nExp, BOOL bNotifyClient, BOOL bApplyRestXPBonus);
+// 0x71004b8ae0 (unnamed, 100 bytes, in the ActorCommonData accessor range): takes the player ACD in x0
+// and returns a BOOL; when it holds, rest XP is refilled to the XP still needed for the level.
+BOOL sub_71004b8ae0(const ActorCommonData & tACD);
 void SHirelingLevelUp(ActorCommonData & tACDHireling, int32 nLevel);  // X/Server/SHireling.cpp:525
 uint32 PlayerGetPlayedSeconds(const Player & tPlayer);  // X/Common/Player.cpp:3593
 PlayerClass PlayerGetPlayerClass(const ACDID idACD);  // X/Common/Player.cpp:2292
@@ -477,7 +480,7 @@ static void sExperienceLevelUp(ActorCommonData & tACD, BOOL fUpdateClient, BOOL 
             tEvaluationData.EvaluateEvent(ptPlayer,
 
                 fUseAltLevels ? Achievement::ACH_EVENT_LEVELUP_PARAGON : Achievement::ACH_EVENT_LEVELUP_HERO,
-                nLevel, 1);
+                nLevel, 1, (uint32)sub_71007b5e70());
 
 
 
@@ -486,7 +489,7 @@ static void sExperienceLevelUp(ActorCommonData & tACD, BOOL fUpdateClient, BOOL 
 
             if (!fUseAltLevels)
             {
-                tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_HAS_HERO_AT_LEVEL, nLevel, 1);
+                tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_HAS_HERO_AT_LEVEL, nLevel, 1, (uint32)sub_71007b5e70());
             }
 
 
@@ -542,7 +545,7 @@ void sPVPExperienceRankUp(ActorCommonData & tACD)
         Achievement::EvaluationData tEvaluationData;
         tEvaluationData.SetPlayer(ptPlayer);
 
-        tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_PVP_LEVELUP_HERO, nRank, 1);
+        tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_PVP_LEVELUP_HERO, nRank, 1, (uint32)sub_71007b5e70());
     }
 
 
@@ -638,8 +641,20 @@ BOOL sExperienceGrantToACD(
         {
             sExperienceGrantToACD(tACD, nRestXPToGrant, bNotifyClient, FALSE);
 
-            nCurrentRestXP -= nRestXPToGrant;
-            tACD.SetRestExperience(nCurrentRestXP);
+            // 2.7.7: see GrantRestExperience; sub_71004b8ae0 refills rest XP to the full level.
+            if (sub_71004b8ae0(tACD))
+            {
+                tACD.SetRestExperience(tACD.ShouldUseAltLevels() ? tACD.GetAltExperienceNext() : tACD.GetExperienceNext());
+            }
+            else
+            {
+                nCurrentRestXP -= nRestXPToGrant;
+                tACD.SetRestExperience(nCurrentRestXP);
+            }
+        }
+        else if (nCurrentRestXP > 0 && sub_71004b8ae0(tACD))
+        {
+            tACD.SetRestExperience(tACD.ShouldUseAltLevels() ? tACD.GetAltExperienceNext() : tACD.GetExperienceNext());
         }
     }
 
@@ -824,10 +839,13 @@ void GrantRestExperience(ActorCommonData & tACDPlayer)
 
 
         uint64 nRestXPCap = (uint64)(pdefGlobal->flRestXPGrantLevelCapModifier * (float)nTotalXPForLevel);
+        uint64 nRestXP = Math::Min(nNewRestXP, nRestXPCap);
 
+        // 2.7.7: when sub_71004b8ae0 holds, rest XP is set to the full XP still needed for the level.
+        if (sub_71004b8ae0(tACDPlayer))
+            nRestXP = tACDPlayer.ShouldUseAltLevels() ? tACDPlayer.GetAltExperienceNext() : tACDPlayer.GetExperienceNext();
 
-
-        tACDPlayer.SetRestExperience(Math::Min(nNewRestXP, nRestXPCap));
+        tACDPlayer.SetRestExperience(nRestXP);
     }
 }
 

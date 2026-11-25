@@ -634,7 +634,7 @@ void OnLeftStick(const UIID & id, int32 nControllerIndex)
 {
     if (sgtBannerCustomizationGlobals.tRingStickInputFilter.HandleInput(::Console::ControllerUtils::GetRawLStickPosition(nControllerIndex, FALSE), FALSE) == 0)
     {
-        sgtBannerCustomizationGlobals.tRingUI.UpdateInput(nControllerIndex, IconSelectionChanged);
+        sgtBannerCustomizationGlobals.tRingUI.UpdateInput(nControllerIndex, IconSelectionChanged, NULL);
     }
 }
 

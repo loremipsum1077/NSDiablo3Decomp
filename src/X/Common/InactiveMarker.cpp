@@ -2507,7 +2507,7 @@ ACDID ActivateActorMarkerInWorld(
 
 
 
-        idSWorld = SWorldCreate(snoWorld, TRUE, FALSE, NULL, ACDID_INVALID, ACDID_INVALID, 0, WARP_UNKNOWN, FALSE);
+        idSWorld = SWorldCreate(snoWorld, TRUE, FALSE, NULL, ACDID_INVALID, ACDID_INVALID, 0, WARP_UNKNOWN, FALSE, 0);
     }
 
 

@@ -4907,7 +4907,7 @@ BOOL CPlayerTogglePlayerIndicatorBeam(const BufferedInput & tInput)
 
     return FALSE;
 }
-
+bool InputIsSingleJoycon(int32_t nControllerIndex);  // InputNX64.cpp
 BOOL CPlayerConsoleTryUseUtilitySkill(const BufferedInput & tInput)
 {
 
@@ -4917,7 +4917,7 @@ BOOL CPlayerConsoleTryUseUtilitySkill(const BufferedInput & tInput)
 
 
 
-    if (Controller::InputIsTargetLock(tInput))
+    if (Controller::InputIsTargetLock(tInput) && !InputIsSingleJoycon(tInput.tBufControllerData.nControllerIndex))
         return CPlayerConsoleTargetLock(tInput);
 
 

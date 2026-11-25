@@ -136,8 +136,11 @@ struct UILeaderboardData {
     LeaderboardFilters eLeaderboardFilter;
     UIState eUINavigationState;
     int32 nSelectedCategory;
-    BOOL bHardcoreGreaterRifts;
-    BOOL bHardcoreConquests;
+    BOOL bHardcoreGreaterRifts;  // 0xb4
+    // 2.7.7: new 4-byte field (unnamed); the constructor leaves it uninitialized and the request
+    // flags that follow move from 0xbc to 0xc0 (UILeaderboardData constructor 0x7100187790).
+    BOOL unk_b8;  // 0xb8
+    BOOL bHardcoreConquests;  // 0xbc
     BOOL bLeaderboardRequestIssued[3];
     BOOL bPlayerPositionRequestIssued;
     BOOL bGlobalLeaderboardsEnabled;
@@ -698,7 +701,7 @@ void OnUpdate(const UIID & id)
         return;
     }
     if (sgtUILeaderboardData.tRingUI.IsEnabled() && UI_GetPrimaryUIController() != -1)
-        sgtUILeaderboardData.tRingUI.UpdateInput(UI_GetPrimaryUIController(), IconSelectionChanged);
+        sgtUILeaderboardData.tRingUI.UpdateInput(UI_GetPrimaryUIController(), IconSelectionChanged, NULL);
     if (::Console::Screens::GetActionManager().AreActionsDirty())
         UpdateControllerActions(FALSE);
     if (sgtUILeaderboardData.tLastUpdatedTicks)
@@ -857,23 +860,24 @@ void UpdateConquestHardcoreDisplay(int32 nSelectedCategory)
 
 void UpdateRingIcons(const UIID & idRing, BOOL bFocus)
 {
-    const UIControlItemArray & arChildren = UI_GetWindowFromID(idRing).GetChildList();
-    for (uint32 i = 0; i < arChildren.size(); ++i)
+    UIIDArray arTargets;
+    sgtUILeaderboardData.tRingUI.GetTargetControlIDs(arTargets);
+    for (uint32 i = 0; i < arTargets.size(); ++i)
     {
-        if (!arChildren[i].ptControl->IsType(UIT_BUTTON))
+        if (!UI_GetWindowFromID(arTargets[i]).IsType(UIT_BUTTON))
             continue;
-        UIButton * ptButton = (UIButton *)arChildren[i].ptControl;
-        if (bFocus || sgtUILeaderboardData.tRingUI.GetSelectedControlID() == arChildren[i].id)
+        UIButton & tButton = UI_GetButtonFromID(arTargets[i]);
+        if (bFocus || sgtUILeaderboardData.tRingUI.GetSelectedControlID() == arTargets[i])
         {
-            ptButton->SetEnabled(TRUE);
-            ptButton->SetShader(SNO_NONE);
-            if (sgtUILeaderboardData.tRingUI.GetSelectedControlID() != arChildren[i].id)
-                ptButton->SetButtonState(BS_NORMAL, FALSE, FALSE);
+            tButton.SetEnabled(TRUE);
+            tButton.SetShader(SNO_NONE);
+            if (sgtUILeaderboardData.tRingUI.GetSelectedControlID() != arTargets[i])
+                tButton.SetButtonState(BS_NORMAL, FALSE, FALSE);
         }
         else
         {
-            ptButton->SetEnabled(FALSE);
-            ptButton->SetShader(GlobalSNOGet(GLOBALSNO_SHADER_SPRITE_TRANSPARENT_INACTIVE));
+            tButton.SetEnabled(FALSE);
+            tButton.SetShader(GlobalSNOGet(GLOBALSNO_SHADER_SPRITE_TRANSPARENT_INACTIVE));
         }
     }
 }

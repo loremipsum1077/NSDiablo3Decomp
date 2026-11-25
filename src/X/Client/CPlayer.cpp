@@ -244,7 +244,7 @@ inline void UI_DeleteControl(T *& ptControl)
         ptControl = NULL;
     }
 }
-struct ClientTrickleEntry {  // size 0x68; X/Client/Network/CTrickle.h:22
+struct ClientTrickleEntry {  // size 0x6c; X/Client/Network/CTrickle.h:22
     ACDNetworkName ann;  // 0x00
     SNO snoActor;  // 0x04
     WorldPlace tPlace;  // 0x08
@@ -266,9 +266,9 @@ struct ClientTrickleEntry {  // size 0x68; X/Client/Network/CTrickle.h:22
     int32 nTieredRiftRank;  // 0x58
     BOOL bBrawling;  // 0x5c
     BOOL bInUberFight;  // 0x60
-    int32 gbidPortraitFrame;  // 0x64
+    int32 gbidPortraitFrame;  /* 0x64 */  int32 unk_68;  // 0x68 (2.7.7: stored by CTrickleUpdate)
 };
-static_assert(sizeof(ClientTrickleEntry) == 0x68, "ClientTrickleEntry");
+static_assert(sizeof(ClientTrickleEntry) == 0x6c, "ClientTrickleEntry");
 typedef XPooledList<ClientTrickleEntry, const ClientTrickleEntry &> ClientTrickleList;  // X/Client/Network/CTrickle.h:52
 ClientTrickleList & CTrickleGetList();  // X/Client/Network/CTrickle.cpp
 // Reset and ProcessDamage restored to DWARF decl lines; declaration-only material is below.
@@ -1771,6 +1771,25 @@ static CRefString sFormatDamageOrHealingNumber(
         return UnicodeText::FormatNumber(flDamageAmount, TRUE, FNS_NORMAL, 0, 0, 0);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3895,13 +3914,13 @@ static SNO sGetFloatingNumberFont(
     FloatingNumberType eType,
     int32 & nFontSize)
 {
-    switch (eType)  // Inference: original compares 5 then 2 and branches (no csel); a switch with default first gives that.
+    switch (eType)
     {
+    case FLOATING_NUMBER_TYPE_CRITICAL_HIT_DONE: case FLOATING_NUMBER_TYPE_CRITICAL_HIT_TAKEN:
+        nFontSize = 22;
+        break;
     default:
         nFontSize = 14;
-        break;
-    case FLOATING_NUMBER_TYPE_CRITICAL_HIT_TAKEN: case FLOATING_NUMBER_TYPE_CRITICAL_HIT_DONE:
-        nFontSize = 22;
         break;
     }
     return GlobalSNOGet(GLOBALSNO_FONT_SANS_SERIF);  // Inference: both font sizes use GLOBALSNO_FONT_SANS_SERIF in surviving Switch code.
@@ -5491,8 +5510,8 @@ void CPlayerLocalPlayerJoin(
         tMessage.uLicenses |= 0x2000000;
     else
         tMessage.uLicenses &= ~0x3000000;
-    tMessage.uLicenses |= Console::DLCManager::GetLicenses();
     tMessage.uLicenses |= 0x1000000;
+    tMessage.uLicenses |= Console::DLCManager::GetLicenses();
     MessageSendToServer(CMSG_JOIN_CONSOLE_GAME, &tMessage, sizeof(tMessage), (const Player *)NULL);
 }
 

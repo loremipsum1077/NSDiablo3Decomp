@@ -1204,7 +1204,7 @@ void OnButton3(const UIID &, const int32 nControllerIndex)
         case DISPLAY_SEASON_CONQUESTS:
             sgtWhatsNewSeasonData.m_bHardcore = !sgtWhatsNewSeasonData.m_bHardcore;
             sUpdateDisplayedConquest();
-            SoundManager::PlaySound(GlobalSNOGet(917), cgtPSODefaults);
+            SoundManager::PlaySound(GlobalSNOGet(GLOBALSNO_SOUND_GENERIC_SCREEN_MODE_SWITCH), cgtPSODefaults);
             break;
         }
         UpdateActions();
@@ -1257,7 +1257,7 @@ void OnDPadLeft(
     case DISPLAY_SEASON_REWARDS:
         sgtWhatsNewSeasonData.m_eCurrentClass = Math::PinWrap(sgtWhatsNewSeasonData.m_eCurrentClass - 1, 0, (int32)NUM_PLAYER_CLASSES);
         sDisplayArmorRewardsForClass(sgtWhatsNewSeasonData.m_eCurrentClass, sgtWhatsNewSeasonData.m_bIsFemale);
-        SoundManager::PlaySound(GlobalSNOGet(918), cgtPSODefaults);
+        SoundManager::PlaySound(GlobalSNOGet(GLOBALSNO_SOUND_GENERIC_FOCUS_SWITCH), cgtPSODefaults);
         break;
     case DISPLAY_SEASON_CONQUESTS:
         sgtWhatsNewSeasonData.m_nSelectedConquest = Math::PinWrap(sgtWhatsNewSeasonData.m_nSelectedConquest - 1, 1, MAX_CONQUESTS + 1);
@@ -1267,7 +1267,7 @@ void OnDPadLeft(
             UIUtils::Console::ResetScrollBox(idScrollbox);
         }
         UpdateActions();
-        SoundManager::PlaySound(GlobalSNOGet(918), cgtPSODefaults);
+        SoundManager::PlaySound(GlobalSNOGet(GLOBALSNO_SOUND_GENERIC_FOCUS_SWITCH), cgtPSODefaults);
         break;
     }
 
@@ -1289,7 +1289,7 @@ void OnDPadRight(
     case DISPLAY_SEASON_REWARDS:
         sgtWhatsNewSeasonData.m_eCurrentClass = Math::PinWrap(sgtWhatsNewSeasonData.m_eCurrentClass + 1, 0, (int32)NUM_PLAYER_CLASSES);
         sDisplayArmorRewardsForClass(sgtWhatsNewSeasonData.m_eCurrentClass, sgtWhatsNewSeasonData.m_bIsFemale);
-        SoundManager::PlaySound(GlobalSNOGet(918), cgtPSODefaults);
+        SoundManager::PlaySound(GlobalSNOGet(GLOBALSNO_SOUND_GENERIC_FOCUS_SWITCH), cgtPSODefaults);
         break;
     case DISPLAY_SEASON_CONQUESTS:
         sgtWhatsNewSeasonData.m_nSelectedConquest = Math::PinWrap(sgtWhatsNewSeasonData.m_nSelectedConquest + 1, 1, MAX_CONQUESTS + 1);
@@ -1299,7 +1299,7 @@ void OnDPadRight(
             UIUtils::Console::ResetScrollBox(idScrollbox);
         }
         UpdateActions();
-        SoundManager::PlaySound(GlobalSNOGet(918), cgtPSODefaults);
+        SoundManager::PlaySound(GlobalSNOGet(GLOBALSNO_SOUND_GENERIC_FOCUS_SWITCH), cgtPSODefaults);
         break;
     }
 

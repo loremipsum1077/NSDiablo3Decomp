@@ -1608,9 +1608,11 @@ void TypeDescriptorClass_DT_FIXEDARRAY::SerializeToBinary(void * lpDefinition, c
     int32 nFullSize = ptAuxTypeDesc->SizeOf();
     int32 nPlatformSize = nFullSize;
     TypeDescriptorField fieldChild(ptAuxTypeDesc, NULL);
+    uint32 dwOffset = dwDstOffset;
     for (int32 i = 0; i < count; ++i) {
         void *lpdefChild = (uint8 *)lpDefinition + (int64)i * nFullSize;
-        ptAuxTypeDesc->SerializeToBinary(lpdefChild, fieldChild, lpDst, dwDstOffset + i * nPlatformSize, dwTotalSize);
+        ptAuxTypeDesc->SerializeToBinary(lpdefChild, fieldChild, lpDst, dwOffset, dwTotalSize);
+        dwOffset += nPlatformSize;
     }
 }
 

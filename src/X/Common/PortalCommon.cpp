@@ -220,7 +220,7 @@ void SPortalMovePlayerToActSpawnPoint(const Player & tPlayer)
 
     if (WorldCommonFindBySNO(tDest.snoWorld, TRUE) == SWORLDID_INVALID)
     {
-        SWorldCreate(tDest.snoWorld, TRUE, SPlayerIsLocal(tPlayer), NULL, ACDID_INVALID, ACDID_INVALID, tDest.uEntranceGUID, 0, FALSE);
+        SWorldCreate(tDest.snoWorld, TRUE, SPlayerIsLocal(tPlayer), NULL, ACDID_INVALID, ACDID_INVALID, tDest.uEntranceGUID, 0, FALSE, 0);
     }
 
 

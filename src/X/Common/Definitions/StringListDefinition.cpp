@@ -65,8 +65,8 @@ enum {
     STRINGLIST_SNO_COMMON_VERSION = 42,
     STRINGLIST_XML_VERSION = 3,
     STRING_TABLE_DEFAULT_HASH_SIZE = 1024,
-    STRINGLIST_SNO_PC_VERSION = 44,
-    STRINGLIST_SNO_CONSOLE_VERSION = 48,
+    STRINGLIST_SNO_PC_VERSION = 45,
+    STRINGLIST_SNO_CONSOLE_VERSION = 49,
     STRINGLIST_SNO_AXE_VERSION = 44,
 };
 
@@ -126,8 +126,8 @@ static void sFreeMapStringTable(StringTableMap * ptMap) {
 // line 194
 StringListGroupDef::StringListGroupDef()
     : GroupDefinition("StringList", STRINGLIST_SNO,
-                      SNOVersions(STRINGLIST_SNO_PC_VERSION, 46, STRINGLIST_SNO_CONSOLE_VERSION,
-                                  STRINGLIST_SNO_CONSOLE_VERSION, 49),
+                      SNOVersions(STRINGLIST_SNO_PC_VERSION, 47, STRINGLIST_SNO_CONSOLE_VERSION,
+                                  STRINGLIST_SNO_CONSOLE_VERSION, 50),
                       SNODATATYPE_TITLE, sizeof(StringListDefinition), DT_STRINGLIST, 0x4441, 0x501e) {
 }
 
@@ -138,7 +138,7 @@ uint32 StringListGroupDef::GetMaxCount() {
 
 // line 470
 BOOL StringListGroupDef::Write(void * lpDefinition, FileReference & tRef) const {
-    DisplayInternalError(NULL, "", 476, ERROR_INTERNAL_FATAL);
+    DisplayInternalError(NULL, "", 485, ERROR_INTERNAL_FATAL);
     ExitProgram(ERROR_INTERNAL_FATAL);
 }
 
@@ -149,7 +149,7 @@ void StringListGroupDef::PurgeDefinitionAndSNO(const SNO sno) {
 
 // line 491
 BOOL StringListGroupDef::AllowMultipleCheckout(SNO snoHandle) {
-    DisplayInternalError(NULL, "", 495, ERROR_INTERNAL_FATAL);
+    DisplayInternalError(NULL, "", 504, ERROR_INTERNAL_FATAL);
     ExitProgram(ERROR_INTERNAL_FATAL);
 }
 

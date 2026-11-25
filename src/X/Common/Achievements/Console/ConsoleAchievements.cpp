@@ -307,7 +307,7 @@ inline AchievementsInterfaceBase::AchievementsInterfaceBase(Achievements * ptAch
 
 void AchievementsInterfaceBase::RegisterSubscription(OnlineService::AccountId, const OnlineService::GameAccountHandle &,
                                                      const OnlineService::AchievementsInterface::RegistrationCallback &) {
-    DisplayInternalError(NULL, "", 317, ERROR_INTERNAL_FATAL);
+    DisplayInternalError(NULL, "", 350, ERROR_INTERNAL_FATAL);
     ExitProgram(ERROR_INTERNAL_FATAL);
 }
 
@@ -321,7 +321,7 @@ void AchievementsInterfaceBase::RegisterSubscription(OnlineService::AccountId, c
 
 bool AchievementsInterfaceBase::CancelSubscription(const OnlineService::GameAccountHandle &,
                                                    const OnlineService::AchievementsInterface::RegistrationCallback &) {
-    DisplayInternalError(NULL, "", 330, ERROR_INTERNAL_FATAL);
+    DisplayInternalError(NULL, "", 363, ERROR_INTERNAL_FATAL);
     ExitProgram(ERROR_INTERNAL_FATAL);
 }
 
@@ -502,7 +502,7 @@ bool ServerAchievementsInterface::CancelSubscription(const OnlineService::GameAc
 
 
 
-OnlineService::ErrorCode ServerAchievementsInterface::EvaluateEvent(const OnlineService::GameAccountHandle & gameAccount, uint32 eventId, uint64 comparand, uint64 quantity, OnlineService::Timestamp timestamp, const OnlineService::AchievementsInterface::ModifierCallback & cb) {
+OnlineService::ErrorCode ServerAchievementsInterface::EvaluateEvent(const OnlineService::GameAccountHandle & gameAccount, uint32 eventId, uint64 comparand, uint64 quantity, OnlineService::Timestamp timestamp, uint32 uUnkFlags, const OnlineService::AchievementsInterface::ModifierCallback & cb) {
     if (!m_ptAchievements->IsEnabled())
         return OnlineService::ERROR_API_NOT_INITIALIZED;
     AchievementRecordsMap::iterator it = m_tAchievementRecordsMap.find(gameAccount);

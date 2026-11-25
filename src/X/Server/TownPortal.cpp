@@ -60,7 +60,7 @@ ACDID TownPortalFindLocationMarkerACD(BOOL bCausedByLocalPlayer)
     SWorldID idSWorld = WorldCommonFindBySNO(tDest.snoWorld, TRUE);
     if (idSWorld == SWORLDID_INVALID)
     {
-        idSWorld = SWorldCreate(tDest.snoWorld, TRUE, bCausedByLocalPlayer, NULL, ACDID_INVALID, ACDID_INVALID, tDest.uEntranceGUID, 0, FALSE);
+        idSWorld = SWorldCreate(tDest.snoWorld, TRUE, bCausedByLocalPlayer, NULL, ACDID_INVALID, ACDID_INVALID, tDest.uEntranceGUID, 0, FALSE, 0);
     }
 
     ACDID idACDDest = SWorldGetPortalDestinationACD(idSWorld, tDest.uEntranceGUID);
@@ -301,7 +301,7 @@ BOOL PortalUse(ACDID idACDPortal, ActorCommonData & tACDOperator, const PlayerWa
 
         SPlayerWorldCreatingBuffApplyToLocalPlayers(tACDOperator);
 
-        SWorldCreate(tResolvedDest.snoWorld, FALSE, FALSE, sPortalWorldCreated, tACDOperator.id, idACDPortal, tResolvedDest.uEntranceGUID, eWarpReason, FALSE);
+        SWorldCreate(tResolvedDest.snoWorld, FALSE, FALSE, sPortalWorldCreated, tACDOperator.id, idACDPortal, tResolvedDest.uEntranceGUID, eWarpReason, FALSE, 0);
     }
     else
     {

@@ -105,7 +105,7 @@ void UIRewards::ShowTieredRiftReward( const D3::Quests::QuestReward & tReward, c
 
     if ( tReward.item().gb_handle().gbid() != GBID_NONE )
     {
-        idACDItem = CItemGenerate( (ACDNetworkName)0x2000, tReward.item(), NULL );
+        idACDItem = CItemGenerate( (ACDNetworkName)0x2e00, tReward.item(), NULL );
 
         ActorCommonData & tACDItem = ACDGet( idACDItem );
 
@@ -220,7 +220,7 @@ void UIQuestComplete::OnQuestReward( const D3::Quests::QuestReward & tReward, co
 
     if ( tReward.item().gb_handle().gbid() != GBID_NONE )
     {
-        idACDItem = CItemGenerate( (ACDNetworkName)0x2000, tReward.item(), NULL );
+        idACDItem = CItemGenerate( (ACDNetworkName)0x2e00, tReward.item(), NULL );
 
         ActorCommonData & tACDItem = ACDGet( idACDItem );
 
@@ -298,9 +298,9 @@ void UIQuestComplete::ShowItemReward( BOOL bEquipped )
 
     if ( m_tQuestReward.item().gb_handle().gbid() == GBID_NONE )
         return;
-    if ( ACDTryToGet( ACDFromANN( (ACDNetworkName)0x2000 ) ) )
+    if ( ACDTryToGet( ACDFromANN( (ACDNetworkName)0x2e00 ) ) )
         return;
-    ACDID idItem = CItemGenerate( (ACDNetworkName)0x2000, m_tQuestReward.item(), NULL );
+    ACDID idItem = CItemGenerate( (ACDNetworkName)0x2e00, m_tQuestReward.item(), NULL );
 
 
 
@@ -406,7 +406,7 @@ void UIQuestComplete::ShowMultiplayerRewards( const int32 nControllerIndex, cons
 
         if ( ptReward->item().gb_handle().gbid() != GBID_NONE )
         {
-            idACDItem = CItemGenerate( (ACDNetworkName)0x2000, ptReward->item(), NULL );
+            idACDItem = CItemGenerate( (ACDNetworkName)0x2e00, ptReward->item(), NULL );
 
             ActorCommonData & tACDItem = ACDGet( idACDItem );
 
@@ -709,7 +709,7 @@ void UIQuestComplete::HandleItemTooltip( const UIID & id )
     {
         if ( tReward.item().gb_handle().gbid() != GBID_NONE )
         {
-            idACDItem = CItemGenerate( (ACDNetworkName)0x2000, tReward.item(), NULL );
+            idACDItem = CItemGenerate( (ACDNetworkName)0x2e00, tReward.item(), NULL );
 
 
 
@@ -1440,7 +1440,7 @@ void UITieredRiftReward::Show(
 
     if (ptGenerator != NULL)
     {
-        ACDID idACDItem = CItemGenerate( (ACDNetworkName)0x2000, *ptGenerator, NULL );
+        ACDID idACDItem = CItemGenerate( (ACDNetworkName)0x2e00, *ptGenerator, NULL );
         if (idACDItem != ACDID_INVALID)
         {
             ActorCommonData & tACDItem = ACDGet( idACDItem );

@@ -5,6 +5,7 @@
   tools/data.py _ZL10cgUIIDRoot            mangled names work too
   tools/data.py 0x7100e5de88 -n 64         an address and a byte count
   tools/data.py 0x71010ccf30 -n 32 --ptr   as 8-byte pointers
+  tools/data.py 0x7100ebd5d0 --version 2.7.7   another version's main.elf
 
 Each row shows hex, the 32-bit ints, the floats and any text. With --ptr each
 8-byte word is shown as a pointer: the value a relocation puts there (the file
@@ -28,10 +29,10 @@ DATA = ROOT / "data/2.6.2"
 BASE = 0x7100000000
 
 
-def symbols():
+def symbols(data=DATA):
     out = []
     for name in ("data_symbols.csv", "functions.csv"):
-        for r in csv.DictReader((DATA / name).open()):
+        for r in csv.DictReader((data / name).open()):
             out.append((int(r["Address"], 16) & 0xFFFFFFFF, r["Name"]))
     out.sort()
     return out
@@ -77,9 +78,11 @@ def main():
     ap.add_argument("what", help="symbol name or address")
     ap.add_argument("-n", type=int, help="bytes to print")
     ap.add_argument("--ptr", action="store_true", help="show 8-byte words as pointers")
+    ap.add_argument("--version", default="2.6.2", help="game version under data/ (default 2.6.2)")
     args = ap.parse_args()
+    data = ROOT / "data" / args.version
 
-    syms = symbols()
+    syms = symbols(data)
     addrs = [a for a, _ in syms]
     if args.what.lower().startswith("0x"):
         vaddr = int(args.what, 16) & 0xFFFFFFFF
@@ -104,7 +107,7 @@ def main():
     if size is None:
         i = bisect.bisect_right(addrs, vaddr)
         size = min(addrs[i] - vaddr, 256) if i < len(addrs) else 64
-    elf = elf_reader.Elf(DATA / "main.elf")
+    elf = elf_reader.Elf(data / "main.elf")
     raw = elf.read_vaddr(vaddr, size)
     if not raw:
         sys.exit(f"0x{BASE + vaddr:x}: not in a loaded segment with file contents (.bss?)")

@@ -568,9 +568,8 @@ inline void LoadingScreenManager::SetBlackOnly(BOOL bBlackOnly) {
 
     m_bBlackOnly = bBlackOnly;
 }
-
-
-
+// X/Client/Console/UtilitiesNX64.cpp (2.7.7 only, unnamed)
+extern "C" void sub_71000b3c50(bool bBoost);
 void LoadingScreenManager::Update() {
     CGameGlobals & tCGameGlobals = CGameGlobalsGet();
     if (!(tCGameGlobals.dwFlags & (1 << CGAMEGLOBALS_GAME_INITIALIZED_BIT)))
@@ -603,11 +602,11 @@ void LoadingScreenManager::Update() {
 
         SNOManager::OnLoadingScreenCanStart();
 
-        if (SNOManager::DisplayLoadingScreen()) {
+        if (!SNOManager::DisplayLoadingScreen()) {
 
 
 
-            m_nState |= LSC_SNO_MANAGER;
+            m_nState &= ~LSC_SNO_MANAGER;
         } else {
 
 
@@ -622,7 +621,7 @@ void LoadingScreenManager::Update() {
 
 
 
-            m_nState &= ~LSC_SNO_MANAGER;
+            m_nState |= LSC_SNO_MANAGER;
         }
     }
 
@@ -667,7 +666,7 @@ void LoadingScreenManager::Update() {
 
         SNOPackSetInstallationSpeed(TRUE);
 
-
+        sub_71000b3c50(FALSE);
         SoundManager::SuppressSounds(0);
 
         tCGameGlobals.dwLoadingScreenDoneFrame = sgtAppGlobals.dwFrameCounter;
@@ -692,7 +691,7 @@ void LoadingScreenManager::Update() {
         Vibration::DeleteAll();
         Prefetch::EnableHighPriority(FALSE);
         m_bExpired = FALSE;
-
+        sub_71000b3c50(TRUE);
         SNOPackSetInstallationSpeed(FALSE);
     }
 
@@ -1647,7 +1646,7 @@ void CGameVariableResDisposeForRWindow(VariableResRWindowData * ptData) {
 }
 void CGameVariableResRenderUpdate(VariableResRWindowData & tData) {
     if (AppDrawFlagIsSet(122)) {
-        TextRenderProperties tProps(GlobalSNOGet(637), 13, 1.0f, 1.0f);
+        TextRenderProperties tProps(GlobalSNOGet(GLOBALSNO_FONT_SANS_SERIF), 13, 1.0f, 1.0f);
         CRefString strInfo;
         strInfo.Format("Variable Res Percent: %4.2f, GPU Profile: %d", tData.flPercent, tData.dwAvgHistoryUs);
         Vector2D vecUIC;
@@ -1992,7 +1991,7 @@ static void sDrawReleaseFPS() {
     Rect2D rectViewportUIC;
     CGameGetSafeViewportUIC(rectViewportUIC);
     Vector2D vecUIC(rectViewportUIC.right + s_nReleaseFPSPosX, rectViewportUIC.top + s_nReleaseFPSPosY);
-    TextRenderProperties tProps(GlobalSNOGet(637), 13, 1.0f, 1.0f);
+    TextRenderProperties tProps(GlobalSNOGet(GLOBALSNO_FONT_SANS_SERIF), 13, 1.0f, 1.0f);
     RGBAColor rgbaColor = sGetFrameTimeColor(s_frameTimeFiltered);
 
     s_nReleaseFPSValue = 1000.0f / s_frameTimeFiltered;
@@ -2073,13 +2072,13 @@ static void sDrawFPSSimple() {
 
 
     CRefString sVal = UnicodeText::FormatNumber(fps, TRUE, FNS_NORMAL, 0, 0, XLOCALE_INVALID);
-    CRefString sMsg = LocalizedSprintf(StringListFetch(GlobalSNOGet(706), "FPSFormat"), sVal.str(), NULL);
+    CRefString sMsg = LocalizedSprintf(StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_UILAYOUT), "FPSFormat"), sVal.str(), NULL);
 
 
 
     Rect2D rectViewportUIC;
     CGameGetSafeViewportUIC(rectViewportUIC);
-    TextRenderProperties tProps(GlobalSNOGet(637), 13, 1.0f, 1.0f);
+    TextRenderProperties tProps(GlobalSNOGet(GLOBALSNO_FONT_SANS_SERIF), 13, 1.0f, 1.0f);
     FormattedText tFormattedText(sMsg, 5);
 
     Vector2D vecSizeUIC;
@@ -3970,7 +3969,7 @@ void sGameGfxSystemInit(BOOL fSkipCGame) {
 
 
 
-                SNO snoStringList = GlobalSNOGet(714);
+                SNO snoStringList = GlobalSNOGet(GLOBALSNO_STRINGLIST_GENERAL);
                 ErrorMessageBox(StringListFetch(snoStringList, "GameGfxInit_ErrorText").str(),
                                 StringListFetch(snoStringList, "GameGfxInit_ErrorHeader").str());
                 ExitProgram(ERROR_NONE);
@@ -4333,7 +4332,7 @@ static void sSendGamePauseRequest(BOOL bPause) {
 
     BoolDataMessage tMessage;
     tMessage.bVal = bPause;
-    MessageSendToServer(413, &tMessage, sizeof(tMessage), LocalPlayerGet());
+    MessageSendToServer(414, &tMessage, sizeof(tMessage), LocalPlayerGet());
 }
 
 
@@ -4372,7 +4371,7 @@ static void sSendGameSoftPauseRequest(BOOL bPause) {
 
     BoolDataMessage tMessage;
     tMessage.bVal = bPause;
-    MessageSendToServer(473, &tMessage, sizeof(tMessage), LocalPlayerGet());
+    MessageSendToServer(474, &tMessage, sizeof(tMessage), LocalPlayerGet());
 }
 
 
@@ -5261,7 +5260,7 @@ static void sSendLoadCompleteMessage(Player * ptPlayer) {
     }
 
     SimpleMessage tMessage;
-    MessageSendToServer(395, &tMessage, sizeof(tMessage), ptPlayer);
+    MessageSendToServer(396, &tMessage, sizeof(tMessage), ptPlayer);
 
     CGameGlobalsGet().dwFlags &= ~(1 << CGAMEGLOBALS_LOAD_COMPLETED_BIT);
 }
@@ -5289,7 +5288,7 @@ void CGameWriteQAPerfLogs() {
     }
     CRefString sTitle = CRefString().Format("QA FPS Writes On - %5.1f", tPerfStats.flAvgFPS);
     Vector2D vecUIC(10.0f, 10.0f);
-    TextRenderProperties tProps(GlobalSNOGet(637), 13, 1.0f, 1.0f);
+    TextRenderProperties tProps(GlobalSNOGet(GLOBALSNO_FONT_SANS_SERIF), 13, 1.0f, 1.0f);
     FontStringDrawUIC(tProps, FormattedText(sTitle.str(), 5, FALSE), vecUIC, crgbaWhite, &crgbaTextShadow, 0.0f, TRUE, NULL, RENDERLAYER_INVALID, FALSE);
 
     if (fPeriodicDumpToTrace && tPerfStats.fileDumpFPS) {
@@ -6731,7 +6730,7 @@ static BOOL sCheckForGfxResetFallback() {
     uint32 dwElapsed = GetMachineTicks() - tCGameGlobals.dwGfxStartTime;
     int32 dwSecsRemaining = (dwElapsed >= dwTimeOut) ? 0 : (dwTimeOut - dwElapsed) / 1000;
 
-    CRefString sMsg = LocalizedSprintf(StringListFetch(GlobalSNOGet(706), "AcceptOptions"),
+    CRefString sMsg = LocalizedSprintf(StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_UILAYOUT), "AcceptOptions"),
                                        UnicodeText::FormatNumber(dwSecsRemaining, TRUE, FNS_NORMAL, 0).str(), NULL);
 
 
@@ -7394,6 +7393,26 @@ inline void AsyncRender::RegisterGPUResourceDelayedDeletion(AsyncRenderCallback 
 
     if (m_dwGPUResourceDelayedDeleteItemCount >= 2048) {
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         XASSERT(FALSE);
     }
 
@@ -7403,6 +7422,7 @@ inline void AsyncRender::RegisterGPUResourceDelayedDeletion(AsyncRenderCallback 
     tItem.pParam2 = pParam2;
     tItem.uiFrameCount = 4;
 }
+#line 7375
 
 
 

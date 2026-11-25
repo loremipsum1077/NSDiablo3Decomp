@@ -1827,7 +1827,7 @@ static void sReadIndicesData(
 
             {
                 GlobalCachePurgeOverride purgeOverride(GLOBALCACHE_MAIN);
-                pwIndexList = (uint16*)DefinitionMemAllocTracked(GLOBALCACHE_SECONDARY, dwIndexSize, 32, FALSE, "D:/BuildServer/2/work/code/branches/2_6_2/X/Client/Definitions/AppearanceDefinition.cpp", __LINE__);
+                pwIndexList = (uint16*)DefinitionMemAllocTracked(GLOBALCACHE_SECONDARY, dwIndexSize, 32, FALSE, "D:/BuildServer/1/work/code/branches/2_7_7/X/Client/Definitions/AppearanceDefinition.cpp", __LINE__);
             }
 
 
@@ -1868,7 +1868,7 @@ static void sReadVerticesData(
 
             {
                 GlobalCachePurgeOverride purgeOverride(GLOBALCACHE_MAIN);
-                ptVertList = (FatVertex*)DefinitionMemAllocTracked(GLOBALCACHE_SECONDARY, dwVertSize, 32, FALSE, "D:/BuildServer/2/work/code/branches/2_6_2/X/Client/Definitions/AppearanceDefinition.cpp", __LINE__);
+                ptVertList = (FatVertex*)DefinitionMemAllocTracked(GLOBALCACHE_SECONDARY, dwVertSize, 32, FALSE, "D:/BuildServer/1/work/code/branches/2_7_7/X/Client/Definitions/AppearanceDefinition.cpp", __LINE__);
             }
 
 
@@ -1906,7 +1906,7 @@ static void sReadPackedGeomData(
 
                 {
                     GlobalCachePurgeOverride purgeOverride(GLOBALCACHE_MAIN);
-                    pPackVertList = (uint8*)DefinitionMemAllocTracked(GLOBALCACHE_SECONDARY, dwPackVertSize, 32, FALSE, "D:/BuildServer/2/work/code/branches/2_6_2/X/Client/Definitions/AppearanceDefinition.cpp", __LINE__);
+                    pPackVertList = (uint8*)DefinitionMemAllocTracked(GLOBALCACHE_SECONDARY, dwPackVertSize, 32, FALSE, "D:/BuildServer/1/work/code/branches/2_7_7/X/Client/Definitions/AppearanceDefinition.cpp", __LINE__);
                 }
 
 
@@ -1930,7 +1930,7 @@ static void sReadPackedGeomData(
 
                     {
                         GlobalCachePurgeOverride purgeOverride(GLOBALCACHE_MAIN);
-                        pPackSkinVertList = (uint8*)DefinitionMemAllocTracked(GLOBALCACHE_SECONDARY, dwPackSkinVertSize, 32, FALSE, "D:/BuildServer/2/work/code/branches/2_6_2/X/Client/Definitions/AppearanceDefinition.cpp", __LINE__);
+                        pPackSkinVertList = (uint8*)DefinitionMemAllocTracked(GLOBALCACHE_SECONDARY, dwPackSkinVertSize, 32, FALSE, "D:/BuildServer/1/work/code/branches/2_7_7/X/Client/Definitions/AppearanceDefinition.cpp", __LINE__);
                     }
 
 
@@ -1949,7 +1949,7 @@ static void sReadPackedGeomData(
 
                     {
                         GlobalCachePurgeOverride purgeOverride(GLOBALCACHE_MAIN);
-                        pPackIndexList = (uint8 *)DefinitionMemAllocTracked(GLOBALCACHE_SECONDARY, dwPackIndexSize, 32, FALSE, "D:/BuildServer/2/work/code/branches/2_6_2/X/Client/Definitions/AppearanceDefinition.cpp", __LINE__);
+                        pPackIndexList = (uint8 *)DefinitionMemAllocTracked(GLOBALCACHE_SECONDARY, dwPackIndexSize, 32, FALSE, "D:/BuildServer/1/work/code/branches/2_7_7/X/Client/Definitions/AppearanceDefinition.cpp", __LINE__);
                     }
 
 

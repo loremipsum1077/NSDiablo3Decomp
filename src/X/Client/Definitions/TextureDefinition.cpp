@@ -216,7 +216,7 @@ void TextureGroupDef::Postprocess(void * lpDefinition) {
 
 // line 505
 BOOL TextureGroupDef::Write(void * lpDefinition, FileReference & tRef) const {
-    DisplayInternalError(NULL, "", 511, ERROR_INTERNAL_FATAL);
+    DisplayInternalError(NULL, "", 515, ERROR_INTERNAL_FATAL);
     ExitProgram(ERROR_INTERNAL_FATAL);
 }
 
@@ -739,11 +739,11 @@ static TextureFormat sFindClosestSupportedTextureFormat(const TextureFormat eDes
                     return eSupportedTextureFormat;
                 eSupportedTextureFormat = TextureFormatGetFallbackFormat(eSupportedTextureFormat);
             }
-            DisplayInternalError(NULL, "", 1941, ERROR_INTERNAL_FATAL);
+            DisplayInternalError(NULL, "", 1949, ERROR_INTERNAL_FATAL);
             ExitProgram(ERROR_INTERNAL_FATAL);
         }
         if (!GfxTextureFormatIsValid(eSupportedTextureFormat, dwTexCreateFlags)) {
-            DisplayInternalError(NULL, "", 1952, ERROR_INTERNAL_FATAL);
+            DisplayInternalError(NULL, "", 1960, ERROR_INTERNAL_FATAL);
             ExitProgram(ERROR_INTERNAL_FATAL);
         }
     }
@@ -932,7 +932,7 @@ void TextureComputeFramePixelCoords(TextureDefinition * pdefTexture) {
 
     if (pdefTexture->serFrame.dwSize != pdefTexture->dwFrameCount * sizeof(TexFrame)) {
         sTraceBinary((const uint8 *)pdefTexture, sizeof(TextureDefinition));
-        DisplayInternalError(NULL, "", 2792, ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 2800, ERROR_INTERNAL_FATAL);
         ExitProgram(ERROR_INTERNAL_FATAL);
     }
 

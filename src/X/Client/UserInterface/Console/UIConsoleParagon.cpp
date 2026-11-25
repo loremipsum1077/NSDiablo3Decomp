@@ -553,7 +553,7 @@ void OnLeftStick(const UIID & id, const int32 nControllerIndex)
         if (!sgptParagonGlobals->m_tRingStickInputFilter.HandleInput(::Console::ControllerUtils::GetRawLStickPosition(nControllerIndex, 0), 0))
         {
 
-            sgptParagonGlobals->m_tRingUI.UpdateInput(nControllerIndex, IconSelectionChanged);
+            sgptParagonGlobals->m_tRingUI.UpdateInput(nControllerIndex, IconSelectionChanged, NULL);
         }
         break;
     case ATTRIBUTE_SELECTION_MODE:

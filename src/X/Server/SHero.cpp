@@ -1541,6 +1541,15 @@ static void sGrantDefaultInventory(
 
 
 
+
+
+
+
+
+
+
+
+
 static void sVersionHero(
     const D3::Hero::SavedDefinition & tHeroDefinition,
     Player & tPlayer)
@@ -1889,7 +1898,7 @@ static void sComposeAccountDefinition(
     }
     // Inference: default stash sequence follows Player.cpp:972 and the original unrolled comparisons.
     BOOL fDefaults = TRUE;
-    for (int32 i = 0; i < 12; ++i)
+    for (int32 i = 0; i < 13; ++i)
     {
         if (tPlayer.bStashIcons[i] != i % MAX_STASH_TABS_CONSOLE)
         {
@@ -2299,10 +2308,10 @@ ACDID HeroReset(
 
 
         uint32 dwPlayerFlags = ptPlayer->tHeroStateData.uPlayerFlags;
-        if (bFemale)
-            dwPlayerFlags |= 1u << PLAYERFLAG_FEMALE;
-        else
-            dwPlayerFlags &= ~(1u << PLAYERFLAG_FEMALE);
+        dwPlayerFlags = bFemale
+            ? (dwPlayerFlags | (1u << PLAYERFLAG_FEMALE))
+            : (dwPlayerFlags & ~(1u << PLAYERFLAG_FEMALE));
+
 
 
 

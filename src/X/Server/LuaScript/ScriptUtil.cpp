@@ -91,7 +91,7 @@ void BrainAPIGetFrontOfPlace(const ActorCommonData & tACDTarget, float flDist, W
 void AIQueueCompleteCurrentAction(ActorID idActor);                               // X/Server/AI/AIQueue.h
 void AIQueueClearList(ActorID idActor);                                           // X/Server/AI/AIQueue.h
 BOOL SItemApplyDye(ActorCommonData & tACDItem, ActorCommonData & tACDOwner, DyeType eDyeType);  // X/Server/SItems.h
-void SItemUpgradeJewel(ActorCommonData & tACDItem, int32 nUpgradeRanks);          // X/Server/SItems.h
+BOOL SItemUpgradeJewel(ActorCommonData & tACDItem, int32 nUpgradeRanks, ActorCommonData & tACDOwner);  // X/Server/Crafting/SItemCrafting.h
 enum { MF_TREASURE_GOBLIN = 11 };                                                  // X/Common/ActorCommonDataSwig.h:41
 AIQueuedActionID AIQueueMoveToLocation(ACDID idACD, const Target & tTarget, ActorAnimationTag eAnimTag, float flSpeed);  // X/Server/AI/AIQueue.h
 void ActorAddToQuestLifespanActors(ActorID idActor);                              // X/Server/Actors/Actors.h
@@ -114,7 +114,7 @@ SNO ACDGetLevelArea(const ActorCommonData & tACD);                              
 BOOL ACDIsInTown(const ActorCommonData & tACD);                                   // X/Common/ActorCommonData.h
 BOOL ACDIsInNoBanterArea(const ActorCommonData & tACD);                           // X/Common/ActorCommonData.h
 BOOL ItemIsLegendary(GBID gbidItem);                                              // X/Common/Items.h
-ACDID ItemGetAssignedACDID(const ActorCommonData & tACDItem);                     // X/Common/Items.h
+ACDID ItemGetAssignedACDID(const ActorCommonData & tACDItem, BOOL bUnk);          // X/Common/Items.h (2.7.7: 0x506180 takes a second argument in w1)
 BOOL ItemIsAncientRank(const ActorCommonData & tACDItem);                         // X/Common/Items.h
 BOOL ItemIsBroken(const ActorCommonData & tACDItem);                              // X/Common/Items.h
 int32 ActorDeleteSoon(ActorID idActor, int32 nDuration);                          // X/Server/Actors/Actors.h
@@ -466,7 +466,7 @@ namespace BossEncounterManager {  // X/Server/System/BossEncounter.h
 BOOL IsEncounterCompleted(SNO snoEncounter);
 }
 namespace SLeaderboard {  // X/Server/SLeaderboard.h
-void PostRiftTime(int riftLevel, int millisecondsElapsed, int playerCount, const Player * firstPlayerInRift, bool cheated);
+void PostRiftTime(int riftLevel, int millisecondsElapsed, int playerCount, const Player * firstPlayerInRift, uint32 unk_categoryId, bool cheated);
 }                                  // X/Server/AI/ActorAI.h
 void AISetCalloutCooldown(ActorCommonData & tACD, SNO snoConversation, float flCooldown, float flGlobalCooldown);  // X/Server/AI/AIConversation.h
 void AISetBanterCooldown(ActorCommonData & tACD, SNO snoConversation, float flCooldown, float flGlobalCooldown);   // X/Server/AI/AIConversation.h
@@ -1823,7 +1823,7 @@ void UpgradeJewel(VACDID idJewel, int32 nUpgradeRanks)
     ActorCommonData * ptACDOwner = ACDTryToGet(idACDOwner);
     if (ptACDOwner == NULL)
         return;
-    SItemUpgradeJewel(*ptACDJewel, nUpgradeRanks);
+    SItemUpgradeJewel(*ptACDJewel, nUpgradeRanks, *ptACDOwner);
 }
 
 BOOL ItemMoveRuneToSkillSlot(VACDID idACDPlayer, VACDID idACDRune, LPCSTR szPower)
@@ -1894,7 +1894,7 @@ void WorldCreate(LPCSTR szWorldName)
 
     SWorldID idSWorld = WorldCommonFindBySNO(snoWorld, TRUE);
     if (idSWorld == SWORLDID_INVALID)
-        SWorldCreate(snoWorld, FALSE, FALSE, NULL, ACDID_INVALID, ACDID_INVALID, 0, 0, FALSE);
+        SWorldCreate(snoWorld, FALSE, FALSE, NULL, ACDID_INVALID, ACDID_INVALID, 0, 0, FALSE, 0);
 }
 
 BOOL WorldIsCreated(LPCSTR szWorldName)
@@ -2316,8 +2316,8 @@ void GameFlagSet(LPCSTR szFlagLabel, BOOL bValue)
 
     if (nGameFlagIndex >= 0 && nGameFlagIndex < tGCD.nGameFlagsSize * 8)
     {
-        uint32 dwBit = nGameFlagIndex & 7;
         uint32 dwByte = (uint32)nGameFlagIndex >> 3;
+        uint32 dwBit = nGameFlagIndex & 7;
         if (bValue)
             tGCD.arGameFlags[dwByte] |= (1 << dwBit);
         else
@@ -3929,7 +3929,7 @@ void AchievementSendCursedChestCompletedEvent(VACDID idACDPlayer, int32 nNumKill
         Achievement::EvaluationData tEvalData;
         tEvalData.SetPlayer(ptPlayer);
         tEvalData.SetCursedChestKillCount(nNumKilled);
-        tEvalData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_CURSED_CHEST_EVENT_COMPLETED, 0, 1);
+        tEvalData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_CURSED_CHEST_EVENT_COMPLETED, 0, 1, (uint32)sub_71007b5e70());
     }
 }
 
@@ -4056,7 +4056,7 @@ void MonsterSetAffixFrequency(GBID gbidAffix, int32 nNewFrequencyWeight)
             int32 nDelta = nNewFrequencyWeight - tEntry.nFrequencyWeight;
             tEntry.nFrequencyWeight = nNewFrequencyWeight;
             *pnAffixWeightTotal += nDelta;
-            return;
+            break;
         }
     }
 }
@@ -4159,8 +4159,11 @@ int32 ActorGetLegendaryGemCount(VACDID idACD, InventorySlotType eSlot)
 {
     int32 nCount = 0;
     ActorCommonData * ptACD = ACDTryToGet(idACD);
-    if (ptACD && (eSlot == SLOT_NONE || eSlot == SLOT_ITEM_SOCKETS || (eSlot >= SLOT_PLAYER_BODYSLOT_START && eSlot < SLOT_PLAYER_BODYSLOT_END)))
-        ACDInventoryIterateItems(*ptACD, eSlot, 0, sLegendaryGemCountCallback, &nCount);
+    if (ptACD == NULL)
+        return 0;
+    if (eSlot != SLOT_NONE && eSlot != SLOT_ITEM_SOCKETS && (eSlot < SLOT_PLAYER_BODYSLOT_START || eSlot >= SLOT_PLAYER_BODYSLOT_END))
+        return 0;
+    ACDInventoryIterateItems(*ptACD, eSlot, 0, sLegendaryGemCountCallback, &nCount);
     return nCount;
 }
 
@@ -4481,10 +4484,15 @@ BOOL ActorIsInPostBossTieredLootRun(VACDID idActor)
     return GameGetActiveGameCommonData().tGameSyncedData.bLootRunBossDead != FALSE;
 }
 
+// 0x7100779460 (unnamed, next to NephalemRiftManager::RiftPlayerCount): looks the hero id up in the
+// hash map at SGameGlobals+0x738 and returns the entry's uint32 at +0x10 (0 when absent).
+uint32 sub_7100779460(OnlineService::HeroId uHeroId);
+
 void GamePostChallengeRiftTime(int32 nMillisecondsElapsed)
 {
+    Player * ptPlayer = PlayerGetFirstInTieredRift();
     SLeaderboard::PostRiftTime(NephalemRiftManager::GetActiveRiftLevel() + 1, nMillisecondsElapsed,
-                               NephalemRiftManager::RiftPlayerCount(), PlayerGetFirstInTieredRift(), false);
+                               NephalemRiftManager::RiftPlayerCount(), ptPlayer, sub_7100779460(ptPlayer->uHeroId), false);
 }
 
 void GamePostRiftTime(int riftLevel, int millisecondsElapsed)
@@ -4494,15 +4502,22 @@ void GamePostRiftTime(int riftLevel, int millisecondsElapsed)
         for (Player * ptPlayer = PlayerGetFirstInTieredRift(); ptPlayer; ptPlayer = PlayerGetNextInTieredRift(ptPlayer))
         {
             tEvalData.SetPlayer(ptPlayer);
-            tEvalData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_PLAYER_COMPLETED_TIERED_RIFT, 1);
+            tEvalData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_PLAYER_COMPLETED_TIERED_RIFT, 1, (uint32)sub_71007b5e70());
         }
     }
 
-    SLeaderboard::PostRiftTime(riftLevel, millisecondsElapsed, NephalemRiftManager::RiftPlayerCount(), PlayerGetFirstInTieredRift(), false);
+    Player * ptPlayer = NULL;
+    uint32 unk_categoryId = 0;
+    if (NephalemRiftManager::RiftPlayerCount() == 1)
+    {
+        ptPlayer = PlayerGetFirstInTieredRift();
+        unk_categoryId = sub_7100779460(ptPlayer->uHeroId);
+    }
+
+    SLeaderboard::PostRiftTime(riftLevel, millisecondsElapsed, NephalemRiftManager::RiftPlayerCount(), PlayerGetFirstInTieredRift(), unk_categoryId, false);
 
     if (NephalemRiftManager::RiftPlayerCount() == 1)
     {
-        Player * ptPlayer = PlayerGetFirstInTieredRift();
         BOOL bHasNewSoloRecord = SPlayerRecordHighestSoloRiftLevel(ptPlayer, riftLevel);
         NephalemRiftManager::PlayerStateSetNewSoloRecord(ptPlayer, bHasNewSoloRecord);
     }
@@ -4752,12 +4767,14 @@ void ActorFadeAndDelete(VACDID idACD, float flFadeTime)
     ActorDeleteSoon((ActorID)ACDGetOwner(idACD), 2);
 }
 
-ACDID ActorItemGetOwner(VACDID idItemActor)
+// 2.7.7: a second parameter is passed through to ItemGetAssignedACDID; the Lua
+// wrapper passes TRUE when the script omits it.
+ACDID ActorItemGetOwner(VACDID idItemActor, BOOL bUnk)
 {
     ActorCommonData * ptACD = ACDTryToGet(idItemActor);
     if (ptACD == NULL)
         return ACDID_INVALID;
-    return ItemGetAssignedACDID(*ptACD);
+    return ItemGetAssignedACDID(*ptACD, bUnk);
 }
 
 void ActorSetDamageCap(ACDID idACD, float flUnitPercent)
@@ -6736,7 +6753,7 @@ void AchievementSendEvent(
             Achievement::EvaluationData tEvaluationData;
             tEvaluationData.SetPlayer(ptPlayer);
 
-            tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_SCRIPTED, gbidScriptEvent, uQuantity);
+            tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_SCRIPTED, gbidScriptEvent, uQuantity, (uint32)sub_71007b5e70());
 #line 11779 "X/Server/LuaScript/ScriptUtil.cpp"
         }
     }
@@ -6782,7 +6799,7 @@ void CalloutSendToPlayer(
         {
             Achievement::EvaluationData tEvaluationData;
             tEvaluationData.SetPlayer(ptPlayer);
-            tEvaluationData.EvaluateEvent(ptPlayer, achEvent, 1);
+            tEvaluationData.EvaluateEvent(ptPlayer, achEvent, 1, (uint32)sub_71007b5e70());
 #line 6755 "X/Server/LuaScript/ScriptUtil.cpp"
         }
     }
@@ -7730,8 +7747,16 @@ double ItemGetAttributeFromInventorySlot(
     {
         switch (eSlotType)
         {
+        case SLOT_PLAYER_HEAD: eSlotType = SLOT_HIRELING_HEAD; break;
+        case SLOT_PLAYER_TORSO: eSlotType = SLOT_HIRELING_TORSO; break;
         case SLOT_PLAYER_LEFT_HAND: eSlotType = SLOT_HIRELING_LEFT_HAND; break;
         case SLOT_PLAYER_RIGHT_HAND: eSlotType = SLOT_HIRELING_RIGHT_HAND; break;
+        case SLOT_PLAYER_HANDS: eSlotType = SLOT_HIRELING_HANDS; break;
+        case SLOT_PLAYER_WAIST: eSlotType = SLOT_HIRELING_WAIST; break;
+        case SLOT_PLAYER_FEET: eSlotType = SLOT_HIRELING_FEET; break;
+        case SLOT_PLAYER_SHOULDERS: eSlotType = SLOT_HIRELING_SHOULDERS; break;
+        case SLOT_PLAYER_LEGS: eSlotType = SLOT_HIRELING_LEGS; break;
+        case SLOT_PLAYER_BRACERS: eSlotType = SLOT_HIRELING_BRACERS; break;
         case SLOT_PLAYER_RIGHT_FINGER: eSlotType = SLOT_HIRELING_RIGHT_FINGER; break;
         case SLOT_PLAYER_LEFT_FINGER: eSlotType = SLOT_HIRELING_LEFT_FINGER; break;
         case SLOT_PLAYER_NECK: eSlotType = SLOT_HIRELING_NECK; break;

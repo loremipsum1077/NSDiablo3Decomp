@@ -6137,7 +6137,7 @@ void UIGame::InvOpen_OnClick(const UIID &)
         ActorCommonData * ptACD = ACDTryToGet(ptPlayer->idPlayerACD);
         if (ptACD && !PlayerCanOpenInventory(*ptACD))
         {
-            UIGame::DisplayError(GameErrorData(149), FALSE, NULL);
+            UIGame::DisplayError(GameErrorData(157), FALSE, NULL);
             return;
         }
     }
@@ -7771,7 +7771,7 @@ void sHandleSequenceSkip(const UIID &)
     // ...
     BoolDataMessage tMessage;
     tMessage.bVal = FALSE;
-    MessageSendToServer(384, &tMessage, sizeof(tMessage), LocalPlayerGet());
+    MessageSendToServer(385, &tMessage, sizeof(tMessage), LocalPlayerGet());
 }
 
 

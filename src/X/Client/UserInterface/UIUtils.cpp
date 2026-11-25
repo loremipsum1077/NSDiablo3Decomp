@@ -859,7 +859,7 @@ CRefString FormatTruncatedNumber( const XLocale eLocale, const float flValue, co
 
 
 {
-    if ( eLocale == XLOCALE_KOREAN || eLocale == XLOCALE_CHINESE_CHINA || eLocale == XLOCALE_CHINESE_TAIWAN )
+    if ( eLocale == XLOCALE_KOREAN || eLocale == XLOCALE_CHINESE_CHINA || eLocale == XLOCALE_CHINESE_TAIWAN || eLocale == 19 /* 2.7.7 XLocale 19, enumerator missing from UnicodeText.h */ )
     {
         return sFormatTruncatedNumber_Asia( flValue, bUseMillions, bIncludeSpecialChar );
     }

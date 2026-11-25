@@ -16,6 +16,12 @@ struct PowerAPIBuffInstance;
 struct PowerAPIDamage;
 struct PowerStartData;
 
+// 0x71007b5e70 (unnamed, probably SGame.cpp): returns SGame+0x30 bit 18 | (bit 20 << 1), built in a
+// 64-bit register. Every 2.7.7 caller of EvaluationData::EvaluateEvent passes it as the last argument
+// truncated to 32 bits and zero-extended (`bl 0x7b5e70; and x5, x0, #0xffffffff`).
+// Defined nowhere yet (functions.csv: U).
+uint64 sub_71007b5e70();
+
 typedef int32 DyeType;
 
 typedef int32 ItemLabel;
@@ -64,8 +70,8 @@ class EvaluationData {  // size 0x58
 public:
     EvaluationData();
     ~EvaluationData();
-    void EvaluateEvent(const Player * ptPlayer, Achievement::EventID eEventID, uint32 qty);
-    void EvaluateEvent(const Player * ptPlayer, Achievement::EventID eEventID, uint32 operand, uint32 qty);
+    void EvaluateEvent(const Player * ptPlayer, Achievement::EventID eEventID, uint32 qty, uint64 uUnkFlags);
+    void EvaluateEvent(const Player * ptPlayer, Achievement::EventID eEventID, uint32 operand, uint32 qty, uint64 uUnkFlags);
     const Player * GetPlayer() const;
     void SetPlayer(const Player * ptPlayer);
     const ActorCommonData * GetACD() const;

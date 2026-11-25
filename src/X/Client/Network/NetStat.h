@@ -23,7 +23,7 @@ struct MsgTrackingData {  // size 0x8
 };
 static_assert(sizeof(MsgTrackingData) == 0x8, "MsgTrackingData");
 
-struct NetworkData {  // size 0x1304
+struct NetworkData {  // size 0x1354
     int32 nShortTermBytes;  // 0x00
     int32 nShortTermNumMessages;  // 0x04
     float flTransferRate[20];  // 0x08
@@ -31,9 +31,9 @@ struct NetworkData {  // size 0x1304
     int32 nCurrent;  // 0xa8
     uint32 dwTotalBytes;  // 0xac
     uint32 dwTotalPackets;  // 0xb0
-    MsgTrackingData atMsgData[586];  // 0xb4
+    MsgTrackingData atMsgData[596];  // 0xb4 (MSG_NUM_MESSAGES)
 };
-static_assert(sizeof(NetworkData) == 0x1304, "NetworkData");
+static_assert(sizeof(NetworkData) == 0x1354, "NetworkData");
 
 struct MsgHistoryData {  // size 0xc
     GameMessageType eMsgType;  // 0x00
@@ -57,7 +57,7 @@ struct kbpsData {  // size 0x38
 };
 static_assert(sizeof(kbpsData) == 0x38, "kbpsData");
 
-struct NetStat {  // size 0x26b8
+struct NetStat {  // size 0x2758
     TMsgHistoryDataPool poolMsgHistoryData;  // 0x00
     kbpsData tkbpsClient;  // 0x30
     kbpsData tkbpsServer;  // 0x68
@@ -66,9 +66,9 @@ struct NetStat {  // size 0x26b8
     uint32 dwTrackingStartTimeTick;  // 0xa8
     uint32 dwTrackingEndTimeTick;  // 0xac
     NetworkData tTransmit;  // 0xb0
-    NetworkData tReceived;  // 0x13b4
+    NetworkData tReceived;  // 0x1404
 };
-static_assert(sizeof(NetStat) == 0x26b8, "NetStat");
+static_assert(sizeof(NetStat) == 0x2758, "NetStat");
 
 // NetStat.cpp:33 and :59 (X/Common/Game.cpp sCGameInit / sCGameDispose).
 void NetStatInit(NetStat & tNetStat);

@@ -18,8 +18,8 @@ enum {
     GLOBAL_XML_VERSION = 3,
     BANNER_PARAMS_VERSION = 10,
     GLOBAL_COMMON_SNO_VERSION = 232,
-    GLOBAL_PC_SNO_VERSION = 234,
-    GLOBAL_CONSOLE_SNO_VERSION = 253,
+    GLOBAL_PC_SNO_VERSION = 237,
+    GLOBAL_CONSOLE_SNO_VERSION = 256,
     GLOBAL_AXE_SNO_VERSION = 252,
     BANNERCOLORSET_XML_VERSION = 1,
 };
@@ -230,7 +230,7 @@ static const TypeDescriptorField GlobalServerData_Fields[115] = {
     TypeDescriptorField("", DT_INT, offsetof(GlobalServerData, nTargetedMagicDropChanceIncrementDelta), NULL, 1),
     TypeDescriptorField("", DT_FLOAT, offsetof(GlobalServerData, flUnluckyBonusMinHours), NULL, 1),
     TypeDescriptorField("", DT_FLOAT, offsetof(GlobalServerData, flUnluckyBonusChancePerHour), NULL, 1),
-    FixedArrayTypeDescriptorField("", DT_FLOAT, offsetof(GlobalServerData, arLegendaryChanceMultiplier), NULL, 1, 0x11, 0),
+    FixedArrayTypeDescriptorField("", DT_FLOAT, offsetof(GlobalServerData, arLegendaryChanceMultiplier), NULL, 1, 0x14, 0),
     TypeDescriptorField("", DT_FLOAT, offsetof(GlobalServerData, flHirelingTargetedItemChance), NULL, 1),
     TypeDescriptorField("", DT_FLOAT, offsetof(GlobalServerData, flHirelingTargetedInactiveChance), NULL, 1),
     TypeDescriptorField("", DT_INT, offsetof(GlobalServerData, nDungeonFinderLevelCount), NULL, 1),
@@ -263,7 +263,7 @@ static const TypeDescriptorField GlobalServerData_Fields[115] = {
     TypeDescriptorField("", DT_FLOAT, offsetof(GlobalServerData, flGlobalMonsterXPDensityMin), NULL, 1),
     TypeDescriptorField("", DT_FLOAT, offsetof(GlobalServerData, flGlobalMonsterXPDensityMax), NULL, 1),
     TypeDescriptorField("", DT_FLOAT, offsetof(GlobalServerData, flGlobalEliteDensity), NULL, 1),
-    FixedArrayTypeDescriptorField("", DT_FLOAT, offsetof(GlobalServerData, arAncientLegendaryChance), NULL, 1, 0xd, 0),
+    FixedArrayTypeDescriptorField("", DT_FLOAT, offsetof(GlobalServerData, arAncientLegendaryChance), NULL, 1, 0x10, 0),
     TypeDescriptorField("", DT_FLOAT, offsetof(GlobalServerData, flPrimalAncientLegendaryChance), NULL, 1),
     TypeDescriptorField("", DT_FLOAT, offsetof(GlobalServerData, flCrafterAncientLegendaryChance), NULL, 1),
     TypeDescriptorField("", DT_INT, offsetof(GlobalServerData, nMinimumAchievedRiftLevelToRollPrimalAncients), NULL, 1),
@@ -291,7 +291,7 @@ static const TypeDescriptorField GlobalServerData_Fields[115] = {
 };
 ComplexTypeDescriptor TypeDescriptor_GlobalServerData("GlobalServerData", 0, GlobalServerData_Fields, 115, NULL, 0x80, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_GLOBAL_SERVER_DATA = &TypeDescriptor_GlobalServerData;
 
-static const TypeDescriptorField GlobalDefinition_Fields[148] = {
+static const TypeDescriptorField GlobalDefinition_Fields[149] = {
     TypeDescriptorField("", DT_SERIALIZEDATA, offsetof(GlobalDefinition, serServerData), NULL, 0),
     VariableArrayTypeDescriptorField("", DT_GLOBAL_SERVER_DATA, offsetof(GlobalDefinition, ptServerData), 0x421, 8),
     TypeDescriptorField("", DT_INT, offsetof(GlobalDefinition, uStartingLocationGUID), NULL, 1),
@@ -325,6 +325,7 @@ static const TypeDescriptorField GlobalDefinition_Fields[148] = {
     TypeDescriptorField("", DT_FLOAT, offsetof(GlobalDefinition, flCrushingBlowDamagePercentNormal), NULL, 1),
     TypeDescriptorField("", DT_FLOAT, offsetof(GlobalDefinition, flCrushingBlowDamagePercentElite), NULL, 1),
     TypeDescriptorField("", DT_FLOAT, offsetof(GlobalDefinition, flCrushingBlowDamagePercentBosses), NULL, 1),
+    TypeDescriptorField("", DT_INT, offsetof(GlobalDefinition, unk_1c8), (const void *)1, 1),
     TypeDescriptorField("", DT_FLOAT, offsetof(GlobalDefinition, flHolyDamageProcHitpointPercentToHeal), NULL, 1),
     TypeDescriptorField("", DT_FLOAT, offsetof(GlobalDefinition, flArcaneDamageProcDuration), NULL, 1),
     TypeDescriptorField("", DT_FLOAT, offsetof(GlobalDefinition, flFireDamageProcHitpointPercentToDamage), NULL, 1),
@@ -441,14 +442,14 @@ static const TypeDescriptorField GlobalDefinition_Fields[148] = {
     TypeDescriptorField("", DT_INT, offsetof(GlobalDefinition, nPad2), NULL, 0x700000),
     TypeDescriptorField(NULL, DT_NULL, sizeof(GlobalDefinition), NULL, 0),
 };
-ComplexTypeDescriptor TypeDescriptor_GlobalDefinition("Globals", GLOBAL_XML_VERSION, GlobalDefinition_Fields, 148, NULL, 0x80, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_GLOBAL = &TypeDescriptor_GlobalDefinition;
+ComplexTypeDescriptor TypeDescriptor_GlobalDefinition("Globals", GLOBAL_XML_VERSION, GlobalDefinition_Fields, 149, NULL, 0x80, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_GLOBAL = &TypeDescriptor_GlobalDefinition;
 
 GlobalGroupDef * gptGroupDefGlobal;  // line 490
 
 // line 496
 GlobalGroupDef::GlobalGroupDef()
     : GroupDefinition("Globals", GLOBAL_SNO,
-                      SNOVersions(GLOBAL_PC_SNO_VERSION, 254, GLOBAL_CONSOLE_SNO_VERSION, GLOBAL_CONSOLE_SNO_VERSION, 254),
+                      SNOVersions(GLOBAL_PC_SNO_VERSION, 257, GLOBAL_CONSOLE_SNO_VERSION, GLOBAL_CONSOLE_SNO_VERSION, 257),
                       SNODATATYPE_TITLE, sizeof(GlobalDefinition), DT_GLOBAL, 0x5005, 14) {
 }
 

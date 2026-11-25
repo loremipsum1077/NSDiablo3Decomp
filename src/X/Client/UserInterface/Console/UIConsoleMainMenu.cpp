@@ -115,10 +115,10 @@ enum {
 enum {
     OPTION_CONTINUE = 0, OPTION_UNLOCK_FULL_GAME = 1, OPTION_GAME_SETTINGS = 2, OPTION_NETWORK_SETTINGS = 3, OPTION_LEAVE_PARTY = 4,
     OPTION_MATCHMAKE = 5, OPTION_FIND_GAME = 6, OPTION_OPTIONS = 7, OPTION_SEASON_JOURNEY = 8, OPTION_CREATE_SEASONAL = 9,
-    OPTION_NECRO_UPSELL = 10, OPTION_CONNECT_DEMONWARE = 11, OPTION_MORE = 12, OPTION_CUSTOMIZE_BANNER = 13, OPTION_VIEW_PROFILE = 14,
-    OPTION_HALL_OF_FALLEN = 15, OPTION_CHALLENGES = 16, OPTION_LEADERBOARDS = 17, OPTION_CINEMATICS = 18, OPTION_CREDITS_MENU = 19,
-    OPTION_IMPORT_SAVE = 20, OPTION_EXPORT_SAVE = 21, OPTION_QUIT_DEMO = 22, OPTION_HELP = 23, OPTION_INSTALL = 24,
-    OPTION_VIEW_WHATS_NEW = 25, OPTION_CREDITS_2017 = 26, OPTION_CREDITS_ROS = 27, OPTION_CREDITS_ETERNAL = 28, OPTION_NUM_OPTIONS = 29,
+    OPTION_NECRO_UPSELL = 10, OPTION_UNK_11 = 11 /* "Console:Diablo4Upsell" */, OPTION_CONNECT_DEMONWARE = 12, OPTION_MORE = 13, OPTION_CUSTOMIZE_BANNER = 14, OPTION_VIEW_PROFILE = 15,
+    OPTION_HALL_OF_FALLEN = 16, OPTION_CHALLENGES = 17, OPTION_LEADERBOARDS = 18, OPTION_CINEMATICS = 19, OPTION_CREDITS_MENU = 20,
+    OPTION_IMPORT_SAVE = 21, OPTION_EXPORT_SAVE = 22, OPTION_QUIT_DEMO = 23, OPTION_HELP = 24, OPTION_INSTALL = 25,
+    OPTION_VIEW_WHATS_NEW = 26, OPTION_CREDITS_2017 = 27, OPTION_CREDITS_ROS = 28, OPTION_CREDITS_ETERNAL = 29, OPTION_NUM_OPTIONS = 30,
 };
 
 typedef int32 MenuOption;
@@ -249,6 +249,7 @@ CRefString GetOptionFromIndex(int32 nOption)
     case OPTION_SEASON_JOURNEY: return StringListFetch("ConsoleSeasonJourney:Title");
     case OPTION_CREATE_SEASONAL: return StringListFetch("Console:CreateSeasonalHero");
     case OPTION_NECRO_UPSELL: return StringListFetch("Console:NecroUpsell");
+    case OPTION_UNK_11: return StringListFetch("Console:Diablo4Upsell");
     case OPTION_CONNECT_DEMONWARE: return StringListFetch("Console:ConnectToDemonwareSwitch");
     case OPTION_MORE: return StringListFetch("ConsoleNavMenu:More");
     case OPTION_CUSTOMIZE_BANNER: return StringListFetch("ConsolePause:Banner");
@@ -475,7 +476,7 @@ BOOL ItemShouldBeVisible(
 
 
     default:
-        return eMenuLevel == (nItem > OPTION_MORE ? MenuLevel::MORE : MenuLevel::MAIN);
+        return nItem > OPTION_MORE ? eMenuLevel == MenuLevel::MORE : eMenuLevel == MenuLevel::MAIN;
     }
     return FALSE;
 
@@ -2260,6 +2261,19 @@ void OpenStoreToNecromancer(int32 nControllerIndex)
         });
 }
 
+// 2.7.7: opened by OPTION_UNK_11 ("Console:Diablo4Upsell"); same body as OpenStoreToNecromancer.
+extern "C" void sub_7100361730(int32 nControllerIndex)
+{
+    NotificationCreationParams tParams;
+    tParams.nControllerIndex = nControllerIndex;
+    tParams.uszMessage = StringListFetch("Console:PleaseWait");
+    ModalNotificationId idDialog = ::Console::Screens::GetModalNotificationManager().SetMessageOnlyNotification(tParams);
+    ::Console::Utilities::ShowStoreUI(::Console::GamerProfile::GetPrimaryProfileUserIndex(), "TODO", false,
+        [idDialog]() {
+            ::Console::Screens::GetModalNotificationManager().RemoveNotification(idDialog);
+        });
+}
+
 
 
 
@@ -2597,6 +2611,12 @@ void OnAccept(
         case OPTION_NECRO_UPSELL:
         {
             OpenStoreToNecromancer(nControllerIndex);
+            break;
+        }
+
+        case OPTION_UNK_11:
+        {
+            sub_7100361730(nControllerIndex);
             break;
         }
 

@@ -367,6 +367,8 @@ void RActorTilt::Set(const TiltType nTiltType, const BOOL bSnap, const Vector3D 
         m_wvTargetTilt.Normalize();
         break;
     }
+
+
     default:
         DisplayInternalError(NULL, "", __LINE__, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
@@ -376,8 +378,6 @@ void RActorTilt::Set(const TiltType nTiltType, const BOOL bSnap, const Vector3D 
         m_wvCurrentTilt = m_wvTargetTilt;
     }
 }
-
-
 
 
 BOOL RActorTilt::Update()
@@ -12273,10 +12273,10 @@ void RActorsUpdateFixedUpdateFlag()
     TDataArrayIterator<RActor> tIt;
     while (RActor * ptRActor = tCGame.ptRActors->Iterate(tIt))
     {
-        if (sIsTopmostParentInUI(ptRActor))
-            ptRActor->dwFlagsEx |= (1 << RACTOREX_FIXED_UPDATE_BIT);
-        else
+        if (sIsTopmostParentInUI(ptRActor) == FALSE)
             ptRActor->dwFlagsEx &= ~(1 << RACTOREX_FIXED_UPDATE_BIT);
+        else
+            ptRActor->dwFlagsEx |= (1 << RACTOREX_FIXED_UPDATE_BIT);
     }
     ParticlesUpdateFixedUpdateFlag();
     RopesUpdateFixedUpdateFlag();
@@ -13709,7 +13709,7 @@ void sAddRope(
         break;
     }
     default:
-#line 7447
+#line 7500
         DisplayInternalError(NULL, "", __LINE__, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 }
@@ -14422,7 +14422,7 @@ BOOL RActorSetACDLocationFromMessage(
 
                 SWorldID idSWorld = CGameGetCurrentSWorldID();
 
-                if (idSWorld == tNewLocation.tWorldLocation.idSWorld)
+                if (tNewLocation.tWorldLocation.idSWorld == idSWorld)
                 {
 
                     sRActorCreateFromACD(tACD.id);

@@ -152,7 +152,7 @@ enum ButtonActions {
     ACTION_TOGGLE_STAT_RANGES = 27,
 };
 
-class PlayerBlacksmithScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x1648
+class PlayerBlacksmithScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x1748
 public:
     enum BlacksmithMode {
         BLACKSMITH_MODE_INVALID = -1,
@@ -228,31 +228,31 @@ private:
         SALVAGE_STATE_SALVAGING = 2,
         SALVAGE_STATE_RESULTS = 3,
     };
-    BlacksmithMode m_eBlacksmithMode;  // 0x1f0
-    CraftingState m_eCraftingState;  // 0x1f4
-    SalvageState m_eSalvageState;  // 0x1f8
-    uint32 m_dwCraftingEndTime;  // 0x1fc
-    ACDNetworkName m_annCraftingResult;  // 0x200
-    RecipeListFilter m_eRecipeFilter;  // 0x204
-    InventoryItems m_tPlayerItemsProvider;  // 0x208
-    CrafterRecipes m_tRecipeItemsProvider;  // 0xa00
-    TrainingItems m_tTrainingItemsProvider;  // 0xfe0
-    SingleItemProvider m_tSingleItemProvider;  // 0x1030
-    EquippedItem m_tEquippedItemProvider;  // 0x1068
-    CraftingItem m_tCrafingItemProvider;  // 0x10a0
-    UIInventoryListView m_tPlayerListView;  // 0x10e8
-    UIInventoryDetailsView m_tPlayerDetailsView;  // 0x1170
-    UIInventoryListView m_tRecipesListView;  // 0x11e8
-    UIInventoryDetailsView m_tRecipesDetailsView;  // 0x1270
-    UIInventoryDetailsView m_tCraftingView;  // 0x12e8
-    UIInventoryDetailsView m_tEquippedItemView;  // 0x1360
-    UIInventoryTrainingView m_tTrainingView;  // 0x13d8
-    UIInventoryListView m_tTrainingListView;  // 0x1438
-    UIInventoryDetailsView m_tTrainingDetailsView;  // 0x14c0
-    UIInventoryDetailsView m_tSelectedDetailsView;  // 0x1538
-    UIInventorySalvageView m_tSalvageView;  // 0x15b0
-    ACDID m_idLastSelectedItem;  // 0x1640
-    ACDID m_idCraftedItem;  // 0x1644
+    BlacksmithMode m_eBlacksmithMode;  // 0x200
+    CraftingState m_eCraftingState;  // 0x204
+    SalvageState m_eSalvageState;  // 0x208
+    uint32 m_dwCraftingEndTime;  // 0x20c
+    ACDNetworkName m_annCraftingResult;  // 0x210
+    RecipeListFilter m_eRecipeFilter;  // 0x214
+    InventoryItems m_tPlayerItemsProvider;  // 0x218
+    CrafterRecipes m_tRecipeItemsProvider;  // 0xb00
+    TrainingItems m_tTrainingItemsProvider;  // 0x10e0
+    SingleItemProvider m_tSingleItemProvider;  // 0x1130
+    EquippedItem m_tEquippedItemProvider;  // 0x1168
+    CraftingItem m_tCrafingItemProvider;  // 0x11a0
+    UIInventoryListView m_tPlayerListView;  // 0x11e8
+    UIInventoryDetailsView m_tPlayerDetailsView;  // 0x1270
+    UIInventoryListView m_tRecipesListView;  // 0x12e8
+    UIInventoryDetailsView m_tRecipesDetailsView;  // 0x1370
+    UIInventoryDetailsView m_tCraftingView;  // 0x13e8
+    UIInventoryDetailsView m_tEquippedItemView;  // 0x1460
+    UIInventoryTrainingView m_tTrainingView;  // 0x14d8
+    UIInventoryListView m_tTrainingListView;  // 0x1538
+    UIInventoryDetailsView m_tTrainingDetailsView;  // 0x15c0
+    UIInventoryDetailsView m_tSelectedDetailsView;  // 0x1638
+    UIInventorySalvageView m_tSalvageView;  // 0x16b0
+    ACDID m_idLastSelectedItem;  // 0x1740
+    ACDID m_idCraftedItem;  // 0x1744
     void OnButton1();
     void OnButton2();
     void OnButton3();
@@ -293,7 +293,7 @@ private:
     void ToggleStatRangeDisplay();
     void ShowError(CRefString sErrorMsg);
 };
-static_assert(sizeof(PlayerBlacksmithScreen) == 0x1648, "PlayerBlacksmithScreen");
+static_assert(sizeof(PlayerBlacksmithScreen) == 0x1748, "PlayerBlacksmithScreen");
 
 PlayerBlacksmithScreen * sgptBlacksmithGlobals;  // line 425
 

@@ -696,7 +696,7 @@ static void sEvaluatePlayerConverseWithNPCAchievement(
             &tPlayer,
             Achievement::ACH_EVENT_CONVERSE_WITH_NPC,
             tACDNPC.GetActorSNO(),
-            1);
+            1, (uint32)sub_71007b5e70());
     }
 }
 
@@ -727,7 +727,7 @@ static void sEvaluateConversationLineHeardAchievement(
 
 
                     SGameStatsEncodeSNODataToID(tPlayLineParams.snoConversation, tPlayLineParams.dwLineUID),
-                    1);
+                    1, (uint32)sub_71007b5e70());
             }
         }
     }
@@ -748,7 +748,7 @@ static void sEvaluatePlayerConversationAchievement(
         Achievement::EvaluationData tEvaluationData;
         tEvaluationData.SetPlayer(&tPlayer);
 
-        tEvaluationData.EvaluateEvent(&tPlayer, eventID, snoConversation, 1);
+        tEvaluationData.EvaluateEvent(&tPlayer, eventID, snoConversation, 1, (uint32)sub_71007b5e70());
 
 
 
@@ -2992,12 +2992,13 @@ void ConversationMgr::AdvanceConversationForPlayer(const Player & tPlayer, SNO s
     SGame & tSGame = SGameManager::GameGet();
     ConversationMgrGlobals * ptConvGlobals = tSGame.ptConversationMgrGlobals;
 
+    int32 nPlayerIndex = tPlayer.nPlayerIndex;
     POS pos = ptConvGlobals->tConversationList.GetHeadPosition();
     while (pos != NULL)
     {
         ActiveConversation & tConv = ptConvGlobals->tConversationList.GetNext(pos);
 
-        if (!tConv.fMarkedForRemoval && tConv.snoConversation == snoConv && tConv.eStatus[tPlayer.nPlayerIndex] == PARTICIPATION_STATUS_OPTED_IN)
+        if (!tConv.fMarkedForRemoval && tConv.snoConversation == snoConv && tConv.eStatus[nPlayerIndex] == PARTICIPATION_STATUS_OPTED_IN)
         {
             uint32 dwUsageFlags = ConversationTypeGetUsageFlags(tConv.eConvType);
             BOOL fCanAdvance = (dwUsageFlags & (1 << 2)) != 0;
@@ -3052,12 +3053,13 @@ void ConversationMgr::UpdateConversationAutoAdvanceForPlayer(const Player & tPla
     SGame & tSGame = SGameManager::GameGet();
     ConversationMgrGlobals * ptConvGlobals = tSGame.ptConversationMgrGlobals;
 
+    int32 nPlayerIndex = tPlayer.nPlayerIndex;
     POS pos = ptConvGlobals->tConversationList.GetHeadPosition();
     while (pos != NULL)
     {
         ActiveConversation & tConv = ptConvGlobals->tConversationList.GetNext(pos);
 
-        if (!tConv.fMarkedForRemoval && tConv.snoConversation == snoConv && tConv.eStatus[tPlayer.nPlayerIndex] == PARTICIPATION_STATUS_OPTED_IN)
+        if (!tConv.fMarkedForRemoval && tConv.snoConversation == snoConv && tConv.eStatus[nPlayerIndex] == PARTICIPATION_STATUS_OPTED_IN)
         {
             if (tConv.nLastLineGUIDSentToClient == nLineUID)
             {

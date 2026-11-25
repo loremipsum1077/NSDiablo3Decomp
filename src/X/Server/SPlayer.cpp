@@ -103,9 +103,9 @@ namespace Avenger { namespace Console { void PlayExitEffect(ActorCommonData & tA
 #include "../Common/TagMaps/Tags.h"
 void PlayerBrainSpendTraitPoint(ActorCommonData & tACDPlayer, const SNO snoPower);  // X/Server/AI/PlayerBrain.cpp:586
 uint32 NavMeshGetDynamicFlagsForPassability(PassabilityType ePassability);  // X/Common/Nav/NavigationMesh.cpp:3187
-struct StashIconStateMessage {  // size 0x14; X/Common/Networking/GameMessage.h
+struct StashIconStateMessage {  // size 0x18; X/Common/Networking/GameMessage.h
     RequiredMessageHeader tHeader;  // 0x00
-    uint8 bStashIcons[12];  // 0x08
+    uint8 bStashIcons[13];  // 0x08
 };
 #include "System/BossEncounter.h"
 #include "System/SNephalemRift.h"
@@ -2156,7 +2156,7 @@ void SPlayerDelete(
     {
         Achievement::EvaluationData tEvaluationData;
         tEvaluationData.SetPlayer(&tPlayer);
-        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_PLAYER_LEAVE_GAME, 1);
+        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_PLAYER_LEAVE_GAME, 1, (uint32)sub_71007b5e70());
 
 
 
@@ -2626,7 +2626,7 @@ void PlayerSendHeroStateLoadoutToClient(
     int32 nLoadoutIndex,
     BOOL bOnSave)
 {
-    if (nLoadoutIndex < 0 || nLoadoutIndex >= 5)
+    if (nLoadoutIndex < 0 || nLoadoutIndex >= 10)
         return;
 
 
@@ -2663,7 +2663,7 @@ void PlayerSendHeroStateLoadoutToClient(
 void PlayerSendHeroStateAllLoadoutsToClient(
     Player & tPlayer)
 {
-    for (int32 i = 0; i < 5; i++)
+    for (int32 i = 0; i < 10; i++)
         PlayerSendHeroStateLoadoutToClient(tPlayer, i, FALSE);
 }
 
@@ -2984,6 +2984,115 @@ void SPlayerUnlockAdventureMode(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int32 SPlayerAddPet(
     ACDID idACDPlayer,
     PetType eType,
@@ -3210,7 +3319,7 @@ int32 SPlayerAddPet(
         tEvaluationData.SetPlayer(&tPlayer);
         tEvaluationData.SetACD(&tACDPet);
 
-        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_PET_ACQUIRED, eType, 1);
+        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_PET_ACQUIRED, eType, 1, (uint32)sub_71007b5e70());
     }
 
 
@@ -3812,7 +3921,7 @@ static BOOL sPlayerTrickleLoreAchievements(
 
             Achievement::EvaluationData tEvaluationData;
             tEvaluationData.SetPlayer(&tPlayer);
-            tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_LORE_LEARNED, pdefLore->snoConversation, 1);
+            tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_LORE_LEARNED, pdefLore->snoConversation, 1, (uint32)sub_71007b5e70());
 
             tPerPlayer.nTrickleLoreAchievementIndex++;
 
@@ -4470,7 +4579,7 @@ void PlayerRecordDamageDone(
         {
             Achievement::EvaluationData tEvaluationData;
             tEvaluationData.SetPlayer(ptPlayer);
-            tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_PVP_PLAYER_DAMAGED_PLAYER, Math::FloatToInt(flDamage));
+            tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_PVP_PLAYER_DAMAGED_PLAYER, Math::FloatToInt(flDamage), (uint32)sub_71007b5e70());
         }
     }
 
@@ -5113,7 +5222,7 @@ void SPlayerUpdateCombatStatus(
                                 Achievement::EvaluationData tEvaluationData;
                                 tEvaluationData.SetPlayer(&tPlayer);
 
-                                tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_SURVIVED_COMBAT_WITH_LOW_HEALTH, 1);
+                                tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_SURVIVED_COMBAT_WITH_LOW_HEALTH, 1, (uint32)sub_71007b5e70());
 
 
 
@@ -6376,7 +6485,7 @@ void SPlayerAssignToLegendaryPowerSlot(
     {
         Achievement::EvaluationData tEvaluationData;
         tEvaluationData.SetPlayer(&tPlayer);
-        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_EQUIP_THREE_CUBE_POWERS, 1);
+        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_EQUIP_THREE_CUBE_POWERS, 1, (uint32)sub_71007b5e70());
     }
 }
 
@@ -7306,7 +7415,7 @@ void SPlayerLearnLore(
         {
             Achievement::EvaluationData tEvaluationData;
             tEvaluationData.SetPlayer(ptPlayer);
-            tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_LORE_LEARNED, pdefLore->snoConversation, 1);
+            tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_LORE_LEARNED, pdefLore->snoConversation, 1, (uint32)sub_71007b5e70());
         }
     }
 
@@ -7980,7 +8089,7 @@ void SPlayerOnChangeLevelArea(
                 Achievement::EvaluationData tEvaluationData;
                 tEvaluationData.SetPlayer(ptPlayer);
 
-                tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_LEAVE_LEVEL_AREA, snoLevelAreaOld, 1);
+                tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_LEAVE_LEVEL_AREA, snoLevelAreaOld, 1, (uint32)sub_71007b5e70());
             }
         }
 
@@ -8039,7 +8148,7 @@ void SPlayerOnChangeLevelArea(
                 Achievement::EvaluationData tEvaluationData;
                 tEvaluationData.SetPlayer(ptPlayer);
 
-                tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_ENTER_LEVEL_AREA, snoLevelAreaNew, 1);
+                tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_ENTER_LEVEL_AREA, snoLevelAreaNew, 1, (uint32)sub_71007b5e70());
             }
         }
     }
@@ -9134,7 +9243,7 @@ void SPlayerUpdateKillCounter(
                     if (PlayersAreLocalToEachOther(tPlayer, *ptPlayer))
                     {
                         tEvaluationData.SetPlayer(ptPlayer);
-                        tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_KILL_COUNTER_RESET, eType, 1);
+                        tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_KILL_COUNTER_RESET, eType, 1, (uint32)sub_71007b5e70());
                     }
                 }
             }
@@ -9145,7 +9254,7 @@ void SPlayerUpdateKillCounter(
             else
             {
                 tEvaluationData.SetPlayer(&tPlayer);
-                tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_KILL_COUNTER_RESET, eType, 1);
+                tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_KILL_COUNTER_RESET, eType, 1, (uint32)sub_71007b5e70());
             }
 
 
@@ -9228,7 +9337,7 @@ void SPlayerUpdateCurrencyCounter(
 
         Achievement::EvaluationData tEvaluationData;
         tEvaluationData.SetPlayer(&tPlayer);
-        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_GOLD_COUNTER_EXPIRED, 1);
+        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_GOLD_COUNTER_EXPIRED, 1, (uint32)sub_71007b5e70());
         tCounter.Reset();
     }
     else
@@ -9689,7 +9798,7 @@ static void sEvaluateObjectKillForDestructionCounter(
             Achievement::ACH_EVENT_OBJECT_DESTROYED_BY_PLAYER,
 
             tACDVictim.snoActor,
-            1);
+            1, (uint32)sub_71007b5e70());
     }
 }
 
@@ -9797,7 +9906,7 @@ static void sIncAllCounters(
                     Player * ptSavedPlayer = PlayerGetByACD(idACDAttackTarget);
                     PlayerClass ePlayerClass = ptSavedPlayer ? PlayerGetPlayerClass(idACDAttackTarget) : PLAYER_CLASS_NONE;
 
-                    tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_SAVED_ANOTHER_PLAYER_FROM_DEATH, ePlayerClass, 1);
+                    tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_SAVED_ANOTHER_PLAYER_FROM_DEATH, ePlayerClass, 1, (uint32)sub_71007b5e70());
 
 
 
@@ -9823,7 +9932,7 @@ static void sIncAllCounters(
                     Achievement::ACH_EVENT_MONSTER_KILLED_BY_ENVIRONMENT,
 
                     tACDVictim.snoActor,
-                    1);
+                    1, (uint32)sub_71007b5e70());
             }
         }
     }
@@ -9868,7 +9977,7 @@ static void sIncAllCounters(
                 Achievement::ACH_EVENT_OBJECT_DESTROYED_BY_MONSTER,
 
                 tACDVictim.snoActor,
-                1);
+                1, (uint32)sub_71007b5e70());
         }
     }
 
@@ -10171,7 +10280,7 @@ void SPlayerWarpToOtherPlayer(
             if (tEvaluationData.GetPlayer())
             {
 
-                tEvaluationData.EvaluateEvent(tEvaluationData.GetPlayer(), Achievement::ACH_EVENT_WARPED_USING_BANNER, 1);
+                tEvaluationData.EvaluateEvent(tEvaluationData.GetPlayer(), Achievement::ACH_EVENT_WARPED_USING_BANNER, 1, (uint32)sub_71007b5e70());
             }
         }
     }
@@ -12478,7 +12587,7 @@ void sHandlePlayerAchievementScoreUpdate(
     {
         Achievement::EvaluationData tEvaluationData;
         tEvaluationData.SetPlayer(ptPlayer);
-        tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_PLAYER_EARNED_SEASONAL_ACHIEVEMENT_POINTS, nPoints);
+        tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_PLAYER_EARNED_SEASONAL_ACHIEVEMENT_POINTS, nPoints, (uint32)sub_71007b5e70());
     }
 }
 
@@ -13327,7 +13436,7 @@ static void sPrefetchPortalDestination(
     SWorldID idSWorld = WorldCommonFindBySNO(snoWorld, TRUE);
     if (idSWorld == SWORLDID_INVALID)
     {
-        SWorldCreate(snoWorld, FALSE, FALSE, sPrefetchPortalDestinationCallback, idACDOperator, idACDPortal, uEntranceGUID, eWarpReason, FALSE);
+        SWorldCreate(snoWorld, FALSE, FALSE, sPrefetchPortalDestinationCallback, idACDOperator, idACDPortal, uEntranceGUID, eWarpReason, FALSE, 0);
     }
     else
     {
@@ -13514,7 +13623,7 @@ void SPlayerAddMailItemToInventory(
     if (ptACDItem)
     {
 
-        ACDInventoryItemRestoreSocketsFromGenerator(tPlayerFrom.idPlayerACD, *ptACDItem, tGenerator, NULL, 0x2000);
+        ACDInventoryItemRestoreSocketsFromGenerator(tPlayerFrom.idPlayerACD, *ptACDItem, tGenerator, NULL, 0x2e00);
     }
 
     SACDInventoryPickup(tPlayerFrom.idPlayerACD, idACD, EFFECT_INVALID, TRUE, FALSE, NULL, FALSE, FALSE, FALSE, TRUE);
@@ -13549,7 +13658,7 @@ void SPlayerRetrieveSeasonalStashItemOrChallengeRiftReward(
     ActorCommonData * ptACDItem = ACDTryToGet(idACD);
     if (ptACDItem)
     {
-        ACDInventoryItemRestoreSocketsFromGenerator(tPlayerFrom.idPlayerACD, *ptACDItem, tGenerator, NULL, 0x2000);
+        ACDInventoryItemRestoreSocketsFromGenerator(tPlayerFrom.idPlayerACD, *ptACDItem, tGenerator, NULL, 0x2e00);
     }
 
     PickupResponse eResponse = SACDInventoryPickup(tPlayerFrom.idPlayerACD, idACD, EFFECT_INVALID, TRUE, eInvSlot == SLOT_PLAYER_SHARED_STASH, NULL, FALSE, eInvSlot == SLOT_PLAYER_SHARED_STASH, FALSE, TRUE);
@@ -15410,7 +15519,7 @@ void SPlayerLoadout_Equip(
     Player & tPlayer,
     int32 nLoadoutIndex)
 {
-    if (nLoadoutIndex < 0 || nLoadoutIndex >= 5)
+    if (nLoadoutIndex < 0 || nLoadoutIndex >= 10)
         return;
 
 
@@ -15725,7 +15834,7 @@ void SPlayerLoadout_Save(
     int32 nLoadoutIndex,
     LPCSTR szName)
 {
-    if (nLoadoutIndex < 0 || nLoadoutIndex >= 5)
+    if (nLoadoutIndex < 0 || nLoadoutIndex >= 10)
         return;
 
 
@@ -15876,7 +15985,7 @@ void SPlayerUpdateLoadoutItemANNs(
         return;
     }
 
-    for (int32 i = 0; i < 5; i++)
+    for (int32 i = 0; i < 10; i++)
     {
         LoadoutSavedData & tLoadout = tPlayer.tLoadouts[i];
         for (int32 j = 0; j < 13; j++)

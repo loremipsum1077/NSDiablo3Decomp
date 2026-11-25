@@ -220,26 +220,30 @@ enum ButtonActions {
     ACTION_EQUIP_POTION = 32,
 };
 
-class PlayerInventoryScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x12c8
+class PlayerInventoryScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x13a8 (InitializeForGame: operator new(0x13a8))
 public:
-    UIInventory::Console::InventoryItems tItemsProvider;  // 0x1f0
-    UIInventory::Console::EquippedItem tEquippedItemProvider;  // 0x9e8
-    UIInventory::Console::SingleItemProvider tSyncedDetailsProvider;  // 0xa20
-    UIInventory::Console::CosmeticItemsProvider tCosmeticItemsProvider;  // 0xa58
-    UIInventory::Console::CraftingMatItemsProvider tCraftingMatItemsProvider;  // 0xb40
-    UIInventory::Console::UIInventoryListView tListView;  // 0xbb0
-    UIInventory::Console::UIInventoryListView tCosmeticListView;  // 0xc38
-    UIInventory::Console::UIInventoryListView tCraftingMatListView;  // 0xcc0
-    UIInventory::Console::UIInventoryDetailsView tDetailsView;  // 0xd48
-    UIInventory::Console::UIInventoryDetailsView tEquippedView;  // 0xdc0
-    UIInventory::Console::UIInventoryDetailsView tBagDetailsView;  // 0xe38
-    UIInventory::Console::UIInventorySocketView tSocketView;  // 0xeb0
-    UIInventory::Console::UIInventoryDyeView tDyeView;  // 0xf40
-    UIInventory::Console::UIInventoryAddSocketsView tAddSocketsView;  // 0xfb0
-    UIInventory::Console::UIInventoryCategoryView tCategoriesView;  // 0x1020
-    UIInventory::Console::UIInventoryCategorySummaryView tCategorySummaryView;  // 0x10b8
-    UIInventory::Console::UIPortraitFrameSummaryView tPortraitFrameSummaryView;  // 0x1120
-    VisualInventory tVisualInventory;  // 0x1188
+    // 2.7.7: a blz::function the constructor clears and OnOpen sets to a lambda capturing this
+    // that calls OnButton1(0) (impl vtable 0x71010a5fc0, call slot 0x7100371f30).
+    blz::function<void()> unk_200;  // 0x200
+    UIInventory::Console::InventoryItems tItemsProvider;  // 0x228
+    UIInventory::Console::EquippedItem tEquippedItemProvider;  // 0xb10
+    UIInventory::Console::SingleItemProvider tSyncedDetailsProvider;  // 0xb48
+    UIInventory::Console::CosmeticItemsProvider tCosmeticItemsProvider;  // 0xb80
+    UIInventory::Console::CraftingMatItemsProvider tCraftingMatItemsProvider;  // 0xc68
+    UIInventory::Console::UIInventoryListView tListView;  // 0xcd8
+    UIInventory::Console::UIInventoryListView tCosmeticListView;  // 0xd60
+    UIInventory::Console::UIInventoryListView tCraftingMatListView;  // 0xde8
+    UIInventory::Console::UIInventoryDetailsView tDetailsView;  // 0xe70
+    UIInventory::Console::UIInventoryDetailsView tEquippedView;  // 0xee8
+    UIInventory::Console::UIInventoryDetailsView tBagDetailsView;  // 0xf60
+    UIInventory::Console::UIInventorySocketView tSocketView;  // 0xfd8
+    UIInventory::Console::UIInventoryDyeView tDyeView;  // 0x1068
+    UIInventory::Console::UIInventoryAddSocketsView tAddSocketsView;  // 0xfb0 in 2.6.2. 2.7.7 has a 0x28-byte object at 0x10d8 instead
+    // (constructor sub_71003739a0; it reaches the add-sockets view through the pointer at its +0x18).
+    UIInventory::Console::UIInventoryCategoryView tCategoriesView;  // 0x1100
+    UIInventory::Console::UIInventoryCategorySummaryView tCategorySummaryView;  // 0x1198
+    UIInventory::Console::UIPortraitFrameSummaryView tPortraitFrameSummaryView;  // 0x1200
+    VisualInventory tVisualInventory;  // 0x1268
     PlayerInventoryScreen();
     virtual ~PlayerInventoryScreen();
     virtual void HandleButtonInput(const int32 nControllerIndex, const InputButton eInputButton);  // vtable slot 9
@@ -313,13 +317,14 @@ protected:
 public:
     // Private in the original; the module's free functions (OpenForController and friends) are
     // its friends there. Kept public here until the friend declarations are known.
-    BOOL m_fInTradeSelectMode;  // 0x12a8
-    BOOL m_fInMailSelectMode;  // 0x12ac
-    InventoryState m_eInventoryState;  // 0x12b0
-    UIInventory::Console::ItemCategory m_eCurrentCategory;  // 0x12b4
-    UIFilterType m_eCachedRingSelection;  // 0x12b8
-    ACDID m_idLastSelectedItem;  // 0x12bc
-    ACDID m_idLastIdentifyingACD;  // 0x12c0
+    BOOL m_fInTradeSelectMode;  // 0x1388
+    BOOL m_fInMailSelectMode;  // 0x138c
+    BOOL unk_1390;  // 0x1390; tested as a flag in OnUpdate and the button handlers, not set by the constructor
+    InventoryState m_eInventoryState;  // 0x1394
+    UIInventory::Console::ItemCategory m_eCurrentCategory;  // 0x1398
+    UIFilterType m_eCachedRingSelection;  // 0x139c
+    ACDID m_idLastSelectedItem;  // 0x13a0
+    ACDID m_idLastIdentifyingACD;  // 0x13a4
 private:
     BOOL CanOpenSelectedCategory();
     void UpdateSocketingActions(::Console::ControllerActionManager & tActionManager);
@@ -347,7 +352,9 @@ private:
     void EquipPotion();
     void UnMarkEquippedItemAsNew(const UIFilterType eFilterType);
 };
-static_assert(sizeof(PlayerInventoryScreen) == 0x12c8, "PlayerInventoryScreen");
+// 2.7.7 size is 0x13a8. One part is still the 2.6.2 layout: tAddSocketsView is 0x70 where
+// 2.7.7 has the 0x28-byte object above.
+static_assert(sizeof(PlayerInventoryScreen) == 0x13a8 + (0x70 - 0x28), "PlayerInventoryScreen");
 
 BOOL bExitViaTrade;
 static BOOL sbTabNavigationEnabled;
@@ -1712,11 +1719,15 @@ BOOL RingIncludeControlPredicate(const UIID & idControl)
     return idControl != UIWND_INVENTORY_CONSOLE_RING_GLOW;
 }
 
+// 2.7.7 Console::Screens function that clears the vector at +0x1010 of its global (unnamed).
+extern "C" void sub_710016ab00();
+
 void Close()
 {
     if (!sgptInventoryGlobals->IsActive())
         return;
 
+    sub_710016ab00();
     if (!bExitViaTrade)
     {
         CTradeCancel(sgptInventoryGlobals->GetPlayer(), FALSE, TRUE);
@@ -1729,6 +1740,7 @@ void OpenForController(int32 nControllerOpening)
     PlayerInventoryScreen * ptScreen = sgptInventoryGlobals;
     ptScreen->m_fInTradeSelectMode = FALSE;
     ptScreen->m_fInMailSelectMode = FALSE;
+    ptScreen->unk_1390 = FALSE;
     ptScreen->tItemsProvider.SetProviderMode(InventoryItems::PROVIDERMODE_BACKPACK);
     ptScreen->tCosmeticItemsProvider.SetProviderMode(InventoryItems::PROVIDERMODE_BACKPACK);
     sgptInventoryGlobals->UIInventoryScreen::OpenForController(nControllerOpening);

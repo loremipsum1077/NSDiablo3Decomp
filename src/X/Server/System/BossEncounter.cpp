@@ -1049,7 +1049,7 @@ BOOL BossWorldCreate(SNO snoWorld)
     SWorldID idSWorld = WorldCommonFindBySNO(snoWorld, TRUE);
     if (idSWorld == SWORLDID_INVALID)
     {
-        idSWorld = SWorldCreate(snoWorld, TRUE, FALSE, NULL, ACDID_INVALID, ACDID_INVALID, 0, 0, 0);
+        idSWorld = SWorldCreate(snoWorld, TRUE, FALSE, NULL, ACDID_INVALID, ACDID_INVALID, 0, 0, 0, 0);
         SceneCommonData * ptSCD = NULL;
         SceneCommonDataIterator tIterator;
         while (SceneCommonDataArrayIterate(tIterator, ptSCD, SkipHolodeckScenes))

@@ -479,7 +479,7 @@ private:
 public:
     AutoDefinitionR(const DEFINITION * pdef_) : fLocked(FALSE), pdef(pdef_) {}  // line 1061
     AutoDefinitionR(ScopedDefinitionLockR<DEFINITION> & pdef_) : fLocked(FALSE), pdef(pdef_) {}  // line 1063
-    AutoDefinitionR(SNO sno) : fLocked(TRUE) { pdef = sno != SNO_NONE ? AutoDefinitionLockR(sno) : NULL; }  // line 1065
+    AutoDefinitionR(SNO sno) : fLocked(TRUE) { if (sno != SNO_NONE) pdef = AutoDefinitionLockR(sno); else pdef = NULL; }  // line 1065
     AutoDefinitionR(const AutoDefinitionR<DEFINITION> & pdef_) : fLocked(FALSE), pdef(pdef_) {}  // line 1067
     ~AutoDefinitionR() { if (fLocked && pdef) AutoDefinitionUnlockR(pdef); }  // line 1069
     SNO GetSNO() const { return pdef ? pdef->tHeader.snoHandle : SNO_NONE; }  // line 1071

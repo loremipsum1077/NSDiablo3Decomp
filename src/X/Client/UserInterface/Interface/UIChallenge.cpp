@@ -57,7 +57,7 @@ void OnOK(const UIID & id)
     SNODataMessage tMessage;
 
     tMessage.snoData = sgtUIChallengeGlobals.snoChallenge;
-    MessageSendToServer(467, &tMessage, sizeof(tMessage), LocalPlayerGet());
+    MessageSendToServer(CMSG_CHALLENGE_ACCEPT, &tMessage, sizeof(tMessage), LocalPlayerGet());
 
     Close();
 }

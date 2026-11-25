@@ -765,6 +765,16 @@ struct UIFunctionTable {  // size 0x18
     void * pfnFunction;  // 0x10
 };
 
+// 2.7.7 console table entries whose functions are unnamed (UIConsoleFunctionPtr signature).
+extern "C" void sub_71003f6c10(const UIID &);  // "UI_Stash_FilterInput_OnChange"
+extern "C" void sub_7100179550(const UIID &);  // "DarkAlchemyUI_OnUpdate"
+extern "C" void sub_710035ae80(const UIID &, const int32);  // "UIHeroSelect_Rebirth"
+extern "C" void sub_710035ae90(const UIID &, const int32);  // "UIHeroSelect_RebirthSolo"
+extern "C" void sub_7100355c90(const UIID &, const int32);  // "UIWhatsNew_Season_Up"
+extern "C" void sub_7100355cc0(const UIID &, const int32);  // "UIWhatsNew_Season_Down"
+extern "C" void sub_710017a270(const UIID &, const int32);  // "DarkAlchemyUI_OnButton1"
+extern "C" void sub_710017a510(const UIID &, const int32);  // "DarkAlchemyUI_OnButton2"
+
 struct UIConsoleFunctionTable {  // size 0x18
     LPCSTR szFunction;  // 0x00
     uint32 uFuncHash;  // 0x08
@@ -1139,6 +1149,8 @@ static const UIFunctionTable sgtUIFunctions[] =
     { NULL, (uint32)-1, NULL },
     //@ 990
     { NULL, (uint32)-1, NULL },
+    { NULL, (uint32)-1, NULL },
+    { NULL, (uint32)-1, NULL },
     { "UIJewelUpgrade_OnUpdate", XHashKey<LPCSTR>("UIJewelUpgrade_OnUpdate"), (void *)UIJewelUpgrade::OnUpdate },
     { NULL, (uint32)-1, NULL },
     { NULL, (uint32)-1, NULL },
@@ -1201,6 +1213,8 @@ static const UIFunctionTable sgtUIFunctions[] =
     { NULL, (uint32)-1, NULL },
     //@ 1059
     { NULL, (uint32)-1, NULL },
+    { NULL, (uint32)-1, NULL },
+    { NULL, (uint32)-1, NULL },
     { "UIEquipLegendaryPowers_OnUpdate", XHashKey<LPCSTR>("UIEquipLegendaryPowers_OnUpdate"), (void *)UIEquipLegendaryPowers::OnUpdate },
     { NULL, (uint32)-1, NULL },
     { NULL, (uint32)-1, NULL },
@@ -1222,6 +1236,13 @@ static const UIFunctionTable sgtUIFunctions[] =
     //@ 1082
     { NULL, (uint32)-1, NULL },
     { "UI_Skills_Toggle", XHashKey<LPCSTR>("UI_Skills_Toggle"), (void *)UISkills::DisplayToggle },
+    { NULL, (uint32)-1, NULL },
+    { NULL, (uint32)-1, NULL },
+    { NULL, (uint32)-1, NULL },
+    { NULL, (uint32)-1, NULL },
+    { NULL, (uint32)-1, NULL },
+    { NULL, (uint32)-1, NULL },
+    { NULL, (uint32)-1, NULL },
     { NULL, (uint32)-1, NULL },
     { NULL, (uint32)-1, NULL },
     //@ 1087
@@ -1442,6 +1463,7 @@ static const UIFunctionTable sgtUIFunctions[] =
     { "UI_Stash_IconPicker_Close", XHashKey<LPCSTR>("UI_Stash_IconPicker_Close"), (void *)UIStash::OnIconPickerClose },
     { "UI_Stash_Icon_Pick", XHashKey<LPCSTR>("UI_Stash_Icon_Pick"), (void *)UIStash::IconPickerAccept },
     //@ 1356
+    { "UI_Stash_FilterInput_OnChange", XHashKey<LPCSTR>("UI_Stash_FilterInput_OnChange"), (void *)sub_71003f6c10 },
     { "UI_Hireling_OnInit", XHashKey<LPCSTR>("UI_Hireling_OnInit"), (void *)UIHireling::OnInit },
     { "UI_HirelingToggle_OnClick", XHashKey<LPCSTR>("UI_HirelingToggle_OnClick"), (void *)UIHireling::ToggleOnClick },
     { "UI_Hireling_Close", XHashKey<LPCSTR>("UI_Hireling_Close"), (void *)UIHireling::Close },
@@ -2441,6 +2463,10 @@ static const UIFunctionTable sgtUIFunctions[] =
     //@ 2506
     { NULL, (uint32)-1, NULL },
     //@ 2512
+    { NULL, (uint32)-1, NULL },
+    { NULL, (uint32)-1, NULL },
+    { NULL, (uint32)-1, NULL },
+    { NULL, (uint32)-1, NULL },
     { "UIConsole_MainMenu_OnUpdate", XHashKey<LPCSTR>("UIConsole_MainMenu_OnUpdate"), (void *)UIMainMenu::Console::OnUpdate },
     //@ 2514
     { "UISkills_Console_Update", XHashKey<LPCSTR>("UISkills_Console_Update"), (void *)UISkills::Console::OnUpdate },
@@ -2522,6 +2548,7 @@ static const UIFunctionTable sgtUIFunctions[] =
     { "UIRiftComplete_OnUpdate", XHashKey<LPCSTR>("UIRiftComplete_OnUpdate"), (void *)UIRiftComplete::OnUpdate },
     //@ 2601
     { "UIEquipmentManager_Console_Update", XHashKey<LPCSTR>("UIEquipmentManager_Console_Update"), (void *)UIEquipmentManager::Console::OnUpdate },
+    { "DarkAlchemyUI_OnUpdate", XHashKey<LPCSTR>("DarkAlchemyUI_OnUpdate"), (void *)sub_7100179550 },
 };
 
 //@ 2625
@@ -2663,7 +2690,8 @@ static const UIConsoleFunctionTable sgtUIConsoleFunctions[] =
     { "UIHeroSelect_NewHero", XHashKey<LPCSTR>("UIHeroSelect_NewHero"), UIHeroSelect::Console::OnNewHero },
     { "UIHeroSelect_DeleteHero", XHashKey<LPCSTR>("UIHeroSelect_DeleteHero"), UIHeroSelect::Console::OnDeleteHero },
     { "UIHeroSelect_Cancel", XHashKey<LPCSTR>("UIHeroSelect_Cancel"), UIHeroSelect::Console::OnBack },
-    { "UIHeroSelect_Rebirth", XHashKey<LPCSTR>("UIHeroSelect_Rebirth"), UIHeroSelect::Console::OnRebirth },
+    { "UIHeroSelect_Rebirth", XHashKey<LPCSTR>("UIHeroSelect_Rebirth"), sub_710035ae80 },
+    { "UIHeroSelect_RebirthSolo", XHashKey<LPCSTR>("UIHeroSelect_RebirthSolo"), sub_710035ae90 },
     { "UIHeroSelect_Console_OnAcceptRebirthWarning", XHashKey<LPCSTR>("UIHeroSelect_Console_OnAcceptRebirthWarning"), UIHeroSelect::Console::OnAcceptModalWarning },
     { "UIHeroSelect_Console_OnCancelRebirthWarning", XHashKey<LPCSTR>("UIHeroSelect_Console_OnCancelRebirthWarning"), UIHeroSelect::Console::OnCancelModalWarning },
     //@ 2788
@@ -2903,6 +2931,8 @@ static const UIConsoleFunctionTable sgtUIConsoleFunctions[] =
     { "UIWhatsNew_Season_OnButton4", XHashKey<LPCSTR>("UIWhatsNew_Season_OnButton4"), UIWhatsNewSeason::Console::OnButton4 },
     { "UIWhatsNew_Season_Previous", XHashKey<LPCSTR>("UIWhatsNew_Season_Previous"), UIWhatsNewSeason::Console::OnDPadLeft },
     { "UIWhatsNew_Season_Next", XHashKey<LPCSTR>("UIWhatsNew_Season_Next"), UIWhatsNewSeason::Console::OnDPadRight },
+    { "UIWhatsNew_Season_Up", XHashKey<LPCSTR>("UIWhatsNew_Season_Up"), sub_7100355c90 },
+    { "UIWhatsNew_Season_Down", XHashKey<LPCSTR>("UIWhatsNew_Season_Down"), sub_7100355cc0 },
     { "UIWhatsNew_Season_ScreenLeft", XHashKey<LPCSTR>("UIWhatsNew_Season_ScreenLeft"), UIWhatsNewSeason::Console::OnL1 },
     { "UIWhatsNew_Season_ScreenRight", XHashKey<LPCSTR>("UIWhatsNew_Season_ScreenRight"), UIWhatsNewSeason::Console::OnR1 },
     { "UIWhatsNew_Season_OnL2", XHashKey<LPCSTR>("UIWhatsNew_Season_OnL2"), UIWhatsNewSeason::Console::OnL2 },
@@ -2922,6 +2952,8 @@ static const UIConsoleFunctionTable sgtUIConsoleFunctions[] =
     { "UIEquipmentManager_OnLeftStick", XHashKey<LPCSTR>("UIEquipmentManager_OnLeftStick"), UIEquipmentManager::Console::OnLeftStick },
     { "UIEquipmentManager_OnDPadLeft", XHashKey<LPCSTR>("UIEquipmentManager_OnDPadLeft"), UIEquipmentManager::Console::OnDPadLeft },
     { "UIEquipmentManager_OnDPadRight", XHashKey<LPCSTR>("UIEquipmentManager_OnDPadRight"), UIEquipmentManager::Console::OnDPadRight },
+    { "DarkAlchemyUI_OnButton1", XHashKey<LPCSTR>("DarkAlchemyUI_OnButton1"), sub_710017a270 },
+    { "DarkAlchemyUI_OnButton2", XHashKey<LPCSTR>("DarkAlchemyUI_OnButton2"), sub_710017a510 },
 };
 
 //@ 3113
@@ -2994,7 +3026,7 @@ void UIFunction_InitializeMap()
             bFound = tMap.Lookup(tEntry.uFuncHash, nExistingIdx);
             if (bFound)
             {
-                DisplayInternalError(NULL, "", 3372, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+                DisplayInternalError(NULL, "", 3407, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
             }
 
             tMap.SetAt_Tracked(tEntry.uFuncHash, i);
@@ -3016,7 +3048,7 @@ void UIConsoleFunction_InitializeMap()
             bFound = tMap.Lookup(tEntry.uFuncHash, nExistingIdx);
             if (bFound)
             {
-                DisplayInternalError(NULL, "", 3401, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+                DisplayInternalError(NULL, "", 3436, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
             }
 
             tMap.SetAt_Tracked(tEntry.uFuncHash, i);

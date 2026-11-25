@@ -74,7 +74,6 @@ static const ActEntry gptActs[] = {
 static const TypeDescriptorField GameSyncedData_Fields[32] = {
     BoundedTypeDescriptorField("", DT_INT, offsetof(GameSyncedData, dwGameSyncedFlags), NULL, (const void *)0, (const void *)((1 << GAME_SYNCED_FLAGS_COUNT) - 1)),
     TypeDescriptorField("", DT_INT, offsetof(GameSyncedData, eAct), NULL, 1),
-    TypeDescriptorField("", DT_INT, offsetof(GameSyncedData, nInitialMonsterLevel), NULL, 1),
     TypeDescriptorField("", DT_INT, offsetof(GameSyncedData, nMonsterLevel), NULL, 1),
     TypeDescriptorField("", DT_INT, offsetof(GameSyncedData, nRandomWeatherSeed), NULL, 1),
     TypeDescriptorField("", DT_INT, offsetof(GameSyncedData, eOpenWorldMode), NULL, 1),
@@ -88,6 +87,7 @@ static const TypeDescriptorField GameSyncedData_Fields[32] = {
     TypeDescriptorField("", DT_INT, offsetof(GameSyncedData, nOpenLootRunLevel), NULL, 1),
     TypeDescriptorField("", DT_INT, offsetof(GameSyncedData, bLootRunBossDead), NULL, 1),
     TypeDescriptorField("", DT_INT, offsetof(GameSyncedData, bSetDungeonActive), NULL, 1),
+    TypeDescriptorField("", DT_INT, offsetof(GameSyncedData, unk_4c), NULL, 1),
     TypeDescriptorField("", DT_INT, offsetof(GameSyncedData, nHunterPlayerIdx), NULL, 1),
     TypeDescriptorField("", DT_INT, offsetof(GameSyncedData, bLootRunBossActive), NULL, 1),
     TypeDescriptorField("", DT_INT, offsetof(GameSyncedData, bTieredLootRunFailed), NULL, 1),
@@ -161,7 +161,7 @@ void GameCommonData::Initialize( const GameParams & tParams )
     }
 
     tGameSyncedData.eAct = tParams.eAct;
-    tGameSyncedData.nInitialMonsterLevel = tParams.nMonsterLevel;
+    tGameSyncedData.unk_4c = 0;
     tGameSyncedData.nMonsterLevel = tParams.nMonsterLevel;
     tGameSyncedData.eOpenWorldMode = 0;
     tGameSyncedData.eOpenWorldModeAct = ACT_INVALID;

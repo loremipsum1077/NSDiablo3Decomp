@@ -11,7 +11,7 @@
 
 typedef int32 TrickleInfoType;
 
-struct ClientTrickleEntry {  // size 0x68
+struct ClientTrickleEntry {  // size 0x6c
     ACDNetworkName ann;  // 0x00
     SNO snoActor;  // 0x04
     WorldPlace tPlace;  // 0x08
@@ -33,9 +33,9 @@ struct ClientTrickleEntry {  // size 0x68
     int32 nTieredRiftRank;  // 0x58
     BOOL bBrawling;  // 0x5c
     BOOL bInUberFight;  // 0x60
-    int32 gbidPortraitFrame;  // 0x64
+    int32 gbidPortraitFrame;  /* 0x64 */  int32 unk_68;  // 0x68 (2.7.7: stored by CTrickleUpdate)
 };
-static_assert(sizeof(ClientTrickleEntry) == 0x68, "ClientTrickleEntry");
+static_assert(sizeof(ClientTrickleEntry) == 0x6c, "ClientTrickleEntry");
 
 typedef XPooledList<ClientTrickleEntry, const ClientTrickleEntry &> ClientTrickleList;
 
@@ -46,7 +46,7 @@ typedef XPooledList<ClientTrickleEntry, const ClientTrickleEntry &> ClientTrickl
 
 // Layout checks generated from the DWARF by tools/layout_asserts.py.
 #include <stddef.h>
-static_assert(sizeof(ClientTrickleEntry) == 0x68, "ClientTrickleEntry");
+static_assert(sizeof(ClientTrickleEntry) == 0x6c, "ClientTrickleEntry");
 static_assert(offsetof(ClientTrickleEntry, ann) == 0x0, "ClientTrickleEntry");
 static_assert(offsetof(ClientTrickleEntry, snoActor) == 0x4, "ClientTrickleEntry");
 static_assert(offsetof(ClientTrickleEntry, tPlace) == 0x8, "ClientTrickleEntry");

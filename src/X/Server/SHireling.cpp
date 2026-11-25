@@ -769,7 +769,7 @@ ACDID SHirelingCreate(
 			Achievement::EvaluationData tEvaluationData;
 			tEvaluationData.SetPlayer(ptPlayer);
 
-			tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_ACQUIRE_HIRELING, eHirelingClass, 1);
+			tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_ACQUIRE_HIRELING, eHirelingClass, 1, (uint32)sub_71007b5e70());
 
 
 
@@ -867,10 +867,6 @@ void SHireling_TryRetrain(Player & tPlayer)
 
 
 
-
-
-
-
 void SHirelingRespec(ActorCommonData & tACDHireling)
 {
 
@@ -884,16 +880,11 @@ void SHirelingRespec(ActorCommonData & tACDHireling)
 
     ScriptEventOnUserEventSentToActor("HirelingRetrain", tACDHireling.id, tACDHireling.id, 0);
 }
-
-
-
-
 void SHirelingSetActive(ACDID idACDPlayer, HirelingClass eClass, BOOL bSave)
 {
     Player * ptPlayer = PlayerGetByACD(idACDPlayer);
     if (ptPlayer == NULL)
     {
-
 
 
         DisplayInternalError(NULL, "", __LINE__, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);

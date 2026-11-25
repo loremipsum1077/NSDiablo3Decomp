@@ -3770,14 +3770,14 @@ int32 GameGetMonsterLevel()
 
 
 
-int32 GameGetInitialMonsterLevel()
-{
-
-    int32 nLevel = GameGetActiveGameCommonData().tGameSyncedData.nInitialMonsterLevel;
+// 2.7.7: GameGetInitialMonsterLevel was removed with GameSyncedData::nInitialMonsterLevel.
 
 
-    return Math::Max(nLevel, 1);
-}
+
+
+
+
+
 
 
 

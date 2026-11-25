@@ -47,7 +47,7 @@ SWorldID SActTravelTo(const Act eAct, Player & tPlayer, ResolvedPortalDestinatio
     } else {
         if (idSWorld == SWORLDID_INVALID) {
             idSWorld = SWorldCreate(tDest.snoWorld, TRUE, FALSE, NULL, ACDID_INVALID, ACDID_INVALID,
-                                    tDest.uEntranceGUID, WARP_UNKNOWN, FALSE);
+                                    tDest.uEntranceGUID, WARP_UNKNOWN, FALSE, 0);
         }
 
         SPlayerEnterAct(tPlayer, eAct, FALSE);

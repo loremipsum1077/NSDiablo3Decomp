@@ -1917,6 +1917,32 @@ int32 ItemCrafting_GetReforgeReagents(ActorCommonData & tACDItem, RecipeIngredie
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 GameMessageType ItemCrafting_BackEnd::MessageTypeFromCrafterType(CrafterType eType, BOOL fInitialInfo)
 {
     GameMessageType eMessageType = 0;
@@ -2278,7 +2304,7 @@ static void sFindTransmogGBIDInInventory(ACDID idACDSquare, InventorySlotType, v
 {
     TransmogSearchData * ptSearchData = (TransmogSearchData *)pUserData;
     ActorCommonData & tACDItem = ACDGet(idACDSquare);
-    ptSearchData->bFound |= (ptSearchData->snoItemActor == tACDItem.snoActor);
+    ptSearchData->bFound |= (tACDItem.snoActor == ptSearchData->snoItemActor);
 }
 
 
@@ -2568,7 +2594,7 @@ int32 ItemCrafting_GetGemTier(const ActorCommonData & tACDGem)
     int32 nGemQuality = tACDGem.AttributesGetInt(FastAttribKey(ATTRIBUTE_GEM_QUALITY));
     for (int32 i = 0; i < 10; i++)
     {
-        if (GEM_QUALITIES[i] == nGemQuality)
+        if (nGemQuality == GEM_QUALITIES[i])
         {
             nTier = i + 1;
             break;

@@ -21,15 +21,16 @@
 // Nintendo SDK entry points (nn/oe/oe_LanguageApi.h, nn/nifm/nifm_Api.h, nn/friends/friends_Api.h,
 // nn/settings/settings_Language.h); the SDK headers are not in src/.
 namespace nn { namespace oe { nn::settings::LanguageCode GetDesiredLanguage(); } }
-namespace nn { namespace nifm { void HandleNetworkRequestResult(); } }
+namespace nn { namespace nifm { void HandleNetworkRequestErrorResult(); } }
+namespace nn { namespace oe { enum CpuBoostMode { CpuBoostMode_Normal = 0, CpuBoostMode_FastLoad = 1 }; void SetCpuBoostMode(CpuBoostMode eMode); } }
 namespace nn { namespace friends {
 void ShowUserDetailInfo(const nn::account::Uid & uid, const nn::account::NetworkServiceAccountId & id, const nn::friends::InAppScreenName & userName, const nn::friends::InAppScreenName & profileOwnerName);
 } }
 // settings_Language.h:105 and :119 are DWARF-inline operators over this SDK import.
 namespace nn { namespace settings {
 bool operator==(const LanguageCode & lhs, const LanguageCode & rhs);
-inline bool operator==(const Language & lhs, const LanguageCode & rhs) { return LanguageCode::Make(lhs) == rhs; }
-inline bool operator==(const LanguageCode & lhs, const Language & rhs) { return rhs == lhs; }
+// 2.7.7 calls this one as an import (_ZN2nn8settingseqERKNS0_12LanguageCodeERKNS0_8LanguageE@plt).
+bool operator==(const LanguageCode & lhs, const Language & rhs);
 } }
 // GamerProfileNX64.cpp:734 and :910.
 namespace Console { namespace GamerProfile {
@@ -197,7 +198,18 @@ void ShowProfile(int32 nUserIndex,
 
 void ShowSystemOnlineErrorDialog()
 {
-    nn::nifm::HandleNetworkRequestResult();
+    nn::nifm::HandleNetworkRequestErrorResult();
+}
+
+// 2.7.7 only (0x71000b3c50); called by LoadingScreenManager::Update with TRUE when a loading screen
+// starts and FALSE when it ends. Name unknown.
+static BOOL unk_179a168;
+extern "C" void sub_71000b3c50(bool bBoost)
+{
+    if (unk_179a168 == bBoost)
+        return;
+    unk_179a168 = bBoost;
+    nn::oe::SetCpuBoostMode((nn::oe::CpuBoostMode)bBoost);
 }
 
 
@@ -250,6 +262,7 @@ BOOL ShowGameInviteUI(int32 nControllerIndex)
 
 
 
+extern "C" bool sub_7100073850(XLocale eLocale);  // 2.7.7 only, unnamed
 XLocale GetSystemLanguage()
 {
 
@@ -282,7 +295,7 @@ XLocale GetSystemLanguage()
     }
     else if (languageIn == nn::settings::Language_Chinese)
     {
-        languageOut = XLOCALE_CHINESE_CHINA;
+        languageOut = 19;  // 2.7.7: one past XLOCALE_JAPANESE (no enumerator in UnicodeText.h yet)
     }
     else if (languageIn == nn::settings::Language_Korean)
     {
@@ -290,7 +303,7 @@ XLocale GetSystemLanguage()
     }
     else if (languageIn == nn::settings::Language_Dutch)
     {
-        languageOut = XLOCALE_ENGLISH_EU;
+        languageOut = sub_7100073850(XLOCALE_JAPANESE) ? XLOCALE_JAPANESE : XLOCALE_ENGLISH_EU;
     }
     else if (languageIn == nn::settings::Language_Portuguese)
     {
@@ -318,7 +331,7 @@ XLocale GetSystemLanguage()
     }
     else if (languageIn == nn::settings::Language_SimplifiedChinese)
     {
-        languageOut = XLOCALE_CHINESE_CHINA;
+        languageOut = 19;
     }
     else if (languageIn == nn::settings::Language_TraditionalChinese)
     {
@@ -415,16 +428,18 @@ struct KeyboardConfig {
     bool _isUseTextCheck;
     TextCheckCallback _textCheckCallback;
     int32_t separateTextPos[8];
+    uint8_t unk_400[0xd0];  // 2.7.7 links a newer SDK: workBuf is at arg+0x4d0 in ShowKeyboardForUser
 };
-static_assert(sizeof(KeyboardConfig) == 0x0400, "KeyboardConfig");
+static_assert(sizeof(KeyboardConfig) == 0x04d0, "KeyboardConfig");
 struct ShowKeyboardArg {
     KeyboardConfig keyboardConfig;
     void * workBuf;
     size_t workBufSize;
     void * textCheckWorkBuf;
     size_t textCheckWorkBufSize;
+    uint8_t unk_4f0[0x10];  // newer SDK; size from ShowKeyboardForUser's 0x560-byte frame
 };
-static_assert(sizeof(ShowKeyboardArg) == 0x0420, "ShowKeyboardArg");
+static_assert(sizeof(ShowKeyboardArg) == 0x0500, "ShowKeyboardArg");
 void MakePreset(KeyboardConfig*, Preset);
 void SetHeaderTextUtf8(KeyboardConfig*, const char*);
 void SetSubTextUtf8(KeyboardConfig*, const char*);
@@ -532,7 +547,7 @@ BOOL SendGameInvite(int32 nControllerIndex, uint64 idPlayer)
     Online::PresenceManager* ptPresenceManager = Online::PresenceManager::Get(nControllerIndex);
     const Online::PartyConnectionInfo& tConnectionInfo = ptPresenceManager->GetConnectionInfo();
     bdReference<bdBitBuffer> ptBuffer = ::new bdBitBuffer(0, false);
-    ptBuffer->writeUInt32(0x109);
+    ptBuffer->writeUInt32(0x115);
     ptBuffer->writeUInt32(1);
     tConnectionInfo.Serialize(ptBuffer);
     BOOL bStartedTask = Online::LobbyService::Get(nControllerIndex)->SendGlobalInstantMessage(idPlayer, ptBuffer->getData(), ptBuffer->getDataSize());

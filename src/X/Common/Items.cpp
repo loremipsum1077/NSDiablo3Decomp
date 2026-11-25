@@ -1732,6 +1732,25 @@ GBID ItemGetItemTypeGBID(GBID gbidItem)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const ItemType * ItemsGetItemType(GBID gbidItemType)
 {
     ItemAppGlobals & tItemAppGlobals = *sgtAppGlobals.ptItemAppGlobals;
@@ -2437,9 +2456,6 @@ SNO ItemGetUsePower(const GBID gbidItem)
     GlobalSNO eGlobalSNO;
     switch (sItemActorGetUseType(snoActor))
     {
-    case ITEM_USE_HEALTHGLYPH:
-        eGlobalSNO = GLOBALSNO_POWERS_USE_HEALTH_GLYPH;
-        break;
     case ITEM_USE_HEALTHPOTION:
         eGlobalSNO = GLOBALSNO_POWERS_DRINK_HEALTH_POTION;
         break;
@@ -2451,6 +2467,9 @@ SNO ItemGetUsePower(const GBID gbidItem)
         break;
     case ITEM_USE_HEARTHPORTALSCROLL:
         eGlobalSNO = GLOBALSNO_POWERS_USE_HEARTH_SCROLL;
+        break;
+    case ITEM_USE_HEALTHGLYPH:
+        eGlobalSNO = GLOBALSNO_POWERS_USE_HEALTH_GLYPH;
         break;
     case ITEM_USE_MANAGLYPH:
         eGlobalSNO = GLOBALSNO_POWERS_USE_MANA_GLYPH;
@@ -3910,6 +3929,122 @@ int32 ItemGetItemLevel(const GBID gbidItem)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int32 ItemGetBaseCost(const GBHandle & hGB, const CurrencyType eCurrencyType)
 {
     ScopedItemDefinitionLockR pItemDef(hGB.gbid);
@@ -4611,6 +4746,24 @@ void ItemRemoveAttributesFromSpecifiers(ActorCommonData * ptACDItem, const Attri
         ptACDItem->ModifiedMark(0);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6087,7 +6240,7 @@ BOOL ItemAffixAddsSockets(GBID gbidAffix)
 
 
 
-// NON_MATCHING: one tst operand order at 0x7100467058 (line 6198:10): (1 << eIQL) gives tst mask,dw; (uint32)(1ULL << eIQL) gives lsl x; swapped operands, == 0 and 1U forms all fail.
+// NON_MATCHING: 2.7.7 tests the eIQL bit with a 32-bit lsl (1u << eIQL here; 1ULL gave lsl x); 4 instructions remain, a register swap of the ptAffix/eIQL loads at line 6351. Operand-swapped and >> forms tried.
 BOOL ItemCanAddAffix(
     const ItemAffixSpecifier & tSpecifier,
     const AffixTableEntry * ptAffixTableEntry,
@@ -6195,7 +6348,7 @@ BOOL ItemCanAddAffix(
     }
 
     if (!(tSpecifier.dwFlags & (1 << 0)) &&
-        !(tSpecifier.ptAffix->dwAllowedQualityLevels & (uint32)(1ULL << tSpecifier.eIQL)))
+        !(tSpecifier.ptAffix->dwAllowedQualityLevels & (1u << tSpecifier.eIQL)))
     {
         return FALSE;
     }
@@ -6797,7 +6950,7 @@ AttribGroupID ItemGenerateUpscaledAttribForPlayer(
     ACDID idACDNew = ACDID_INVALID;
     if (GameActiveGameCommonDataIsClient())
     {
-        idACDNew = CItemGenerate((ACDNetworkName)8486, tGenerator, NULL);
+        idACDNew = CItemGenerate((ACDNetworkName)12070, tGenerator, NULL);
     }
     else
     {
@@ -10278,7 +10431,7 @@ void ItemsValidateCachedAffixTableEntries()
 
 
 
-ACDID ItemGetAssignedACDID(const ActorCommonData & tACDItem)
+ACDID ItemGetAssignedACDID(const ActorCommonData & tACDItem, BOOL bUnk)
 {
     const InventoryLocation * ptInventoryLoc = tACDItem.TryToGetInventoryLocation();
     if (ptInventoryLoc != NULL)
@@ -10303,7 +10456,7 @@ ACDID ItemGetAssignedACDID(const ActorCommonData & tACDItem)
     {
         for (Player * ptPlayer = PlayerGetFirstInGame(); ptPlayer != NULL; ptPlayer = PlayerGetNextInGame(ptPlayer))
         {
-            if (tACDItem.DoesPlayerMatchAssignedHeroID(ptPlayer))
+            if (tACDItem.DoesPlayerMatchAssignedHeroID(ptPlayer, bUnk))
                 return ptPlayer->idPlayerACD;
         }
     }

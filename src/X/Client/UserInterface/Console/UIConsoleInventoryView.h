@@ -227,7 +227,7 @@ private:
     UIInventory::Console::InventoryItems::ProviderMode m_eProviderMode;  // 0x7ec
     ItemQualityLevel m_eMinimumItemQuality;  // 0x7f0
 };
-static_assert(sizeof(InventoryItems) == 0x7f8, "InventoryItems");
+static_assert(sizeof(InventoryItems) == 0x8e8, "InventoryItems");
 
 class UIInventoryView {  // size 0x60
 public:
@@ -401,7 +401,7 @@ public:
     CrafterRecipes();
     virtual ~CrafterRecipes() { CleanupACDs(); }  // vtable slot 0
     void SetRecipeOptions(const UIInventory::Console::CrafterRecipes::RecipeOptions dwRecipeOptions);
-    virtual const GBIDArray & GetRecipes() const { return m_arrRecipes[GetFilter() < FILTER_RECIPES_START ? 0 : GetFilter() - FILTER_RECIPES_START]; }  // vtable slot 15
+    virtual const GBIDArray & GetRecipes() const { return GetFilter() < FILTER_RECIPES_START ? m_arrRecipes[0] : m_arrRecipes[GetFilter() - FILTER_RECIPES_START]; }  // vtable slot 15
     virtual const ACDIDArray & GetItemsWithFilter(const UIFilterType eFilterType) const { return eFilterType < FILTER_RECIPES_START ? m_arrEmpty : m_arrItems[eFilterType - FILTER_RECIPES_START]; }  // vtable slot 6
     virtual int32 GetIndexOfItem(const ACDID idItem) const {
         int32 nIndex = GetFilter() - FILTER_RECIPES_START;
@@ -522,7 +522,7 @@ private:
 static_assert(sizeof(CraftingItem) == 0x48, "CraftingItem");
 
 
-class TransmogableItems : public UIInventory::Console::UIInventoryViewItemsProvider {  // size 0x7e8
+class TransmogableItems : public UIInventory::Console::UIInventoryViewItemsProvider {  // size 0x8d8
 public:
     // line 1208
     virtual const ACDIDArray & GetItemsWithFilter(const UIFilterType eFilterType) const  // vtable slot 6
@@ -538,9 +538,9 @@ public:
 private:
     UIInventory::Console::FilteredInventoryView m_tView;  // 0x20
 };
-static_assert(sizeof(TransmogableItems) == 0x7e8, "TransmogableItems");
+static_assert(sizeof(TransmogableItems) == 0x8d8, "TransmogableItems");
 
-class DyeableItems : public UIInventory::Console::UIInventoryViewItemsProvider {  // size 0x7e8
+class DyeableItems : public UIInventory::Console::UIInventoryViewItemsProvider {  // size 0x8d8
 public:
 #line 1235 "X/Client/UserInterface/Console/UIConsoleInventoryView.h"
     virtual const ACDIDArray & GetItemsWithFilter(
@@ -571,7 +571,7 @@ public:
 private:
     UIInventory::Console::FilteredInventoryView m_tView;  // 0x20
 };
-static_assert(sizeof(DyeableItems) == 0x7e8, "DyeableItems");
+static_assert(sizeof(DyeableItems) == 0x8d8, "DyeableItems");
 
 
 class EquippedItem : public UIInventoryViewItemsProvider {  // size 0x38

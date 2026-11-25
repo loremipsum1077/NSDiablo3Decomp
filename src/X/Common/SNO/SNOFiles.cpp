@@ -3191,6 +3191,30 @@ static void sSNOFileMapDelete(SNOElement * ptSNOElement, BOOL fDeleteFromElement
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 static void sFileTableInitialize()
 {
     {
@@ -3294,7 +3318,7 @@ static void sFileTableInitialize()
 
 
 
-    Blizzard::String::Copy(sgptSNOGlobals->szBranch, "2_6_2", sizeof(sgptSNOGlobals->szBranch));
+    Blizzard::String::Copy(sgptSNOGlobals->szBranch, "2_7_7", sizeof(sgptSNOGlobals->szBranch));
 
 
 
@@ -7773,6 +7797,17 @@ BOOL SNOFileLoadTextFile(LPCSTR szPath, CHAR *& lpBuffer, uint32 & dwTextLength,
 
     return TRUE;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

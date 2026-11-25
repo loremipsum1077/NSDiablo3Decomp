@@ -81,7 +81,7 @@ BOOL RingWrapper::IsInDeadZone(const int32 nControllerIndex)
     return ControllerUtils::LStickIsInDeadZone(nControllerIndex, 0, DEAD_ZONE, REBOUND_DEAD_ZONE);
 }
 
-void RingWrapper::UpdateInput(const int32 nControllerIndex, Console::RingWrapper::IconSelectionChanged fnSelectionChanged)
+void RingWrapper::UpdateInput(const int32 nControllerIndex, Console::RingWrapper::IconSelectionChanged fnSelectionChanged, bool (*fnCanSelect)(const Console::RingWrapper &, const UIID &))
 {
     if (!m_bIsEnabled) {
         return;
@@ -91,14 +91,14 @@ void RingWrapper::UpdateInput(const int32 nControllerIndex, Console::RingWrapper
         return;
     }
 
-    UpdateTouchpad(nControllerIndex, fnSelectionChanged);
+    UpdateTouchpad(nControllerIndex, fnSelectionChanged, fnCanSelect);
 
     if (m_nInputSources & 1) {
-        UpdateAnalogStickInput(nControllerIndex, fnSelectionChanged);
+        UpdateAnalogStickInput(nControllerIndex, fnSelectionChanged, fnCanSelect);
     }
 }
 
-void RingWrapper::UpdateAnalogStickInput(const int32 nControllerIndex, Console::RingWrapper::IconSelectionChanged fnSelectionChanged)
+void RingWrapper::UpdateAnalogStickInput(const int32 nControllerIndex, Console::RingWrapper::IconSelectionChanged fnSelectionChanged, bool (*fnCanSelect)(const Console::RingWrapper &, const UIID &))
 {
     static BOOL bInDeadZone = IsInDeadZone(nControllerIndex);
     const BOOL bWasInDeadZone = bInDeadZone;
@@ -117,11 +117,11 @@ void RingWrapper::UpdateAnalogStickInput(const int32 nControllerIndex, Console::
         bInDeadZone = FALSE;
 
         const Vector2D vecStick = ControllerUtils::GetLStickPosition(nControllerIndex, 0);
-        UpdateRingSelection(vecStick, fnSelectionChanged);
+        UpdateRingSelection(vecStick, fnSelectionChanged, fnCanSelect);
     }
 }
 
-void RingWrapper::UpdateRingSelection(const Vector2D & vecUnitDirection, Console::RingWrapper::IconSelectionChanged fnSelectionChanged)
+void RingWrapper::UpdateRingSelection(const Vector2D & vecUnitDirection, Console::RingWrapper::IconSelectionChanged fnSelectionChanged, bool (*fnCanSelect)(const Console::RingWrapper &, const UIID &))
 {
     if (!m_bIsEnabled) {
         return;
@@ -134,8 +134,10 @@ void RingWrapper::UpdateRingSelection(const Vector2D & vecUnitDirection, Console
 
     const UIID idSelected = GetSelectedControlID();
     if (idSelected != m_arIcons[nIndex].id) {
-        PointCursorAtControl(m_arIcons[nIndex].id);
-        SetSelectedControl(m_arIcons[nIndex].id, fnSelectionChanged);
+        if (fnCanSelect == NULL || fnCanSelect(*this, m_arIcons[nIndex].id)) {
+            PointCursorAtControl(m_arIcons[nIndex].id);
+            SetSelectedControl(m_arIcons[nIndex].id, fnSelectionChanged);
+        }
     }
 }
 
@@ -315,7 +317,7 @@ void RingWrapper::CalculateIconRegions(Console::RingWrapper::IncludeControlPredi
     blzext::vector_sort(m_arIcons, sSortByAngle);
 }
 
-BOOL RingWrapper::UpdateTouchpad(const int32 nControllerIndex, Console::RingWrapper::IconSelectionChanged fnSelectionChanged)
+BOOL RingWrapper::UpdateTouchpad(const int32 nControllerIndex, Console::RingWrapper::IconSelectionChanged fnSelectionChanged, bool (*fnCanSelect)(const Console::RingWrapper &, const UIID &))
 {
     if (GetSelectedControlID() == GetUIIDNone()) {
         return FALSE;
@@ -342,9 +344,11 @@ BOOL RingWrapper::UpdateTouchpad(const int32 nControllerIndex, Console::RingWrap
         }
 
         if (nNewSelection != m_nSelectedIndex) {
-            s_nSelectedSlot = nNewSelection;
-            SelectControl(m_arIcons[nNewSelection].id, fnSelectionChanged);
-            return TRUE;
+            if (fnCanSelect == NULL || fnCanSelect(*this, m_arIcons[nNewSelection].id)) {
+                s_nSelectedSlot = nNewSelection;
+                SelectControl(m_arIcons[nNewSelection].id, fnSelectionChanged);
+                return TRUE;
+            }
         }
     } else {
         m_nTouchStartIcon = m_nSelectedIndex;

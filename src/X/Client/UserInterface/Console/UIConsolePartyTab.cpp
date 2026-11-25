@@ -330,7 +330,7 @@ namespace Console {
 
 static const int32 KANAI_SLOT = 10;  // line 61
 
-class InspectInvScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x2a8
+class InspectInvScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x2b8
     enum ButtonActions {
         ACTION_BACK = 0,
         ACTION_SCROLL_LIST = 1,
@@ -389,11 +389,11 @@ private:
     virtual void OnSetActive(BOOL bActive);
     virtual void UpdateControllerActions(::Console::ControllerActionManager & tActionManager);
 
-    UIInventory::Console::EquippedItem m_tEquippedItemProvider;  // 0x1f0
-    UIInventory::Console::UIInventoryDetailsView m_tEquippedView;  // 0x228
-    BOOL m_fRingNeedsUpdating;  // 0x2a0
+    UIInventory::Console::EquippedItem m_tEquippedItemProvider;  // 0x200
+    UIInventory::Console::UIInventoryDetailsView m_tEquippedView;  // 0x238
+    BOOL m_fRingNeedsUpdating;  // 0x2b0
 };
-static_assert(sizeof(InspectInvScreen) == 0x2a8, "InspectInvScreen");
+static_assert(sizeof(InspectInvScreen) == 0x2b8, "InspectInvScreen");
 
 class InspectSkillsScreen {  // size 0x108
     enum ButtonActions {
@@ -481,7 +481,7 @@ private:
 };
 static_assert(sizeof(CharSelectScreen) == 0x40, "CharSelectScreen");
 
-class PartyTab {  // size 0x410
+class PartyTab {  // size 0x420 (UIParty::Console::InitializeForGame: new(0x420))
 public:
     enum PartyTabMode {
         PTM_INVALID = -1,
@@ -535,9 +535,9 @@ private:
     PartyTabMode m_eModeDeferred;  // 0x1c
     CharSelectScreen m_tCharSelectScreen;  // 0x20
     InspectInvScreen m_tInspectInvScreen;  // 0x60
-    InspectSkillsScreen m_tInspectSkillsScreen;  // 0x308
+    InspectSkillsScreen m_tInspectSkillsScreen;  // 0x318
 };
-static_assert(sizeof(PartyTab) == 0x410, "PartyTab");
+static_assert(sizeof(PartyTab) == 0x420, "PartyTab");
 
 PartyTab * sgptPartyTabGlobals;  // line 412
 
@@ -1225,7 +1225,7 @@ inline void InspectSkillsScreen::HandleLeftStickInput(const int32 nControllerInd
     Vector2D vecStick = ::Console::ControllerUtils::GetLStickPosition(nControllerIndex, FALSE);
     if (m_tRingStickInputFilter.HandleInput(vecStick, FALSE) == ::Console::AnalogStickInputFilter::Rule::CATCH_ALL_INPUT)
     {
-        m_tRingUI.UpdateInput(nControllerIndex, IconSelectionChanged);
+        m_tRingUI.UpdateInput(nControllerIndex, IconSelectionChanged, NULL);
     }
 }
 

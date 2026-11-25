@@ -23,7 +23,7 @@ namespace Console { namespace Online { BOOL PartyIsPublic(); } }
 ACDID ACDInventoryGetActiveWeapon(const ActorCommonData & tACD);  // X/Common/ActorInventory.cpp:5398
 #include "../AI/BrainComponents.h"  // Inference: declares BrainAPIGetActiveComponent/ActiveComponent used at line 1057 (no DIE records the include).
 namespace Achievement {
-extern XVarUint32 arTimestamps[10];
+extern XVarUint32 arTimestamps[12];
  } // Achievement; dependency declarations below have global scope.
 #include "../../Common/World.h"
 #include "../../Common/Act.h"
@@ -237,7 +237,7 @@ bool EvaluateModifiers(EvaluationData * ptData, uint64 modifierID, uint64 operan
     }
     return bResult;
 }
-void EvaluationData::EvaluateEvent(const Player * ptPlayer, Achievement::EventID eEventID, uint32 operand, uint32 qty)
+void EvaluationData::EvaluateEvent(const Player * ptPlayer, Achievement::EventID eEventID, uint32 operand, uint32 qty, uint64 uUnkFlags)
 {
 
 
@@ -270,12 +270,13 @@ void EvaluationData::EvaluateEvent(const Player * ptPlayer, Achievement::EventID
             operand,
             qty,
             SGameManager::GameGet().ptSGameGlobals->tAchievementTime,
+            uUnkFlags,
             OnlineService::internal::function_bind_1_2<bool, EvaluationData *, uint64, uint64, &EvaluateModifiers>(this));
     }
 }
 
 
-void EvaluationData::EvaluateEvent(const Player * ptPlayer, Achievement::EventID eEventID, uint32 qty)
+void EvaluationData::EvaluateEvent(const Player * ptPlayer, Achievement::EventID eEventID, uint32 qty, uint64 uUnkFlags)
 {
 
 
@@ -306,6 +307,7 @@ void EvaluationData::EvaluateEvent(const Player * ptPlayer, Achievement::EventID
             eEventID,
             qty,
             SGameManager::GameGet().ptSGameGlobals->tAchievementTime,
+            uUnkFlags,
             OnlineService::internal::function_bind_1_2<bool, EvaluationData *, uint64, uint64, &EvaluateModifiers>(this));
     }
 }
@@ -1662,7 +1664,7 @@ bool EquipmentInfo::IsAllEquipmentDyedDifferently() const
 
 bool EquipmentInfo::IsAllEquipmentEnchanted() const
 {
-    int32 nNumSlots = ACDIsPlayer(tACDIDEquipmentOwner) ? 13 : 6;
+    int32 nNumSlots = ACDIsPlayer(tACDIDEquipmentOwner) ? 13 : 14;
 
     if (bTwoHandedWeaponEquipped)
         nNumSlots--;
@@ -1699,7 +1701,7 @@ bool EquipmentInfo::IsAllHirelingEquipmentMaxLevelLegendary() const
 
     if (ACDIsHireling(*ptACD))
     {
-        int32 nNumSlots = bTwoHandedWeaponEquipped ? 5 : 6;
+        int32 nNumSlots = bTwoHandedWeaponEquipped ? 13 : 14;
         return nNumMaxLevelLegendaryItems >= nNumSlots;
     }
 
@@ -1758,7 +1760,7 @@ bool EquipmentInfo::IsAllEquipmentDyedOneColor() const
 
 bool EquipmentInfo::IsFullyEquipped() const
 {
-    int32 nNumSlots = ACDIsPlayer(tACDIDEquipmentOwner) ? 13 : 6;
+    int32 nNumSlots = ACDIsPlayer(tACDIDEquipmentOwner) ? 13 : 14;
 
     if (bTwoHandedWeaponEquipped)
         nNumSlots--;

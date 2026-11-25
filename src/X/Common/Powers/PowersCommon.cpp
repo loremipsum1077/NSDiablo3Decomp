@@ -1234,18 +1234,35 @@ BOOL PowerPlayerAttackOnlyOncePerClick(AutoPowerDefinitionR pdefPower) {
         snoPower == GlobalSNOGet(GLOBALSNO_POWERS_OPERATE_NPC) ||
         snoPower == GlobalSNOGet(GLOBALSNO_POWERS_OPERATE_HELPER_ATTACH))
         return TRUE;
-    return PowerGetTemplate(pdefPower, ACDID_INVALID) == POTION_POWER;
+    if (PowerGetTemplate(pdefPower, ACDID_INVALID) == POTION_POWER)
+        return TRUE;
+    return FALSE;
 }
 
 // Original line 2304.
 float PowerGetClassBonusPercent(AttribGroupID idFastAttrib, PlayerClass eClass) {
     float flBonusPercent = 0.0f;
     switch (eClass) {
-    case PLAYER_CLASS_WITCHDOCTOR:
-        flBonusPercent = FastAttribGetValueFloat(idFastAttrib, FastAttribKey(ATTRIBUTE_DAMAGE_PERCENT_BONUS_WITCHDOCTOR));
+    case PLAYER_CLASS_DEMONHUNTER:
+        flBonusPercent = FastAttribGetValueFloat(idFastAttrib, FastAttribKey(ATTRIBUTE_DAMAGE_PERCENT_BONUS_DEMONHUNTER));
+        break;
+    case PLAYER_CLASS_BARBARIAN:
+        flBonusPercent = FastAttribGetValueFloat(idFastAttrib, FastAttribKey(ATTRIBUTE_DAMAGE_PERCENT_BONUS_BARBARIAN));
         break;
     case PLAYER_CLASS_WIZARD:
         flBonusPercent = FastAttribGetValueFloat(idFastAttrib, FastAttribKey(ATTRIBUTE_DAMAGE_PERCENT_BONUS_WIZARD));
+        break;
+    case PLAYER_CLASS_WITCHDOCTOR:
+        flBonusPercent = FastAttribGetValueFloat(idFastAttrib, FastAttribKey(ATTRIBUTE_DAMAGE_PERCENT_BONUS_WITCHDOCTOR));
+        break;
+    case PLAYER_CLASS_MONK:
+        flBonusPercent = FastAttribGetValueFloat(idFastAttrib, FastAttribKey(ATTRIBUTE_DAMAGE_PERCENT_BONUS_MONK));
+        break;
+    case PLAYER_CLASS_CRUSADER:
+        flBonusPercent = FastAttribGetValueFloat(idFastAttrib, FastAttribKey(ATTRIBUTE_DAMAGE_PERCENT_BONUS_CRUSADER));
+        break;
+    case PLAYER_CLASS_NECROMANCER:
+        flBonusPercent = FastAttribGetValueFloat(idFastAttrib, FastAttribKey(ATTRIBUTE_DAMAGE_PERCENT_BONUS_NECROMANCER));
         break;
     }
     return flBonusPercent;
@@ -3888,7 +3905,7 @@ Attrib PowerAttributeFromRuneType(RuneType eRuneType) {
 #include "../ActorCommonCollision.h"
 #include "../../Sigma/ErrorManager/ErrorManager.h"
 
-#line 7765
+#line 7831
 uint32 PowerGetPassabilityBit(
     PowerPassabilityType ePassability)
 {
@@ -4329,7 +4346,7 @@ BOOL NavMeshRollMarble(NavMeshRollData &tRollData);
 uint32 NavMeshGetStaticFlagsForPassability(PassabilityType ePassability);
 BOOL NavMeshCallBackPassabilityTypeCanEnter(void *pCallbackData, const NavMeshHandle &tNavMeshHandle);
 
-#line 5139
+#line 5205
 BOOL PowerRollToTargetNavPlace(
     ACDID idACD,
     const Target &tTarget,

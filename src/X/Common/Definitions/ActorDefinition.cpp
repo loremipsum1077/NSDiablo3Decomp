@@ -43,11 +43,11 @@ BOOL ImageCollectionGetImageInfo(const ImageCollectionType eCollection, const Im
 enum {
     ACTOR_XML_VERSION = 41,
     ACTOR_COMMON_SNO_VERSION = 281,
-    ACTOR_PC_SNO_VERSION = 281,
+    ACTOR_PC_SNO_VERSION = 282,
     ACTOR_CONSOLE_SNO_VERSION = 287,
     ACTOR_AXE_SNO_VERSION = 290,
-    ACTOR_XBOXONE_SNO_VERSION = 287,
-    ACTOR_PS4_SNO_VERSION = 287,
+    ACTOR_XBOXONE_SNO_VERSION = 288,
+    ACTOR_PS4_SNO_VERSION = 288,
     ACTOR_NX64_SNO_VERSION = 287,
     ACTOR_COLLISION_FLAGS_VERSION = 1,
 };
@@ -149,7 +149,7 @@ ActorGroupDef * gptGroupDefActor;  // line 151
 // line 157
 ActorGroupDef::ActorGroupDef()
     : GroupDefinition("Actor", ACTOR_SNO,
-                      SNOVersions(ACTOR_PC_SNO_VERSION, 292, ACTOR_XBOXONE_SNO_VERSION, ACTOR_PS4_SNO_VERSION, 288),
+                      SNOVersions(ACTOR_PC_SNO_VERSION, 293, ACTOR_XBOXONE_SNO_VERSION, ACTOR_PS4_SNO_VERSION, 289),
                       SNODATATYPE_TITLE, sizeof(ActorDefinition), DT_ACTOR, 0x4641, 0x500e) {
 }
 

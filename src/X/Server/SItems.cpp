@@ -1377,22 +1377,22 @@ BOOL ItemIsUpgradeableJewel(const ActorCommonData & tACDItem);  // X/Common/Item
 BOOL ItemIsSocketed(const ActorCommonData & tACDItem);  // X/Common/Items.cpp:3522
 float ItemGetAttributeSpecifierValue(const GBID gbidItem, const AttributeSpecifier & tAttribute, const ActorCommonData * ptACDOwner, RNG * ptRNGOverride, int32 nLegendaryItemLevelOverride, BOOL bPrimalAncient);  // X/Common/Items.cpp:4889
 
-void SItemUpgradeJewel(ActorCommonData & tACDItem, int32 nUpgradeRanks)
+BOOL SItemUpgradeJewel(ActorCommonData & tACDItem, int32 nUpgradeRanks, ActorCommonData & tACDOwner)
 {
     if (!ItemIsUpgradeableJewel(tACDItem))
     {
-        return;
+        return FALSE;
     }
 
     if (ItemIsUnidentified(tACDItem))
     {
-        return;
+        return FALSE;
     }
 
     ScopedItemDefinitionLockR pdefItem(tACDItem.hGB.gbid);
     if (!pdefItem)
     {
-        return;
+        return FALSE;
     }
 
     int32 nMaxRank = pdefItem->nJewelMaxRank;
@@ -1405,7 +1405,7 @@ void SItemUpgradeJewel(ActorCommonData & tACDItem, int32 nUpgradeRanks)
 
     if (nUpgradeRanks <= 0 || !tACDItem.IsInInventory())
     {
-        return;
+        return FALSE;
     }
 
     int32 nJewelRankNew = nJewelRank + nUpgradeRanks;
@@ -1486,6 +1486,7 @@ void SItemUpgradeJewel(ActorCommonData & tACDItem, int32 nUpgradeRanks)
             SACDInventoryAddToDirtyList(*ptACDHostItem, AIDA_UPDATE_JEWEL_UPGRADE, ptACDHostItem->GetLocationSlot(), ptACDHostItem->GetLocationSlot());
         }
     }
+    return TRUE;
 }
 
 
@@ -1528,7 +1529,7 @@ BOOL SItemPlayerExtractLegendaryPower(Player & tPlayer, GBID gbidItem, GameError
 
         Achievement::EvaluationData tEvaluationData;
         tEvaluationData.SetPlayer(&tPlayer);
-        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_PLAYER_EXTRACTED_POWER, 1);
+        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_PLAYER_EXTRACTED_POWER, 1, (uint32)sub_71007b5e70());
     }
 
     return TRUE;

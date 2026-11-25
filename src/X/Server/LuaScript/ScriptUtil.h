@@ -625,7 +625,7 @@ ActorIDArray * ActorsInTriggerBounds(ACDID idTrigger, BOOL bPowerTargetsOnly);  
 ActorIDArray * TreasureClassDropAtActor(VACDID idACD, LPCSTR szTreasureClass, BOOL bEnforceLootRules, float flSpawnYawAngle, float flSpawnDist);  // ScriptUtil.cpp:4420
 ActorIDArray * TreasureClassDropAtActorForPlayer(VACDID idACD, LPCSTR szTreasureClass, VACDID idACDPlayer, float flSpawnYawAngle, float flSpawnDist);  // ScriptUtil.cpp:4526
 ActorIDArray * GameGetOpenWorldBossSpawnMarkerLocationsNearActor(ACDID idACDRef, int32 nNumLocations, float flMinDist, float flMaxDist, LPCSTR szLevelArea);  // ScriptUtil.cpp:6938
-ACDID ActorItemGetOwner(VACDID idItemActor); // ScriptUtil.cpp:2203
+ACDID ActorItemGetOwner(VACDID idItemActor, BOOL bUnk); // ScriptUtil.cpp:2203 (2.7.7: second argument passed through to ItemGetAssignedACDID)
 blz::vector<CRefString, blz::allocator<CRefString> > ActorFindMonsterSNOsInSameLevelArea(VACDID idACD); // ScriptUtil.cpp:9301
 void DungeonFinderCreate(LPCSTR szDungeonFinder); // ScriptUtil.cpp:12525
 void DungeonFinderCreate(SNO snoDungeonFinderEngine); // ScriptUtil.cpp:12539

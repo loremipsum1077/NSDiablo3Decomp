@@ -202,7 +202,7 @@ enum ButtonActions {
     ACTION_TOGGLE_STAT_RANGES = 18,
 };
 
-class VendorItems : public UIInventory::Console::UIInventoryViewItemsProvider {  // size 0x7f0
+class VendorItems : public UIInventory::Console::UIInventoryViewItemsProvider {  // size 0x8e0
 public:
     enum ProviderMode {
         PROVIDERMODE_NORMAL = 0,
@@ -222,9 +222,9 @@ public:
 private:
     virtual void OnPlayerChanged();  // vtable slot 14
     UIInventory::Console::FilteredInventoryView m_tView;  // 0x20
-    ProviderMode m_eProviderMode;  // 0x7e8
+    ProviderMode m_eProviderMode;  // 0x8d8
 };
-static_assert(sizeof(VendorItems) == 0x7f0, "VendorItems");
+static_assert(sizeof(VendorItems) == 0x8e0, "VendorItems");
 
 
 inline void VendorItems::Refresh()  // line 150
@@ -234,10 +234,10 @@ inline void VendorItems::Refresh()  // line 150
     switch (m_eProviderMode)
     {
     case PROVIDERMODE_NORMAL:
-        m_tView.AddItems(GetPlayer()->idACDActiveVendor, idACDFilter, 18, 0, 0);
+        m_tView.AddItems(GetPlayer()->idACDActiveVendor, idACDFilter, SLOT_MERCHANT_SHOPLIST, 0, 0);
         break;
     case PROVIDERMODE_BUYBACK:
-        m_tView.AddItems(GetPlayer()->idPlayerACD, idACDFilter, 14, 0, 0);
+        m_tView.AddItems(GetPlayer()->idPlayerACD, idACDFilter, SLOT_PLAYER_BUYBACK, 0, 0);
         break;
     }
 }
@@ -247,7 +247,7 @@ void VendorItems::OnPlayerChanged()
     Refresh();
 }
 
-class PlayerShopScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x2750
+class PlayerShopScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x2b20
 public:
     enum ShopMode {
         SHOP_MODE_INVALID = -1,
@@ -299,26 +299,26 @@ protected:
         BROWSE_ITEMS_STATE = 2,
     };
 private:
-    ShopMode m_eShopMode;  // 0x1f0
-    UIFilterType m_eLastFilter[4];  // 0x1f4
-    VendorItems m_tShopItemsProvider;  // 0x208
-    VendorItems m_tBuybackItemsProvider;  // 0x9f8
-    InventoryItems m_tPlayerItemsProvider;  // 0x11e8
-    InventoryItems m_tRepairItemsProvider;  // 0x19e0
-    SingleItemProvider m_tSynchedItemProvider;  // 0x21d8
-    EquippedItem m_tEquippedItemProvider;  // 0x2210
-    UIInventoryListView m_tShopListView;  // 0x2248
-    UIInventoryListView m_tBuybackListView;  // 0x22d0
-    UIInventoryListView m_tPlayerListView;  // 0x2358
-    UIInventoryListView m_tRepairListView;  // 0x23e0
-    UIInventoryDetailsView m_tShopDetailedItemView;  // 0x2468
-    UIInventoryDetailsView m_tPlayerDetailedItemView;  // 0x24e0
-    UIInventoryDetailsView m_tBuybackDetailedItemView;  // 0x2558
-    UIInventoryDetailsView m_tEquippedItemView;  // 0x25d0
-    UIInventoryCategoryView m_tCategoriesView;  // 0x2648
-    UIInventoryCategorySummaryView m_tCategorySummaryView;  // 0x26e0
-    ACDID m_idLastSelectedItem;  // 0x2748
-    ShopState m_eShopState;  // 0x274c
+    ShopMode m_eShopMode;  // 0x200
+    UIFilterType m_eLastFilter[4];  // 0x204
+    VendorItems m_tShopItemsProvider;  // 0x218
+    VendorItems m_tBuybackItemsProvider;  // 0xaf8
+    InventoryItems m_tPlayerItemsProvider;  // 0x13d8
+    InventoryItems m_tRepairItemsProvider;  // 0x1cc0
+    SingleItemProvider m_tSynchedItemProvider;  // 0x25a8
+    EquippedItem m_tEquippedItemProvider;  // 0x25e0
+    UIInventoryListView m_tShopListView;  // 0x2618
+    UIInventoryListView m_tBuybackListView;  // 0x26a0
+    UIInventoryListView m_tPlayerListView;  // 0x2728
+    UIInventoryListView m_tRepairListView;  // 0x27b0
+    UIInventoryDetailsView m_tShopDetailedItemView;  // 0x2838
+    UIInventoryDetailsView m_tPlayerDetailedItemView;  // 0x28b0
+    UIInventoryDetailsView m_tBuybackDetailedItemView;  // 0x2928
+    UIInventoryDetailsView m_tEquippedItemView;  // 0x29a0
+    UIInventoryCategoryView m_tCategoriesView;  // 0x2a18
+    UIInventoryCategorySummaryView m_tCategorySummaryView;  // 0x2ab0
+    ACDID m_idLastSelectedItem;  // 0x2b18
+    ShopState m_eShopState;  // 0x2b1c
     void UpdateNormalItemActions(::Console::ControllerActionManager & tActionManager);
     void UpdateBuyingActions(::Console::ControllerActionManager &);
     void UpdateBuyBackActions(::Console::ControllerActionManager & tActionManager);
@@ -345,7 +345,7 @@ private:
     void OnButton1();
     void OnButton2();
 };
-static_assert(sizeof(PlayerShopScreen) == 0x2750, "PlayerShopScreen");
+static_assert(sizeof(PlayerShopScreen) == 0x2b20, "PlayerShopScreen");
 
 PlayerShopScreen * sgptShopGlobals;  // line 411
 static const float SCROLLBOX_SCROLLDELTA = 4.0f;
@@ -667,17 +667,9 @@ void PlayerShopScreen::OpenSelectedCategory()
     eFilterType = GetFilterTypeForCategory(eCategory, FALSE);
     if (eFilterType != FILTER_NONE)
     {
-        UIInventoryViewItemsProvider * ptItemsProvider;
-        if (GetShopMode() == SHOP_MODE_BUYING)
-        {
-            ptItemsProvider = &m_tShopItemsProvider;
-        }
-        else
-        {
-            ptItemsProvider = &m_tPlayerItemsProvider;
-        }
+        UIInventoryViewItemsProvider * ptItemsProvider = GetShopMode() == SHOP_MODE_BUYING ? static_cast<UIInventoryViewItemsProvider *>(&m_tShopItemsProvider) : &m_tPlayerItemsProvider;
         ptItemsProvider->SetFilter(eFilterType);
-        if (GetShopMode() == SHOP_MODE_SELLING || GetShopMode() == SHOP_MODE_BUYING)
+        if (GetShopMode() == SHOP_MODE_BUYING || GetShopMode() == SHOP_MODE_SELLING)
         {
             m_tEquippedItemProvider.SetFilter(eFilterType);
         }
@@ -746,11 +738,7 @@ inline UIInventoryViewItemsProvider * PlayerShopScreen::GetProviderForView(const
 
     if (ptView == GetSecondaryView())
     {
-        if (eShopMode == SHOP_MODE_REPAIR)
-        {
-            return &m_tSynchedItemProvider;
-        }
-        return &m_tEquippedItemProvider;
+        return eShopMode == SHOP_MODE_REPAIR ? static_cast<UIInventoryViewItemsProvider *>(&m_tSynchedItemProvider) : &m_tEquippedItemProvider;
     }
 
     switch (eShopMode)

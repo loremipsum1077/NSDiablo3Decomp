@@ -244,32 +244,32 @@ uint32 sRejectInvalidModes(
 {
     qsort(ptDisplayModes, dwDisplayModeCount, sizeof(DisplayMode), sModeSort);
 
-    for (uint32 i = 0; i < dwDisplayModeCount; i++)
+    for (uint32 i = 0; i < dwDisplayModeCount; )
     {
         DisplayMode & tMode = ptDisplayModes[i];
         DisplayMode & tMode1 = ptDisplayModes[i + 1];
-
-
-        while (dwDisplayModeCount > i + 1 &&
+        if (i + 1 < dwDisplayModeCount &&
             tMode.dwWidth == tMode1.dwWidth &&
             tMode.dwHeight == tMode1.dwHeight &&
             tMode.dwBitDepth == tMode1.dwBitDepth &&
             tMode.nRefreshRate == tMode1.nRefreshRate)
         {
-
-
-
-
-
-
-            if (i >= dwDisplayModeCount - 1)
-                return dwDisplayModeCount - 1;
-            SigmaMemoryMove(&tMode, &tMode1, (dwDisplayModeCount - i - 1) * sizeof(DisplayMode));
+            if (i < dwDisplayModeCount - 1)
+                SigmaMemoryMove(&tMode, &tMode1, (dwDisplayModeCount - i - 1) * sizeof(DisplayMode));
             dwDisplayModeCount--;
+        }
+        else
+        {
+            i++;
         }
     }
     return dwDisplayModeCount;
 }
+
+
+
+
+
 
 
 
@@ -2623,7 +2623,7 @@ BOOL GfxRenderPresent()
         bResult = gptGFXAPI->RenderPresent();
     }
 
-    if ( !bResult ) gptGfxData->dwFlags |= ( 1 << GFXINTERNAL_PRESENT_FAILED_BIT ); else gptGfxData->dwFlags &= ~( 1 << GFXINTERNAL_PRESENT_FAILED_BIT );
+    if ( bResult == FALSE ) gptGfxData->dwFlags |= ( 1 << GFXINTERNAL_PRESENT_FAILED_BIT ); else gptGfxData->dwFlags &= ~( 1 << GFXINTERNAL_PRESENT_FAILED_BIT );
 
 
     if ( !CmdLineGetParams()->tBitArray.Test( CMDLINE_NO_FPS_LIMIT_BIT ) &&

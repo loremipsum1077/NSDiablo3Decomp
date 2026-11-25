@@ -191,7 +191,7 @@ BOOL SWorldPlayerAllowed(SWorldID idSWorld, const Player & tPlayer);  // SWorld.
 SWorldID SWorldCreate(const SNO snoWorld, BOOL bCreateImmediately, BOOL bCausedByLocalPlayer,
                       WorldCreatedCallback pfCreatedCallback, ACDID idACDPortalOperator,
                       ACDID idACDPortal, uint32 uEntranceGUID, PlayerWarpReason eWarpReason,
-                      BOOL fCreateWhenLoadingScreenIsDone);  // SWorld.cpp:1134
+                      BOOL fCreateWhenLoadingScreenIsDone, uint32 unk_14);  // SWorld.cpp:1134; unk_14 (2.7.7) is stored in WorldCreateData::unk_14 and ORed into SWorld::dwFlags
 ACDID SWorldPlayerEnter(SWorldID idSWorld, const ACDID idACDPlayer, Player * ptPlayer,
                         const uint32 uEntranceGUID, const BOOL fAllowStartLocationOverride,
                         const D3::Hero::SavedDefinition & tHeroDefinition,

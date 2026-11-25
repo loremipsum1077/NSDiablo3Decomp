@@ -4708,7 +4708,7 @@ CRefString UIInventory::GetInstructionTooltip(
         }
     }
 
-    BOOL fItemIsInMail = tACDItem.ann >= 0x2046 && tACDItem.ann < 0x2118;
+    BOOL fItemIsInMail = tACDItem.ann >= 0x2e46 && tACDItem.ann < 0x2f18;
     if (fItemIsInMail)
         return usToolTip;
 
@@ -5484,6 +5484,7 @@ void UIInventory::GetItemTooltipParameters(ItemTooltipParameterBlock & tParams, 
 
 
 
+#line 5608  // 2.7.7: this function's three __LINE__ constants are 121 higher (5632/5666/5699)
 static AttribGroupID sCreateInverseAttribGroup(
     AttribGroupID idAttribOrig)
 {

@@ -2780,7 +2780,7 @@ void PowerEvaluatePowerStartedAchievementEvent(const PowerStartData & tPowerStar
     {
         tEvaluationData.SetPower(&tPowerStartData);
         tEvaluationData.SetACD(ACDTryToGet(tPowerStartData.idACD));
-        tEvaluationData.EvaluateEvent(tEvaluationData.GetPlayer(), Achievement::ACH_EVENT_PLAYER_POWER_STARTED, tPowerStartData.snoPower, 1);
+        tEvaluationData.EvaluateEvent(tEvaluationData.GetPlayer(), Achievement::ACH_EVENT_PLAYER_POWER_STARTED, tPowerStartData.snoPower, 1, (uint32)sub_71007b5e70());
     }
 }
 
@@ -4548,7 +4548,7 @@ BOOL PowerCheckToDodge(const PowerAPIAttackPayload & tPayload, const ActorCommon
         {
             tEvaluationData.SetPower(snoPower);
             tEvaluationData.SetACD(ptACDAttacker);
-            tEvaluationData.EvaluateEvent(tEvaluationData.GetPlayer(), Achievement::ACH_EVENT_PLAYER_DODGED_ATTACK, snoPower, 1);
+            tEvaluationData.EvaluateEvent(tEvaluationData.GetPlayer(), Achievement::ACH_EVENT_PLAYER_DODGED_ATTACK, snoPower, 1, (uint32)sub_71007b5e70());
         }
         return TRUE;
     }
@@ -4862,7 +4862,7 @@ void PowerResetSkills(ActorCommonData & tACD, BOOL bNewHero)
             {
                 SPlayerAssignToTraitSlot(*ptPlayer, SNO_NONE, i, FALSE);
             }
-            for (int32 i = 0; i < 3; i++)
+            for (int32 i = 0; i < 4; i++)
             {
                 SPlayerAssignToLegendaryPowerSlot(*ptPlayer, -1, i);
             }
@@ -5349,7 +5349,7 @@ float PowerGetProcScalar(Power & tPower)
     if (tPower.bDoesntAnimate && !tPower.bAllowHitProcs)
         return 0.0f;
     RuneType eRuneType = PowerGetRuneType(&tPower);
-    uint32 dwPowerTag;
+
     if (PowerIsComboPower(AutoPowerDefinitionR(tPower.snoPower)))
     {
         int32 nComboLevel = tPower.nComboLevel;
@@ -5358,34 +5358,34 @@ float PowerGetProcScalar(Power & tPower)
         case 0:
             switch (eRuneType)
             {
-            case RUNE_TYPE_A: dwPowerTag = TAG_POWER_RUNEA_COMBO1_PROC_SCALAR; break;
-            case RUNE_TYPE_B: dwPowerTag = TAG_POWER_RUNEB_COMBO1_PROC_SCALAR; break;
-            case RUNE_TYPE_C: dwPowerTag = TAG_POWER_RUNEC_COMBO1_PROC_SCALAR; break;
-            case RUNE_TYPE_D: dwPowerTag = TAG_POWER_RUNED_COMBO1_PROC_SCALAR; break;
-            case RUNE_TYPE_E: dwPowerTag = TAG_POWER_RUNEE_COMBO1_PROC_SCALAR; break;
-            default: dwPowerTag = TAG_POWER_NORUNE_COMBO1_PROC_SCALAR; break;
+            case RUNE_TYPE_A: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNEA_COMBO1_PROC_SCALAR);
+            case RUNE_TYPE_B: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNEB_COMBO1_PROC_SCALAR);
+            case RUNE_TYPE_C: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNEC_COMBO1_PROC_SCALAR);
+            case RUNE_TYPE_D: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNED_COMBO1_PROC_SCALAR);
+            case RUNE_TYPE_E: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNEE_COMBO1_PROC_SCALAR);
+            default: return PowerGetFormulaValue(tPower.id, TAG_POWER_NORUNE_COMBO1_PROC_SCALAR);
             }
             break;
         case 1:
             switch (eRuneType)
             {
-            case RUNE_TYPE_A: dwPowerTag = TAG_POWER_RUNEA_COMBO2_PROC_SCALAR; break;
-            case RUNE_TYPE_B: dwPowerTag = TAG_POWER_RUNEB_COMBO2_PROC_SCALAR; break;
-            case RUNE_TYPE_C: dwPowerTag = TAG_POWER_RUNEC_COMBO2_PROC_SCALAR; break;
-            case RUNE_TYPE_D: dwPowerTag = TAG_POWER_RUNED_COMBO2_PROC_SCALAR; break;
-            case RUNE_TYPE_E: dwPowerTag = TAG_POWER_RUNEE_COMBO2_PROC_SCALAR; break;
-            default: dwPowerTag = TAG_POWER_NORUNE_COMBO2_PROC_SCALAR; break;
+            case RUNE_TYPE_A: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNEA_COMBO2_PROC_SCALAR);
+            case RUNE_TYPE_B: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNEB_COMBO2_PROC_SCALAR);
+            case RUNE_TYPE_C: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNEC_COMBO2_PROC_SCALAR);
+            case RUNE_TYPE_D: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNED_COMBO2_PROC_SCALAR);
+            case RUNE_TYPE_E: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNEE_COMBO2_PROC_SCALAR);
+            default: return PowerGetFormulaValue(tPower.id, TAG_POWER_NORUNE_COMBO2_PROC_SCALAR);
             }
             break;
         case 2:
             switch (eRuneType)
             {
-            case RUNE_TYPE_A: dwPowerTag = TAG_POWER_RUNEA_COMBO3_PROC_SCALAR; break;
-            case RUNE_TYPE_B: dwPowerTag = TAG_POWER_RUNEB_COMBO3_PROC_SCALAR; break;
-            case RUNE_TYPE_C: dwPowerTag = TAG_POWER_RUNEC_COMBO3_PROC_SCALAR; break;
-            case RUNE_TYPE_D: dwPowerTag = TAG_POWER_RUNED_COMBO3_PROC_SCALAR; break;
-            case RUNE_TYPE_E: dwPowerTag = TAG_POWER_RUNEE_COMBO3_PROC_SCALAR; break;
-            default: dwPowerTag = TAG_POWER_NORUNE_COMBO3_PROC_SCALAR; break;
+            case RUNE_TYPE_A: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNEA_COMBO3_PROC_SCALAR);
+            case RUNE_TYPE_B: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNEB_COMBO3_PROC_SCALAR);
+            case RUNE_TYPE_C: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNEC_COMBO3_PROC_SCALAR);
+            case RUNE_TYPE_D: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNED_COMBO3_PROC_SCALAR);
+            case RUNE_TYPE_E: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNEE_COMBO3_PROC_SCALAR);
+            default: return PowerGetFormulaValue(tPower.id, TAG_POWER_NORUNE_COMBO3_PROC_SCALAR);
             }
             break;
         default:
@@ -5396,15 +5396,15 @@ float PowerGetProcScalar(Power & tPower)
     {
         switch (eRuneType)
         {
-        case RUNE_TYPE_A: dwPowerTag = TAG_POWER_RUNEA_PROC_SCALAR; break;
-        case RUNE_TYPE_B: dwPowerTag = TAG_POWER_RUNEB_PROC_SCALAR; break;
-        case RUNE_TYPE_C: dwPowerTag = TAG_POWER_RUNEC_PROC_SCALAR; break;
-        case RUNE_TYPE_D: dwPowerTag = TAG_POWER_RUNED_PROC_SCALAR; break;
-        case RUNE_TYPE_E: dwPowerTag = TAG_POWER_RUNEE_PROC_SCALAR; break;
-        default: dwPowerTag = TAG_POWER_NORUNE_PROC_SCALAR; break;
+        case RUNE_TYPE_A: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNEA_PROC_SCALAR);
+        case RUNE_TYPE_B: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNEB_PROC_SCALAR);
+        case RUNE_TYPE_C: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNEC_PROC_SCALAR);
+        case RUNE_TYPE_D: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNED_PROC_SCALAR);
+        case RUNE_TYPE_E: return PowerGetFormulaValue(tPower.id, TAG_POWER_RUNEE_PROC_SCALAR);
+        default: return PowerGetFormulaValue(tPower.id, TAG_POWER_NORUNE_PROC_SCALAR);
         }
     }
-    return PowerGetFormulaValue(tPower.id, dwPowerTag);
+
 }
 
 

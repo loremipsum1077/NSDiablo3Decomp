@@ -125,7 +125,7 @@ BOOL PowerIsCoolDownDone(const ActorCommonData & tACD, SNO snoPower); /* X/Serve
 
 
 
-class CTargetCache  // size 0x5c0
+class CTargetCache  // size 0x618
 {
 public:
     CTargetCache(ActorID idActor)
@@ -147,10 +147,10 @@ public:
 
     const Target & GetTarget(AIStateTargetType eTargetType, EntryData & tEntryData);
 
-    Target m_Target[46];  // 0x00
-    TargetMap mapPowerTargets;  // 0x508
-    uint64 m_dwCachedFlags;  // 0x5b0
-    ACDID m_idACD;  // 0x5b8
+    Target m_Target[AISTATE_TARGET_COUNT];  // 0x00
+    TargetMap mapPowerTargets;  // 0x560
+    uint64 m_dwCachedFlags;  // 0x608
+    ACDID m_idACD;  // 0x610
 private:
     static const int32 MAX_TARGET_TYPES = 64;
 };

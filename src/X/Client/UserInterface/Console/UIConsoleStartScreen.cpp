@@ -267,6 +267,7 @@ void sAdvanceIntoGame(const int32 nControllerIndex)
 
             ::Console::Online::GameParams tGameParams;
             tGameParams.m_bIsHardcore = FALSE;
+            tGameParams.unk_14 = FALSE;
             tGameParams.m_bResumeFromSave = FALSE;
             tGameParams.m_eAct = ACT_OPEN_WORLD;
             tGameParams.m_snoQuest = -1;

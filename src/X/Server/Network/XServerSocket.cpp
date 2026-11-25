@@ -836,7 +836,7 @@ static BOOL sXServerReceive( intptr idUpcallHandle, uint8 * pMessage, uint32 dwS
 
 
 
-        if ( tHeader.eType >= 585 )  // MSG_RANGE_INGAME_END
+        if ( tHeader.eType >= 595 )  // MSG_RANGE_INGAME_END
         {
             return FALSE;
         }

@@ -24,7 +24,9 @@ public:
     void WrapUsingContainerControl(const UIID & idContainer, const UIID & idCursor, Console::RingWrapper::IncludeControlPredicate fnPredicate, BOOL bForceUpdate);
     const UIID & GetContainerControlID() const;
     void GetTargetControlIDs(UIIDArray & aridTargets) const;
-    void UpdateInput(const int32 nControllerIndex, Console::RingWrapper::IconSelectionChanged fnSelectionChanged);
+    // 2.7.7 added the fnCanSelect argument (unnamed in the binary): when non-NULL, a ring icon is
+    // selected only if it returns true (UpdateRingSelection 0x710038a270, UpdateTouchpad 0x7100389dd0).
+    void UpdateInput(const int32 nControllerIndex, Console::RingWrapper::IconSelectionChanged fnSelectionChanged, bool (*fnCanSelect)(const Console::RingWrapper &, const UIID &));
     const UIID & GetSelectedControlID() const;
     void SelectControl(const UIID & id, Console::RingWrapper::IconSelectionChanged fnSelectionChanged);
     void SelectControlIndex(int32, Console::RingWrapper::IconSelectionChanged);
@@ -47,8 +49,8 @@ private:
     Console::RingWrapper::InputSources m_nInputSources;  // 0x30
     Console::TouchGestureTracker m_tTouchGestureTracker;  // 0x34
     int32 m_nTouchStartIcon;  // 0x64
-    void UpdateAnalogStickInput(const int32 nControllerIndex, Console::RingWrapper::IconSelectionChanged fnSelectionChanged);
-    void UpdateRingSelection(const Vector2D & vecUnitDirection, Console::RingWrapper::IconSelectionChanged fnSelectionChanged);
+    void UpdateAnalogStickInput(const int32 nControllerIndex, Console::RingWrapper::IconSelectionChanged fnSelectionChanged, bool (*fnCanSelect)(const Console::RingWrapper &, const UIID &));
+    void UpdateRingSelection(const Vector2D & vecUnitDirection, Console::RingWrapper::IconSelectionChanged fnSelectionChanged, bool (*fnCanSelect)(const Console::RingWrapper &, const UIID &));
     void Reset();
     BOOL IsInDeadZone(const int32 nControllerIndex);
     void CalculateIconRegions(Console::RingWrapper::IncludeControlPredicate fnPredicate);
@@ -58,7 +60,7 @@ private:
     void PointCursorAtControl(const UIID & id);
     void UpdateCursorVisibility();
     static int32 sSortByAngle(const void * pLHS, const void * pRHS);
-    BOOL UpdateTouchpad(const int32 nControllerIndex, Console::RingWrapper::IconSelectionChanged fnSelectionChanged);
+    BOOL UpdateTouchpad(const int32 nControllerIndex, Console::RingWrapper::IconSelectionChanged fnSelectionChanged, bool (*fnCanSelect)(const Console::RingWrapper &, const UIID &));
 };
 static_assert(sizeof(RingWrapper) == 0x68, "RingWrapper");
 

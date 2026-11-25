@@ -31,8 +31,8 @@
 enum {
     GAME_BALANCE_XML_VERSION = 3,
     GAMEBALANCE_COMMON_SNO_VERSION = 2444,
-    GAMEBALANCE_PC_SNO_VERSION = 2453,
-    GAMEBALANCE_CONSOLE_SNO_VERSION = 2450,
+    GAMEBALANCE_PC_SNO_VERSION = 2469,
+    GAMEBALANCE_CONSOLE_SNO_VERSION = 2466,
     GAMEBALANCE_AXE_SNO_VERSION = 2454,
 };
 
@@ -138,7 +138,7 @@ TypeDescriptorField(NULL, DT_NULL, sizeof(GBHandle), NULL, 0), }; ComplexTypeDes
 
 
 
-static const TypeDescriptorField ItemDefinition_Fields[148] = {
+static const TypeDescriptorField ItemDefinition_Fields[172] = {
 TypeDescriptorField("", DT_SERIALIZEDATA, offsetof(ItemDefinition, tHeader), NULL, 7340032), VariableArrayTypeDescriptorField("", DT_BYTE, offsetof(ItemDefinition, tHeader.szName), 0x700020, offsetof(ItemDefinition, tHeader) - offsetof(ItemDefinition, tHeader.szName)), TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, tHeader.gbid), NULL, 0), TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, tHeader.dwPad), NULL, 0),
 FilterTypeDescriptorField("", DT_SNO, offsetof(ItemDefinition, snoActor), "", 1, 0, -1),
 FilterTypeDescriptorField("", DT_GBID, offsetof(ItemDefinition, gbidItemType), "", 1, 0, -1),
@@ -200,7 +200,9 @@ FlagTypeDescriptorField("", offsetof(ItemDefinition, dwFlags), NULL, 11),
 FlagTypeDescriptorField("", offsetof(ItemDefinition, dwFlags), NULL, 12),
 FlagTypeDescriptorField("", offsetof(ItemDefinition, dwFlags), NULL, 13),
 FlagTypeDescriptorField("", offsetof(ItemDefinition, dwFlags), NULL, 24),
+FlagTypeDescriptorField("", offsetof(ItemDefinition, dwFlags), NULL, 25),
 FlagTypeDescriptorField("", offsetof(ItemDefinition, dwFlags), NULL, 26),
+FlagTypeDescriptorField("", offsetof(ItemDefinition, dwFlags), NULL, 28),
 FlagTypeDescriptorField("", offsetof(ItemDefinition, dwFlags), NULL, 23),
 FlagTypeDescriptorField("", offsetof(ItemDefinition, dwFlags), NULL, 14),
 FlagTypeDescriptorField("", offsetof(ItemDefinition, dwFlags), NULL, 17),
@@ -209,6 +211,10 @@ FlagTypeDescriptorField("", offsetof(ItemDefinition, dwFlags), NULL, 19),
 FlagTypeDescriptorField("", offsetof(ItemDefinition, dwFlags), NULL, 20),
 FlagTypeDescriptorField("", offsetof(ItemDefinition, dwFlags), NULL, 21),
 FlagTypeDescriptorField("", offsetof(ItemDefinition, dwFlags), NULL, 22),
+FlagTypeDescriptorField("", offsetof(ItemDefinition, dwFlags), NULL, 30),
+FlagTypeDescriptorField("", offsetof(ItemDefinition, dwFlags), NULL, 31),
+FlagTypeDescriptorField("", offsetof(ItemDefinition, unk_24), NULL, 0),
+FlagTypeDescriptorField("", offsetof(ItemDefinition, unk_24), NULL, 1),
 
 TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, eSavedDyeType), NULL, 1),
 
@@ -231,7 +237,7 @@ FilterTypeDescriptorField("", DT_SNO, offsetof(ItemDefinition, tSkills[3]), "", 
 TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, tSkills[3].nLevelMod), NULL, 1),
 
 FixedArrayTypeDescriptorField("", DT_INT, offsetof(ItemDefinition, dwItemLabelMask), NULL, 1, 5, 0),
-TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, dwPad), NULL, 0),
+
 
 
 
@@ -309,8 +315,16 @@ TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, bUseLegendaryAllowedTyp
 TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, bUseLegendaryAllowedTypes[3]), NULL, 1),
 TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, bUseLegendaryAllowedTypes[4]), NULL, 1),
 TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, bUseLegendaryAllowedTypes[5]), NULL, 1),
+TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, unk_1d0), NULL, 1),
+TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, unk_1d0[1]), NULL, 1),
+TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, unk_1d0[2]), NULL, 1),
+TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, unk_1d0[3]), NULL, 1),
+TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, unk_1d0[4]), NULL, 1),
+TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, unk_1d0[5]), NULL, 1),
 
 FilterTypeDescriptorField("", DT_GBID, offsetof(ItemDefinition, gbidLegendaryFamily), "", 4294967295, 0, -1),
+FilterTypeDescriptorField("", DT_GBID, offsetof(ItemDefinition, unk_1ec), "", 47, 0, -1),
+TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, unk_1f0), NULL, 1),
 
 EnumTypeDescriptorField("", offsetof(ItemDefinition, eGemType), NULL, gGemTypeNames),
 TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, nCraftingTier), NULL, 1),
@@ -338,6 +352,15 @@ TranslatableTypeDescriptorField("", offsetof(ItemDefinition, tJewelSecondaryEffe
 TypeDescriptorField("", DT_ATTRIBUTEPARAM, offsetof(ItemDefinition, tJewelSecondaryEffectAttribute.nParam), (const void *)-1, 1),
 TypeDescriptorField("", DT_SERIALIZEDATA, offsetof(ItemDefinition, tJewelSecondaryEffectAttribute.serAttributeFormula), NULL, 0), FormulaTypeDescriptorField("", offsetof(ItemDefinition, tJewelSecondaryEffectAttribute.pbAttributeFormula), offsetof(ItemDefinition, tJewelSecondaryEffectAttribute.serAttributeFormula) - offsetof(ItemDefinition, tJewelSecondaryEffectAttribute.pbAttributeFormula)),
 TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, nJewelSecondaryEffectUnlockRank), (const void *)-1, 1),
+TranslatableTypeDescriptorField("", offsetof(ItemDefinition, unk_2b8), (const void *)-1, XMLStringToAttrib, AttribToXMLString),
+TypeDescriptorField("", DT_ATTRIBUTEPARAM, offsetof(ItemDefinition, unk_2b8.nParam), (const void *)-1, 1),
+TypeDescriptorField("", DT_SERIALIZEDATA, offsetof(ItemDefinition, unk_2b8.serAttributeFormula), NULL, 0), FormulaTypeDescriptorField("", offsetof(ItemDefinition, unk_2b8.pbAttributeFormula), offsetof(ItemDefinition, unk_2b8.serAttributeFormula) - offsetof(ItemDefinition, unk_2b8.pbAttributeFormula)),
+TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, unk_2d0), (const void *)-1, 1),
+TranslatableTypeDescriptorField("", offsetof(ItemDefinition, unk_2d8), (const void *)-1, XMLStringToAttrib, AttribToXMLString),
+TypeDescriptorField("", DT_ATTRIBUTEPARAM, offsetof(ItemDefinition, unk_2d8.nParam), (const void *)-1, 1),
+TypeDescriptorField("", DT_SERIALIZEDATA, offsetof(ItemDefinition, unk_2d8.serAttributeFormula), NULL, 0), FormulaTypeDescriptorField("", offsetof(ItemDefinition, unk_2d8.pbAttributeFormula), offsetof(ItemDefinition, unk_2d8.serAttributeFormula) - offsetof(ItemDefinition, unk_2d8.pbAttributeFormula)),
+TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, unk_2f0), (const void *)-1, 1),
+TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, unk_2f8), NULL, 1),
 TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, nJewelMaxRank), (const void *)-1, 1),
 
 FilterTypeDescriptorField("", DT_SNO, offsetof(ItemDefinition, snoStartEffect), "", 14, 0, -1),
@@ -360,7 +383,7 @@ TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, nDynamicCraftCostRare),
 TypeDescriptorField("", DT_INT, offsetof(ItemDefinition, nDynamicCraftAffixCount), NULL, 1),
 
 FilterTypeDescriptorField("", DT_SNO, offsetof(ItemDefinition, snoSeasonCache), "", 52, 0, -1),
-TypeDescriptorField(NULL, DT_NULL, sizeof(ItemDefinition), NULL, 0), }; ComplexTypeDescriptor TypeDescriptor_ItemDefinition("Item", 0, ItemDefinition_Fields, 148, NULL, 0x0, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_ITEM = &TypeDescriptor_ItemDefinition;
+TypeDescriptorField(NULL, DT_NULL, sizeof(ItemDefinition), NULL, 0), }; ComplexTypeDescriptor TypeDescriptor_ItemDefinition("Item", 0, ItemDefinition_Fields, 172, NULL, 0x0, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_ITEM = &TypeDescriptor_ItemDefinition;
 
 static const TypeDescriptorField ItemTable_Fields[3] = {
 TypeDescriptorField("", DT_SERIALIZEDATA, offsetof(ItemTable, serItems), NULL, 0), VariableArrayTypeDescriptorField("", DT_ITEM, offsetof(ItemTable, ptItems), 0x21, offsetof(ItemTable, serItems) - offsetof(ItemTable, ptItems)),
@@ -1926,8 +1949,8 @@ GameBalanceGroupDef * gptGroupDefGameBalance;
 
 GameBalanceGroupDef::GameBalanceGroupDef()
     : GroupDefinition("GameBalance", GAMEBALANCE_SNO,
-                      SNOVersions(GAMEBALANCE_PC_SNO_VERSION, 2456, GAMEBALANCE_CONSOLE_SNO_VERSION,
-                                  GAMEBALANCE_CONSOLE_SNO_VERSION, 2451),
+                      SNOVersions(GAMEBALANCE_PC_SNO_VERSION, 2472, GAMEBALANCE_CONSOLE_SNO_VERSION,
+                                  GAMEBALANCE_CONSOLE_SNO_VERSION, 2467),
                       SNODATATYPE_TITLE, sizeof(GameBalanceDefinition), DT_GAMEBALANCE, 0x9005, 15) {
 }
 
@@ -2082,7 +2105,7 @@ SNOPackType GameBalanceGroupDef::GetSNOPackDestination(const void * ptDefinition
 
 
 BOOL GameBalanceGroupDef::Write(void * lpDefinition, FileReference & tRef) const {
-    DisplayInternalError(NULL, "", 2090, ERROR_INTERNAL_FATAL);
+    DisplayInternalError(NULL, "", 2123, ERROR_INTERNAL_FATAL);
     ExitProgram(ERROR_INTERNAL_FATAL);
 }
 
@@ -2521,7 +2544,7 @@ size_t sGetGBTableOffset(GameBalanceType eType) {
     case GB_TRANSMUTE_RECIPES: return offsetof(GameBalanceDefinition, tTransmuteRecipeTable.ptRecipes);
     case GB_CURRENCY_CONVERSIONS: return offsetof(GameBalanceDefinition, tCurrencyConversionTable.ptCurrencyConversionEntries);
     }
-    DisplayInternalError(NULL, "", 2561, ERROR_INTERNAL_FATAL);
+    DisplayInternalError(NULL, "", 2594, ERROR_INTERNAL_FATAL);
     ExitProgram(ERROR_INTERNAL_FATAL);
 }
 
@@ -2601,7 +2624,7 @@ int32 sGetGBSize(GameBalanceType eType) {
     case GB_TRANSMUTE_RECIPES: return sizeof(TransmuteRecipe);
     case GB_CURRENCY_CONVERSIONS: return sizeof(CurrencyConversionTableEntry);
     }
-    DisplayInternalError(NULL, "", 2640, ERROR_INTERNAL_FATAL);
+    DisplayInternalError(NULL, "", 2673, ERROR_INTERNAL_FATAL);
     ExitProgram(ERROR_INTERNAL_FATAL);
 }
 
@@ -2887,7 +2910,7 @@ int32 sGetGBCount(const GameBalanceDefinition * pdefGB) {
     case GB_TRANSMUTE_RECIPES: nRetval = pdefGB->tTransmuteRecipeTable.serRecipes.dwSize; break;
     case GB_CURRENCY_CONVERSIONS: nRetval = pdefGB->tCurrencyConversionTable.serCurrencyConversionEntries.dwSize; break;
     default:
-        DisplayInternalError(NULL, "", 2962, ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 2995, ERROR_INTERNAL_FATAL);
         ExitProgram(ERROR_INTERNAL_FATAL);
     }
     return nRetval / sGetGBSize(pdefGB->eGameBalanceType);
@@ -3616,7 +3639,7 @@ static float sGameBalanceDefGetAttributes(const void * pGBData, GameBalanceType 
         default: return 0.0f;
         }
     }
-    DisplayInternalError(NULL, "", 3623, ERROR_INTERNAL_FATAL);
+    DisplayInternalError(NULL, "", 3656, ERROR_INTERNAL_FATAL);
     ExitProgram(ERROR_INTERNAL_FATAL);
     return 0.0f;
 }

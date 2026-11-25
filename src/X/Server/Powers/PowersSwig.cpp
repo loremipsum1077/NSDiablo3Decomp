@@ -883,10 +883,10 @@ int32 PowerCreateTargetAreaCapsuleAroundCursors(int32 nCursorID1, int32 nCursorI
     Power * ptPower = PowerGet(idPower);
     PowerCursor * ptCursor1 = sPowerGetCursorAtIndex(ptPower, nCursorID1, TRUE);
     PowerCursor * ptCursor2 = sPowerGetCursorAtIndex(ptPower, nCursorID2, TRUE);
-    if (ptCursor1 == NULL || ptCursor2 == NULL) {
-        return PowerCreateTargetAreaAOE(flRadius);
+    if (ptCursor1 && ptCursor2) {
+        return sPowerCreateTargetAreaCapsule(ptCursor1->tPlace, ptCursor2->tPlace, flRadius, flBonusHeight);
     }
-    return sPowerCreateTargetAreaCapsule(ptCursor1->tPlace, ptCursor2->tPlace, flRadius, flBonusHeight);
+    return PowerCreateTargetAreaAOE(flRadius);
 }
 
 // Original PowersSwig.cpp:1482.
@@ -1769,11 +1769,7 @@ void PowerPayloadAddPeriodicDamage(int32 nPayloadID, DamageType eDamageType, flo
     ptPayload->flDamageDurationInSecs[eDamageType] = flDuration;
     ptPayload->arCombatDamage[eDamageType].flMin += flDamage;
     ptPayload->arCombatDamage[eDamageType].flDelta += flDamageDelta;
-    if (ptPower->bDoesntAnimate && !ptPower->bAllowHitProcs) {
-        ptPayload->bTriggersHitProcs = FALSE;
-    } else {
-        ptPayload->bTriggersHitProcs = bTriggersHitProcsAndThorns;
-    }
+    ptPayload->bTriggersHitProcs = (ptPower->bDoesntAnimate && !ptPower->bAllowHitProcs) ? FALSE : bTriggersHitProcsAndThorns;
 }
 
 // Original PowersSwig.cpp:3302.
@@ -1825,11 +1821,7 @@ void PowerPayloadConvertToDOTDamageType(int32 nPayloadID, DamageType eDamageType
     ptPayload->arCombatDamage[eDamageType].flDelta = flDamageDeltaTotal;
     ptPayload->flDamageDurationInSecs[eDamageType] = flDuration;
     ptPayload->eDeliveryMechanism = PDM_DOT;
-    if (ptPower->bDoesntAnimate && !ptPower->bAllowHitProcs) {
-        ptPayload->bTriggersHitProcs = FALSE;
-    } else {
-        ptPayload->bTriggersHitProcs = bTriggersHitProcsAndThorns;
-    }
+    ptPayload->bTriggersHitProcs = (ptPower->bDoesntAnimate && !ptPower->bAllowHitProcs) ? FALSE : bTriggersHitProcsAndThorns;
 }
 
 // Original PowersSwig.cpp:3389.
@@ -2294,9 +2286,10 @@ void PowerPayloadSetProcScalar(int32 nPayloadID, float flProcScalar)
     PowerAPIAttackPayload * ptPayload = sPowerGetAttackPayloadAtIndex(ptPower, nPayloadID);
     if (ptPayload != NULL) {
         if (ptPower->bDoesntAnimate && !ptPower->bAllowHitProcs) {
-            flProcScalar = 0.0f;
+            ptPayload->flProcScalar = 0.0f;
+        } else {
+            ptPayload->flProcScalar = flProcScalar;
         }
-        ptPayload->flProcScalar = flProcScalar;
     }
 }
 
@@ -2586,32 +2579,30 @@ void PowerCursorRollToCursor(int32 nCursorID, int32 nDestCursorID, float flDestP
 
     PowerCursor * ptCursor = sPowerGetCursorAtIndex(ptPower, nCursorID, TRUE);
     PowerCursor * ptDestCursor = sPowerGetCursorAtIndex(ptPower, nDestCursorID, TRUE);
-    if (ptCursor == NULL || ptDestCursor == NULL) {
-        return;
-    }
+    if (ptCursor && ptDestCursor) {
+        ptCursor->qOrientation = ptDestCursor->qOrientation;
 
-    ptCursor->qOrientation = ptDestCursor->qOrientation;
+        const ActorCommonData * ptACD = ACDTryToGet(ptPower->idACD);
+        if (ptACD == NULL) {
+            return;
+        }
+        const ActorMovement * ptACM = ptACD->GetActorMovement();
+        if (ptACM == NULL) {
+            return;
+        }
 
-    const ActorCommonData * ptACD = ACDTryToGet(ptPower->idACD);
-    if (ptACD == NULL) {
-        return;
-    }
-    const ActorMovement * ptACM = ptACD->GetActorMovement();
-    if (ptACM == NULL) {
-        return;
-    }
+        SNO snoPowerPassability = SNO_NONE;
+        if (szPowerPassability != NULL) {
+            snoPowerPassability = SNOFileLookupGUID(POWER_SNO, szPowerPassability);
+        }
+        if (snoPowerPassability == SNO_NONE) {
+            snoPowerPassability = ptPower->snoPower;
+        }
 
-    SNO snoPowerPassability = SNO_NONE;
-    if (szPowerPassability != NULL) {
-        snoPowerPassability = SNOFileLookupGUID(POWER_SNO, szPowerPassability);
+        WorldPlace tPlaceFound;
+        PowerComputeDestination(snoPowerPassability, *ptACM, ptDestCursor->tPlace, ptCursor->tPlace, tPlaceFound, FALSE, flDestPerturbRadiusMax);
+        ptCursor->tPlace = tPlaceFound;
     }
-    if (snoPowerPassability == SNO_NONE) {
-        snoPowerPassability = ptPower->snoPower;
-    }
-
-    WorldPlace tPlaceFound;
-    PowerComputeDestination(snoPowerPassability, *ptACM, ptDestCursor->tPlace, ptCursor->tPlace, tPlaceFound, FALSE, flDestPerturbRadiusMax);
-    ptCursor->tPlace = tPlaceFound;
 }
 
 // Original PowersSwig.cpp:4466.
@@ -2622,28 +2613,26 @@ void PowerCursorPathToCursor(int32 nCursorID, int32 nDestCursorID, LPCSTR szPowe
 
     PowerCursor * ptCursor = sPowerGetCursorAtIndex(ptPower, nCursorID, TRUE);
     PowerCursor * ptDestCursor = sPowerGetCursorAtIndex(ptPower, nDestCursorID, TRUE);
-    if (ptCursor == NULL || ptDestCursor == NULL) {
-        return;
-    }
+    if (ptCursor && ptDestCursor) {
+        SNO snoPowerPassability = SNO_NONE;
+        if (szPowerPassability != NULL) {
+            snoPowerPassability = SNOFileLookupGUID(POWER_SNO, szPowerPassability);
+        }
+        if (snoPowerPassability == SNO_NONE) {
+            snoPowerPassability = ptPower->snoPower;
+        }
 
-    SNO snoPowerPassability = SNO_NONE;
-    if (szPowerPassability != NULL) {
-        snoPowerPassability = SNOFileLookupGUID(POWER_SNO, szPowerPassability);
-    }
-    if (snoPowerPassability == SNO_NONE) {
-        snoPowerPassability = ptPower->snoPower;
-    }
+        ActorCommonData * ptACDOwner = ACDTryToGet(ptPower->idACD);
+        if (ptACDOwner == NULL) {
+            return;
+        }
+        ActorMovement * ptMove = ptACDOwner->GetActorMovement();
+        if (ptMove == NULL) {
+            return;
+        }
 
-    ActorCommonData * ptACDOwner = ACDTryToGet(ptPower->idACD);
-    if (ptACDOwner == NULL) {
-        return;
+        ptCursor->tPlace = PowerHelper_ComputePathableDestination(snoPowerPassability, ptCursor->tPlace, ptDestCursor->tPlace, ptMove->GetRadius(FALSE), *ptACDOwner);
     }
-    ActorMovement * ptMove = ptACDOwner->GetActorMovement();
-    if (ptMove == NULL) {
-        return;
-    }
-
-    ptCursor->tPlace = PowerHelper_ComputePathableDestination(snoPowerPassability, ptCursor->tPlace, ptDestCursor->tPlace, ptMove->GetRadius(FALSE), *ptACDOwner);
 }
 
 // Original PowersSwig.cpp:4584.
@@ -2901,25 +2890,24 @@ BOOL PowerCursorSetToOpenLocationNearCursor(int32 nCursorID, int32 nTargetCursor
     Power * ptPower = PowerGet(idPower);
     PowerCursor * ptCursor = sPowerGetCursorAtIndex(ptPower, nCursorID, FALSE);
     PowerCursor * ptCursorTarget = sPowerGetCursorAtIndex(ptPower, nTargetCursorID, TRUE);
-    if (ptCursor == NULL || ptCursorTarget == NULL) {
-        return FALSE;
-    }
-
-    WorldPlace tPlaceOpen = ptCursorTarget->tPlace;
-    PowerAPIChooseOpenGround tOpenGroundInfo;
-    NavPlace tNavPlace;
-    BOOL bSuccess = FALSE;
-    if (PowerPlaceToNavMeshHandle(tPlaceOpen, tNavPlace.tNavMeshHandle)) {
-        NavMeshHandle hNavMeshCurr;
-        tNavPlace.tPlace = tPlaceOpen;
-        PowerHelper_ChooseOpenGroundInit(idPower, tNavPlace, tOpenGroundInfo, 0.0f);
-        tOpenGroundInfo.bUseActorPassability = (szActorSNO != NULL);
-        bSuccess = PowerAPI_DoChooseOpenGround(snoActor, flScale, tOpenGroundInfo, tPlaceOpen, hNavMeshCurr);
-        if (bSuccess) {
-            ptCursor->tPlace = tPlaceOpen;
+    if (ptCursor && ptCursorTarget) {
+        WorldPlace tPlaceOpen = ptCursorTarget->tPlace;
+        PowerAPIChooseOpenGround tOpenGroundInfo;
+        NavPlace tNavPlace;
+        BOOL bSuccess = FALSE;
+        if (PowerPlaceToNavMeshHandle(tPlaceOpen, tNavPlace.tNavMeshHandle)) {
+            NavMeshHandle hNavMeshCurr;
+            tNavPlace.tPlace = tPlaceOpen;
+            PowerHelper_ChooseOpenGroundInit(idPower, tNavPlace, tOpenGroundInfo, 0.0f);
+            tOpenGroundInfo.bUseActorPassability = (szActorSNO != NULL);
+            bSuccess = PowerAPI_DoChooseOpenGround(snoActor, flScale, tOpenGroundInfo, tPlaceOpen, hNavMeshCurr);
+            if (bSuccess) {
+                ptCursor->tPlace = tPlaceOpen;
+            }
         }
+        return bSuccess;
     }
-    return bSuccess;
+    return FALSE;
 }
 
 // Original PowersSwig.cpp:5013.
@@ -2965,12 +2953,11 @@ void PowerCursorRotateAroundCursor(int32 nCursorID, int32 nCursorIDTarget, float
     Power * ptPower = PowerGet(idPower);
     PowerCursor * ptCursor = sPowerGetCursorAtIndex(ptPower, nCursorID, TRUE);
     PowerCursor * ptCursorTarget = sPowerGetCursorAtIndex(ptPower, nCursorIDTarget, TRUE);
-    if (ptCursor == NULL || ptCursorTarget == NULL) {
-        return;
+    if (ptCursor && ptCursorTarget) {
+        Vector3D wvOffset = ptCursor->tPlace.wp - ptCursorTarget->tPlace.wp;
+        Vector3D::Rotate(cgwvZAxis, Math::DegToAngle(flDegrees), wvOffset);
+        ptCursor->tPlace.wp = ptCursorTarget->tPlace.wp + wvOffset;
     }
-    Vector3D wvOffset = ptCursor->tPlace.wp - ptCursorTarget->tPlace.wp;
-    Vector3D::Rotate(cgwvZAxis, Math::DegToAngle(flDegrees), wvOffset);
-    ptCursor->tPlace.wp = ptCursorTarget->tPlace.wp + wvOffset;
 }
 
 // Original PowersSwig.cpp:5095.
@@ -3082,23 +3069,21 @@ void PowerCursorRotateTowardsCursor(int32 nCursorID, int32 nTargetCursorID)
 
     PowerCursor * ptCursor = sPowerGetCursorAtIndex(ptPower, nCursorID, TRUE);
     PowerCursor * ptTargetCursor = sPowerGetCursorAtIndex(ptPower, nTargetCursorID, TRUE);
-    if (ptCursor == NULL || ptTargetCursor == NULL) {
-        return;
+    if (ptCursor && ptTargetCursor) {
+        Angle aNewYaw;
+        WorldPlace wpCursor = ptCursor->tPlace;
+        WorldPlace wpTarget = ptTargetCursor->tPlace;
+        if (wpCursor.idSWorld != wpTarget.idSWorld) {
+            return;
+        }
+        Vector3D wvToTarget = wpTarget.wp - wpCursor.wp;
+        Vector2D vToTarget(wvToTarget.x, wvToTarget.y);
+        if (vToTarget.MagnitudeSquared() < 1e-06f) {
+            return;
+        }
+        aNewYaw = vToTarget.ToYaw();
+        ptCursor->qOrientation.SetRotation(cgwvZAxis, aNewYaw);
     }
-
-    Angle aNewYaw;
-    WorldPlace wpCursor = ptCursor->tPlace;
-    WorldPlace wpTarget = ptTargetCursor->tPlace;
-    if (wpCursor.idSWorld != wpTarget.idSWorld) {
-        return;
-    }
-    Vector3D wvToTarget = wpTarget.wp - wpCursor.wp;
-    Vector2D vToTarget(wvToTarget.x, wvToTarget.y);
-    if (vToTarget.MagnitudeSquared() < 1e-06f) {
-        return;
-    }
-    aNewYaw = vToTarget.ToYaw();
-    ptCursor->qOrientation.SetRotation(cgwvZAxis, aNewYaw);
 }
 
 // Original PowersSwig.cpp:5262.
@@ -3212,20 +3197,20 @@ double PowerActorDotProductBetweenCursors(VACDID idActor, int32 nCursorFirstID, 
     WorldPlace placeActor = tACD.GetPlace();
     PowerCursor * ptCursorFirst = sPowerGetCursorAtIndex(ptPower, nCursorFirstID, TRUE);
     PowerCursor * ptCursorSecond = sPowerGetCursorAtIndex(ptPower, nCursorSecondID, TRUE);
-    if (ptCursorFirst == NULL || ptCursorSecond == NULL) {
-        return FLT_MAX;
-    }
-    if (ptCursorFirst->tPlace.idSWorld != placeActor.idSWorld || ptCursorSecond->tPlace.idSWorld != ptCursorFirst->tPlace.idSWorld) {
-        return FLT_MAX;
-    }
+    if (ptCursorFirst && ptCursorSecond) {
+        if (ptCursorFirst->tPlace.idSWorld != placeActor.idSWorld || ptCursorSecond->tPlace.idSWorld != ptCursorFirst->tPlace.idSWorld) {
+            return FLT_MAX;
+        }
 
     float dot;
     Vector3D wvFirst = ptCursorFirst->tPlace.wp - placeActor.wp;
     Vector3D wvSecond = ptCursorSecond->tPlace.wp - placeActor.wp;
     wvFirst.Normalize();
     wvSecond.Normalize();
-    dot = Vector3D::DotProduct(wvFirst, wvSecond);
-    return dot;
+        dot = Vector3D::DotProduct(wvFirst, wvSecond);
+        return dot;
+    }
+    return FLT_MAX;
 }
 
 // Original PowersSwig.cpp:5427.
@@ -3241,19 +3226,19 @@ double PowerActorCrossProductBetweenCursors(VACDID idActor, int32 nCursorFirstID
     WorldPlace placeActor = tACD.GetPlace();
     PowerCursor * ptCursorFirst = sPowerGetCursorAtIndex(ptPower, nCursorFirstID, TRUE);
     PowerCursor * ptCursorSecond = sPowerGetCursorAtIndex(ptPower, nCursorSecondID, TRUE);
-    if (ptCursorFirst == NULL || ptCursorSecond == NULL) {
-        return FLT_MAX;
-    }
-    if (ptCursorFirst->tPlace.idSWorld != placeActor.idSWorld || ptCursorSecond->tPlace.idSWorld != ptCursorFirst->tPlace.idSWorld) {
-        return FLT_MAX;
-    }
+    if (ptCursorFirst && ptCursorSecond) {
+        if (ptCursorFirst->tPlace.idSWorld != placeActor.idSWorld || ptCursorSecond->tPlace.idSWorld != ptCursorFirst->tPlace.idSWorld) {
+            return FLT_MAX;
+        }
 
     Vector3D wvFirst = ptCursorFirst->tPlace.wp - placeActor.wp;
     Vector3D wvSecond = ptCursorSecond->tPlace.wp - placeActor.wp;
     wvFirst.Normalize();
     wvSecond.Normalize();
-    Vector3D vCross = Vector3D::CrossProduct(wvFirst, wvSecond);
-    return vCross.z;
+        Vector3D vCross = Vector3D::CrossProduct(wvFirst, wvSecond);
+        return vCross.z;
+    }
+    return FLT_MAX;
 }
 
 // Original PowersSwig.cpp:5509.
@@ -3977,7 +3962,7 @@ void PowerBuffRemove(int32 nBuffID, VACDID idActor, ACDID idActorSource, BOOL bF
             PowerAPI_BuffFlagForDeletion(idBuff, FALSE, TRUE, eRemovalReason, TRUE);
         }
         if (bRemoveSingleStack) {
-            break;
+            return;
         }
     }
 }
@@ -4006,7 +3991,7 @@ void PowerBuffRemoveByBuffData(int32 nBuffID, int32 nBuffData, VACDID idActor, A
             PowerAPI_BuffFlagForDeletion(idBuff, FALSE, TRUE, eRemovalReason, TRUE);
         }
         if (bRemoveSingleStack) {
-            break;
+            return;
         }
     }
 }
@@ -4593,13 +4578,14 @@ void sPowerBuffSetDuration(SNO snoPower, int32 nBuffID, ACDID idACD, float flDur
         uint32 dwNow = GameGetServerTime();
         uint32 nTicksLeft = ptBuff->dwDuration - dwNow + ptBuff->dwStartTick;
         uint32 nNewRemainingDuration = (uint32)(flDuration * TICKS_PER_SECOND) - (ptBuff->bInfinite ? 0 : nTicksLeft);
+        BOOL bWantInfinite = flDuration < 1e-6f;
         if (idACDSource == ACDID_INVALID) {
-            PowerAPI_BuffModifyDuration(idBuff, nNewRemainingDuration, flDuration < 1e-6f, bResetStartTick);
+            PowerAPI_BuffModifyDuration(idBuff, nNewRemainingDuration, bWantInfinite, bResetStartTick);
             if (bOnlyFirstBuff) {
                 return;
             }
         } else if (ptBuff->idACDSource == idACDSource) {
-            PowerAPI_BuffModifyDuration(idBuff, nNewRemainingDuration, flDuration < 1e-6f, bResetStartTick);
+            PowerAPI_BuffModifyDuration(idBuff, nNewRemainingDuration, bWantInfinite, bResetStartTick);
             if (bOnlyFirstBuff) {
                 return;
             }
@@ -5714,7 +5700,7 @@ float PowerBuffDamageShieldReduceDamageByPercent(float flPercentToReduce)
         tEvaluationData.EvaluateEvent(ptPlayer,
                                       Achievement::ACH_EVENT_PLAYER_ABSORBED_DAMAGE_WITH_POWER,
                                       ptPower->snoPower,
-                                      Math::FloatToInt(flAmountAbsorbed));
+                                      Math::FloatToInt(flAmountAbsorbed), (uint32)sub_71007b5e70());
     }
 
     return flAmountAbsorbed;
@@ -6830,7 +6816,7 @@ void PowerOffsetTranslatePowerTargetPosition(
 
 
         WorldPlace wpTargetOffset = wpTarget;
-        wpTargetOffset.wp += vecTowardsTarget * -flModifiedDistOffset;
+        wpTargetOffset.wp -= vecTowardsTarget * flModifiedDistOffset;
 
         const ActorMovement *ptMove = ptACD->GetActorMovement();
         WorldPlace wpResult;
@@ -6971,10 +6957,10 @@ double PowerCursorDistanceBetweenCursors(int32 nCursorIDFrom, int32 nCursorIDTo)
     Power * ptPower = PowerGet(idPower);
     PowerCursor * ptCursorFrom = sPowerGetCursorAtIndex(ptPower, nCursorIDFrom, TRUE);
     PowerCursor * ptCursorTo = sPowerGetCursorAtIndex(ptPower, nCursorIDTo, TRUE);
-    if (ptCursorFrom == NULL || ptCursorTo == NULL || ptCursorFrom->tPlace.idSWorld != ptCursorTo->tPlace.idSWorld) {
-        return 3.4028234663852886e+38f;
+    if (ptCursorFrom && ptCursorTo && ptCursorFrom->tPlace.idSWorld == ptCursorTo->tPlace.idSWorld) {
+        return Vector3D::Distance(ptCursorFrom->tPlace.wp, ptCursorTo->tPlace.wp);
     }
-    return Vector3D::Distance(ptCursorFrom->tPlace.wp, ptCursorTo->tPlace.wp);
+    return 3.4028234663852886e+38f;
 }
 
 // Original PowersSwig.cpp:14057.
@@ -6984,10 +6970,10 @@ double PowerCursorDistanceSquaredBetweenCursors(int32 nCursorIDFrom, int32 nCurs
     Power * ptPower = PowerGet(idPower);
     PowerCursor * ptCursorFrom = sPowerGetCursorAtIndex(ptPower, nCursorIDFrom, TRUE);
     PowerCursor * ptCursorTo = sPowerGetCursorAtIndex(ptPower, nCursorIDTo, TRUE);
-    if (ptCursorFrom == NULL || ptCursorTo == NULL || ptCursorFrom->tPlace.idSWorld != ptCursorTo->tPlace.idSWorld) {
-        return 3.4028234663852886e+38f;
+    if (ptCursorFrom && ptCursorTo && ptCursorFrom->tPlace.idSWorld == ptCursorTo->tPlace.idSWorld) {
+        return Vector3D::DistanceSquared(ptCursorFrom->tPlace.wp, ptCursorTo->tPlace.wp);
     }
-    return Vector3D::DistanceSquared(ptCursorFrom->tPlace.wp, ptCursorTo->tPlace.wp);
+    return 3.4028234663852886e+38f;
 }
 
 // Original PowersSwig.cpp:14152.
@@ -7059,10 +7045,10 @@ float PowerCursorAngleToCursor(int32 nCursorSource, int32 nCursorDest)
     Power * ptPower = PowerGet(idPower);
     PowerCursor * ptCursorSource = sPowerGetCursorAtIndex(ptPower, nCursorSource, TRUE);
     PowerCursor * ptCursorDest = sPowerGetCursorAtIndex(ptPower, nCursorDest, TRUE);
-    if (ptCursorSource == NULL || ptCursorDest == NULL) {
-        return 0.0f;
+    if (ptCursorSource && ptCursorDest) {
+        return sPowerGetAngleBetween(ptCursorSource->tPlace, ptCursorSource->qOrientation, ptCursorDest->tPlace);
     }
-    return sPowerGetAngleBetween(ptCursorSource->tPlace, ptCursorSource->qOrientation, ptCursorDest->tPlace);
+    return 0.0f;
 }
 
 // Original PowersSwig.cpp:14714.
@@ -10432,7 +10418,7 @@ float PowerBuffDamageShieldAbsorb(
                     ptPlayer,
                     Achievement::ACH_EVENT_PLAYER_ABSORBED_DAMAGE_WITH_POWER,
                     ptPower->snoPower,
-                    Math::FloatToInt(flAmountAbsorbed));
+                    Math::FloatToInt(flAmountAbsorbed), (uint32)sub_71007b5e70());
             }
 
         }
@@ -10544,7 +10530,7 @@ float PowerBuffDamageShieldAbsorbFromBuff(
                     ptPlayer,
                     Achievement::ACH_EVENT_PLAYER_ABSORBED_DAMAGE_WITH_POWER,
                     ptPower->snoPower,
-                    Math::FloatToInt(flAmountAbsorbed));
+                    Math::FloatToInt(flAmountAbsorbed), (uint32)sub_71007b5e70());
             }
 
         }
@@ -10723,7 +10709,7 @@ void PowerProjectileReflect(
                 ptPlayer,
                 Achievement::ACH_EVENT_PLAYER_USED_POWER_TO_REFLECTE_PROJECTILE,
                 snoPower,
-                1);
+                1, (uint32)sub_71007b5e70());
         }
     }
 

@@ -266,7 +266,7 @@ static const int32 MAX_PARTY_SIZE = 3;  // line 55 (DW_AT_const_value 3)
 // SetProviderData (line 110) calls it, so it is declared before the class (inferred).
 PlayerClass GetPlayerClass();
 
-class DetailsInvScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x400
+class DetailsInvScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x410
     enum ButtonActions {
         ACTION_BACK = 0,
         ACTION_SCROLL_LIST = 1,
@@ -323,13 +323,15 @@ private:
     virtual void OnClose();
     virtual void OnSetActive(BOOL bActive);
     virtual void UpdateControllerActions(::Console::ControllerActionManager & tActionManager);
-    UIInventory::Console::LeaderboardEquippedItem m_tEquippedItemProvider;  // 0x1f0
-    UIInventory::Console::UIInventoryDetailsView m_tEquippedView;  // 0x380
-    BOOL m_fRingNeedsUpdating;  // 0x3f8
+    UIInventory::Console::LeaderboardEquippedItem m_tEquippedItemProvider;  // 0x200
+    UIInventory::Console::UIInventoryDetailsView m_tEquippedView;  // 0x390
+    BOOL m_fRingNeedsUpdating;  // 0x408
 };
-static_assert(sizeof(DetailsInvScreen) == 0x400, "DetailsInvScreen");
+static_assert(sizeof(DetailsInvScreen) == 0x410, "DetailsInvScreen");
 
-class DetailsSkillsScreen {  // size 0x98
+extern "C" void sub_710019b630(void * pThis, const UIID & idParent);
+
+class DetailsSkillsScreen {  // size 0xc8
     enum ButtonActions {
         ACTION_BACK = 0,
         ACTION_SCROLL_DETAIL_INFO = 1,
@@ -338,6 +340,7 @@ public:
     DetailsSkillsScreen()  // line 280
         : m_fCurrentlyOpening(FALSE)
     {
+        sub_710019b630(unk_98, UIWND_CONSOLE_LEADERBOARDS_SKILLS_KANAIS_POWERS);
         m_tRingStickInputFilter.AddRule(::Console::AnalogStickInputFilter::Rule::CatchAllRule);
     }
 
@@ -365,13 +368,16 @@ public:
     ::Console::RingWrapper m_tRingUI;  // 0x00
     ::Console::AnalogStickInputFilter m_tRingStickInputFilter;  // 0x68
     BOOL m_fCurrentlyOpening;  // 0x90
+    // 2.7.7: a 0x30-byte object of an unnamed class, built by sub_710019b630 for the Kanai's
+    // powers window (UILeaderboardInspectData constructor sub_7100196d90 at +0x558).
+    uint64 unk_98[6];  // 0x98
 private:
     BOOL CanScrollDetails();
     void ResetDetailScrollPosition(const UIID & idScrollBox);
     void ResetDetailScrollPositions();
     void ScrollDetailInfo(const float);
 };
-static_assert(sizeof(DetailsSkillsScreen) == 0x98, "DetailsSkillsScreen");
+static_assert(sizeof(DetailsSkillsScreen) == 0xc8, "DetailsSkillsScreen");
 
 enum class DetailsScreen : int {
     NONE = -1,
@@ -379,7 +385,7 @@ enum class DetailsScreen : int {
     SKILLS = 1,
 };
 
-struct UILeaderboardInspectData {  // size 0x660
+struct UILeaderboardInspectData {  // size 0x6a0 (InitializeForGame sub_7100196d50: new(0x6a0))
     UILeaderboardInspectData();
     ~UILeaderboardInspectData();
     void SwitchToScreen(UILeaderboardInspect::Console::DetailsScreen eScreen);
@@ -388,19 +394,19 @@ struct UILeaderboardInspectData {  // size 0x660
     BOOL bWaitingOnCallback;  // 0x30
     D3::Leaderboard::HeroSnapshot tHeroSnapshot;  // 0x38
     UILeaderboardInspect::Console::DetailsInvScreen tInventoryScreen;  // 0xb0
-    UILeaderboardInspect::Console::DetailsSkillsScreen tSkillsScreen;  // 0x4b0
-    UILeaderboardInspect::Console::DetailsScreen eCurrentScreen;  // 0x548
-    uint64 idCurrentUser;  // 0x550
-    BOOL bChallengeRift;  // 0x558
-    PlayerClass ePlayerClass;  // 0x55c
-    BOOL bFemale;  // 0x560
-    int32 nPartyMembers;  // 0x564
-    CRefString strPartyMemberNames[3];  // 0x568
-    CRefString strPlayerBattleTag;  // 0x5b0
-    VisualEquipment m_tVisualEquipment;  // 0x5c8
-    ModalNotificationId idLoadingDataDialog;  // 0x658
+    UILeaderboardInspect::Console::DetailsSkillsScreen tSkillsScreen;  // 0x4c0
+    UILeaderboardInspect::Console::DetailsScreen eCurrentScreen;  // 0x588
+    uint64 idCurrentUser;  // 0x590
+    BOOL bChallengeRift;  // 0x598
+    PlayerClass ePlayerClass;  // 0x59c
+    BOOL bFemale;  // 0x5a0
+    int32 nPartyMembers;  // 0x5a4
+    CRefString strPartyMemberNames[3];  // 0x5a8
+    CRefString strPlayerBattleTag;  // 0x5f0
+    VisualEquipment m_tVisualEquipment;  // 0x608
+    ModalNotificationId idLoadingDataDialog;  // 0x698
 };
-static_assert(sizeof(UILeaderboardInspectData) == 0x660, "UILeaderboardInspectData");
+static_assert(sizeof(UILeaderboardInspectData) == 0x6a0, "UILeaderboardInspectData");
 
 void Close();
 void ForceClose();
@@ -842,7 +848,7 @@ void DetailsInvScreen::Update()
 {
     if (RingHasFocus())
     {
-        GetRingUI().UpdateInput(sgptUILeaderboardInspectData->nControllerIndex, IconSelectionChanged);
+        GetRingUI().UpdateInput(sgptUILeaderboardInspectData->nControllerIndex, IconSelectionChanged, NULL);
     }
 
     if (m_fRingNeedsUpdating)
@@ -1326,7 +1332,7 @@ inline void DetailsSkillsScreen::Update()
     Vector2D vecStick = ::Console::ControllerUtils::GetLStickPosition(sgptUILeaderboardInspectData->nControllerIndex, FALSE);
     if (m_tRingStickInputFilter.HandleInput(vecStick, FALSE) == 0)
     {
-        m_tRingUI.UpdateInput(sgptUILeaderboardInspectData->nControllerIndex, sIconSelectionChanged);
+        m_tRingUI.UpdateInput(sgptUILeaderboardInspectData->nControllerIndex, sIconSelectionChanged, NULL);
     }
 }
 

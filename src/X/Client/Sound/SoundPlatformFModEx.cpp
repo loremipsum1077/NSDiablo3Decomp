@@ -806,7 +806,7 @@ static void sWaitForReady(FMOD_SOUND * ptFModSound)
 FMOD_RESULT sFMODChannelSetPosition(FMOD_SOUND * ptFModSound, FMOD_CHANNEL * ptFModChannel, unsigned int position, FMOD_TIMEUNIT postype)
 {
 
-    sWaitForReady(ptFModSound);
+    // 2.7.7: no sWaitForReady here (SetStreamPosition tail-calls FMOD_Channel_SetPosition).
     return FMOD_Channel_SetPosition(ptFModChannel, position, postype);
 }
 
@@ -3694,7 +3694,7 @@ static BOOL sPlaySound(
 
 
 
-    sWaitForReady(ptFModSound);
+
 
     {
 
@@ -3738,7 +3738,7 @@ static BOOL sPlaySound(
     FMOD_CHANNEL *ptFModChannel = NULL;
     {
 
-        sWaitForReady(ptFModSound);
+
 
 
 
@@ -4356,7 +4356,7 @@ BOOL sPlayMusic(FModCachedSound * ptCachedSound, SoundInstance * ptSound, Playli
 
 
 
-    sWaitForReady(ptFModSound);
+
 
     FMOD_RESULT result;
     {
@@ -4386,7 +4386,7 @@ BOOL sPlayMusic(FModCachedSound * ptCachedSound, SoundInstance * ptSound, Playli
     FMOD_CHANNEL * ptFModChannel = NULL;
 
 
-    sWaitForReady(ptFModSound);
+
 
 
 
@@ -4443,8 +4443,8 @@ BOOL sPlayMusic(FModCachedSound * ptCachedSound, SoundInstance * ptSound, Playli
     }
 
     ptPlayingSoundData->idSound = idSound;
-    ptPlayingSoundData->ptFModChannel = ptFModChannel;
     ptPlayingSoundData->ptFModSound = ptFModSound;
+    ptPlayingSoundData->ptFModChannel = ptFModChannel;
     ptPlayingSoundData->ptCachedSound = ptCachedSound;
     return TRUE;
 }
@@ -4627,7 +4627,7 @@ BOOL SoundPlatform::GetOVTStreamPos(float & flStreamPos)
         uint32 nBufferSize = ptSoundOVT->dwFrequency * ptSoundOVT->dwChannels * sizeof(int16);
         if (nNewStreamPos >= nBufferSize)
             nNewStreamPos = nBufferSize - ptSoundOVT->dwChannels * sizeof(int16);
-        ptSoundOVT->nLastPosPCMBytes += nNewStreamPos - ptSoundOVT->nLastBufferPosPCMBytes + ((nNewStreamPos < ptSoundOVT->nLastBufferPosPCMBytes) ? nBufferSize : 0);
+        if (nNewStreamPos < ptSoundOVT->nLastBufferPosPCMBytes) ptSoundOVT->nLastPosPCMBytes += nBufferSize - ptSoundOVT->nLastBufferPosPCMBytes + nNewStreamPos; else ptSoundOVT->nLastPosPCMBytes += nNewStreamPos - ptSoundOVT->nLastBufferPosPCMBytes;
         ptSoundOVT->nLastBufferPosPCMBytes = nNewStreamPos;
         flStreamPos = (float)ptSoundOVT->nLastPosPCMBytes / (float)nBufferSize;
         return TRUE;
@@ -6655,6 +6655,40 @@ void sReleaseSound(
         }
         else
         {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             DisplayInternalError(NULL, "", __LINE__, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
         }

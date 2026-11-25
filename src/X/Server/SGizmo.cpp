@@ -540,7 +540,7 @@ static void sGizmoOperateChest(
             ptPlayer,
             Achievement::ACH_EVENT_LOOTED_CHEST,
             tACD.snoActor,
-            1);
+            1, (uint32)sub_71007b5e70());
     }
 
 }
@@ -977,7 +977,7 @@ void sGizmoOperateHeadstone(ActorCommonData & tACDHeadstone, ACDID idACDOperator
             tEvaluationData.SetPlayer(ptPlayerOperator);
             tEvaluationData.SetACD(&tACDVictim);
 
-            tEvaluationData.EvaluateEvent(ptPlayerOperator, 501 /* ACH_EVENT_RESURRECT_PLAYER */, PlayerGetPlayerClass(&tACDVictim), 1);
+            tEvaluationData.EvaluateEvent(ptPlayerOperator, 501 /* ACH_EVENT_RESURRECT_PLAYER */, PlayerGetPlayerClass(&tACDVictim), 1, (uint32)sub_71007b5e70());
         }
 
     }
@@ -1884,7 +1884,7 @@ void SGizmoOperatePortal(
         SWorldID idSWorld = SWorldFindBySNO(tResolvedDest.snoWorld);
         SWorld * ptSWorld = SWorldTryToGet(idSWorld);
         // inferred: ptSWorld && at 1887 and 1893 (columns 12/38/50 and 13/35); the NULL test is folded into SWorldTryToGet's
-        if(ptSWorld && tResolvedDest.snoWorld == GlobalSNOGet(GLOBALSNO_WORLD_GREED_REALM))
+        if(ptSWorld && (tResolvedDest.snoWorld == GlobalSNOGet(GLOBALSNO_WORLD_GREED_REALM) || tResolvedDest.snoWorld == GlobalSNOGet(GLOBALSNO_UNK_686)))
         {
             SGameGlobals& tSGameGlobals = SGameGlobalsGet();
             tSGameGlobals.idGreedPortal = tACDGizmo.id;
@@ -2160,7 +2160,7 @@ void GizmoOperate(
 				tEvaluationData.SetPower(TagMapGetSNO(pdefActor->hTagMap, TAG_ACTOR_GIZMO_POWER_ON_OPERATE));
 			}
 
-			tEvaluationData.EvaluateEvent(tEvaluationData.GetPlayer(), Achievement::ACH_EVENT_INTERACT, nGizmoType, TRUE);
+			tEvaluationData.EvaluateEvent(tEvaluationData.GetPlayer(), Achievement::ACH_EVENT_INTERACT, nGizmoType, TRUE, (uint32)sub_71007b5e70());
 		}
 	}
 
@@ -3063,6 +3063,7 @@ BOOL GizmoRequiresOperator(const GizmoType eGizmoType)
     case 79:
     case 80:
     case 82:
+    case 87:
         return TRUE;
     default:
         return FALSE;
@@ -3265,9 +3266,10 @@ static void sPlaceLoot(const WorldPlace & placeLoot, const Player & tPlayer, SNO
 
 
 
-    tLootee.snoTreasureClass = snoTreasureClass;
+
 
     tLootee.tLooteeParams.nLevel = nLevelAreaLevel; tLootee.flNoDropScalar = 0.0f; tLootee.hGBDebug = cghgbNone;
+    tLootee.snoTreasureClass = snoTreasureClass;
 
     LootSpecifierArray arLootSpecifiers;
     if (LootGetLootSpecifiers(tLootee, tPlayer.idPlayerACD, arLootSpecifiers, NULL, FALSE, 1, NULL))
@@ -3488,7 +3490,8 @@ void GizmoSetHearthPortal(Player & tPlayer, const WorldPlace & placeReturn, cons
 
 
     tPlayer.tHearthPortalInfo.place = placeReturn;
-    tPlayer.tHearthPortalInfo.snoLastWaypointLevelArea = placeReturn.idSWorld != SWORLDID_INVALID ? tPlayer.snoLastWaypointLevelArea : SNO_NONE;
+    SNO snoLevelArea = tPlayer.snoLastWaypointLevelArea;
+    tPlayer.tHearthPortalInfo.snoLastWaypointLevelArea = placeReturn.idSWorld != SWORLDID_INVALID ? snoLevelArea : SNO_NONE;
     if (bSendToClient)
     {
         GizmoSendHearthPortalToPlayer(tPlayer, ACDID_INVALID);
@@ -3512,6 +3515,7 @@ void GizmoSendHearthPortalToPlayer(
     WorldPlace placeReturn = tPlayer.tHearthPortalInfo.place;
 
     SNO snoLevelArea = SNO_NONE;
+    SNO snoWorld = SNO_NONE;
     if (placeReturn.idSWorld != SWORLDID_INVALID)
     {
         NavMeshHandle tNavMeshHandle;
@@ -3519,12 +3523,14 @@ void GizmoSendHearthPortalToPlayer(
         {
             snoLevelArea = ScenesCommonLevelAreaFromPlace(tNavMeshHandle.idSScene, placeReturn.wp, FALSE);
         }
+        snoWorld = WorldGetCommonData(placeReturn.idSWorld).snoWorld;
     }
 
     tPlayer.tHearthPortalInfo.snoPortalLevelArea = snoLevelArea;
 
     HearthPortalInfoMessage tMessage;
     tMessage.snoLevelArea = snoLevelArea;
+    tMessage.unk_c = snoWorld;
     tMessage.annPortal = ANNFromACD(idACDPortal);
     tMessage.bResetUI = TRUE;
     tMessage.bIsTieredRift = SWorldIsDungeonFinder(placeReturn.idSWorld) && NephalemRift::IsTieredRiftActive();

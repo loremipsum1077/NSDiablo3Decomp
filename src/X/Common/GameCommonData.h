@@ -70,24 +70,23 @@ BOOL GameIsWeeklyChallenge();  // GameCommonData.cpp
 struct GameSyncedData {  // size 0xd0
     uint32 dwGameSyncedFlags;  // 0x00
     Act eAct;  // 0x04
-    int32 nInitialMonsterLevel;  // 0x08
-    int32 nMonsterLevel;  // 0x0c
-    int32 nRandomWeatherSeed;  // 0x10
-    int32 eOpenWorldMode;  // 0x14 (OpenWorldMode)
-    Act eOpenWorldModeAct;  // 0x18
-    int32 nOpenWorldModeParam;  // 0x1c
-    uint32 dwOpenWorldTransitionTime;  // 0x20
-    Act eOpenWorldDefaultAct;  // 0x24
-    Act eOpenWorldBonusAct;  // 0x28
-    int32 snoDungeonFinderLevelArea;  // 0x2c (SNO)
-    BOOL bLootRunOpen;  // 0x30
-    int32 nOpenLootRunLevel;  // 0x34
-    BOOL bLootRunBossDead;  // 0x38
-    int32 nHunterPlayerIdx;  // 0x3c
-    BOOL bLootRunBossActive;  // 0x40
-    BOOL bTieredLootRunFailed;  // 0x44
-    BOOL bLootRunChallengeCompleted;  // 0x48
-    BOOL bSetDungeonActive;  // 0x4c
+    int32 nMonsterLevel;  // 0x08 (2.7.7: the 2.6.2 field nInitialMonsterLevel is gone; GameGetInitialMonsterLevel is not in the binary)
+    int32 nRandomWeatherSeed;  // 0x0c
+    int32 eOpenWorldMode;  // 0x10 (OpenWorldMode)
+    Act eOpenWorldModeAct;  // 0x14
+    int32 nOpenWorldModeParam;  // 0x18
+    uint32 dwOpenWorldTransitionTime;  // 0x1c
+    Act eOpenWorldDefaultAct;  // 0x20
+    Act eOpenWorldBonusAct;  // 0x24
+    int32 snoDungeonFinderLevelArea;  // 0x28 (SNO)
+    BOOL bLootRunOpen;  // 0x2c
+    int32 nOpenLootRunLevel;  // 0x30
+    BOOL bLootRunBossDead;  // 0x34
+    int32 nHunterPlayerIdx;  // 0x38
+    BOOL bLootRunBossActive;  // 0x3c
+    BOOL bTieredLootRunFailed;  // 0x40
+    BOOL bLootRunChallengeCompleted;  // 0x44
+    BOOL bSetDungeonActive;  /* 0x48 */  int32 unk_4c;  // 0x4c (2.7.7: new; zeroed by GameCommonData::Initialize, set from sub_71007d5160)
     int32 arPlayerAllyTeam[4];  // 0x50 (Team)
     int32 arMonsterTeam[4];  // 0x60 (Team)
     int32 eSceneryTeam;  // 0x70 (Team)
@@ -101,6 +100,7 @@ struct GameSyncedData {  // size 0xd0
     uint32 nTeamWins[2];  // 0x90
     uint32 nTeamScore[2];  // 0x98
     int32 ePVPGameResult[2];  // 0xa0 (PVPGameResult)
+
     uint64 uPartyGuideHeroId;  // 0xa8 (OnlineService::HeroId)
     uint64 arTieredRiftParticipatingHeroID[4];  // 0xb0
 };

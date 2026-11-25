@@ -285,7 +285,7 @@ LootSpecifier::LootSpecifier() :
     eTargetedHirelingClass(0),
     bTryStack(FALSE),
     bAddExtraMajorAffix(FALSE),
-    bIgnoreGoldRange(FALSE)
+    bIgnoreGoldRange(FALSE), unk_e0(FALSE), unk_ec(0)
 {
     for (int32 i = 0; i < LOOT_MAX_AFFIXES; i++)
     {
@@ -5282,7 +5282,7 @@ void LootSpecifier::AddRandomAffixes(AffixType & eLastAffixType,
     }
 }
 
-
+// NON_MATCHING: 1 of 83 insns: the first "nTotalAffixes + nNumAffixes" add (shard path) has its operands swapped (add w10, w8, w9 vs w9, w8); tried the operand order, ">= 6", an explicit sum and the check inside the while condition. 2.7.7 adds the unk_e0 trim loop.
 void LootDetermineRandomAffixes(LootSpecifier & tSpecifier)
 {
     int32 nRandomAffixes = 0;
@@ -5304,27 +5304,28 @@ void LootDetermineRandomAffixes(LootSpecifier & tSpecifier)
     }
 
     int32 nTotalAffixes = nRandomAffixes + nMajorAffixes + nMinorAffixes;
+    if (tSpecifier.unk_e0 && nTotalAffixes + tSpecifier.nNumAffixes > 5)
+    {
+        do
+        {
+            if (nMinorAffixes > 0)
+                nMinorAffixes--;
+            else if (nRandomAffixes > 0)
+                nRandomAffixes--;
+            else if (nMajorAffixes > 0)
+                nMajorAffixes--;
+            else
+                return;
+            nTotalAffixes = nRandomAffixes + nMajorAffixes + nMinorAffixes;
+        } while (nTotalAffixes + tSpecifier.nNumAffixes > 5);
+    }
+
     if (nTotalAffixes > 0 && tSpecifier.nAffixLevel > 0)
     {
         AffixType eLastAffixType = -1;
         tSpecifier.AddRandomAffixes(eLastAffixType, nMajorAffixes, nMinorAffixes, nRandomAffixes);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -7135,8 +7136,8 @@ static void sRollForTargetedItem(
     }
 }
 
-
-
+BOOL sub_710050e910(GBID gbidItem); BOOL GameCommonGameFlagIsSet(LPCSTR szFlagLabel); namespace NephalemRiftManager { int32 RiftPlayerCount(); }
+// NON_MATCHING: 2.7.7 logic is complete (sub_710050e910 always-ancient check, seasonal solo tiered-rift guaranteed primal with ATTRIBUTE_TIERED_RIFT_PRIMAL_RECEIVED); the remaining diff is block layout only: the original puts the "LootRunTieredRiftFailed not set" path (looter / rift-level / attribute checks) out of line at the end of the function. Tried the flag in a local.
 void LootRollForAncientLegendary(LootSpecifier & tSpecifier, const ACDID idACDLooter)
 {
     if (tSpecifier.tLooteeParams.bDisableAncientDrops)
@@ -7153,6 +7154,12 @@ void LootRollForAncientLegendary(LootSpecifier & tSpecifier, const ACDID idACDLo
 
     if (!ItemIsLegendary(tSpecifier.hGBItem.gbid))
     {
+        return;
+    }
+
+    if (sub_710050e910(tSpecifier.hGBItem.gbid))
+    {
+        tSpecifier.eAncientRank = ANCIENT_RANK_ANCIENT;
         return;
     }
 
@@ -7193,7 +7200,26 @@ void LootRollForAncientLegendary(LootSpecifier & tSpecifier, const ACDID idACDLo
     }
 
     BOOL bAncient = RandFloat_Internal(SGameGetRNG()) <= flAncientChance;
-    if (bAncient)
+
+    if (GameIsSeasonal() && tSpecifier.tLooteeParams.nTieredLootRunLevel > 0 && NephalemRiftManager::RiftPlayerCount() == 1)
+    {
+        ScopedGlobalDefinitionLockR pdefGlobal;
+        int32 nMinimumAchievedRiftLevelToRollPrimalAncients = pdefGlobal->ptServerData->nMinimumAchievedRiftLevelToRollPrimalAncients;
+        if (!GameCommonGameFlagIsSet("LootRunTieredRiftFailed") &&
+            idACDLooter != ACDID_INVALID &&
+            tSpecifier.tLooteeParams.nTieredLootRunLevel + 1 >= nMinimumAchievedRiftLevelToRollPrimalAncients)
+        {
+            ActorCommonData * ptACDLooter = ACDTryToGet(idACDLooter);
+            if (ptACDLooter && !ptACDLooter->AttributesGetInt(ATTRIBUTE_TIERED_RIFT_PRIMAL_RECEIVED))
+            {
+                tSpecifier.eAncientRank = ANCIENT_RANK_PRIMAL_ANCIENT;
+                tSpecifier.fAccountBound = TRUE;
+                ptACDLooter->AttributesSetInt(ATTRIBUTE_TIERED_RIFT_PRIMAL_RECEIVED, TRUE);
+            }
+        }
+    }
+
+    if (bAncient && tSpecifier.eAncientRank != ANCIENT_RANK_PRIMAL_ANCIENT)
     {
         tSpecifier.eAncientRank = ANCIENT_RANK_ANCIENT;
         if (idACDLooter != ACDID_INVALID && !tSpecifier.tLooteeParams.bDisablePrimalAncientDrops)
@@ -7216,31 +7242,6 @@ void LootRollForAncientLegendary(LootSpecifier & tSpecifier, const ACDID idACDLo
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

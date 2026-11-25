@@ -1303,6 +1303,11 @@ void GroupDefinition::ReadFromMemoryBuffer(void * lpDefinition, uint32 dwDefinit
 
 
 
+
+
+
+
+
 BOOL GroupDefinition::ValidateSourceFiles(const void *) const
 {
 
@@ -2794,6 +2799,22 @@ void GroupDefinition::UnlockW(void *& lpDef)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void GroupDefinition::SNOWrite(const SNO sno, void * lpDefinition)
 {
 
@@ -3631,6 +3652,18 @@ SNOName GroupDefinition::GlobalCacheManagerFindElementToPurge(GlobalCacheType eG
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 inline BOOL GroupDefinition::GlobalCacheManagerPurge(GlobalCacheType eGlobalCacheType, const BOOL fLockCanFail, const BOOL fMemoryIsCritical)
 {
 
@@ -3735,6 +3768,10 @@ BOOL GroupDefinition::CacheManagerPurge(const BOOL fLockCanFail)
         DisplayInternalError(NULL, "", __LINE__, ERROR_INTERNAL_FATAL);
         ExitProgram(ERROR_INTERNAL_FATAL);
     }
+
+
+
+
 
 
 
@@ -4147,6 +4184,10 @@ uint32 GroupDefinition::GetContiguousReadSize(SNOElement * ptSNOElement)
 
     return SNOFileGetDataSize(ptSNOElement, TRUE);
 }
+
+
+
+
 
 
 

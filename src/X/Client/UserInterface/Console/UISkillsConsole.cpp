@@ -1895,7 +1895,7 @@ void PlayerSkillsGlobals::OnLeftStick(const UIID & id, const int32 nControllerIn
     switch (m_eSelectionMode) {
         case SLOT_SELECTION_MODE:
             if (tRingStickInputFilter.HandleInput(vecStick, FALSE) == ::Console::AnalogStickInputFilter::Rule::CATCH_ALL_INPUT) {
-                tRingUI.UpdateInput(nControllerIndex, IconSelectionChanged);
+                tRingUI.UpdateInput(nControllerIndex, IconSelectionChanged, NULL);
             }
             break;
         case TRAIT_SELECTION_MODE: {

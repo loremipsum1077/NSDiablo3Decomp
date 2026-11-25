@@ -225,7 +225,7 @@ static_assert(sizeof(MatchmakingData) == 0x30, "MatchmakingData");
 struct CCInfo;  // X/Server/Powers/PowerAPI.h
 typedef XGrowableMap<ACDID, ACDID, CCInfo, CCInfo &> mapPendingCCMessages;  // SGame.h:252
 
-struct SGameGlobals {  // size 0x2268
+struct SGameGlobals {  // size 0x2278
     BOOL WaypointIsActive(int32 nWaypoint);
     void WaypointEnable(int32 nWaypoint, BOOL bState);
     OnlineService::AchievementsInterface * ptAchievementsInterface;  // 0x00
@@ -297,18 +297,18 @@ struct SGameGlobals {  // size 0x2268
     mapPendingCCMessages tMapPendingCCMessages;  // 0x2098
     uint64 tAchievementTime;  // 0x2118 (OnlineService::Timestamp)
     ACDID idGreedPortal;  // 0x2120
-    float flBlizzconRiftTier1RewardDropChance;  // 0x2124
-    float flBlizzconRiftTier2RewardDropChance;  // 0x2128
-    uint8 _unadopted6g[0x2130 - 0x212c];  // (invented name: 0x212c .. 0x2130)
-    UpdateData tCommunityBuffsUpdateData;  // 0x2130
-    uint32 dwLastTimeVerboseSlowFrameLog;  // 0x2150
-    uint32 dwTimeBetweenVerboseSlowFrameLogs;  // 0x2154
-    uint32 dwVerboseSlowFrameLogMaxPowersPerLog;  // 0x2158
-    uint8 _unadopted6h[0x2160 - 0x215c];  // (invented name: 0x215c .. 0x2160)
-    XPooledList<struct PacketBuffer *, struct PacketBuffer *> tOrphanedPacketBufferList;  // 0x2160 (TPacketBufferList)
-    ChallengeRiftData tChallengeRift;  // 0x2188
+    uint32 unk_2124;  /* 0x2124 */  uint32 unk_2128;  /* 0x2128 */  uint32 unk_212c;  /* 0x212c */  uint32 unk_2130;  /* 0x2130 */  uint32 unk_2134;  // 0x2134 (2.7.7: 0x14 new bytes; flBlizzconRiftTier1RewardDropChance is stored at 0x2138 by SGameInitializeGame)
+    float flBlizzconRiftTier1RewardDropChance;  // 0x2138
+    float flBlizzconRiftTier2RewardDropChance;  // 0x213c
+    UpdateData tCommunityBuffsUpdateData;  // 0x2140
+    uint32 dwLastTimeVerboseSlowFrameLog;  // 0x2160
+    uint32 dwTimeBetweenVerboseSlowFrameLogs;  // 0x2164
+    uint32 dwVerboseSlowFrameLogMaxPowersPerLog;  // 0x2168
+    uint8 _unadopted6h[0x2170 - 0x216c];  // (invented name: 0x216c .. 0x2170)
+    XPooledList<struct PacketBuffer *, struct PacketBuffer *> tOrphanedPacketBufferList;  // 0x2170 (TPacketBufferList)
+    ChallengeRiftData tChallengeRift;  // 0x2198
 };
-static_assert(sizeof(SGameGlobals) == 0x2268, "SGameGlobals");
+static_assert(sizeof(SGameGlobals) == 0x2278, "SGameGlobals");
 static_assert(__builtin_offsetof(SGameGlobals, dwActivatedWaypoints) == 0x139c, "SGameGlobals::dwActivatedWaypoints");
 static_assert(__builtin_offsetof(SGameGlobals, uDatabaseSerializeToken) == 0x13c8, "SGameGlobals::uDatabaseSerializeToken");
 static_assert(__builtin_offsetof(SGameGlobals, nLogHistoryCurrentIndex) == 0x1780, "SGameGlobals::nLogHistoryCurrentIndex");

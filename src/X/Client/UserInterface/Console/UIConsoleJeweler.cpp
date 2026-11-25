@@ -180,7 +180,7 @@ enum ButtonActions {
     ACTION_SCROLL_LIST = 17,
 };
 
-class PlayerJewelerScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x1630
+class PlayerJewelerScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x1730
 public:
     enum JewelerMode {
         JEWELER_MODE_INVALID = -1,
@@ -256,26 +256,26 @@ protected:
         FINISHED_CRAFTING_STATE = 9,
     };
 private:
-    JewelerMode m_eJewelerMode;  // 0x1f0
-    CraftState m_eCraftState;  // 0x1f4
-    RecipeListFilter m_eRecipeFilter;  // 0x1f8
-    InventoryItems m_tPlayerItemsProvider;  // 0x200
-    CrafterRecipes m_tRecipeItemsProvider;  // 0x9f8
-    TrainingItems m_tTrainingItemsProvider;  // 0xfd8
-    SingleItemProvider m_tSingleItemProvider;  // 0x1028
-    UIInventoryListView m_tPlayerListView;  // 0x1060
-    UIInventoryDetailsView m_tPlayerDetailsView;  // 0x10e8
-    UIInventoryCategoryView m_tGemCategoriesView;  // 0x1160
-    UIInventoryCategorySummaryView m_tCategorySummaryView;  // 0x11f8
-    UIInventoryListView m_tRecipesListView;  // 0x1260
-    UIInventoryDetailsView m_tRecipesDetailsView;  // 0x12e8
-    UIInventorySocketView m_tSocketView;  // 0x1360
-    UIInventoryGemCombineView m_tCombineGemsView;  // 0x13f0
-    UIInventoryRemoveGemsView m_tRemoveGemsView;  // 0x1460
-    UIInventoryTrainingView m_tTrainingView;  // 0x14c8
-    UIInventoryListView m_tTrainingListView;  // 0x1528
-    UIInventoryDetailsView m_tTrainingDetailsView;  // 0x15b0
-    ACDID m_idLastSelectedItem;  // 0x1628
+    JewelerMode m_eJewelerMode;  // 0x200
+    CraftState m_eCraftState;  // 0x204
+    RecipeListFilter m_eRecipeFilter;  // 0x208
+    InventoryItems m_tPlayerItemsProvider;  // 0x210
+    CrafterRecipes m_tRecipeItemsProvider;  // 0xaf8
+    TrainingItems m_tTrainingItemsProvider;  // 0x10d8
+    SingleItemProvider m_tSingleItemProvider;  // 0x1128
+    UIInventoryListView m_tPlayerListView;  // 0x1160
+    UIInventoryDetailsView m_tPlayerDetailsView;  // 0x11e8
+    UIInventoryCategoryView m_tGemCategoriesView;  // 0x1260
+    UIInventoryCategorySummaryView m_tCategorySummaryView;  // 0x12f8
+    UIInventoryListView m_tRecipesListView;  // 0x1360
+    UIInventoryDetailsView m_tRecipesDetailsView;  // 0x13e8
+    UIInventorySocketView m_tSocketView;  // 0x1460
+    UIInventoryGemCombineView m_tCombineGemsView;  // 0x14f0
+    UIInventoryRemoveGemsView m_tRemoveGemsView;  // 0x1560
+    UIInventoryTrainingView m_tTrainingView;  // 0x15c8
+    UIInventoryListView m_tTrainingListView;  // 0x1628
+    UIInventoryDetailsView m_tTrainingDetailsView;  // 0x16b0
+    ACDID m_idLastSelectedItem;  // 0x1728
     void RefreshWithFilter(UIFilterType eFilterType);
     BOOL CanCombineGems();
     BOOL CanOpenSelectedCategory();
@@ -306,7 +306,7 @@ private:
     BOOL CanAffordToRemoveGem(ACDID idSelectedItem);
     void UpdateGemCategories();
 };
-static_assert(sizeof(PlayerJewelerScreen) == 0x1630, "PlayerJewelerScreen");
+static_assert(sizeof(PlayerJewelerScreen) == 0x1730, "PlayerJewelerScreen");
 
 PlayerJewelerScreen * sgptJewelerGlobals;  // line 389
 static const float SCROLLBOX_SCROLLDELTA = 4.0f;

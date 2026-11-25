@@ -539,6 +539,9 @@ ActorInventoryStorageBucket GetInventoryBucket(const ActorCommonData & tACDItem,
 
 
 
+
+
+
 InventorySlotType ACDInventoryGetOppositeTwoHandedSlot(InventorySlotType eSlot)
 {
     switch (eSlot)
@@ -2157,6 +2160,101 @@ BOOL ACDInventorySlotIsMultiItemSlot(InventorySlotType eSlot)
         return TRUE;
     return FALSE;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4025,6 +4123,7 @@ void ACDInventoryRestoreFromLimbo(
 }
 
 
+
 BOOL ACDInventoryMove(ActorCommonData & tACDItem, const InventoryLocation & tDstLocation)
 {
 
@@ -4824,7 +4923,7 @@ int64 sPlayerCurrencyPickup(ActorCommonData & tACDItem, ActorCommonData & tACDPi
                     Achievement::EvaluationData tEvaluationData;
                     tEvaluationData.SetPlayer(ptCollectingPlayer);
 
-                    tEvaluationData.EvaluateEvent(ptCollectingPlayer, Achievement::ACH_EVENT_PICKUP_GOLD, (uint32)nAmount);
+                    tEvaluationData.EvaluateEvent(ptCollectingPlayer, Achievement::ACH_EVENT_PICKUP_GOLD, (uint32)nAmount, (uint32)sub_71007b5e70());
                 }
 
 
@@ -5044,7 +5143,7 @@ PickupResponse SACDInventoryPickup(const ACDID idACDPickee, const ACDID idACDIte
     Player * ptPlayer = PlayerGetByACD(tACDPickee.id);
     if (ptPlayer &&
 
-        !tACDItem.DoesPlayerMatchAssignedHeroID(ptPlayer))
+        !tACDItem.DoesPlayerMatchAssignedHeroID(ptPlayer, TRUE))
     {
         return PICKUP_RESPONSE_OWNED_BY_OTHER;
     }
@@ -7572,6 +7671,61 @@ static BOOL sPlaceOrSwapToArm(ActorCommonData & tACDOwner, ActorCommonData & tAC
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 static BOOL sPlaceOrSwapMultiLeft(ActorCommonData & tACDPlayer, ActorCommonData & tACDOwner, ActorCommonData & tACDItem, ACDID idACDLeft, ActorCommonData & tACDRight, InventorySlotType eSlotLeft)
 {
 
@@ -8188,7 +8342,7 @@ BOOL SACDInventoryProcessSocketRequest(
                 Achievement::ACH_EVENT_SOCKET_ITEM,
 
                 ptDefGem->eGemType,
-                1);
+                1, (uint32)sub_71007b5e70());
 
 
             SItemCrafting_TryUnlockSecondaryTransmogs(tACDGem.hGB.gbid, *ptPlayer);
@@ -9778,6 +9932,38 @@ InventoryType ACDInventoryGetType(const ActorCommonData & tACD)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void ACDInventoryGetSlotTypeInfo(InventoryType eType, int32 & nStart, int32 & nEnd, int32 & nSlots)
 {
     switch (eType)
@@ -9921,7 +10107,7 @@ static BOOL sChargePlayerForItem(
             Achievement::EvaluationData tEvaluationData;
             tEvaluationData.SetPlayer(ptPlayer);
 
-            tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_SPEND_BLOODSHARDS, (uint32)uCost);
+            tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_SPEND_BLOODSHARDS, (uint32)uCost, (uint32)sub_71007b5e70());
 
 
 
@@ -10073,7 +10259,7 @@ BOOL SACDInventoryBuy(
 
                     Achievement::EvaluationData tEvaluationData;
                     tEvaluationData.SetPlayer(ptPlayer);
-                    tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_LEGENDARY_FROM_KADALA, 1);
+                    tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_LEGENDARY_FROM_KADALA, 1, (uint32)sub_71007b5e70());
                 }
 
             }
@@ -10191,7 +10377,7 @@ BOOL SACDInventoryBuy(
         tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_ITEM_PURCHASED,
 
 
-            ptACDItemToPickup->hGB.gbid, 1);
+            ptACDItemToPickup->hGB.gbid, 1, (uint32)sub_71007b5e70());
 
     }
 
@@ -10504,7 +10690,7 @@ BOOL SACDInventoryBuyStashSlots(const ACDID idACDPlayerActor)
         Achievement::EvaluationData tEvaluationData;
         tEvaluationData.SetPlayer(ptPlayer);
 
-        tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_STASH_SIZE_INCREASED, 1);
+        tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_STASH_SIZE_INCREASED, 1, (uint32)sub_71007b5e70());
 
 
 
@@ -10958,14 +11144,18 @@ BOOL ACDInventorySlotIsEquippable(InventorySlotType eSlot)
     case SLOT_HIRELING_NECK:
     case SLOT_HIRELING_RIGHT_FINGER:
     case SLOT_HIRELING_LEFT_FINGER:
+    case SLOT_HIRELING_HEAD:
+    case SLOT_HIRELING_TORSO:
+    case SLOT_HIRELING_HANDS:
+    case SLOT_HIRELING_WAIST:
+    case SLOT_HIRELING_FEET:
+    case SLOT_HIRELING_SHOULDERS:
+    case SLOT_HIRELING_LEGS:
+    case SLOT_HIRELING_BRACERS:
         return TRUE;
     }
     return FALSE;
 }
-
-
-
-
 
 static void sACDInventoryGetItemsOfTypeItem(const ActorCommonData & tACDPickee,
                                             InventorySlotType * peSlots,
@@ -10978,10 +11168,6 @@ static void sACDInventoryGetItemsOfTypeItem(const ActorCommonData & tACDPickee,
         nIndex++;
     }
 }
-
-
-
-
 
 
 
@@ -12515,6 +12701,26 @@ int32 ACDInventoryGetStashUpgradeCost(ActorCommonData & tACDPlayer)
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 SNO ACDGetInventory(const ActorCommonData * ptACD, BOOL bSecondary)
 {
 
@@ -12580,7 +12786,7 @@ inline void SACDInventoryEvaluateAcquireItemAchievementEvent(const Player & tPla
                                       Achievement::ACH_EVENT_ACQUIRE_ITEM,
 
                                       tACDItem.hGB.gbid,
-                                      1);
+                                      1, (uint32)sub_71007b5e70());
     }
 }
 
@@ -12598,7 +12804,7 @@ void SACDInventoryEvaluateItemDyeAchievements(Achievement::EvaluationData * ptEv
         ptEvaluationData->EvaluateEvent(
             ptEvaluationData->GetPlayer(),
             Achievement::ACH_EVENT_EQUIP_ALL_ITEMS_WITH_DIFFERENT_DYES,
-            1);
+            1, (uint32)sub_71007b5e70());
     }
     else if (ptEvaluationData->GetEquipmentInfo()->IsAllEquipmentDyed())
     {
@@ -12619,7 +12825,7 @@ void SACDInventoryEvaluateItemDyeAchievements(Achievement::EvaluationData * ptEv
                 ptEvaluationData->GetPlayer(),
                 Achievement::ACH_EVENT_EQUIP_ALL_ITEMS_WITH_SPECIFIC_DYE,
                 DyeTypeTranslateToSavedDyeType(eDyeType),
-                1);
+                1, (uint32)sub_71007b5e70());
         }
     }
 }
@@ -12664,7 +12870,7 @@ void SACDInventorySetItemEquipped(ActorCommonData & tACDItem, BOOL bOnHeroLoad)
                 tEvaluationData.GetPlayer(),
                 Achievement::ACH_EVENT_EQUIP_ITEM_PLAYER,
                 tACDItem.hGB.gbid,
-                1);
+                1, (uint32)sub_71007b5e70());
 
             if (tEvaluationData.GetEquipmentInfo()->IsFullyEquipped())
             {
@@ -12672,7 +12878,7 @@ void SACDInventorySetItemEquipped(ActorCommonData & tACDItem, BOOL bOnHeroLoad)
                 tEvaluationData.EvaluateEvent(
                     tEvaluationData.GetPlayer(),
                     Achievement::ACH_EVENT_PLAYER_FULLY_EQUIPPED,
-                    1);
+                    1, (uint32)sub_71007b5e70());
             }
 
 
@@ -12681,7 +12887,7 @@ void SACDInventorySetItemEquipped(ActorCommonData & tACDItem, BOOL bOnHeroLoad)
                 tEvaluationData.EvaluateEvent(
                     tEvaluationData.GetPlayer(),
                     Achievement::ACH_EVENT_EQUIP_ALL_ITEMS_ENCHANTED,
-                    1);
+                    1, (uint32)sub_71007b5e70());
             }
 
 
@@ -12690,7 +12896,7 @@ void SACDInventorySetItemEquipped(ActorCommonData & tACDItem, BOOL bOnHeroLoad)
                 tEvaluationData.EvaluateEvent(
                     tEvaluationData.GetPlayer(),
                     Achievement::ACH_EVENT_EQUIP_ALL_ITEMS_TRANSMOG_LEGENDARY,
-                    1);
+                    1, (uint32)sub_71007b5e70());
             }
 
 
@@ -12699,7 +12905,7 @@ void SACDInventorySetItemEquipped(ActorCommonData & tACDItem, BOOL bOnHeroLoad)
                 tEvaluationData.EvaluateEvent(
                     tEvaluationData.GetPlayer(),
                     Achievement::ACH_EVENT_EQUIP_ALL_ITEMS_MAX_LEVEL_LEGENDARY,
-                    1);
+                    1, (uint32)sub_71007b5e70());
             }
 
             SACDInventoryEvaluateItemDyeAchievements(&tEvaluationData);
@@ -12728,7 +12934,7 @@ void SACDInventorySetItemEquipped(ActorCommonData & tACDItem, BOOL bOnHeroLoad)
                         tEvaluationData.EvaluateEvent(
                             tEvaluationData.GetPlayer(),
                             Achievement::ACH_EVENT_HIRELING_FULLY_EQUIPPED,
-                            1);
+                            1, (uint32)sub_71007b5e70());
                     }
 
                     if (tEvaluationData.GetEquipmentInfo()->IsAllHirelingEquipmentMaxLevelLegendary())
@@ -12736,7 +12942,7 @@ void SACDInventorySetItemEquipped(ActorCommonData & tACDItem, BOOL bOnHeroLoad)
                         tEvaluationData.EvaluateEvent(
                             tEvaluationData.GetPlayer(),
                             Achievement::ACH_EVENT_EQUIP_HIRELING_ALL_ITEMS_MAX_LEVEL_LEGENDARY,
-                            1);
+                            1, (uint32)sub_71007b5e70());
                     }
                 }
             }
@@ -13137,7 +13343,7 @@ BOOL ActorInventoryAllowedToSeeItem(
 
     if (tACDItem.HasAssignedHeroID())
     {
-        if (!tACDItem.DoesPlayerMatchAssignedHeroID(ptPlayer))
+        if (!tACDItem.DoesPlayerMatchAssignedHeroID(ptPlayer, TRUE))
             return FALSE;
     }
 
@@ -13159,7 +13365,7 @@ BOOL ActorInventoryAllowedToPickupItem(
 
 
     if (tACDItem.HasAssignedHeroID() &&
-        tACDItem.DoesPlayerMatchAssignedHeroID(ptPlayer))
+        tACDItem.DoesPlayerMatchAssignedHeroID(ptPlayer, TRUE))
         return TRUE;
 
 

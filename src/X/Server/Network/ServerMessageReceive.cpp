@@ -818,9 +818,9 @@ struct AdvanceConvMessage {  // size 0x10
     int32 nLineUID;  // 0x0c
 };
 // X/Common/Player.h
-struct StashIconStateMessage {  // size 0x14
+struct StashIconStateMessage {  // size 0x18
     RequiredMessageHeader tHeader;  // 0x00
-    uint8 bStashIcons[12];  // 0x08
+    uint8 bStashIcons[13];  // 0x08
 };
 // X/Common/Player.h
 struct LogoutContextMessage {  // size 0xc

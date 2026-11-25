@@ -121,7 +121,8 @@ void GlobalSNOListRefresh()
     }
 
 #include "generated-game-data/sno_calls.inc"
-#line 2640
+// 2.7.7: the registrations end 135 lines later than in 2.6.2 (GlobalGBIDGet's assert, line 3409).
+#line 2775
 }
 
 
@@ -524,7 +525,7 @@ extern const BOOL cgfDefaultPlayerSexIsMale = FALSE;
 static TGlobalGBID sgtGlobalGBIDs[] =
 {
 #include "generated-game-data/gbid_rows.inc"
-#line 3160
+#line 3299
 };
 
 

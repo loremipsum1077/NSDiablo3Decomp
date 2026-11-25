@@ -881,7 +881,7 @@ static ItemUseResult sUseDye(
                 tEvaluationData.GetPlayer(),
                 Achievement::ACH_EVENT_DYE_ITEM,
                 tACDSrcItem.hGB.gbid,
-                1);
+                1, (uint32)sub_71007b5e70());
 
             SACDInventoryEvaluateItemDyeAchievements(&tEvaluationData);
         }

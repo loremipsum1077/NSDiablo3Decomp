@@ -2998,10 +2998,10 @@ void InitializeForGame() {
         }
         ::Console::Online::GetPartyMemberVoiceChatTalkingEvent().Subscribe(OnlineService::internal::function_bind_0_1<void, int, &OnEventRemotePlayerSpoke>());
     }
-    sgbLostBonusXP = false;
     for (uint64 & xp : sgarLastKnownRestXP) {
         xp = 0;
     }
+    sgbLostBonusXP = false;
 }
 
 

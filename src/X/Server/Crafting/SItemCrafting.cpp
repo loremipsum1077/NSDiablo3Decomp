@@ -194,7 +194,7 @@ BOOL UnSocket(const InventoryLocation & tInvLoc, void * pCallBackData)
 
             ScopedItemDefinitionLockR ptDefGem(ptACDItem->hGB.gbid);
 
-            tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_UNSOCKET_ITEM, ptDefGem->eGemType, 1);
+            tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_UNSOCKET_ITEM, ptDefGem->eGemType, 1, (uint32)sub_71007b5e70());
 
 
 
@@ -491,7 +491,7 @@ void SItemCrafting_TryTransmog(ACDID idACDItem, GBID gbidTransmog, Player & tPla
         tEvaluationData.SetACD(&tACDItem);
         tEvaluationData.SetEquipmentInfo(tPlayer.idPlayerACD);
 
-        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_TRANSMOG_ITEM, gbidTransmog, 1);
+        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_TRANSMOG_ITEM, gbidTransmog, 1, (uint32)sub_71007b5e70());
 
 
 
@@ -500,7 +500,7 @@ void SItemCrafting_TryTransmog(ACDID idACDItem, GBID gbidTransmog, Player & tPla
 
         if (tEvaluationData.GetEquipmentInfo()->IsAllEquipmentTransmogrifiedToLegendary())
         {
-            tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_EQUIP_ALL_ITEMS_TRANSMOG_LEGENDARY, 1);
+            tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_EQUIP_ALL_ITEMS_TRANSMOG_LEGENDARY, 1, (uint32)sub_71007b5e70());
         }
 
 
@@ -582,7 +582,7 @@ void SItemCrafting_TryDyeItem(ACDID idACDItem, DyeType eDyeType, Player & tPlaye
                 tEvaluationData.GetPlayer(),
                 Achievement::ACH_EVENT_DYE_ITEM,
                 ItemGetGBIDForDyeType(eDyeType),
-                1);
+                1, (uint32)sub_71007b5e70());
 
             SACDInventoryEvaluateItemDyeAchievements(&tEvaluationData);
         }
@@ -894,7 +894,7 @@ static BOOL sTransmuteExecuteAction(
         {
             Achievement::EvaluationData tEvaluationData;
             tEvaluationData.SetPlayer(&tPlayer);
-            tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_REFORGED_LEGENDARY, 1);
+            tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_REFORGED_LEGENDARY, 1, (uint32)sub_71007b5e70());
         }
 
         return TRUE;  // no row of its own: overrideRNG's destructor is on 901, then b +0x2860 (success)
@@ -1023,7 +1023,7 @@ static BOOL sTransmuteExecuteAction(
         {
             Achievement::EvaluationData tEvaluationData;
             tEvaluationData.SetPlayer(&tPlayer);
-            tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_PLAYER_UPGRADED_RARE, 1);
+            tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_PLAYER_UPGRADED_RARE, 1, (uint32)sub_71007b5e70());
         }
 
         SItemBroadcastToClan(*ptACDItem, tPlayer);
@@ -1134,7 +1134,7 @@ static BOOL sTransmuteExecuteAction(
         {
             Achievement::EvaluationData tEvaluationData;
             tEvaluationData.SetPlayer(&tPlayer);
-            tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_PLAYER_CONVERTED_SET_ITEM, 1);
+            tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_PLAYER_CONVERTED_SET_ITEM, 1, (uint32)sub_71007b5e70());
         }
 
         return TRUE;  // no row of its own: success b at line 1138 reaches the exit through the overrideRNG cleanup
@@ -1665,14 +1665,14 @@ static BOOL sTransmuteExecuteAction(
             {
                 Achievement::EvaluationData tEvaluationData;
                 tEvaluationData.SetPlayer(&tPlayer);
-                tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_AUGMENT_ANCIENT_30_PLUS, 1);
+                tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_AUGMENT_ANCIENT_30_PLUS, 1, (uint32)sub_71007b5e70());
                 if (nJewelRank >= 40)
                 {
-                    tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_AUGMENT_ANCIENT_40_PLUS, 1);
+                    tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_AUGMENT_ANCIENT_40_PLUS, 1, (uint32)sub_71007b5e70());
                 }
                 if (nJewelRank >= 50)
                 {
-                    tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_AUGMENT_ANCIENT_50_PLUS, 1);
+                    tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_AUGMENT_ANCIENT_50_PLUS, 1, (uint32)sub_71007b5e70());
                 }
             }
         }
@@ -2086,7 +2086,7 @@ void SItemCrafting_LearnRecipe(const ACDID idACDPlayer, const GBID gbidRecipe)
             tEvaluationData.SetPlayer(ptPlayer);
             tEvaluationData.SetCrafterType(pdefRecipeEntry->eCrafterType);
 
-            tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_TEACH_RECIPE, gbidRecipe, 1);
+            tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_TEACH_RECIPE, gbidRecipe, 1, (uint32)sub_71007b5e70());
 
 
 
@@ -2393,7 +2393,7 @@ ACDID SItemCrafting_TryCraftItem(Player & tPlayer, GBID gbidRecipe)
         tEvaluationData.EvaluateEvent(&tPlayer,
                                       Achievement::ACH_EVENT_CRAFT_ITEM,
                                       tACDItem.hGB.gbid,
-                                      1);
+                                      1, (uint32)sub_71007b5e70());
 
     }
 
@@ -2447,7 +2447,7 @@ BOOL SItemCrafting_TryRepair(ACDID idACDItem, Player & tPlayer)
         tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_REPAIR_ITEM,
 
 
-                                      ItemGetQualityLevel(*ptACDItem));
+                                      ItemGetQualityLevel(*ptACDItem), (uint32)sub_71007b5e70());
     }
 
     ItemModifyDurability(tACDPlayer, *ptACDItem, ptACDItem->AttributesGetInt(ATTRIBUTE_DURABILITY_MAX));
@@ -2980,12 +2980,12 @@ void SItemCrafting_EnchantItemAffixChoose(
             &tPlayer,
             Achievement::ACH_EVENT_ENCHANT_ITEM,
             ItemGetQualityLevel(tACDNewItem),
-            1);
+            1, (uint32)sub_71007b5e70());
 
 
         if(tEvaluationData.GetEquipmentInfo()->IsAllEquipmentEnchanted())
         {
-            tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_EQUIP_ALL_ITEMS_ENCHANTED, 1);
+            tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_EQUIP_ALL_ITEMS_ENCHANTED, 1, (uint32)sub_71007b5e70());
         }
 
 
@@ -2993,7 +2993,7 @@ void SItemCrafting_EnchantItemAffixChoose(
 
         if (gbidAffixChoice != GBID_NONE && ItemAffixGetNumSockets(ptACDItem->hGB.gbid, gbidAffixChoice) > 0)
         {
-            tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_REROLL_AFFIX_TO_GET_SOCKET, 1);
+            tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_REROLL_AFFIX_TO_GET_SOCKET, 1, (uint32)sub_71007b5e70());
         }
 
 
@@ -3057,7 +3057,7 @@ void sCrafterOnLevelUp(const Player & tPlayer, CrafterType eType, const BOOL fCh
         tEvaluationData.SetPlayer(&tPlayer);
         tEvaluationData.SetCrafterType(eType);
 
-        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_LEVELUP_CRAFTER, nRank, 1);
+        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_LEVELUP_CRAFTER, nRank, 1, (uint32)sub_71007b5e70());
 
 
 
@@ -3130,7 +3130,7 @@ void SCrafterUnlock(Player & tPlayer, const CrafterType eType)
         tEvaluationData.SetPlayer(&tPlayer);
         tEvaluationData.SetCrafterType(eType);
 
-        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_ACQUIRE_CRAFTER, eType, 1);
+        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_ACQUIRE_CRAFTER, eType, 1, (uint32)sub_71007b5e70());
     }
 
 
@@ -3216,7 +3216,7 @@ void SItemCrafting_UpgradeJewel(Player & tPlayer, ActorCommonData & tACDItem)
         SGameStatsPlayerCounterIncrement(&tPlayer, STAT_COUNTER_PLAYER_ITEM_LEGENDARY_GEM_UPGRADED, tACDItem.hGB.gbid, tACDItem.AttributesGetInt(ATTRIBUTE_JEWEL_RANK), (float)nUpgradeRanks);
 
 
-        SItemUpgradeJewel(tACDItem, nUpgradeRanks);
+        SItemUpgradeJewel(tACDItem, nUpgradeRanks, *ptACDPlayer);
 
         if (nJewelUpgradesBonus > 0)
         {
@@ -3229,7 +3229,7 @@ void SItemCrafting_UpgradeJewel(Player & tPlayer, ActorCommonData & tACDItem)
 
         Achievement::EvaluationData tEvaluationData;
         tEvaluationData.SetPlayer(&tPlayer);
-        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_LEGENDARY_GEM_UPGRADED, 0, 1);
+        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_LEGENDARY_GEM_UPGRADED, 0, 1, (uint32)sub_71007b5e70());
 
 
 

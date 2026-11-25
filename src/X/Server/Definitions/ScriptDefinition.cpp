@@ -188,7 +188,7 @@ ScriptGroupDef::ScriptGroupDef()
 
 
 uint32 ScriptGroupDef::GetMaxCount() {
-    return 8192;
+    return 9000;
 }
 
 
@@ -336,6 +336,11 @@ uint32 ScriptGroupDef::GetMaxCount() {
 BOOL ScriptGroupDef::Write(void * lpDefinition,
                            FileReference & tRef) const
 {
+
+
+
+
+
 
 
 

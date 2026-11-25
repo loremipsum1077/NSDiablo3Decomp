@@ -301,7 +301,9 @@ struct NpadHandheldState { int64_t samplingNumber; NpadButtonSet buttons; Analog
 struct NpadJoyDualState { int64_t samplingNumber; NpadButtonSet buttons; AnalogStickState analogStickL; AnalogStickState analogStickR; NpadAttributesSet attributes; };
 struct NpadJoyLeftState { int64_t samplingNumber; NpadButtonSet buttons; AnalogStickState analogStickL; AnalogStickState analogStickR; NpadAttributesSet attributes; };
 struct NpadJoyRightState { int64_t samplingNumber; NpadButtonSet buttons; AnalogStickState analogStickL; AnalogStickState analogStickR; NpadAttributesSet attributes; };
-struct ControllerSupportArg {  // size 0x21c
+// 2.7.7 links a newer SDK: the frame is 0x430 bytes and SetDefault is an import
+// (_ZN2nn3hid20ControllerSupportArg10SetDefaultEv@plt), so the arrays hold 8 entries.
+struct ControllerSupportArg {  // size 0x430
     int8_t playerCountMin;  // 0x00
     int8_t playerCountMax;  // 0x01
     bool enableTakeOverConnection;  // 0x02
@@ -309,20 +311,10 @@ struct ControllerSupportArg {  // size 0x21c
     bool enablePermitJoyDual;  // 0x04
     bool enableSingleMode;  // 0x05
     bool enableIdentificationColor;  // 0x06
-    nn::util::Color4u8Type identificationColor[4];  // 0x07
-    bool enableExplainText;  // 0x17
-    char explainText[4][129];  // 0x18
-    void SetDefault()  // body from the line table (hid_ControllerSupportArg.h:96-105)
-    {
-        playerCountMin = 0;
-        playerCountMax = 4;
-        enableTakeOverConnection = true;
-        enableLeftJustify = false;
-        enablePermitJoyDual = true;
-        enableSingleMode = false;
-        enableIdentificationColor = false;
-        enableExplainText = false;
-    }
+    nn::util::Color4u8Type identificationColor[8];  // 0x07
+    bool enableExplainText;  // 0x27
+    char explainText[8][129];  // 0x28
+    void SetDefault();
 };
 void InitializeNpad();
 void SetSupportedNpadStyleSet( NpadStyleSet );
@@ -1915,17 +1907,18 @@ uint32_t InputGetConnectedNpadIds( nn::hid::NpadIdType * atNpads )
     if ( InputAreInHandheldMode() )
     {
 
-        if ( sgtNX64Globals.atNpad[0].bConnected )
-        {
-
-            atNpads[nCount++] = sgtNX64Globals.atNpad[0].uId;
-        }
-        else
-        {
+        Npad & npad = sgtNX64Globals.atNpad[0].bConnected ? sgtNX64Globals.atNpad[0] : sgtNX64Globals.tNpadHandheld;
+        atNpads[nCount++] = npad.uId;
 
 
-            atNpads[nCount++] = sgtNX64Globals.tNpadHandheld.uId;
-        }
+
+
+
+
+
+
+
+
     }
     else
     {
@@ -2145,6 +2138,7 @@ static uint sCSAThreadProc( void * pParam )
 
         nn::hid::ControllerSupportArg arg;
         arg.SetDefault();
+        arg.enableLeftJustify = false;
         arg.enableSingleMode = sCSAGlobals.bSingleMode;
 
         nn::Result result = nn::hid::ShowControllerSupport( arg );

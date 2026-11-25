@@ -101,13 +101,13 @@ void sEvaluateHealingAchievements(ACDID idACDCaster, ACDID idACDTarget, SNO snoP
         Achievement::EvaluationData tEvaluationData;
         tEvaluationData.SetPlayer(ptPlayerHealed);
         tEvaluationData.SetPower(snoPower);
-        tEvaluationData.EvaluateEvent(ptPlayerHealed, Achievement::ACH_EVENT_PLAYER_HEALED, eHealType, Math::FloatRoundToInt(flHealing));
+        tEvaluationData.EvaluateEvent(ptPlayerHealed, Achievement::ACH_EVENT_PLAYER_HEALED, eHealType, Math::FloatRoundToInt(flHealing), (uint32)sub_71007b5e70());
 
         Player * ptPlayerCaster = PlayerGetByACD(idACDCaster);
         if (ptPlayerCaster && ptPlayerCaster != ptPlayerHealed)
         {
             tEvaluationData.SetPlayer(ptPlayerCaster);
-            tEvaluationData.EvaluateEvent(ptPlayerCaster, Achievement::ACH_EVENT_PLAYER_HEALED_PLAYER, eHealType, Math::FloatRoundToInt(flHealing));
+            tEvaluationData.EvaluateEvent(ptPlayerCaster, Achievement::ACH_EVENT_PLAYER_HEALED_PLAYER, eHealType, Math::FloatRoundToInt(flHealing), (uint32)sub_71007b5e70());
         }
     }
 }

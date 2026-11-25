@@ -1151,7 +1151,6 @@ void UI_InitializeForGame()
     UIPartyDisplay::Console::InitializeForGame();
     UIMainMenu::Console::InitializeForGame();
     UIConsoleRiftEndScreen::InitializeForGame();
-    UILeaderboardInspect::Console::InitializeForGame();
 #line 1635
     UITextControlInitializeForGame();
 #line 1649
@@ -1426,6 +1425,7 @@ void UI_InitializeForGame()
                 { SNOFileLookupGUID(UI_SNO, "ConsoleConversationDialog"), TRUE, FALSE },
                 { SNOFileLookupGUID(UI_SNO, "ConsoleMap"), FALSE, FALSE },
                 { SNOFileLookupGUID(UI_SNO, "ConsoleWaypointMap"), FALSE, FALSE },
+                { SNOFileLookupGUID(UI_SNO, "ConsoleDarkAlchemy"), FALSE, FALSE },
                 { SNOFileLookupGUID(UI_SNO, "ConsoleEventText"), TRUE, TRUE },
                 { SNOFileLookupGUID(UI_SNO, "CountDown"), FALSE, FALSE },
                 { SNOFileLookupGUID(UI_SNO, "ConsoleInventoryRing"), FALSE, TRUE },
@@ -1452,6 +1452,7 @@ void UI_InitializeForGame()
                 { SNOFileLookupGUID(UI_SNO, "ConsoleEmoteMenu"), FALSE, FALSE },
                 { SNOFileLookupGUID(UI_SNO, "ConsoleHUD_SinglePlayerFrame"), FALSE, TRUE },
                 { SNOFileLookupGUID(UI_SNO, "ConsoleHUD"), TRUE, FALSE },
+                { SNOFileLookupGUID(UI_SNO, "GameNotifyForeground"), TRUE, FALSE },
                 { SNOFileLookupGUID(UI_SNO, "ConsoleBossJoinParty"), FALSE, FALSE },
                 { SNOFileLookupGUID(UI_SNO, "ConsoleBossEnter"), FALSE, FALSE },
                 { SNOFileLookupGUID(UI_SNO, "ConsoleSetDungeonJoinParty"), FALSE, FALSE },
@@ -1627,6 +1628,7 @@ void UI_InitializeForGame()
         UIQuestLore::InitializeForGame();
         CPlayerUIInitializeForGame();
     }
+    UILeaderboardInspect::Console::InitializeForGame();
 #line 2562
     ControllerDisconnectedHandler::Console::InitializeForGame();
 #line 2564
@@ -3218,7 +3220,7 @@ UITreeFolder & UI_GetTreeFolderFromID(const UIID & id)
     return sGetControlFromID<UITreeFolder, TreeFolderCreationParams>(id, UIT_TREEFOLDER);
 }
 
-#line 5932
+#line 5953
 void UI_AddControl(const UIID & id, UIControl * pControl)
 {
 
@@ -3251,12 +3253,12 @@ void UI_AddControl(const UIID & id, UIControl * pControl)
     UI.pmapElements->SetAt_Tracked(id, pControl);
 }
 
-#line 6019
+#line 6040
 static UIControlData * sUIControl_FindChild(const UIControlDataArray * pChildren, LPCSTR szName, size_t * nNameLength)
 {
 
 
-#line 6024
+#line 6045
     for (uint32 i = 0; i < pChildren->size(); i++)
     {
         UIControlData * pChild = (*pChildren)[i];
@@ -3271,7 +3273,7 @@ static UIControlData * sUIControl_FindChild(const UIControlDataArray * pChildren
         }
         else
         {
-#line 6037
+#line 6058
             if (strcmp(szName, "*") == 0 ||
                 strcmp(szName, pChild->szName) == 0)
             {
@@ -3283,7 +3285,7 @@ static UIControlData * sUIControl_FindChild(const UIControlDataArray * pChildren
     return NULL;
 }
 
-#line 6050
+#line 6071
 static UIControlData * sUIControl_FindDescendant(LPCSTR szPathToChild, const UIControlDataArray * pChildren, BOOL fDirectChildOnly)
 
 
@@ -3296,7 +3298,7 @@ static UIControlData * sUIControl_FindDescendant(LPCSTR szPathToChild, const UIC
         return NULL;
     }
 
-#line 6062
+#line 6083
     const char * dot = strchr(szPathToChild, '.');
 
     if (dot)
@@ -3309,7 +3311,7 @@ static UIControlData * sUIControl_FindDescendant(LPCSTR szPathToChild, const UIC
         }
     }
 
-#line 6074
+#line 6095
     UIControlData * pDescendant = sUIControl_FindChild(pChildren, szPathToChild, NULL);
 
     if (pDescendant)
@@ -3319,7 +3321,7 @@ static UIControlData * sUIControl_FindDescendant(LPCSTR szPathToChild, const UIC
 
     if (!fDirectChildOnly)
     {
-#line 6085
+#line 6106
         for (uint32 i = 0; i < pChildren->size(); i++)
         {
             UIControlData * pChild = (*pChildren)[i];
@@ -3334,7 +3336,7 @@ static UIControlData * sUIControl_FindDescendant(LPCSTR szPathToChild, const UIC
     return NULL;
 }
 
-#line 6101
+#line 6122
 void UI_SetupStyles(UIControlData & pControl, const UIControlDataArray * pChildren, SNO snoImpliedFile, const UIStyleMap * pmapStylesFromImpliedSno)
 
 
@@ -3357,11 +3359,11 @@ void UI_SetupStyles(UIControlData & pControl, const UIControlDataArray * pChildr
                 }
                 pControl.pBaseStyle = pStyle;
 
-#line 6124
+#line 6145
                 const UIStyle * pCurStyle = pStyle;
                 while (pCurStyle)
                 {
-#line 6130
+#line 6151
                     for (int32 i = (int32)pCurStyle->plistChildSpecs->size() - 1; i >= 0; i--)
                     {
 
@@ -3389,7 +3391,7 @@ void UI_SetupStyles(UIControlData & pControl, const UIControlDataArray * pChildr
         }
     }
 
-#line 6157
+#line 6178
     if (pControl.tInlineStyle.plistChildSpecs)
     {
         for (uint32 i = 0; i < pControl.tInlineStyle.plistChildSpecs->size(); i++)
@@ -3415,7 +3417,7 @@ void UI_SetupStyles(UIControlData & pControl, const UIControlDataArray * pChildr
         }
     }
 
-#line 6182
+#line 6203
     if (pChildren)
     {
 
@@ -3427,14 +3429,14 @@ void UI_SetupStyles(UIControlData & pControl, const UIControlDataArray * pChildr
     }
 }
 
-#line 6196
+#line 6217
 void UI_DeleteControl(const UIID & idControl, const BOOL fAssertIfDeletingRoot)
 {
     UIID idControlCopy(idControl);
     UI_DeleteControl(idControlCopy, fAssertIfDeletingRoot);
 }
 
-#line 6205
+#line 6226
 void UI_DeleteControl(
     UIID & idControl,
     const BOOL fAssertIfDeletingRoot)

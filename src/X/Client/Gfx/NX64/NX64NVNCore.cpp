@@ -180,7 +180,7 @@ inline void GFXNX64NVN::sInitVideo()
 
     { nn::Result nn_result = nn::vi::OpenDefaultDisplay(&globals.ptViDisplay); }
     { nn::Result nn_result = nn::vi::CreateLayer(&globals.ptViLayer, globals.ptViDisplay); }
-    { nn::Result nn_result = nn::vi::SetLayerScalingMode(globals.ptViLayer, nn::vi::ScalingMode_FitToLayer); }
+
     { nn::Result nn_result = nn::vi::GetNativeWindow(&globals.tViNativeWindow, globals.ptViLayer); }
 }
 
@@ -1094,7 +1094,7 @@ void GFXNX64NVN::EvictResources()
 
 
 
-
+// NON_MATCHING: cmp/orr w0 scheduling around the csel pair (2 instructions)
 BOOL GFXNX64NVN::GetCurrentDisplayMode(DisplayMode & tDisplayMode)
 {
     tDisplayMode.nWinLeft = 0;
@@ -1108,8 +1108,8 @@ BOOL GFXNX64NVN::GetCurrentDisplayMode(DisplayMode & tDisplayMode)
     }
     else
     {
-        tDisplayMode.nWinWidth = globals.dwReducedDeviceWidth;
         tDisplayMode.nWinHeight = globals.dwReducedDeviceHeight;
+        tDisplayMode.nWinWidth = globals.dwReducedDeviceWidth;
     }
     tDisplayMode.dwUIOptWidth = tDisplayMode.nWinWidth;
     tDisplayMode.dwUIOptHeight = tDisplayMode.nWinHeight;
@@ -1777,7 +1777,7 @@ inline NVNTexInfo::NVNTexInfo()
     , dwPixelHeight(0)
     , dwPixelDepth(1)
     , dwMipLevels(0)
-    , nTextureID(0), nReducedTextureID(0), ptTexture(NULL), ptReducedTexture(NULL)
+    , bIsWindowTexture(FALSE), nTextureID(0), nReducedTextureID(0), ptTexture(NULL), ptReducedTexture(NULL)
 {
 
 
@@ -1813,6 +1813,16 @@ NVNTexInfo::~NVNTexInfo()
     }
 
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1864,7 +1874,7 @@ void NVNTexInfo::CreateNVNTexture(BOOL bLinearLayout, BOOL bRenderTarget, BOOL b
         nvnTarget = nvn::TextureTarget::TARGET_3D;
         break;
     default:
-        DisplayInternalError(NULL, "", 1865, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 1875, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 
 
@@ -1961,7 +1971,6 @@ BOOL GFXNX64NVN::TextureCreate(HTexture * phTexture, const TextureFormat eTexFor
 
 
 
-
     *phTexture = NULL;
     NVNTexInfo * pTexInfo = new NVNTexInfo;
 
@@ -1975,9 +1984,10 @@ BOOL GFXNX64NVN::TextureCreate(HTexture * phTexture, const TextureFormat eTexFor
 
     BOOL bIsLinear = TextureFormatIsLinear(eTexFormat);
     BOOL bIsDepthTarget = (dwTexCreateFlags >> TEXCREATE_DEPTH_TARGET_BIT) & 1;
-    BOOL bIsRenderTarget = bIsDepthTarget ? TRUE : (dwTexCreateFlags & (1 << TEXCREATE_RENDER_TARGET_BIT));
-
-    pTexInfo->CreateNVNTexture(bIsLinear, bIsRenderTarget, FALSE, bIsDepthTarget);
+    if (bIsDepthTarget)
+        pTexInfo->CreateNVNTexture(bIsLinear, TRUE, FALSE, bIsDepthTarget);
+    else
+        pTexInfo->CreateNVNTexture(bIsLinear, dwTexCreateFlags & (1 << TEXCREATE_RENDER_TARGET_BIT), FALSE, FALSE);
     NVNMarkResourceReadyForDelete(pTexInfo);
     *phTexture = pTexInfo;
 
@@ -2537,7 +2547,7 @@ void GFXNX64NVN::LoadAllMipLevels(SNOElement * ptSNOElement, void *, uint32, HTe
 
         default:
 
-            DisplayInternalError(NULL, "", 2540, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+            DisplayInternalError(NULL, "", 2550, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
             break;
         }
     }
@@ -2770,7 +2780,7 @@ void * NVNMemoryAllocator::Allocate(size_t nSize, size_t nAlign, NVNAllocType eT
         break;
     case NVNALLOCTYPE_TRANSIENT:
 
-        pMemory = DefinitionMemAllocTracked(GLOBALCACHE_SECONDARY, (uint32)nSize, (uint32)nAlign, FALSE, "D:/BuildServer/2/work/code/branches/2_6_2/X/Client/Gfx/NX64/NX64NVNCore.cpp", __LINE__);
+        pMemory = DefinitionMemAllocTracked(GLOBALCACHE_SECONDARY, (uint32)nSize, (uint32)nAlign, FALSE, "D:/BuildServer/1/work/code/branches/2_7_7/X/Client/Gfx/NX64/NX64NVNCore.cpp", __LINE__);
         break;
     }
     return pMemory;
@@ -3401,7 +3411,7 @@ static nvn::Format sTextureFormatToNVNFormat(const TextureFormat eTexFormat, NVN
         break;
 
     default:
-        DisplayInternalError(NULL, "", 3404, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 3414, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 
     return eNVNFormat;

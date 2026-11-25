@@ -713,8 +713,8 @@ inline CRefString Achievements::GetLooseFilenameConsole()  // line 1536
 }
 AchievementsInterface::AchievementsInterface(Achievements * ptAchievements) : m_ptAchievements(ptAchievements) {}
 AchievementsInterface::~AchievementsInterface() {}
-ErrorCode AchievementsInterface::EvaluateEvent(const GameAccountHandle & gameAccount, uint32 eventId, uint64 quantity, Timestamp timestamp, const ModifierCallback & cb) { return EvaluateEvent(gameAccount, eventId, 0, quantity, timestamp, cb); }
-ErrorCode AchievementsInterface::EvaluateEvent(const GameAccountHandle & gameAccount, uint32 eventId, uint64 comparand, uint64 quantity, Timestamp timestamp, const ModifierCallback & cb) { return 0; }
+ErrorCode AchievementsInterface::EvaluateEvent(const GameAccountHandle & gameAccount, uint32 eventId, uint64 quantity, Timestamp timestamp, uint32 uUnkFlags, const ModifierCallback & cb) { return EvaluateEvent(gameAccount, eventId, 0, quantity, timestamp, uUnkFlags, cb); }
+ErrorCode AchievementsInterface::EvaluateEvent(const GameAccountHandle & gameAccount, uint32 eventId, uint64 comparand, uint64 quantity, Timestamp timestamp, uint32 uUnkFlags, const ModifierCallback & cb) { return 0; }
 void AchievementsInterface::ConvertAchievementRecord(const AchievementsEngine::Achievement & bnetRecord, AchievementRecord & osRecord) {
     osRecord.m_achievementId = bnetRecord.m_achievementId;
     osRecord.m_timestampEarned = Blizzard::Time::FromUnixTime64(bnetRecord.m_completion);

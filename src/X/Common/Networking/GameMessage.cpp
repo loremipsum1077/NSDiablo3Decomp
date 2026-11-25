@@ -858,15 +858,16 @@ static const TypeDescriptorField SavePointInfoMessage_Fields[3] = {
 ComplexTypeDescriptor TypeDescriptor_SavePointInfoMessage("SavePointInfoMessage", 0, SavePointInfoMessage_Fields, 3, NULL, 0x80, NULL, NULL, NULL, NULL);
 const XTypeDescriptor * DT_SAVE_POINT_INFO_MESSAGE = &TypeDescriptor_SavePointInfoMessage;
 
-static const TypeDescriptorField HearthPortalInfoMessage_Fields[6] = {
+static const TypeDescriptorField HearthPortalInfoMessage_Fields[7] = {
     TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(HearthPortalInfoMessage, tHeader), NULL, 1),
     FilterTypeDescriptorField("", DT_SNO, offsetof(HearthPortalInfoMessage, snoLevelArea), "", LEVELAREA_SNO, 0, -1),
+    FilterTypeDescriptorField("", DT_SNO, offsetof(HearthPortalInfoMessage, unk_c), "", WORLD_SNO, 0, -1),
     TypeDescriptorField("", DT_INT, offsetof(HearthPortalInfoMessage, annPortal), NULL, 1),
     BoundedTypeDescriptorField("", DT_INT, offsetof(HearthPortalInfoMessage, bResetUI), NULL, NULL, (const void *)0x1),
     BoundedTypeDescriptorField("", DT_INT, offsetof(HearthPortalInfoMessage, bIsTieredRift), NULL, NULL, (const void *)0x1),
     TypeDescriptorField(NULL, DT_NULL, sizeof(HearthPortalInfoMessage), NULL, 0),
 };
-ComplexTypeDescriptor TypeDescriptor_HearthPortalInfoMessage("HearthPortalInfoMessage", 0, HearthPortalInfoMessage_Fields, 6, NULL, 0x80, NULL, NULL, NULL, NULL);
+ComplexTypeDescriptor TypeDescriptor_HearthPortalInfoMessage("HearthPortalInfoMessage", 0, HearthPortalInfoMessage_Fields, 7, NULL, 0x80, NULL, NULL, NULL, NULL);
 const XTypeDescriptor * DT_HEARTHPORTAL_INFO_MESSAGE = &TypeDescriptor_HearthPortalInfoMessage;
 
 static const TypeDescriptorField ReturnPointInfoMessage_Fields[3] = {
