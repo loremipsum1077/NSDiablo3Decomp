@@ -5689,9 +5689,9 @@ BOOL PowerComputeDestination(const ACDCollSettings & tCollSettingsDuring,
 
 
 
-    if (isnan(placeResult.wp.x) ||
-        isnan(placeResult.wp.y) ||
-        isnan(placeResult.wp.z))
+    if (NXSDK::IsNaNFloat(placeResult.wp.x) ||
+        NXSDK::IsNaNFloat(placeResult.wp.y) ||
+        NXSDK::IsNaNFloat(placeResult.wp.z))
     {
 
 

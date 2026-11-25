@@ -1225,7 +1225,7 @@ static int _wrap_ActorsNearActor__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -1303,7 +1303,7 @@ static int _wrap_ActorsNearActor__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -1375,7 +1375,7 @@ static int _wrap_ActorsNearActor__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -1441,7 +1441,7 @@ static int _wrap_ActorsNearActor__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -1501,7 +1501,7 @@ static int _wrap_ActorsNearActor__SWIG_4(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -1714,7 +1714,7 @@ static int _wrap_ActorFindNearestActor__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -1800,7 +1800,7 @@ static int _wrap_ActorFindNearestActor__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -1880,7 +1880,7 @@ static int _wrap_ActorFindNearestActor__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -1954,7 +1954,7 @@ static int _wrap_ActorFindNearestActor__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -4226,7 +4226,7 @@ static int _wrap_ActorGetClosestPlayer__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -4991,7 +4991,7 @@ static int _wrap_ActorFadeAndDelete(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -5780,7 +5780,7 @@ static int _wrap_ActorAddResource__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -5843,7 +5843,7 @@ static int _wrap_ActorAddResource__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -5896,7 +5896,7 @@ static int _wrap_ActorAddResource__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -6109,7 +6109,7 @@ static int _wrap_ActorSetHitPointsPercent(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -6142,7 +6142,7 @@ static int _wrap_ActorSetHitPoints(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -6175,7 +6175,7 @@ static int _wrap_ActorSetHitPointsMax(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -6520,7 +6520,7 @@ static int _wrap_ActorMergeAIState(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -6855,7 +6855,7 @@ static int _wrap_ActorSetAITether__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -6900,7 +6900,7 @@ static int _wrap_ActorSetAITether__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -7728,7 +7728,7 @@ static int _wrap_QActorMoveToLocationWithinTime(lua_State *L)
     arg3 = (ActorAnimationTag)lua_tonumber(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -7798,7 +7798,7 @@ static int _wrap_QActorMoveToLocation(lua_State *L)
     arg3 = (ActorAnimationTag)lua_tonumber(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -7869,7 +7869,7 @@ static int _wrap_QActorMoveToFrontOf(lua_State *L)
     arg3 = (ActorAnimationTag)lua_tonumber(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -7884,7 +7884,7 @@ static int _wrap_QActorMoveToFrontOf(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -8257,7 +8257,7 @@ static int _wrap_QActorAnimLoop(lua_State *L)
     arg2 = (ActorAnimationTag)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -8400,7 +8400,7 @@ static int _wrap_QActorFadeAndDelete(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -8478,7 +8478,7 @@ static int _wrap_QActorWalkForward(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -8830,7 +8830,7 @@ static int _wrap_QActorWait(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -8957,7 +8957,7 @@ static int _wrap_QActorEventSendInRange(lua_State *L)
     arg2 = (LPCSTR)lua_tostring(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -10671,7 +10671,7 @@ static int _wrap_ActorBroadcastLookAt(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -10686,7 +10686,7 @@ static int _wrap_ActorBroadcastLookAt(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -10844,7 +10844,7 @@ static int _wrap_ActorPlaySink(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -11853,7 +11853,7 @@ static int _wrap_ActorHeal__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -11924,7 +11924,7 @@ static int _wrap_ActorHeal__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -11981,7 +11981,7 @@ static int _wrap_ActorHeal__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -12032,7 +12032,7 @@ static int _wrap_ActorHeal__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -12077,7 +12077,7 @@ static int _wrap_ActorHeal__SWIG_4(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -12253,7 +12253,7 @@ static int _wrap_ActorDamageByPercent(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -12721,7 +12721,7 @@ static int _wrap_ActorSetDamageCap(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -13116,7 +13116,7 @@ static int _wrap_ActorGetAnimContactFrameTime__SWIG_0(lua_State *L)
     arg3 = (int32)lua_tonumber(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -13312,7 +13312,7 @@ static int _wrap_ActorGetNearbyFollower(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -14813,7 +14813,7 @@ static int _wrap_PlayerWarpToWorld__SWIG_0(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -14870,7 +14870,7 @@ static int _wrap_PlayerWarpToWorld__SWIG_1(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -15650,7 +15650,7 @@ static int _wrap_CameraFocusOnActor__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -15807,7 +15807,7 @@ static int _wrap_CameraFocusClear__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -15903,7 +15903,7 @@ static int _wrap_CameraSetYaw__SWIG_0(lua_State *L)
     float arg3;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -15927,7 +15927,7 @@ static int _wrap_CameraSetYaw__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -15955,7 +15955,7 @@ static int _wrap_CameraSetYaw__SWIG_1(lua_State *L)
     BOOL arg2;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -15991,7 +15991,7 @@ static int _wrap_CameraSetYaw__SWIG_2(lua_State *L)
     float arg1;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -16074,7 +16074,7 @@ static int _wrap_CameraSetZoom__SWIG_0(lua_State *L)
     float arg3;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -16098,7 +16098,7 @@ static int _wrap_CameraSetZoom__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -16126,7 +16126,7 @@ static int _wrap_CameraSetZoom__SWIG_1(lua_State *L)
     BOOL arg2;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -16162,7 +16162,7 @@ static int _wrap_CameraSetZoom__SWIG_2(lua_State *L)
     float arg1;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -16249,7 +16249,7 @@ static int _wrap_BossZoom(lua_State *L)
     }
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -16265,7 +16265,7 @@ static int _wrap_BossZoom(lua_State *L)
     arg2 = (ACDID)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -16514,7 +16514,7 @@ static int _wrap_WeatherIntensityOverride(lua_State *L)
     arg1 = (LPCSTR)lua_tostring(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -16529,7 +16529,7 @@ static int _wrap_WeatherIntensityOverride(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -16636,7 +16636,7 @@ static int _wrap_MusicPlay__SWIG_0(lua_State *L)
     arg2 = (ACDID)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -18006,7 +18006,7 @@ static int _wrap_ActorPlayCallout__SWIG_0(lua_State *L)
     arg4 = (int32)lua_tonumber(L, 4);
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -18021,7 +18021,7 @@ static int _wrap_ActorPlayCallout__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -18036,7 +18036,7 @@ static int _wrap_ActorPlayCallout__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -18051,7 +18051,7 @@ static int _wrap_ActorPlayCallout__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 8)) {
         float flInput = (float)lua_tonumber(L, 8);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 8);
@@ -18125,7 +18125,7 @@ static int _wrap_ActorPlayCallout__SWIG_1(lua_State *L)
     arg4 = (int32)lua_tonumber(L, 4);
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -18140,7 +18140,7 @@ static int _wrap_ActorPlayCallout__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -18155,7 +18155,7 @@ static int _wrap_ActorPlayCallout__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -18170,7 +18170,7 @@ static int _wrap_ActorPlayCallout__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 8)) {
         float flInput = (float)lua_tonumber(L, 8);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 8);
@@ -18234,7 +18234,7 @@ static int _wrap_ActorPlayCallout__SWIG_2(lua_State *L)
     arg4 = (int32)lua_tonumber(L, 4);
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -18249,7 +18249,7 @@ static int _wrap_ActorPlayCallout__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -18264,7 +18264,7 @@ static int _wrap_ActorPlayCallout__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -18327,7 +18327,7 @@ static int _wrap_ActorPlayCallout__SWIG_3(lua_State *L)
     arg4 = (int32)lua_tonumber(L, 4);
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -18342,7 +18342,7 @@ static int _wrap_ActorPlayCallout__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -18404,7 +18404,7 @@ static int _wrap_ActorPlayCallout__SWIG_4(lua_State *L)
     arg4 = (int32)lua_tonumber(L, 4);
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -18731,7 +18731,7 @@ static int _wrap_ActorSetCalloutCooldown(lua_State *L)
     arg2 = (LPCSTR)lua_tostring(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -18809,7 +18809,7 @@ static int _wrap_ActorSilenceCallouts(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -18853,7 +18853,7 @@ static int _wrap_ActorSilenceBanter(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -18949,7 +18949,7 @@ static int _wrap_ActorPlayRandomBanterFromList__SWIG_0(lua_State *L)
     arg4 = (int32)lua_tonumber(L, 4);
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -18964,7 +18964,7 @@ static int _wrap_ActorPlayRandomBanterFromList__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -19018,7 +19018,7 @@ static int _wrap_ActorPlayRandomBanterFromList__SWIG_1(lua_State *L)
     arg4 = (int32)lua_tonumber(L, 4);
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -19857,7 +19857,7 @@ static int _wrap_EventSendInRange__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -19908,7 +19908,7 @@ static int _wrap_EventSendInRange__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -20676,7 +20676,7 @@ static int _wrap_QuestMeterSetAmount(lua_State *L)
     arg1 = (LPCSTR)lua_tostring(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -20818,7 +20818,7 @@ static int _wrap_TimerModifyExpirationTime(lua_State *L)
     arg1 = (LPCSTR)lua_tostring(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -24602,7 +24602,7 @@ static int _wrap_TreasureClassDropAtActor__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -24617,7 +24617,7 @@ static int _wrap_TreasureClassDropAtActor__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -24692,7 +24692,7 @@ static int _wrap_TreasureClassDropAtActor__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -24981,7 +24981,7 @@ static int _wrap_TreasureClassDropAtActorForPlayer__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -24996,7 +24996,7 @@ static int _wrap_TreasureClassDropAtActorForPlayer__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -25078,7 +25078,7 @@ static int _wrap_TreasureClassDropAtActorForPlayer__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -25309,7 +25309,7 @@ static int _wrap_ItemDropAtActor__SWIG_0(lua_State *L)
     arg4 = (ACDID)lua_tonumber(L, 4);
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -25324,7 +25324,7 @@ static int _wrap_ItemDropAtActor__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -25390,7 +25390,7 @@ static int _wrap_ItemDropAtActor__SWIG_1(lua_State *L)
     arg4 = (ACDID)lua_tonumber(L, 4);
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -26360,7 +26360,7 @@ static int _wrap_GameGetOpenWorldBossSpawnMarkerLocationsNearActor__SWIG_0(lua_S
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -26375,7 +26375,7 @@ static int _wrap_GameGetOpenWorldBossSpawnMarkerLocationsNearActor__SWIG_0(lua_S
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -26431,7 +26431,7 @@ static int _wrap_GameGetOpenWorldBossSpawnMarkerLocationsNearActor__SWIG_1(lua_S
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -26446,7 +26446,7 @@ static int _wrap_GameGetOpenWorldBossSpawnMarkerLocationsNearActor__SWIG_1(lua_S
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -26500,7 +26500,7 @@ static int _wrap_GameGetOpenWorldBossSpawnMarkerLocationsNearActor__SWIG_2(lua_S
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -26691,7 +26691,7 @@ static int _wrap_TriggerTrialEnd(lua_State *L)
     BOOL result;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -28245,7 +28245,7 @@ static int _wrap_PVPPlayerSetOnDeathAccolade(lua_State *L)
     arg2 = (LPCSTR)lua_tostring(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -28290,7 +28290,7 @@ static int _wrap_PVPPlayerSetAccolade__SWIG_0(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -28783,7 +28783,7 @@ static int _wrap_PVPPlayerSetTeamRating(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -28816,7 +28816,7 @@ static int _wrap_PVPPlayerSetTeamVariance(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -28849,7 +28849,7 @@ static int _wrap_PVPPlayerSetIndividualRating(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -28882,7 +28882,7 @@ static int _wrap_PVPPlayerSetIndividualVariance(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -32140,7 +32140,7 @@ static int _wrap_MinimapAddPing__SWIG_0(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -32197,7 +32197,7 @@ static int _wrap_MinimapAddPing__SWIG_1(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -32240,7 +32240,7 @@ static int _wrap_MinimapAddPing__SWIG_2(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -32277,7 +32277,7 @@ static int _wrap_MinimapAddPing__SWIG_3(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -33113,7 +33113,7 @@ static int _wrap_DungeonFinderAddLevel__SWIG_0(lua_State *L)
     arg2 = (LPCSTR)lua_tostring(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -33128,7 +33128,7 @@ static int _wrap_DungeonFinderAddLevel__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -33143,7 +33143,7 @@ static int _wrap_DungeonFinderAddLevel__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -33185,7 +33185,7 @@ static int _wrap_DungeonFinderAddLevel__SWIG_1(lua_State *L)
     arg2 = (LPCSTR)lua_tostring(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -33200,7 +33200,7 @@ static int _wrap_DungeonFinderAddLevel__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -33215,7 +33215,7 @@ static int _wrap_DungeonFinderAddLevel__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -33425,7 +33425,7 @@ static int _wrap_DungeonFinderClosingTriggered(lua_State *L)
     float arg1;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -33452,7 +33452,7 @@ static int _wrap_SetDungeonClosingTriggered(lua_State *L)
     float arg1;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -33479,7 +33479,7 @@ static int _wrap_GreedRealmClosingTriggered(lua_State *L)
     float arg1;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -34106,7 +34106,7 @@ static int _wrap_GameUpdateRiftStats(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -35837,7 +35837,7 @@ static int _wrap_PowerDoChanneledContinualCosts__SWIG_0(lua_State *L)
     BOOL result;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -39358,7 +39358,7 @@ static int _wrap_PowerOffsetTranslatePowerTargetPosition(lua_State *L)
     float arg1;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -39406,7 +39406,7 @@ static int _wrap_PowerSetCooldown__SWIG_0(lua_State *L)
     BOOL arg2;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -39442,7 +39442,7 @@ static int _wrap_PowerSetCooldown__SWIG_1(lua_State *L)
     float arg1;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -39493,7 +39493,7 @@ static int _wrap_PowerSetCooldown__SWIG_2(lua_State *L)
     arg2 = (LPCSTR)lua_tostring(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -39552,7 +39552,7 @@ static int _wrap_PowerSetCooldown__SWIG_3(lua_State *L)
     arg2 = (LPCSTR)lua_tostring(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -39714,7 +39714,7 @@ static int _wrap_PowerReduceCooldown(lua_State *L)
     arg2 = (LPCSTR)lua_tostring(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -39764,7 +39764,7 @@ static int _wrap_PowerReduceCooldownByPercentage(lua_State *L)
     arg2 = (LPCSTR)lua_tostring(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -39797,7 +39797,7 @@ static int _wrap_PowerReduceAllCooldowns(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -39830,7 +39830,7 @@ static int _wrap_PowerReduceAllCooldownsByPercentage(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -39945,7 +39945,7 @@ static int _wrap_PowerTriggerCooldown__SWIG_0(lua_State *L)
     arg2 = (LPCSTR)lua_tostring(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -40444,7 +40444,7 @@ static int _wrap_PowerCreateTargetAreaMelee(lua_State *L)
     int32 result;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -40474,7 +40474,7 @@ static int _wrap_PowerCreateTargetAreaSingleTarget(lua_State *L)
     int32 result;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -40521,7 +40521,7 @@ static int _wrap_PowerCreateTargetAreaSingleTargetAroundActor(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -40557,7 +40557,7 @@ static int _wrap_PowerCreateTargetAreaSingleTargetAroundCursor(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -40587,7 +40587,7 @@ static int _wrap_PowerCreateTargetAreaAOE(lua_State *L)
     int32 result;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -40634,7 +40634,7 @@ static int _wrap_PowerCreateTargetAreaAOEAroundActor(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -40670,7 +40670,7 @@ static int _wrap_PowerCreateTargetAreaAOEAroundCursor(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -40706,7 +40706,7 @@ static int _wrap_PowerCreateTargetAreaPie__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -40722,7 +40722,7 @@ static int _wrap_PowerCreateTargetAreaPie__SWIG_0(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -40757,7 +40757,7 @@ static int _wrap_PowerCreateTargetAreaPie__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -40856,7 +40856,7 @@ static int _wrap_PowerCreateTargetAreaPieAroundActor__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -40872,7 +40872,7 @@ static int _wrap_PowerCreateTargetAreaPieAroundActor__SWIG_0(lua_State *L)
     arg3 = (int32)lua_tonumber(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -40924,7 +40924,7 @@ static int _wrap_PowerCreateTargetAreaPieAroundActor__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -41022,7 +41022,7 @@ static int _wrap_PowerCreateTargetAreaPieAroundCursor__SWIG_0(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -41038,7 +41038,7 @@ static int _wrap_PowerCreateTargetAreaPieAroundCursor__SWIG_0(lua_State *L)
     arg3 = (int32)lua_tonumber(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -41079,7 +41079,7 @@ static int _wrap_PowerCreateTargetAreaPieAroundCursor__SWIG_1(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -41165,7 +41165,7 @@ static int _wrap_PowerCreateTargetAreaCylinder__SWIG_0(lua_State *L)
     int32 result;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -41196,7 +41196,7 @@ static int _wrap_PowerCreateTargetAreaCylinder__SWIG_1(lua_State *L)
     int32 result;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -41211,7 +41211,7 @@ static int _wrap_PowerCreateTargetAreaCylinder__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -41293,7 +41293,7 @@ static int _wrap_PowerCreateTargetAreaCylinderAroundActor__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -41341,7 +41341,7 @@ static int _wrap_PowerCreateTargetAreaCylinderAroundActor__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -41356,7 +41356,7 @@ static int _wrap_PowerCreateTargetAreaCylinderAroundActor__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -41437,7 +41437,7 @@ static int _wrap_PowerCreateTargetAreaCylinderAroundCursor__SWIG_0(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -41474,7 +41474,7 @@ static int _wrap_PowerCreateTargetAreaCylinderAroundCursor__SWIG_1(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -41489,7 +41489,7 @@ static int _wrap_PowerCreateTargetAreaCylinderAroundCursor__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -41599,7 +41599,7 @@ static int _wrap_PowerCreateTargetAreaCapsuleAroundActors__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -41614,7 +41614,7 @@ static int _wrap_PowerCreateTargetAreaCapsuleAroundActors__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -41678,7 +41678,7 @@ static int _wrap_PowerCreateTargetAreaCapsuleAroundActors__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -41787,7 +41787,7 @@ static int _wrap_PowerCreateTargetAreaCapsuleAroundActorAndCursor__SWIG_0(lua_St
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -41802,7 +41802,7 @@ static int _wrap_PowerCreateTargetAreaCapsuleAroundActorAndCursor__SWIG_0(lua_St
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -41855,7 +41855,7 @@ static int _wrap_PowerCreateTargetAreaCapsuleAroundActorAndCursor__SWIG_1(lua_St
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -41953,7 +41953,7 @@ static int _wrap_PowerCreateTargetAreaCapsuleAroundCursors__SWIG_0(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -41968,7 +41968,7 @@ static int _wrap_PowerCreateTargetAreaCapsuleAroundCursors__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -42010,7 +42010,7 @@ static int _wrap_PowerCreateTargetAreaCapsuleAroundCursors__SWIG_1(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -42096,7 +42096,7 @@ static int _wrap_PowerCreateTargetAreaBox(lua_State *L)
     int32 result;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -42111,7 +42111,7 @@ static int _wrap_PowerCreateTargetAreaBox(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -42148,7 +42148,7 @@ static int _wrap_PowerCreateTargetAreaBoxAroundCursor(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -42163,7 +42163,7 @@ static int _wrap_PowerCreateTargetAreaBoxAroundCursor(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -42572,7 +42572,7 @@ static int _wrap_PowerGetSeparatedTargets(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -42789,7 +42789,7 @@ static int _wrap_PowerCursorRollToCursor__SWIG_0(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -42829,7 +42829,7 @@ static int _wrap_PowerCursorRollToCursor__SWIG_1(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -43501,7 +43501,7 @@ static int _wrap_PowerCursorSetToOpenLocationNearActor__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -43721,7 +43721,7 @@ static int _wrap_PowerCursorRotate(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -43811,7 +43811,7 @@ static int _wrap_PowerCursorRotateAbsolute(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -43844,7 +43844,7 @@ static int _wrap_PowerCursorOffset(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -43877,7 +43877,7 @@ static int _wrap_PowerCursorOffsetLaterally(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -43910,7 +43910,7 @@ static int _wrap_PowerCursorOffsetVertically(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -43949,7 +43949,7 @@ static int _wrap_PowerCursorOffsetFromContactOffset(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -43982,7 +43982,7 @@ static int _wrap_PowerCursorRotateAroundOwner(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -44032,7 +44032,7 @@ static int _wrap_PowerCursorRotateAroundActor(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -44071,7 +44071,7 @@ static int _wrap_PowerCursorRotateAroundCursor(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -44105,7 +44105,7 @@ static int _wrap_PowerCursorOffsetFromOwner__SWIG_0(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -44147,7 +44147,7 @@ static int _wrap_PowerCursorOffsetFromOwner__SWIG_1(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -44226,7 +44226,7 @@ static int _wrap_PowerCursorPinAtProjectileDistFromOwner(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -44241,7 +44241,7 @@ static int _wrap_PowerCursorPinAtProjectileDistFromOwner(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -44693,7 +44693,7 @@ static int _wrap_PowerPayloadSetPetDamageScalar(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -45238,7 +45238,7 @@ static int _wrap_PowerCreatePayload__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -45279,7 +45279,7 @@ static int _wrap_PowerCreatePayload__SWIG_1(lua_State *L)
     int32 result;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -45318,7 +45318,7 @@ static int _wrap_PowerCreatePayload__SWIG_2(lua_State *L)
     int32 result;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -45427,7 +45427,7 @@ static int _wrap_PowerCreatePayloadNew__SWIG_0(lua_State *L)
     arg1 = (PayloadDeliveryMechanism)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -45474,7 +45474,7 @@ static int _wrap_PowerCreatePayloadNew__SWIG_1(lua_State *L)
     arg1 = (PayloadDeliveryMechanism)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -45519,7 +45519,7 @@ static int _wrap_PowerCreatePayloadNew__SWIG_2(lua_State *L)
     arg1 = (PayloadDeliveryMechanism)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -45668,7 +45668,7 @@ static int _wrap_PowerPayloadAddDamage__SWIG_0(lua_State *L)
     arg2 = (DamageType)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -45683,7 +45683,7 @@ static int _wrap_PowerPayloadAddDamage__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -45732,7 +45732,7 @@ static int _wrap_PowerPayloadAddDamage__SWIG_1(lua_State *L)
     arg2 = (DamageType)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -45747,7 +45747,7 @@ static int _wrap_PowerPayloadAddDamage__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -45855,7 +45855,7 @@ static int _wrap_PowerPayloadAddPeriodicDamage__SWIG_0(lua_State *L)
     arg2 = (DamageType)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -45870,7 +45870,7 @@ static int _wrap_PowerPayloadAddPeriodicDamage__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -45885,7 +45885,7 @@ static int _wrap_PowerPayloadAddPeriodicDamage__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -45945,7 +45945,7 @@ static int _wrap_PowerPayloadAddPeriodicDamage__SWIG_1(lua_State *L)
     arg2 = (DamageType)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -45960,7 +45960,7 @@ static int _wrap_PowerPayloadAddPeriodicDamage__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -45975,7 +45975,7 @@ static int _wrap_PowerPayloadAddPeriodicDamage__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -46025,7 +46025,7 @@ static int _wrap_PowerPayloadAddPeriodicDamage__SWIG_2(lua_State *L)
     arg2 = (DamageType)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -46040,7 +46040,7 @@ static int _wrap_PowerPayloadAddPeriodicDamage__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -46055,7 +46055,7 @@ static int _wrap_PowerPayloadAddPeriodicDamage__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -46232,7 +46232,7 @@ static int _wrap_PowerPayloadConvertToDOTDamageType__SWIG_0(lua_State *L)
     arg2 = (DamageType)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -46280,7 +46280,7 @@ static int _wrap_PowerPayloadConvertToDOTDamageType__SWIG_1(lua_State *L)
     arg2 = (DamageType)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -46388,7 +46388,7 @@ static int _wrap_PowerPayloadSetAdditionalCritChance(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -46441,7 +46441,7 @@ static int _wrap_PowerPayloadSetAdditionalCrushingBlowChance(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -46474,7 +46474,7 @@ static int _wrap_PowerPayloadSetCritDamageBonusPercent(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -46507,7 +46507,7 @@ static int _wrap_PowerPayloadSetCritCap(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -46731,7 +46731,7 @@ static int _wrap_PowerPayloadAddStun(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -46746,7 +46746,7 @@ static int _wrap_PowerPayloadAddStun(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -46761,7 +46761,7 @@ static int _wrap_PowerPayloadAddStun(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -46795,7 +46795,7 @@ static int _wrap_PowerPayloadAddFear(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -46810,7 +46810,7 @@ static int _wrap_PowerPayloadAddFear(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -46844,7 +46844,7 @@ static int _wrap_PowerPayloadAddRoot(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -46859,7 +46859,7 @@ static int _wrap_PowerPayloadAddRoot(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -46894,7 +46894,7 @@ static int _wrap_PowerPayloadAddFreeze__SWIG_0(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -46909,7 +46909,7 @@ static int _wrap_PowerPayloadAddFreeze__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -46924,7 +46924,7 @@ static int _wrap_PowerPayloadAddFreeze__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -46958,7 +46958,7 @@ static int _wrap_PowerPayloadAddFreeze__SWIG_1(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -46973,7 +46973,7 @@ static int _wrap_PowerPayloadAddFreeze__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -47063,7 +47063,7 @@ static int _wrap_PowerPayloadAddSlow(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -47078,7 +47078,7 @@ static int _wrap_PowerPayloadAddSlow(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -47093,7 +47093,7 @@ static int _wrap_PowerPayloadAddSlow(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -47128,7 +47128,7 @@ static int _wrap_PowerPayloadAddChill__SWIG_0(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -47143,7 +47143,7 @@ static int _wrap_PowerPayloadAddChill__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -47158,7 +47158,7 @@ static int _wrap_PowerPayloadAddChill__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -47192,7 +47192,7 @@ static int _wrap_PowerPayloadAddChill__SWIG_1(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -47207,7 +47207,7 @@ static int _wrap_PowerPayloadAddChill__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -47240,7 +47240,7 @@ static int _wrap_PowerPayloadAddChill__SWIG_2(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -47370,7 +47370,7 @@ static int _wrap_PowerPayloadAddBlind__SWIG_0(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -47385,7 +47385,7 @@ static int _wrap_PowerPayloadAddBlind__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -47428,7 +47428,7 @@ static int _wrap_PowerPayloadAddBlind__SWIG_1(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -47443,7 +47443,7 @@ static int _wrap_PowerPayloadAddBlind__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -47620,7 +47620,7 @@ static int _wrap_PowerPayloadSetKnockback__SWIG_0(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -47635,7 +47635,7 @@ static int _wrap_PowerPayloadSetKnockback__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -47650,7 +47650,7 @@ static int _wrap_PowerPayloadSetKnockback__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -47720,7 +47720,7 @@ static int _wrap_PowerPayloadSetKnockback__SWIG_1(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -47735,7 +47735,7 @@ static int _wrap_PowerPayloadSetKnockback__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -47750,7 +47750,7 @@ static int _wrap_PowerPayloadSetKnockback__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -47806,7 +47806,7 @@ static int _wrap_PowerPayloadSetKnockback__SWIG_2(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -47821,7 +47821,7 @@ static int _wrap_PowerPayloadSetKnockback__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -47836,7 +47836,7 @@ static int _wrap_PowerPayloadSetKnockback__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -47890,7 +47890,7 @@ static int _wrap_PowerPayloadSetKnockback__SWIG_3(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -47905,7 +47905,7 @@ static int _wrap_PowerPayloadSetKnockback__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -47920,7 +47920,7 @@ static int _wrap_PowerPayloadSetKnockback__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -48598,7 +48598,7 @@ static int _wrap_PowerPayloadSetProcScalar(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -48694,7 +48694,7 @@ static int _wrap_PowerCreateProjectile__SWIG_0(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -48709,7 +48709,7 @@ static int _wrap_PowerCreateProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -48807,7 +48807,7 @@ static int _wrap_PowerCreateProjectile__SWIG_1(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -48822,7 +48822,7 @@ static int _wrap_PowerCreateProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -48910,7 +48910,7 @@ static int _wrap_PowerCreateProjectile__SWIG_2(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -48925,7 +48925,7 @@ static int _wrap_PowerCreateProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -49003,7 +49003,7 @@ static int _wrap_PowerCreateProjectile__SWIG_3(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -49018,7 +49018,7 @@ static int _wrap_PowerCreateProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -49086,7 +49086,7 @@ static int _wrap_PowerCreateProjectile__SWIG_4(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -49101,7 +49101,7 @@ static int _wrap_PowerCreateProjectile__SWIG_4(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -49159,7 +49159,7 @@ static int _wrap_PowerCreateProjectile__SWIG_5(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -49174,7 +49174,7 @@ static int _wrap_PowerCreateProjectile__SWIG_5(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -49222,7 +49222,7 @@ static int _wrap_PowerCreateProjectile__SWIG_6(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -49563,7 +49563,7 @@ static int _wrap_PowerCreateLobbedProjectile__SWIG_0(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -49578,7 +49578,7 @@ static int _wrap_PowerCreateLobbedProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -49652,7 +49652,7 @@ static int _wrap_PowerCreateLobbedProjectile__SWIG_1(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -49667,7 +49667,7 @@ static int _wrap_PowerCreateLobbedProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -49731,7 +49731,7 @@ static int _wrap_PowerCreateLobbedProjectile__SWIG_2(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -49746,7 +49746,7 @@ static int _wrap_PowerCreateLobbedProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -49935,7 +49935,7 @@ static int _wrap_PowerCreateLobbedProjectileWithBounce__SWIG_0(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -49950,7 +49950,7 @@ static int _wrap_PowerCreateLobbedProjectileWithBounce__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -49965,7 +49965,7 @@ static int _wrap_PowerCreateLobbedProjectileWithBounce__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -49980,7 +49980,7 @@ static int _wrap_PowerCreateLobbedProjectileWithBounce__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -50066,7 +50066,7 @@ static int _wrap_PowerCreateLobbedProjectileWithBounce__SWIG_1(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -50081,7 +50081,7 @@ static int _wrap_PowerCreateLobbedProjectileWithBounce__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -50096,7 +50096,7 @@ static int _wrap_PowerCreateLobbedProjectileWithBounce__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -50111,7 +50111,7 @@ static int _wrap_PowerCreateLobbedProjectileWithBounce__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -50187,7 +50187,7 @@ static int _wrap_PowerCreateLobbedProjectileWithBounce__SWIG_2(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -50202,7 +50202,7 @@ static int _wrap_PowerCreateLobbedProjectileWithBounce__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -50217,7 +50217,7 @@ static int _wrap_PowerCreateLobbedProjectileWithBounce__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -50232,7 +50232,7 @@ static int _wrap_PowerCreateLobbedProjectileWithBounce__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -50475,7 +50475,7 @@ static int _wrap_PowerCreateDeterministicProjectile__SWIG_0(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -50490,7 +50490,7 @@ static int _wrap_PowerCreateDeterministicProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -50594,7 +50594,7 @@ static int _wrap_PowerCreateDeterministicProjectile__SWIG_1(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -50609,7 +50609,7 @@ static int _wrap_PowerCreateDeterministicProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -50703,7 +50703,7 @@ static int _wrap_PowerCreateDeterministicProjectile__SWIG_2(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -50718,7 +50718,7 @@ static int _wrap_PowerCreateDeterministicProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -50802,7 +50802,7 @@ static int _wrap_PowerCreateDeterministicProjectile__SWIG_3(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -50817,7 +50817,7 @@ static int _wrap_PowerCreateDeterministicProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -50891,7 +50891,7 @@ static int _wrap_PowerCreateDeterministicProjectile__SWIG_4(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -50906,7 +50906,7 @@ static int _wrap_PowerCreateDeterministicProjectile__SWIG_4(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -50970,7 +50970,7 @@ static int _wrap_PowerCreateDeterministicProjectile__SWIG_5(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -50985,7 +50985,7 @@ static int _wrap_PowerCreateDeterministicProjectile__SWIG_5(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -51334,7 +51334,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_0(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -51349,7 +51349,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -51364,7 +51364,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -51379,7 +51379,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -51394,7 +51394,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 8)) {
         float flInput = (float)lua_tonumber(L, 8);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 8);
@@ -51409,7 +51409,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 9)) {
         float flInput = (float)lua_tonumber(L, 9);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 9);
@@ -51501,7 +51501,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_1(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -51516,7 +51516,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -51531,7 +51531,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -51546,7 +51546,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -51561,7 +51561,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 8)) {
         float flInput = (float)lua_tonumber(L, 8);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 8);
@@ -51576,7 +51576,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 9)) {
         float flInput = (float)lua_tonumber(L, 9);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 9);
@@ -51658,7 +51658,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_2(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -51673,7 +51673,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -51688,7 +51688,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -51703,7 +51703,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -51718,7 +51718,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 8)) {
         float flInput = (float)lua_tonumber(L, 8);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 8);
@@ -51733,7 +51733,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 9)) {
         float flInput = (float)lua_tonumber(L, 9);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 9);
@@ -51805,7 +51805,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_3(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -51820,7 +51820,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -51835,7 +51835,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -51850,7 +51850,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -51865,7 +51865,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 8)) {
         float flInput = (float)lua_tonumber(L, 8);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 8);
@@ -51880,7 +51880,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 9)) {
         float flInput = (float)lua_tonumber(L, 9);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 9);
@@ -51942,7 +51942,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_4(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -51957,7 +51957,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_4(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -51972,7 +51972,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_4(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -51987,7 +51987,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_4(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -52002,7 +52002,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_4(lua_State *L)
     }
     if (lua_isnumber(L, 8)) {
         float flInput = (float)lua_tonumber(L, 8);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 8);
@@ -52017,7 +52017,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_4(lua_State *L)
     }
     if (lua_isnumber(L, 9)) {
         float flInput = (float)lua_tonumber(L, 9);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 9);
@@ -52069,7 +52069,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_5(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -52084,7 +52084,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_5(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -52099,7 +52099,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_5(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -52114,7 +52114,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_5(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -52129,7 +52129,7 @@ static int _wrap_PowerCreateSinWaveProjectile__SWIG_5(lua_State *L)
     }
     if (lua_isnumber(L, 8)) {
         float flInput = (float)lua_tonumber(L, 8);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 8);
@@ -52534,7 +52534,7 @@ static int _wrap_PowerCreatePedalCurveProjectile__SWIG_0(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -52549,7 +52549,7 @@ static int _wrap_PowerCreatePedalCurveProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -52564,7 +52564,7 @@ static int _wrap_PowerCreatePedalCurveProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -52579,7 +52579,7 @@ static int _wrap_PowerCreatePedalCurveProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -52659,7 +52659,7 @@ static int _wrap_PowerCreatePedalCurveProjectile__SWIG_1(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -52674,7 +52674,7 @@ static int _wrap_PowerCreatePedalCurveProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -52689,7 +52689,7 @@ static int _wrap_PowerCreatePedalCurveProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -52704,7 +52704,7 @@ static int _wrap_PowerCreatePedalCurveProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -52774,7 +52774,7 @@ static int _wrap_PowerCreatePedalCurveProjectile__SWIG_2(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -52789,7 +52789,7 @@ static int _wrap_PowerCreatePedalCurveProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -52804,7 +52804,7 @@ static int _wrap_PowerCreatePedalCurveProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -52819,7 +52819,7 @@ static int _wrap_PowerCreatePedalCurveProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -52879,7 +52879,7 @@ static int _wrap_PowerCreatePedalCurveProjectile__SWIG_3(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -52894,7 +52894,7 @@ static int _wrap_PowerCreatePedalCurveProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -52909,7 +52909,7 @@ static int _wrap_PowerCreatePedalCurveProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -52924,7 +52924,7 @@ static int _wrap_PowerCreatePedalCurveProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -53179,7 +53179,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_0(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -53194,7 +53194,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -53209,7 +53209,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -53224,7 +53224,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -53239,7 +53239,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 8)) {
         float flInput = (float)lua_tonumber(L, 8);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 8);
@@ -53254,7 +53254,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 9)) {
         float flInput = (float)lua_tonumber(L, 9);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 9);
@@ -53346,7 +53346,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_1(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -53361,7 +53361,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -53376,7 +53376,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -53391,7 +53391,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -53406,7 +53406,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 8)) {
         float flInput = (float)lua_tonumber(L, 8);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 8);
@@ -53421,7 +53421,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 9)) {
         float flInput = (float)lua_tonumber(L, 9);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 9);
@@ -53503,7 +53503,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_2(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -53518,7 +53518,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -53533,7 +53533,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -53548,7 +53548,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -53563,7 +53563,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 8)) {
         float flInput = (float)lua_tonumber(L, 8);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 8);
@@ -53578,7 +53578,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 9)) {
         float flInput = (float)lua_tonumber(L, 9);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 9);
@@ -53650,7 +53650,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_3(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -53665,7 +53665,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -53680,7 +53680,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -53695,7 +53695,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -53710,7 +53710,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 8)) {
         float flInput = (float)lua_tonumber(L, 8);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 8);
@@ -53725,7 +53725,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 9)) {
         float flInput = (float)lua_tonumber(L, 9);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 9);
@@ -53787,7 +53787,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_4(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -53802,7 +53802,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_4(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -53817,7 +53817,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_4(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -53832,7 +53832,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_4(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -53847,7 +53847,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_4(lua_State *L)
     }
     if (lua_isnumber(L, 8)) {
         float flInput = (float)lua_tonumber(L, 8);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 8);
@@ -53862,7 +53862,7 @@ static int _wrap_PowerCreateSpiralProjectile__SWIG_4(lua_State *L)
     }
     if (lua_isnumber(L, 9)) {
         float flInput = (float)lua_tonumber(L, 9);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 9);
@@ -54225,7 +54225,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_0(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -54240,7 +54240,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -54255,7 +54255,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -54270,7 +54270,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -54285,7 +54285,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 8)) {
         float flInput = (float)lua_tonumber(L, 8);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 8);
@@ -54376,7 +54376,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_1(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -54391,7 +54391,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -54406,7 +54406,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -54421,7 +54421,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -54436,7 +54436,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 8)) {
         float flInput = (float)lua_tonumber(L, 8);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 8);
@@ -54517,7 +54517,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_2(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -54532,7 +54532,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -54547,7 +54547,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -54562,7 +54562,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -54577,7 +54577,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 8)) {
         float flInput = (float)lua_tonumber(L, 8);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 8);
@@ -54648,7 +54648,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_3(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -54663,7 +54663,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -54678,7 +54678,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -54693,7 +54693,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -54708,7 +54708,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 8)) {
         float flInput = (float)lua_tonumber(L, 8);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 8);
@@ -54769,7 +54769,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_4(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -54784,7 +54784,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_4(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -54799,7 +54799,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_4(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -54814,7 +54814,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_4(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -54829,7 +54829,7 @@ static int _wrap_PowerCreateImmediateSpiralProjectile__SWIG_4(lua_State *L)
     }
     if (lua_isnumber(L, 8)) {
         float flInput = (float)lua_tonumber(L, 8);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 8);
@@ -55170,7 +55170,7 @@ static int _wrap_PowerCreatePieWedgeProjectile__SWIG_0(lua_State *L)
     arg4 = (LPCSTR)lua_tostring(L, 4);
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -55185,7 +55185,7 @@ static int _wrap_PowerCreatePieWedgeProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -55200,7 +55200,7 @@ static int _wrap_PowerCreatePieWedgeProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -55285,7 +55285,7 @@ static int _wrap_PowerCreatePieWedgeProjectile__SWIG_1(lua_State *L)
     arg4 = (LPCSTR)lua_tostring(L, 4);
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -55300,7 +55300,7 @@ static int _wrap_PowerCreatePieWedgeProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -55315,7 +55315,7 @@ static int _wrap_PowerCreatePieWedgeProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -55390,7 +55390,7 @@ static int _wrap_PowerCreatePieWedgeProjectile__SWIG_2(lua_State *L)
     arg4 = (LPCSTR)lua_tostring(L, 4);
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -55405,7 +55405,7 @@ static int _wrap_PowerCreatePieWedgeProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -55420,7 +55420,7 @@ static int _wrap_PowerCreatePieWedgeProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -55485,7 +55485,7 @@ static int _wrap_PowerCreatePieWedgeProjectile__SWIG_3(lua_State *L)
     arg4 = (LPCSTR)lua_tostring(L, 4);
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -55500,7 +55500,7 @@ static int _wrap_PowerCreatePieWedgeProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -55515,7 +55515,7 @@ static int _wrap_PowerCreatePieWedgeProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -55766,7 +55766,7 @@ static int _wrap_PowerCreateCurvedOffsetProjectile__SWIG_0(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -55781,7 +55781,7 @@ static int _wrap_PowerCreateCurvedOffsetProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -55796,7 +55796,7 @@ static int _wrap_PowerCreateCurvedOffsetProjectile__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -55875,7 +55875,7 @@ static int _wrap_PowerCreateCurvedOffsetProjectile__SWIG_1(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -55890,7 +55890,7 @@ static int _wrap_PowerCreateCurvedOffsetProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -55905,7 +55905,7 @@ static int _wrap_PowerCreateCurvedOffsetProjectile__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -55974,7 +55974,7 @@ static int _wrap_PowerCreateCurvedOffsetProjectile__SWIG_2(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -55989,7 +55989,7 @@ static int _wrap_PowerCreateCurvedOffsetProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -56004,7 +56004,7 @@ static int _wrap_PowerCreateCurvedOffsetProjectile__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -56063,7 +56063,7 @@ static int _wrap_PowerCreateCurvedOffsetProjectile__SWIG_3(lua_State *L)
     arg3 = (LPCSTR)lua_tostring(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -56078,7 +56078,7 @@ static int _wrap_PowerCreateCurvedOffsetProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -56093,7 +56093,7 @@ static int _wrap_PowerCreateCurvedOffsetProjectile__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -56396,7 +56396,7 @@ static int _wrap_PowerProjectileSeekActor__SWIG_0(lua_State *L)
     arg2 = (ACDID)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -56444,7 +56444,7 @@ static int _wrap_PowerProjectileSeekActor__SWIG_1(lua_State *L)
     arg2 = (ACDID)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -56576,7 +56576,7 @@ static int _wrap_PowerProjectileSeekCursor__SWIG_0(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -56624,7 +56624,7 @@ static int _wrap_PowerProjectileSeekCursor__SWIG_1(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -56882,7 +56882,7 @@ static int _wrap_PowerProjectileReflect__SWIG_0(lua_State *L)
     arg3 = (int32)lua_tonumber(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -56898,7 +56898,7 @@ static int _wrap_PowerProjectileReflect__SWIG_0(lua_State *L)
     arg5 = (ACDID)lua_tonumber(L, 5);
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -56913,7 +56913,7 @@ static int _wrap_PowerProjectileReflect__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 7)) {
         float flInput = (float)lua_tonumber(L, 7);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 7);
@@ -56968,7 +56968,7 @@ static int _wrap_PowerProjectileReflect__SWIG_1(lua_State *L)
     arg3 = (int32)lua_tonumber(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -56984,7 +56984,7 @@ static int _wrap_PowerProjectileReflect__SWIG_1(lua_State *L)
     arg5 = (ACDID)lua_tonumber(L, 5);
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -57038,7 +57038,7 @@ static int _wrap_PowerProjectileReflect__SWIG_2(lua_State *L)
     arg3 = (int32)lua_tonumber(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -57088,7 +57088,7 @@ static int _wrap_PowerProjectileReflect__SWIG_3(lua_State *L)
     arg3 = (int32)lua_tonumber(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -57382,7 +57382,7 @@ static int _wrap_PowerProjectileSetSpeedMultiplier__SWIG_0(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -57397,7 +57397,7 @@ static int _wrap_PowerProjectileSetSpeedMultiplier__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -57460,7 +57460,7 @@ static int _wrap_PowerProjectileSetSpeedMultiplier__SWIG_1(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -57475,7 +57475,7 @@ static int _wrap_PowerProjectileSetSpeedMultiplier__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -57528,7 +57528,7 @@ static int _wrap_PowerProjectileSetSpeedMultiplier__SWIG_2(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -57543,7 +57543,7 @@ static int _wrap_PowerProjectileSetSpeedMultiplier__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -57586,7 +57586,7 @@ static int _wrap_PowerProjectileSetSpeedMultiplier__SWIG_3(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -57601,7 +57601,7 @@ static int _wrap_PowerProjectileSetSpeedMultiplier__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -57752,7 +57752,7 @@ static int _wrap_PowerProjectileSetPierceChance(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -57973,7 +57973,7 @@ static int _wrap_PowerCreateBeam__SWIG_0(lua_State *L)
     arg2 = (LPCSTR)lua_tostring(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -58026,7 +58026,7 @@ static int _wrap_PowerCreateBeam__SWIG_1(lua_State *L)
     arg2 = (LPCSTR)lua_tostring(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -58077,7 +58077,7 @@ static int _wrap_PowerCreateBeam__SWIG_2(lua_State *L)
     arg2 = (LPCSTR)lua_tostring(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -58202,7 +58202,7 @@ static int _wrap_PowerBeamUpdate__SWIG_0(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -58246,7 +58246,7 @@ static int _wrap_PowerBeamUpdate__SWIG_1(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -58288,7 +58288,7 @@ static int _wrap_PowerBeamUpdate__SWIG_2(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -58398,7 +58398,7 @@ static int _wrap_PowerCreateProxyActorOnCursor(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -58471,7 +58471,7 @@ static int _wrap_PowerSummonActorOnCursor__SWIG_0(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -58596,7 +58596,7 @@ static int _wrap_PowerSummonActorOnCursor__SWIG_1(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -58719,7 +58719,7 @@ static int _wrap_PowerSummonActorOnCursor__SWIG_2(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -58832,7 +58832,7 @@ static int _wrap_PowerSummonActorOnCursor__SWIG_3(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -58935,7 +58935,7 @@ static int _wrap_PowerSummonActorOnCursor__SWIG_4(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -59028,7 +59028,7 @@ static int _wrap_PowerSummonActorOnCursor__SWIG_5(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -59111,7 +59111,7 @@ static int _wrap_PowerSummonActorOnCursor__SWIG_6(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -59184,7 +59184,7 @@ static int _wrap_PowerSummonActorOnCursor__SWIG_7(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -59243,7 +59243,7 @@ static int _wrap_PowerSummonActorOnCursor__SWIG_8(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -59296,7 +59296,7 @@ static int _wrap_PowerSummonActorOnCursor__SWIG_9(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -59920,7 +59920,7 @@ static int _wrap_PowerSpawnMirrorImages__SWIG_0(lua_State *L)
     arg2 = (LPCSTR)lua_tostring(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -60013,7 +60013,7 @@ static int _wrap_PowerSpawnMirrorImages__SWIG_1(lua_State *L)
     arg2 = (LPCSTR)lua_tostring(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -60100,7 +60100,7 @@ static int _wrap_PowerSpawnMirrorImages__SWIG_2(lua_State *L)
     arg2 = (LPCSTR)lua_tostring(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -60185,7 +60185,7 @@ static int _wrap_PowerSpawnMirrorImages__SWIG_3(lua_State *L)
     arg2 = (LPCSTR)lua_tostring(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -60473,7 +60473,7 @@ static int _wrap_PowerActorSetDamageAttributes(lua_State *L)
     arg2 = (DamageType)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -60488,7 +60488,7 @@ static int _wrap_PowerActorSetDamageAttributes(lua_State *L)
     }
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -61047,7 +61047,7 @@ static int _wrap_PowerPlayerSetPetProcScalar(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -61261,7 +61261,7 @@ static int _wrap_PowerActorGetNearbySummonCount__SWIG_0(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -61352,7 +61352,7 @@ static int _wrap_PowerActorGetNearbySummons__SWIG_0(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -61517,7 +61517,7 @@ static int _wrap_PowerPlayerReviveActorOnCursor(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -61568,7 +61568,7 @@ static int _wrap_PowerCreateBuff__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -61614,7 +61614,7 @@ static int _wrap_PowerCreateBuff__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -62063,7 +62063,7 @@ static int _wrap_PowerBuffSetDOTDPS__SWIG_0(lua_State *L)
     arg2 = (DamageType)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -62141,7 +62141,7 @@ static int _wrap_PowerBuffSetDOTDPS__SWIG_1(lua_State *L)
     arg2 = (DamageType)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -62209,7 +62209,7 @@ static int _wrap_PowerBuffSetDOTDPS__SWIG_2(lua_State *L)
     arg2 = (DamageType)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -62267,7 +62267,7 @@ static int _wrap_PowerBuffSetDOTDPS__SWIG_3(lua_State *L)
     arg2 = (DamageType)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -62315,7 +62315,7 @@ static int _wrap_PowerBuffSetDOTDPS__SWIG_4(lua_State *L)
     arg2 = (DamageType)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -62505,7 +62505,7 @@ static int _wrap_PowerBuffSetPetDamageScalar(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -62555,7 +62555,7 @@ static int _wrap_PowerBuffSetProcScalar(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -62932,7 +62932,7 @@ static int _wrap_PowerBuffAddSlow(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -62975,7 +62975,7 @@ static int _wrap_PowerBuffAddChill(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -63018,7 +63018,7 @@ static int _wrap_PowerBuffAddAttackSpeedReduction(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -63114,7 +63114,7 @@ static int _wrap_PowerBuffSetDuration__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -63193,7 +63193,7 @@ static int _wrap_PowerBuffSetDuration__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -63262,7 +63262,7 @@ static int _wrap_PowerBuffSetDuration__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -63321,7 +63321,7 @@ static int _wrap_PowerBuffSetDuration__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -63374,7 +63374,7 @@ static int _wrap_PowerBuffSetDuration__SWIG_4(lua_State *L)
     arg3 = (ACDID)lua_tonumber(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -63454,7 +63454,7 @@ static int _wrap_PowerBuffSetDuration__SWIG_5(lua_State *L)
     arg3 = (ACDID)lua_tonumber(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -63520,7 +63520,7 @@ static int _wrap_PowerBuffSetDuration__SWIG_6(lua_State *L)
     arg3 = (ACDID)lua_tonumber(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -63584,7 +63584,7 @@ static int _wrap_PowerBuffSetDuration__SWIG_7(lua_State *L)
     arg3 = (ACDID)lua_tonumber(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -63638,7 +63638,7 @@ static int _wrap_PowerBuffSetDuration__SWIG_8(lua_State *L)
     arg3 = (ACDID)lua_tonumber(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -63671,7 +63671,7 @@ static int _wrap_PowerBuffSetDuration__SWIG_9(lua_State *L)
     arg1 = (int)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -64646,7 +64646,7 @@ static int _wrap_PowerBuffSetStoredDataFloat__SWIG_0(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -64823,7 +64823,7 @@ static int _wrap_PowerBuffSetStoredDataFloat__SWIG_1(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -64871,7 +64871,7 @@ static int _wrap_PowerBuffSetStoredDataFloat__SWIG_2(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -67583,7 +67583,7 @@ static int _wrap_PowerBuffAddAttributeModifier(lua_State *L)
     arg3 = (int32)lua_tonumber(L, 3);
     if (lua_isnumber(L, 4)) {
         float flInput = (float)lua_tonumber(L, 4);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 4);
@@ -67876,7 +67876,7 @@ static int _wrap_PowerBuffSetPeriodicRefreshRate(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -67911,7 +67911,7 @@ static int _wrap_PowerBuffEnablePeriodicEffect(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -68595,7 +68595,7 @@ static int _wrap_PowerBuffEnableOnReflectEffect__SWIG_0(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -69139,7 +69139,7 @@ static int _wrap_PowerBuffDamageShieldAbsorb__SWIG_0(lua_State *L)
     float result;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -69178,7 +69178,7 @@ static int _wrap_PowerBuffDamageShieldAbsorb__SWIG_1(lua_State *L)
     float result;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -69308,7 +69308,7 @@ static int _wrap_PowerBuffDamageShieldSetAmountOnBuff(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -69464,7 +69464,7 @@ static int _wrap_PowerBuffDamageShieldReduceDamageByPercent(lua_State *L)
     float result;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -69765,7 +69765,7 @@ static int _wrap_PowerBuffAppliedDamageSetDamageTypeAmount(lua_State *L)
     arg1 = (DamageType)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -69792,7 +69792,7 @@ static int _wrap_PowerBuffAppliedDamageModifyByPercent(lua_State *L)
     float arg1;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -69928,7 +69928,7 @@ static int _wrap_PowerBuffAppliedDamageDoRollAgainstProcCoefficient(lua_State *L
     BOOL result;
     if (lua_isnumber(L, 1)) {
         float flInput = (float)lua_tonumber(L, 1);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 1);
@@ -70081,7 +70081,7 @@ static int _wrap_PowerSendMessageToBuff__SWIG_0(lua_State *L)
     arg4 = (uint32)lua_tonumber(L, 4);
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -70202,7 +70202,7 @@ static int _wrap_PowerSendMessageToBuff__SWIG_3(lua_State *L)
     arg5 = (uint32)lua_tonumber(L, 5);
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 6);
@@ -70528,7 +70528,7 @@ static int _wrap_PowerBuffInternalCooldownSet(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -70731,7 +70731,7 @@ static int _wrap_PowerTeleportActorToCursor__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -70810,7 +70810,7 @@ static int _wrap_PowerTeleportActorToCursor__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 5);
@@ -71742,7 +71742,7 @@ static int _wrap_PowerActorIsFacingCursor(lua_State *L)
     arg2 = (ACDID)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -72345,7 +72345,7 @@ static int _wrap_PowerSetStoredFloat(lua_State *L)
     arg1 = (LPCSTR)lua_tostring(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -72746,7 +72746,7 @@ static int _wrap_PowerInstanceSetDamagePercentBonus(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -72781,7 +72781,7 @@ static int _wrap_PowerActorAddResource__SWIG_0(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -72833,7 +72833,7 @@ static int _wrap_PowerActorAddResource__SWIG_1(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -72875,7 +72875,7 @@ static int _wrap_PowerActorAddResource__SWIG_2(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -73021,7 +73021,7 @@ static int _wrap_PowerActorSpendResource__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -73104,7 +73104,7 @@ static int _wrap_PowerActorSpendResource__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -73177,7 +73177,7 @@ static int _wrap_PowerActorSpendResource__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -73240,7 +73240,7 @@ static int _wrap_PowerActorSpendResource__SWIG_3(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -73293,7 +73293,7 @@ static int _wrap_PowerActorSpendResource__SWIG_4(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -73472,7 +73472,7 @@ static int _wrap_PowerActorCanSpendResource__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -73538,7 +73538,7 @@ static int _wrap_PowerActorCanSpendResource__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -73594,7 +73594,7 @@ static int _wrap_PowerActorCanSpendResource__SWIG_2(lua_State *L)
     }
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -73714,7 +73714,7 @@ static int _wrap_PowerActorHeal__SWIG_0(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -73770,7 +73770,7 @@ static int _wrap_PowerActorHeal__SWIG_1(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -73824,7 +73824,7 @@ static int _wrap_PowerActorHeal__SWIG_2(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -73864,7 +73864,7 @@ static int _wrap_PowerActorHeal__SWIG_3(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -73898,7 +73898,7 @@ static int _wrap_PowerActorHeal__SWIG_4(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -74063,7 +74063,7 @@ static int _wrap_PowerDamageActor(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -74116,7 +74116,7 @@ static int _wrap_PowerActorSetHitPointsMax(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -74189,7 +74189,7 @@ static int _wrap_PowerActorSetHitPointsPercent(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -74222,7 +74222,7 @@ static int _wrap_PowerActorSetHitPoints(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -74511,7 +74511,7 @@ static int _wrap_PowerUpdateRechargeTimer(lua_State *L)
     arg2 = (SNO)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -75458,7 +75458,7 @@ static int _wrap_PowerDebugDrawSphere__SWIG_0(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -75492,7 +75492,7 @@ static int _wrap_PowerDebugDrawSphere__SWIG_1(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -75678,7 +75678,7 @@ static int _wrap_PowerDebugDrawCapsule__SWIG_0(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -75718,7 +75718,7 @@ static int _wrap_PowerDebugDrawCapsule__SWIG_1(lua_State *L)
     arg2 = (int32)lua_tonumber(L, 2);
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -75812,7 +75812,7 @@ static int _wrap_PowerDebugDrawPie__SWIG_0(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -75827,7 +75827,7 @@ static int _wrap_PowerDebugDrawPie__SWIG_0(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
@@ -75862,7 +75862,7 @@ static int _wrap_PowerDebugDrawPie__SWIG_1(lua_State *L)
     arg1 = (int32)lua_tonumber(L, 1);
     if (lua_isnumber(L, 2)) {
         float flInput = (float)lua_tonumber(L, 2);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 2);
@@ -75877,7 +75877,7 @@ static int _wrap_PowerDebugDrawPie__SWIG_1(lua_State *L)
     }
     if (lua_isnumber(L, 3)) {
         float flInput = (float)lua_tonumber(L, 3);
-        if (!isfinite(flInput) || isnan(flInput)) {
+        if (!NXSDK::IsFiniteFloat(flInput) || NXSDK::IsNaNFloat(flInput)) {
             {
                 CRefString sError;
                 sError.Format("Argument %d is an invalid floating point number", 3);
