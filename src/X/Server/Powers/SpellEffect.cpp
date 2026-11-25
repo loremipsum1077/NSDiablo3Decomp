@@ -2923,7 +2923,7 @@ static void sSpellEffect_MonsterTeleport(const PowerID idPower, void *)
 
 
 
-        DisplayInternalError(NULL, "", __LINE__, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 2850, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 }
 
@@ -10770,7 +10770,7 @@ static void sSpellEffect_UberBossPortal(PowerID idPower, ACDID idACDItem, int32 
                 if (ptACDSpot)
                 {
                     ActorAddStruct tActorAdd;
-                    tActorAdd.dwActorAddFlags = (1 << ACTORADD_DOESNT_WALK_BIT) | (1 << ACTORADD_EVEN_WHEN_STUCK) | (1 << ACTORADD_DONT_PERTURB) | (1 << ACTORADD_DONT_SEARCH_FOR_LOCATION);
+                    tActorAdd.dwActorAddFlags = (1 << ACTORADD_DOESNT_WALK_BIT) | (1 << ACTORADD_EVEN_WHEN_STUCK) | (1 << ACTORADD_DONT_PERTURB) | (1 << ACTORADD_DONT_SEARCH_FOR_LOCATION) | (1 << ACTORADD_DOESNT_DEACTIVATE);
     // 
     // 
     // 
@@ -16551,7 +16551,7 @@ void sSpellEffect_MorluCaster_Shift(PowerID idPower, void *)
 
 
 
-            DisplayInternalError(NULL, "", __LINE__, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+            DisplayInternalError(NULL, "", 16479, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
         }
     }
 }

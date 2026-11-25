@@ -183,7 +183,7 @@ BOOL sbSkipCompatabilityCheck;
 
 uint64 GetTitleVersion()
 {
-    return 0x109;
+    return 0x115;
 }
 
 
@@ -227,7 +227,7 @@ public:
     {
         bdGameInfo::serialize(tBitBuffer);
         tBitBuffer.writeString(m_szName, sizeof(m_szName));
-        tBitBuffer.writeUInt64(0x109);
+        tBitBuffer.writeUInt64(0x115);
         m_tGameInfo.Serialize(tBitBuffer);
     }
 
@@ -239,7 +239,7 @@ public:
         bOk = bOk && tBitBuffer.readString(m_szName, sizeof(m_szName));
         bOk = bOk && tBitBuffer.readUInt64(m_uTitleVersion);
 
-        return bOk && m_uTitleVersion == 0x109 && m_tGameInfo.Deserialize(tBitBuffer);
+        return bOk && m_uTitleVersion == 0x115 && m_tGameInfo.Deserialize(tBitBuffer);
     }
 
 private:
@@ -2637,6 +2637,7 @@ GameParams::GameParams()
       m_eGameType(1),
       m_bIsHardcore(FALSE),
       m_bIsSeasonal(FALSE),
+      unk_14(FALSE),
       m_bResumeFromSave(FALSE),
       m_uSeason(0),
       m_nLevel(0),
@@ -2679,6 +2680,7 @@ void GameParams::Serialize(bdBitBufferRef ptBitBuffer) const
             ptBitBuffer->writeUInt32(m_tWeeklyChallengeConfig.challenge_number());
             ptBitBuffer->writeInt64(m_tWeeklyChallengeConfig.challenge_end_unix_time_console());
         }
+        ptBitBuffer->writeBool(unk_14);
     }
 }
 
@@ -2703,7 +2705,7 @@ bdBool GameParams::Deserialize(bdBitBufferRef ptBitBuffer)
             && ptBitBuffer->readUInt32(m_dwDevCreationFlags);
         m_snoDevWorld = snoDevWorld;
 
-        m_bIsHardcore = m_bIsSeasonal = m_bResumeFromSave = m_uSeason = 0;
+        m_bIsHardcore = m_bIsSeasonal = unk_14 = m_bResumeFromSave = m_uSeason = 0;
 
         m_eAct = ACT_1;
         m_snoQuest = SNO_NONE;
@@ -2716,6 +2718,7 @@ bdBool GameParams::Deserialize(bdBitBufferRef ptBitBuffer)
     {
         bdBool bIsHardcore = false;
         bdBool bResumeFromSave = false;
+        bdBool bUnk14 = false;
         bdInt32 eAct = ACT_1;
         bdInt32 snoQuest = 0;
         bdInt32 ePreferredAdventureAct = ACT_1;
@@ -2744,6 +2747,8 @@ bdBool GameParams::Deserialize(bdBitBufferRef ptBitBuffer)
             m_tWeeklyChallengeConfig.set_challenge_end_unix_time_console(nChallengeEndUnixTime);
         }
 
+        bOk = bOk && ptBitBuffer->readBool(bUnk14);
+        unk_14 = bUnk14;
         m_bIsHardcore = bIsHardcore;
         m_bIsSeasonal = m_uSeason != 0;
         m_bResumeFromSave = bResumeFromSave;
@@ -2803,8 +2808,9 @@ void GamePresence::Serialize(bdBitBuffer & tBitBuffer) const
     tBitBuffer.writeRangedInt32(m_eAct, -1, 3000);
     tBitBuffer.writeInt32(m_snoQuest);
     tBitBuffer.writeRangedUInt32(m_uNumPlayers, 0, 4, true);
-    tBitBuffer.writeRangedInt32(m_nHandicap, -1, 17);
+    tBitBuffer.writeRangedInt32(m_nHandicap, -1, HC_NUM_HANDICAP_LEVELS);
     tBitBuffer.writeRangedUInt32(m_bIsSeasonal ? m_uSeason : 0, 0, 1024, true);
+    tBitBuffer.writeBool(unk_14);
 }
 
 
@@ -2816,6 +2822,7 @@ bdBool GamePresence::Deserialize(bdBitBuffer & tBitBuffer)
     bdBool bInGame = false;
     bdBool bIsChallenge = false;
     bdBool bIsHardcore = false;
+    bdBool bUnk14 = false;
     bdInt32 eAct = 0;
     bdInt32 snoQuest = 0;
     bdInt32 nHandicap = 0;
@@ -2828,14 +2835,16 @@ bdBool GamePresence::Deserialize(bdBitBuffer & tBitBuffer)
         tBitBuffer.readRangedInt32(eAct, -1, 3000) &&
         tBitBuffer.readInt32(snoQuest) &&
         tBitBuffer.readRangedUInt32(m_uNumPlayers, 0, 4, true) &&
-        tBitBuffer.readRangedInt32(nHandicap, -1, 17) &&
-        tBitBuffer.readRangedUInt32(uSeason, 0, 1024, true);
+        tBitBuffer.readRangedInt32(nHandicap, -1, HC_NUM_HANDICAP_LEVELS) &&
+        tBitBuffer.readRangedUInt32(uSeason, 0, 1024, true) &&
+        tBitBuffer.readBool(bUnk14);
 
     m_eOnlineState = eOnlineState;
     m_bInGame = bInGame;
     m_bIsChallenge = bIsChallenge;
     m_bIsHardcore = bIsHardcore;
     m_bIsSeasonal = uSeason != 0;
+    unk_14 = bUnk14;
     m_eAct = eAct;
     m_snoQuest = snoQuest;
     m_nHandicap = nHandicap;

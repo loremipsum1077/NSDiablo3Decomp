@@ -163,7 +163,7 @@ public:
 
 
 
-class OnlineFriendsDataSource : public ConsoleListBoxDataSource {  // size 0x1310
+class OnlineFriendsDataSource : public ConsoleListBoxDataSource {  // size 0x1410
 public:
 
     OnlineFriendsDataSource()
@@ -230,10 +230,10 @@ public:
     }
 
     ::Console::Online::Friend m_arFriends[32];  // 0x08
-    uint32 m_nNumFriends;  // 0x1308
-    BOOL m_bShowWhenEmpty;  // 0x130c
-};  static_assert(sizeof(OnlineFriendsDataSource) == 0x1310, "OnlineFriendsDataSource");
-class LocalCommunicationsDataSource : public ConsoleListBoxDataSource { public:  // size 0xc450
+    uint32 m_nNumFriends;  // 0x1408
+    BOOL m_bShowWhenEmpty;  // 0x140c
+};  static_assert(sizeof(OnlineFriendsDataSource) == 0x1410, "OnlineFriendsDataSource");
+class LocalCommunicationsDataSource : public ConsoleListBoxDataSource { public:  // size 0xc750
     virtual ~LocalCommunicationsDataSource() {}
 
 
@@ -405,7 +405,7 @@ class LocalCommunicationsDataSource : public ConsoleListBoxDataSource { public: 
     blz::list<::Console::Online::PartyInfo, blz::allocator<::Console::Online::PartyInfo> > m_tFindResult;  // 0x28
     BOOL m_bResultsDirty;  // 0x40
 
-    struct PerPlayerPartyInfo {  // size 0x620
+    struct PerPlayerPartyInfo {  // size 0x638
         int32 m_nPlayerIndex;  // 0x00
         UIPartyDisplay::Console::GroupBannerDisplay m_eBannerDisplay;  // 0x04
         ::Console::Online::PartyInfo m_tPartyinfo;  // 0x08
@@ -413,33 +413,33 @@ class LocalCommunicationsDataSource : public ConsoleListBoxDataSource { public: 
 
 
     UIPartyDisplay::Console::LocalCommunicationsDataSource::PerPlayerPartyInfo m_arAdHocPartyResult[32];  // 0x48
-    uint32 m_nNumMatchesAvailable;  // 0xc448
+    uint32 m_nNumMatchesAvailable;  // 0xc748
 
-    bool m_bCurrentlyExpanded;  // 0xc44c
-};  static_assert(sizeof(LocalCommunicationsDataSource) == 0xc450, "LocalCommunicationsDataSource");
+    bool m_bCurrentlyExpanded;  // 0xc74c
+};  static_assert(sizeof(LocalCommunicationsDataSource) == 0xc750, "LocalCommunicationsDataSource");
 
 
 
-struct PartyDisplayData {  // size 0xdef0
+struct PartyDisplayData {  // size 0xe2f0
     UIPartyDisplay::Console::PartyDataSource tPartyList;  // 0x00
     UIPartyDisplay::Console::OnlineFriendsDataSource tFriendList;  // 0x08
-    UIPartyDisplay::Console::LocalCommunicationsDataSource tLocalCommList;  // 0x1318
+    UIPartyDisplay::Console::LocalCommunicationsDataSource tLocalCommList;  // 0x1418
 
-    uint32 nNumPartyMembers;  // 0xd768
-    uint32 nNumLocalPartyMembers;  // 0xd76c
-    ::Console::Online::PartyMember arPartyMembers[4];  // 0xd770
-    UIUtils::Console::PartyVoiceChatStateListener * ptVoiceListener;  // 0xded0
-    BOOL bNamePlatesEnabled;  // 0xded8
-    int32 nFocusedNameplate;  // 0xdedc
-    EffectGroupID idHighlightEffect;  // 0xdee0
-
-
+    uint32 nNumPartyMembers;  // 0xdb68
+    uint32 nNumLocalPartyMembers;  // 0xdb6c
+    ::Console::Online::PartyMember arPartyMembers[4];  // 0xdb70
+    UIUtils::Console::PartyVoiceChatStateListener * ptVoiceListener;  // 0xe2d0
+    BOOL bNamePlatesEnabled;  // 0xe2d8
+    int32 nFocusedNameplate;  // 0xe2dc
+    EffectGroupID idHighlightEffect;  // 0xe2e0
 
 
 
 
-    int32 nPlayerInfoPartyMember;  // 0xdee4
-    OnlineUserId tPlayerInfoFriendId;  // 0xdee8
+
+
+    int32 nPlayerInfoPartyMember;  // 0xe2e4
+    OnlineUserId tPlayerInfoFriendId;  // 0xe2e8
 
     PartyDisplayData()
         : nNumPartyMembers(0),
@@ -458,7 +458,7 @@ struct PartyDisplayData {  // size 0xdef0
     ~PartyDisplayData()
     {
     }
-};  static_assert(sizeof(PartyDisplayData) == 0xdef0, "PartyDisplayData");
+};  static_assert(sizeof(PartyDisplayData) == 0xe2f0, "PartyDisplayData");
 PartyDisplayData sgtPartyDisplayData;
 
 

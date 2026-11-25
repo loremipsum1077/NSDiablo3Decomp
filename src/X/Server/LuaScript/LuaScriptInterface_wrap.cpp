@@ -70056,8 +70056,8 @@ static int _wrap_PowerSendMessageToBuff__SWIG_0(lua_State *L)
     int SWIG_arg = 0;
     LPCSTR arg1;
     int32 arg2;
-    uint32 arg3;
-    uint32 arg4;
+    int32 arg3;
+    int32 arg4;
     float arg5;
     if (!lua_isstring(L, 1)) {
         lua_pushfstring(L, "argument %d incorrect/missing", 1);
@@ -70077,8 +70077,8 @@ static int _wrap_PowerSendMessageToBuff__SWIG_0(lua_State *L)
     }
     arg1 = (LPCSTR)lua_tostring(L, 1);
     arg2 = (int32)lua_tonumber(L, 2);
-    arg3 = (uint32)lua_tonumber(L, 3);
-    arg4 = (uint32)lua_tonumber(L, 4);
+    arg3 = (int32)lua_tonumber(L, 3);
+    arg4 = (int32)lua_tonumber(L, 4);
     if (lua_isnumber(L, 5)) {
         float flInput = (float)lua_tonumber(L, 5);
         if (!isfinite(flInput) || isnan(flInput)) {
@@ -70107,8 +70107,8 @@ static int _wrap_PowerSendMessageToBuff__SWIG_1(lua_State *L)
     int SWIG_arg = 0;
     LPCSTR arg1;
     int32 arg2;
-    uint32 arg3;
-    uint32 arg4;
+    int32 arg3;
+    int32 arg4;
     if (!lua_isstring(L, 1)) {
         lua_pushfstring(L, "argument %d incorrect/missing", 1);
         goto fail;
@@ -70127,8 +70127,8 @@ static int _wrap_PowerSendMessageToBuff__SWIG_1(lua_State *L)
     }
     arg1 = (LPCSTR)lua_tostring(L, 1);
     arg2 = (int32)lua_tonumber(L, 2);
-    arg3 = (uint32)lua_tonumber(L, 3);
-    arg4 = (uint32)lua_tonumber(L, 4);
+    arg3 = (int32)lua_tonumber(L, 3);
+    arg4 = (int32)lua_tonumber(L, 4);
     PowerSendMessageToBuff(arg1, arg2, arg3, arg4, 0.0f);
     return SWIG_arg;
 fail:
@@ -70142,7 +70142,7 @@ static int _wrap_PowerSendMessageToBuff__SWIG_2(lua_State *L)
     int SWIG_arg = 0;
     LPCSTR arg1;
     int32 arg2;
-    uint32 arg3;
+    int32 arg3;
     if (!lua_isstring(L, 1)) {
         lua_pushfstring(L, "argument %d incorrect/missing", 1);
         goto fail;
@@ -70157,7 +70157,7 @@ static int _wrap_PowerSendMessageToBuff__SWIG_2(lua_State *L)
     }
     arg1 = (LPCSTR)lua_tostring(L, 1);
     arg2 = (int32)lua_tonumber(L, 2);
-    arg3 = (uint32)lua_tonumber(L, 3);
+    arg3 = (int32)lua_tonumber(L, 3);
     PowerSendMessageToBuff(arg1, arg2, arg3, 0u, 0.0f);
     return SWIG_arg;
 fail:
@@ -70172,8 +70172,8 @@ static int _wrap_PowerSendMessageToBuff__SWIG_3(lua_State *L)
     ACDID arg1;
     LPCSTR arg2;
     int32 arg3;
-    uint32 arg4;
-    uint32 arg5;
+    int32 arg4;
+    int32 arg5;
     float arg6;
     if (!lua_isnumber(L, 1)) {
         lua_pushfstring(L, "argument %d incorrect/missing", 1);
@@ -70198,8 +70198,8 @@ static int _wrap_PowerSendMessageToBuff__SWIG_3(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     arg2 = (LPCSTR)lua_tostring(L, 2);
     arg3 = (int32)lua_tonumber(L, 3);
-    arg4 = (uint32)lua_tonumber(L, 4);
-    arg5 = (uint32)lua_tonumber(L, 5);
+    arg4 = (int32)lua_tonumber(L, 4);
+    arg5 = (int32)lua_tonumber(L, 5);
     if (lua_isnumber(L, 6)) {
         float flInput = (float)lua_tonumber(L, 6);
         if (!isfinite(flInput) || isnan(flInput)) {
@@ -70229,8 +70229,8 @@ static int _wrap_PowerSendMessageToBuff__SWIG_4(lua_State *L)
     ACDID arg1;
     LPCSTR arg2;
     int32 arg3;
-    uint32 arg4;
-    uint32 arg5;
+    int32 arg4;
+    int32 arg5;
     if (!lua_isnumber(L, 1)) {
         lua_pushfstring(L, "argument %d incorrect/missing", 1);
         goto fail;
@@ -70254,8 +70254,8 @@ static int _wrap_PowerSendMessageToBuff__SWIG_4(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     arg2 = (LPCSTR)lua_tostring(L, 2);
     arg3 = (int32)lua_tonumber(L, 3);
-    arg4 = (uint32)lua_tonumber(L, 4);
-    arg5 = (uint32)lua_tonumber(L, 5);
+    arg4 = (int32)lua_tonumber(L, 4);
+    arg5 = (int32)lua_tonumber(L, 5);
     PowerSendMessageToBuff(arg1, arg2, arg3, arg4, arg5, 0.0f);
     return SWIG_arg;
 fail:
@@ -70270,7 +70270,7 @@ static int _wrap_PowerSendMessageToBuff__SWIG_5(lua_State *L)
     ACDID arg1;
     LPCSTR arg2;
     int32 arg3;
-    uint32 arg4;
+    int32 arg4;
     if (!lua_isnumber(L, 1)) {
         lua_pushfstring(L, "argument %d incorrect/missing", 1);
         goto fail;
@@ -70290,7 +70290,7 @@ static int _wrap_PowerSendMessageToBuff__SWIG_5(lua_State *L)
     arg1 = (ACDID)lua_tonumber(L, 1);
     arg2 = (LPCSTR)lua_tostring(L, 2);
     arg3 = (int32)lua_tonumber(L, 3);
-    arg4 = (uint32)lua_tonumber(L, 4);
+    arg4 = (int32)lua_tonumber(L, 4);
     PowerSendMessageToBuff(arg1, arg2, arg3, arg4, 0u, 0.0f);
     return SWIG_arg;
 fail:
