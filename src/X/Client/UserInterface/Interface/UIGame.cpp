@@ -8230,6 +8230,7 @@ namespace UIGame { void FlashTieredRiftProgressBar(
 #include "../../../Common/GameTemplate.h"
 // Raw UIQuests.cpp:1052 only; no recovered header declaration.
 namespace UIQuests { void MakeCurrentObjectivesReappear(); }
+extern "C" blz::string sub_710051b1e0(SNO snoWorld);
 
 #line 6613 "X/Client/UserInterface/Interface/UIGame.cpp"
 namespace UIGame { void Area_Title_Update(
@@ -8369,8 +8370,8 @@ namespace UIGame { void Area_Title_Update(
                         ActorCommonData * ptACDLocalPlayer = ACDTryToGet(ptPlayer->idPlayerACD);
                         if (ptACDLocalPlayer && ACDIsInTieredLootRun(*ptACDLocalPlayer))
                         {
-                            CRefString sVal = UnicodeText::FormatNumber(nLevel, TRUE, FNS_NORMAL, XLOCALE_INVALID);
-                            sName = LocalizedSprintf(StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_LEVEL_AREAS), "TieredRift").str(), sVal.str(), NULL);
+                            SNO snoWorld = WorldCommonGetWorldSNO(ptACDLocalPlayer->GetPlace().idSWorld);
+                            sName = sub_710051b1e0(snoWorld).c_str();
                         }
                     }
                 }

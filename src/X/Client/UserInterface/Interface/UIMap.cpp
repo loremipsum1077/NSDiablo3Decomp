@@ -37,6 +37,9 @@ CursorMgr & PlayerGetCursorMgr(); void CPlayerInputForceHighlightUpdate(Player *
 #include "UITutorials.h"
 extern UITutorialManager gtTutorialMgr; Hub & HubGet(); namespace Console { namespace Screens { BOOL OpenToScreen(const ScreenSets eScreenSet, const ScreenID idScreen, int32 nControllerOpening, BOOL fSkipTransition); } }
 
+// The tiered-rift label helper at 0x710051b420 returns an owning string.
+extern "C" blz::string sub_710051b420();
+
 namespace UIMap {
 
 inline void OnSideScreenShowHide(const UIID & id, BOOL fWindowOpen);
@@ -83,7 +86,7 @@ void Update()
                     if (nDungeonFinderLevel > 0)
                     {
                         CRefString sVal = UnicodeText::FormatNumber(nDungeonFinderLevel, TRUE, FNS_NORMAL, 0);
-                        usAreaName = LocalizedSprintf(StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_LEVEL_AREAS), "TieredRift").str(), sVal.str(), NULL);
+                        usAreaName = LocalizedSprintf(sub_710051b420().c_str(), sVal.str(), NULL);
                     }
                 }
 

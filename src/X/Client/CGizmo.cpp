@@ -123,6 +123,8 @@ void sOperateGizmo(const UIID &)
 }
 
 //@ 126
+extern "C" blz::string sub_710051b420();
+
 void GizmoConfirmOperation(ACDID idACDGizmo, Player * ptPlayer)
 
 
@@ -192,7 +194,7 @@ void GizmoConfirmOperation(ACDID idACDGizmo, Player * ptPlayer)
                     CRefString sVal = UnicodeText::FormatNumber(nDungeonFinderLevel, TRUE, FNS_NORMAL, (XLocale)0);
                     if (ACDIsInTieredLootRun(*ptACD))
                     {
-                        sLocationName = LocalizedSprintf(StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_LEVEL_AREAS), "TieredRift").str(), sVal.str(), NULL);
+                        sLocationName = LocalizedSprintf(sub_710051b420().c_str(), sVal.str(), NULL);
                     }
                     else
                     {

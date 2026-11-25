@@ -2245,7 +2245,7 @@ Address,File,Compiler
 0x00000071000d96a0,X/Client/CWorld.cpp,7.1.0
 0x00000071000d9810,X/Client/CWorld.cpp,7.1.0
 0x00000071000d9990,X/Client/CWorld.cpp,7.1.0
-0x00000071000d9ad0,,
+0x00000071000d9ad0,X/Client/CWorld.cpp,7.1.0
 0x00000071000d9bb0,X/Client/CWorld.cpp,7.1.0
 0x00000071000d9bc0,X/Client/CWorld.cpp,7.1.0
 0x00000071000d9c00,X/Client/CWorld.cpp,7.1.0
@@ -9009,8 +9009,8 @@ Address,File,Compiler
 0x00000071003557f0,X/Client/UserInterface/Console/UIConsoleWhatsNewSeason.cpp,7.1.0
 0x0000007100355860,,
 0x0000007100355a80,,
-0x0000007100355c90,,
-0x0000007100355cc0,,
+0x0000007100355c90,X/Client/UserInterface/Console/UIConsoleWhatsNewSeason.cpp,7.1.0
+0x0000007100355cc0,X/Client/UserInterface/Console/UIConsoleWhatsNewSeason.cpp,7.1.0
 0x0000007100355cf0,X/Client/UserInterface/Console/UIConsoleWhatsNewSeason.cpp,7.1.0
 0x0000007100355d80,X/Client/UserInterface/Console/UIConsoleWhatsNewSeason.cpp,7.1.0
 0x0000007100355d90,X/Client/UserInterface/Console/UIConsoleWhatsNewSeason.cpp,7.1.0
@@ -10818,7 +10818,7 @@ Address,File,Compiler
 0x00000071003e53b0,X/Client/UserInterface/Interface/UIInventory.cpp,7.1.0
 0x00000071003e53c0,X/Client/UserInterface/Interface/UIInventory.cpp,7.1.0
 0x00000071003e5610,X/Client/UserInterface/Interface/UIInventory.cpp,7.1.0
-0x00000071003e5660,,
+0x00000071003e5660,X/Client/UserInterface/Interface/UIInventory.cpp,7.1.0
 0x00000071003e5690,X/Client/UserInterface/Interface/UIInventory.cpp,7.1.0
 0x00000071003e5870,X/Client/UserInterface/Interface/UIInventory.cpp,7.1.0
 0x00000071003e5b20,X/Client/UserInterface/Interface/UIInventory.cpp,7.1.0
@@ -10975,7 +10975,7 @@ Address,File,Compiler
 0x00000071003f63a0,X/Client/UserInterface/Interface/UIStash.cpp,7.1.0
 0x00000071003f6470,X/Client/UserInterface/Interface/UIStash.cpp,7.1.0
 0x00000071003f6aa0,X/Client/UserInterface/Interface/UIStash.cpp,7.1.0
-0x00000071003f6c10,,
+0x00000071003f6c10,X/Client/UserInterface/Interface/UIStash.cpp,7.1.0
 0x00000071003f6cb0,X/Client/UserInterface/Interface/UIStash.cpp,7.1.0
 0x00000071003f6cf0,X/Client/UserInterface/Interface/UIToolTipManager.cpp,7.1.0
 0x00000071003f6d60,X/Client/UserInterface/Interface/UIToolTipManager.cpp,7.1.0
@@ -13857,8 +13857,8 @@ Address,File,Compiler
 0x000000710051b010,X/Common/NephalemRiftCommon.cpp,7.1.0
 0x000000710051b060,,
 0x000000710051b100,X/Common/NephalemRiftCommon.cpp,7.1.0
-0x000000710051b1e0,,
-0x000000710051b420,,
+0x000000710051b1e0,X/Common/NephalemRiftCommon.cpp,7.1.0
+0x000000710051b420,X/Common/NephalemRiftCommon.cpp,7.1.0
 0x000000710051b620,,
 0x000000710051b6e0,X/Common/NPC.cpp,7.1.0
 0x000000710051b830,X/Common/NPC.cpp,7.1.0
@@ -14043,7 +14043,7 @@ Address,File,Compiler
 0x0000007100527b30,X/Common/Player.cpp,7.1.0
 0x0000007100527b80,X/Common/Player.cpp,7.1.0
 0x0000007100527d20,X/Common/Player.cpp,7.1.0
-0x0000007100527d30,,
+0x0000007100527d30,X/Common/Player.cpp,7.1.0
 0x0000007100527d50,X/Common/Player.cpp,7.1.0
 0x0000007100527d70,X/Common/Player.cpp,7.1.0
 0x0000007100527e40,X/Common/Player.cpp,7.1.0
@@ -20091,7 +20091,7 @@ Address,File,Compiler
 0x0000007100676fb0,X/Common/World.cpp,7.1.0
 0x00000071006770e0,X/Common/World.cpp,7.1.0
 0x0000007100677150,X/Common/World.cpp,7.1.0
-0x00000071006771f0,,
+0x00000071006771f0,X/Common/World.cpp,7.1.0
 0x0000007100677230,X/Common/World.cpp,7.1.0
 0x0000007100677280,X/Common/World.cpp,7.1.0
 0x00000071006772f0,X/Common/World.cpp,7.1.0

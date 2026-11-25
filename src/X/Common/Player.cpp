@@ -5740,3 +5740,10 @@ void PlayerRemoveOnGroundCraftingPlan(Player & tPlayer, GBID gbidPlan)
 #line 173 "X/Common/Player.cpp"
 const InventorySlotType cgarPlayerLoadoutSocketableSlotsOrder[9] = { SLOT_PLAYER_LEFT_HAND, SLOT_PLAYER_RIGHT_HAND, SLOT_PLAYER_HEAD, SLOT_PLAYER_TORSO, SLOT_PLAYER_LEGS, SLOT_PLAYER_LEFT_FINGER, SLOT_PLAYER_RIGHT_FINGER, SLOT_PLAYER_NECK, SLOT_NONE };
 #line 5590 "X/Common/Player.cpp"
+
+extern "C" BOOL sub_710072e0b0(uint32 uSeasonCreated, uint32 uFlags);
+
+extern "C" BOOL sub_7100527d30(const Player *ptPlayer)
+{
+    return sub_710072e0b0(ptPlayer->uSeasonCreated, ptPlayer->tHeroStateData.uPlayerFlags2);
+}

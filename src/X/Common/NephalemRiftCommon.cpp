@@ -1,12 +1,16 @@
 // Original file: X/Common/NephalemRiftCommon.cpp
 
 #include "NephalemRiftCommon.h"
+#include "../../Contrib/Contrib/blz/include/blz/algo_seq_const.h"
 
 #include "ActorCommonData.h"
 #include "ActorInventory.h"
 #include "Attributes/FastAttribConstantsSwig.h"
 #include "Attributes/FastAttribute.h"
 #include "Definitions/GameBalanceDefinition.h"
+#include "Definitions/StringListDefinition.h"
+#include "World.h"
+#include "../Sigma/UnicodeText.h"
 #include "Game.h"
 #include "GameBalance.h"
 #include "GameCommonData.h"
@@ -16,6 +20,10 @@
 #include "Player.h"
 #include "../Client/CGame.h"
 #include "../Sigma/Math/MathGeneral.h"
+#include "../Client/Gfx/GfxVB.h"  // Normal-color constants initialized at 0x710051b620.
+
+SNO WorldGetDungeonFinderWorldFromLevel(int32 nLevel);
+extern "C" SNO sub_71006771f0(SNO snoWorld);
 
 namespace NephalemRiftManager {  // X/Server/System/SNephalemRift.h
 int32 RiftPlayerCount();
@@ -310,6 +318,34 @@ extern "C" BOOL sub_710051b100()
             return TRUE;
     }
     return FALSE;
+}
+
+// 0x71019147d0, initialized by the function at 0x710051b620.
+static blz::vector<GlobalSNO> unk_19147d0 = {
+    GLOBALSNO_UNK_694, GLOBALSNO_UNK_695, GLOBALSNO_UNK_696, GLOBALSNO_UNK_697,
+    GLOBALSNO_UNK_698, GLOBALSNO_UNK_699, GLOBALSNO_UNK_700
+};
+
+extern "C" blz::string sub_710051b420()
+{
+    blz::string label(StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_LEVEL_AREAS), "TieredRift").str());
+    SNO tileset = sub_71006771f0(WorldGetDungeonFinderWorldFromLevel(1));
+    if (tileset != SNO_NONE && blz::find_if(unk_19147d0.begin(), unk_19147d0.end(),
+            [tileset](GlobalSNO entry) { return GlobalSNOGet(entry) == tileset; }) != unk_19147d0.end())
+        label = StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_LEVEL_AREAS), "GGTieredRift").str();
+    return label;
+}
+
+extern "C" blz::string sub_710051b1e0(SNO snoWorld)
+{
+    CRefString level = UnicodeText::FormatNumber(WorldGetDungeonFinderLevel(snoWorld), TRUE, FNS_NORMAL, 0);
+    blz::string label = sub_710051b420();
+    blz::string result(LocalizedSprintf(label.c_str(), level.str(), NULL).str());
+    SNO tileset = sub_71006771f0(WorldGetDungeonFinderWorldFromLevel(1));
+    if (tileset != SNO_NONE && blz::find_if(unk_19147d0.begin(), unk_19147d0.end(),
+            [tileset](GlobalSNO entry) { return GlobalSNOGet(entry) == tileset; }) != unk_19147d0.end())
+        result = LocalizedSprintf(label.c_str(), level.str(), NULL);
+    return result;
 }
 
 }  // namespace NephalemRift

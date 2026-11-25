@@ -331,6 +331,9 @@ public:
     void SetCenterOnParent(UICenterOnParent);
     void SetStereoDepth(float flStereoDepth) { m_flStereoDepth = flStereoDepth; }  // line 851
     float GetStereoDepth() const { return m_flStereoDepth; }  // line 857
+    void SetIgnoresClipping(const BOOL bIgnoresClipping) {  // line 910
+        m_dwFlags = !bIgnoresClipping ? (m_dwFlags & ~(1 << UIWINDOW_IGNORES_CLIPPING_BIT)) : (m_dwFlags | (1 << UIWINDOW_IGNORES_CLIPPING_BIT));
+    }
     void SetEatsClicks(EatsClicksValue eEatsClicks) { m_eEatsClicks = eEatsClicks; }  // line 864
 protected:
     // DWARF places m_tImageTexBkgrnd (UIWindow+0xa0) in the protected section,
@@ -341,9 +344,6 @@ protected:
     // identical with and without it).
     friend class UIConsoleScrollIndicator;
     BOOL IgnoresClipping();
-    void SetIgnoresClipping(const BOOL bIgnoresClipping) {  // line 910
-        m_dwFlags = !bIgnoresClipping ? (m_dwFlags & ~(1 << UIWINDOW_IGNORES_CLIPPING_BIT)) : (m_dwFlags | (1 << UIWINDOW_IGNORES_CLIPPING_BIT));
-    }
     BOOL ClickIsEaten(const IVector2D & p) const;
     virtual LPCSTR GetTooltipText();  // vtable slot 33
     void AllocateFunctionsPtrIfNeeded() {  // line 927

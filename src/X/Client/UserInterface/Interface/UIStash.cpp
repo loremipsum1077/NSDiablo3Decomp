@@ -790,3 +790,17 @@ void UIStash::Purchase(const UIID &)
     if (!ptACDPlayer)
         return;
 }
+
+#include "../Controls/UIEditControl.h"
+extern UIID unk_71018625d8;  // StashFilter.FilterInput.
+UIEdit & UI_GetEditFromID(const UIID &);
+extern "C" void sub_71003e5660(CRefString text);
+
+extern "C" void sub_71003f6c10(const UIID &id)
+{
+    if (UI_TestID(id) && UI_TestID(unk_71018625d8))
+    {
+        CRefString text = UI_GetEditFromID(unk_71018625d8).GetText();
+        sub_71003e5660(text);
+    }
+}

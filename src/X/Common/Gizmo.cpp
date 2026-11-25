@@ -46,6 +46,7 @@ BOOL ACDIsParticipatingInTieredLootRun(const ActorCommonData & tACD);  // X/Comm
 namespace NephalemRift {  // X/Common/NephalemRiftCommon.h
 BOOL IsTieredRiftActive();
 }
+extern "C" blz::string sub_710051b1e0(SNO snoWorld);
 int32 WorldGetDungeonFinderLevel(SNO snoWorld);  // X/Common/World.cpp
 SNO WorldGetLevelAreaSNOFromRActor(RActorID idRActor);  // X/Client/CWorld.cpp
 namespace BossEncounterManager {  // X/Server/System/BossEncounter.h
@@ -1276,8 +1277,7 @@ BOOL GizmoGetUIName(const ActorCommonData & tACD, CRefString & usText)
                         int32 nActiveRiftLevel = LevelAreaGetDungeonFinderLevel(snoLevelArea);
                         if (nActiveRiftLevel > 0)
                         {
-                            CRefString sVal = UnicodeText::FormatNumber(nActiveRiftLevel, TRUE, FNS_NORMAL, 0);
-                            usText = LocalizedSprintf(StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_LEVEL_AREAS), "TieredRift").str(), sVal.str(), NULL);
+                            usText = sub_710051b1e0(CGameGlobalsGet().unk_100).c_str();
                             bFound = TRUE;
                         }
                     }
@@ -1308,8 +1308,7 @@ BOOL GizmoGetUIName(const ActorCommonData & tACD, CRefString & usText)
                     int32 nActiveRiftLevel = WorldGetDungeonFinderLevel(ptSpecifier->snoWorld);
                     if (nActiveRiftLevel > 0)
                     {
-                        CRefString sVal = UnicodeText::FormatNumber(nActiveRiftLevel, TRUE, FNS_NORMAL, 0);
-                        usText = LocalizedSprintf(StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_LEVEL_AREAS), "TieredRift").str(), sVal.str(), NULL);
+                        usText = sub_710051b1e0(ptSpecifier->snoWorld).c_str();
                     }
                 }
             }

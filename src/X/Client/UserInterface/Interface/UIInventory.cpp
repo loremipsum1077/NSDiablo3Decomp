@@ -248,7 +248,7 @@ struct TutorialInfo {  // size 0x20
     TutorialInfo();
 };
 
-struct InvGlobals {  // size 0x2f0
+struct InvGlobals {
     ItemTooltipState tPreviousTooltipState;  // 0x00
     BackpackTimers tBackpackTimers;  // 0x10
     BackpackTimers tSharedStashTimers;  // 0x20
@@ -262,8 +262,9 @@ struct InvGlobals {  // size 0x2f0
     TutorialInfo tTutorialInfo;  // 0x2c8
     BOOL fFoundNewCurrency;  // 0x2e8
     ACDID idACDDragged;  // 0x2ec
+    CRefString unk_2f0;  // 0x2f0, stash filter text
 };
-static_assert(sizeof(InvGlobals) == 0x2f0, "InvGlobals");
+static_assert(offsetof(InvGlobals, unk_2f0) == 0x2f0, "InvGlobals");
 static_assert(offsetof(InvGlobals, nStashPageOffset) == 0x2c0, "InvGlobals");
 
 
@@ -8558,4 +8559,9 @@ inline int32 UIInventory::GetStashOffset()
 
 
     return ptInv->nStashPageOffset;
+}
+
+extern "C" void sub_71003e5660(CRefString text)
+{
+    UI_GetInventoryData()->unk_2f0 = text;
 }

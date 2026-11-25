@@ -75,6 +75,7 @@ extern UIID UITEXT_CONSOLE_WHATS_NEW_SEASON_REWARDS_ARMOR_SET_DESC;
 extern UIID UISCROLLBOX_CONSOLE_WHATS_NEW_SEASON_REWARDS_ARMOR_SET_DESC;
 
 extern "C" void sub_71006739b0(OnlineService::RewardIdList & rewards);
+extern UIID unk_710185ef40;  // Season rewards CosmeticScrollBox.
 namespace UIWhatsNewSeason {
 namespace Console {
 
@@ -94,7 +95,7 @@ enum DisplayMode {
 };
 
 enum { ACTION_OK = 0, ACTION_VIEW_SPLASH = 1, ACTION_VIEW_CONQUESTS = 2, ACTION_VIEW_REWARDS = 3,
-       ACTION_TOGGLE_HARDCORE = 4, ACTION_CHANGE_CLASS = 5, ACTION_SCROLL_DETAILS = 6, };
+       ACTION_TOGGLE_HARDCORE = 4, ACTION_CHANGE_CLASS = 5, ACTION_SCROLL_DETAILS = 6, unk_7 = 7, };
 
 enum { MAX_CONQUESTS = 5, };
 enum { PROGRESS_BAR = 0, CHECKLIST = 1, };
@@ -194,6 +195,8 @@ void UpdateActions()
         ::Console::Screens::GetActionManager().SetAction(::Console::CONTROLLER_INPUT_DPAD_HORIZONTAL, ACTION_CHANGE_CLASS, StringListFetch("Console:ChangeClass").str());
         ::Console::Screens::GetActionManager().SetAction(::Console::CONTROLLER_INPUT_LEFT_TRIGGER, ACTION_SCROLL_DETAILS, StringListFetch("Console:SeasonScroll_Rewards"));
         ::Console::Screens::GetActionManager().SetAction(::Console::CONTROLLER_INPUT_RIGHT_TRIGGER, ACTION_SCROLL_DETAILS, StringListFetch("Console:SeasonScroll_Rewards"));
+        if (UIUtils::Console::CanScrollContentInScrollBox(unk_710185ef40))
+            ::Console::Screens::GetActionManager().SetAction(::Console::CONTROLLER_INPUT_DPAD_VERTICAL, unk_7, StringListFetch("Console:SeasonScroll_Rewards"));
         break;
     case DISPLAY_SEASON_CONQUESTS:
     {
@@ -330,6 +333,7 @@ void sPopulateHeroRactor(const UIID & idRactor,
 }
 
 
+// NON_MATCHING: The two transmog icon calls schedule the draw-type argument before the gender comparison.
 void ShowSplash()
 {
     sgtWhatsNewSeasonData.m_eDisplayMode = DISPLAY_SEASON_SPLASH;
@@ -444,6 +448,8 @@ void ShowSplash()
                 RActor * ptPetRActor = RActorTryToGet(ractorID);
                 if (ptPetRActor)
                     RActorSetIrradianceMap(ptPetRActor, GlobalSNOGet(GLOBALSNO_RACTOR_NEUTRAL_IRRADIANCE_TEXTURE));
+                if (gbid == 0x20fe3579)
+                    tRactor.SetObserver(GlobalSNOGet(GLOBALSNO_UNK_1138));
                 LightID idLight = LightAdd(0, UI_GetDefaultHeroLight(), PRTransform(cgqIdentity, cgwpNull), FALSE, tRactor.tRenderData[CGameAsyncGetRenderDataIndex(0)].m_tDisplayList.GetRenderContext());
                 tRactor.SetLight(idLight);
             }
@@ -695,6 +701,7 @@ void ShowRewards()
             UI_GetWindowFromID(UIWND_CONSOLE_WHATS_NEW_SEASON_REWARDS_PORTRAIT).SetActive(TRUE);
             const UIID & idPortraitFrame = UIIDCreateFromParent(UIWND_CONSOLE_WHATS_NEW_SEASON_REWARDS_PORTRAIT, ".PortraitFrame");
             UIUtils::Console::DisplayPortrait(sgtWhatsNewSeasonData.m_eCurrentClass, sgtWhatsNewSeasonData.m_bIsFemale, FALSE, idPortraitFrame, gbid);
+            UI_GetWindowFromID(UIIDCreateFromParent(idPortraitFrame, ".Frame")).SetIgnoresClipping(FALSE);
             break;
         }
         case COSMETIC_ITEM_WINGS:
@@ -747,6 +754,8 @@ void ShowRewards()
                 RActor * ptPetRActor = RActorTryToGet(ractorID);
                 if (ptPetRActor)
                     RActorSetIrradianceMap(ptPetRActor, GlobalSNOGet(GLOBALSNO_RACTOR_NEUTRAL_IRRADIANCE_TEXTURE));
+                if (gbid == 0x20fe3579)
+                    tRactor.SetObserver(GlobalSNOGet(GLOBALSNO_UNK_1138));
                 LightID idLight = LightAdd(0, UI_GetDefaultHeroLight(), PRTransform(cgqIdentity, cgwpNull), FALSE, tRactor.tRenderData[CGameAsyncGetRenderDataIndex(0)].m_tDisplayList.GetRenderContext());
                 tRactor.SetLight(idLight);
             }
@@ -1334,6 +1343,18 @@ void OnR1(const UIID &, const int32 nControllerIndex)
 
 
 
+
+extern "C" void sub_7100355c90(const UIID &, int32)
+{
+    if (sgtWhatsNewSeasonData.m_eDisplayMode == DISPLAY_SEASON_REWARDS)
+        UIUtils::Console::ScrollContentInScrollBox(unk_710185ef40, 40.0f);
+}
+
+extern "C" void sub_7100355cc0(const UIID &, int32)
+{
+    if (sgtWhatsNewSeasonData.m_eDisplayMode == DISPLAY_SEASON_REWARDS)
+        UIUtils::Console::ScrollContentInScrollBox(unk_710185ef40, -40.0f);
+}
 
 void OnL2(const UIID &, const int32 nControllerIndex)
 {

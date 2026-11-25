@@ -502,6 +502,15 @@ WorldCommonData * WorldTryGetCommonData(SWorldID idSWorld)
 
 
 
+extern "C" SNO sub_71000d9ad0(SNO snoWorld);
+
+extern "C" SNO sub_71006771f0(SNO snoWorld)
+{
+    if (GameActiveGameCommonDataIsClient())
+        return sub_71000d9ad0(snoWorld);
+    return SWorldGetDungeonFinderTileset(snoWorld);
+}
+
 BOOL WorldIsDRLG(const SNO snoWorld)
 {
     BOOL fRetVal; ScopedWorldDefinitionLockR pdefWorld(snoWorld);

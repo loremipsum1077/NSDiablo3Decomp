@@ -1072,6 +1072,21 @@ CWorld * CWorldGetFromSWorldID(SWorldID idSWorld)
 
 
 
+extern "C" SNO sub_71000d9ad0(SNO snoWorld)
+{
+    TDataArrayIterator<CWorld> it;
+    CWorld *ptWorld = NULL;
+    while (CGameGet().ptCWorlds->Iterate(it))
+    {
+        if (it->tWCD.snoWorld == snoWorld)
+        {
+            ptWorld = it.ptElement;
+            break;
+        }
+    }
+    return ptWorld ? ptWorld->tWCD.snoDungeonFinderSourceWorld : SNO_NONE;
+}
+
 SNO WorldGetLevelAreaSNOFromRActor(RActorID idRActor)
 {
 
