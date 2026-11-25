@@ -8,6 +8,7 @@ companion repository.
 | --- | --- |
 | Expected changes from base Switch to target 2.7.7 | [Patch change tracking and recovery guide](changes_2_6_2_to_2_7_7.md) |
 | Porting tools, compiler and mixed build for 2.7.7 | [Porting to 2.7.7](port_2_7_7.md) |
+| Remaining 2.7.7 work, sized for agents | [2.7.7 decomp plan](decomp_plan_2_7_7.md) |
 | Source provenance and third-party notices | [Provenance review](source_provenance.md) |
 | Current exact-first priority | [Exact decompilation](exact_decompilation.md) |
 | Compressed evidence snapshots and restore limits | [Artifact storage](artifact_store.md) |
