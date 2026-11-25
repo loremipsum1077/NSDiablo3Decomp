@@ -4844,7 +4844,7 @@ BOOL ClientMessageReceiveGameMessage(void * pMessage)
                 tData.tInfo.fDead = ptMsg->fDead;
                 tData.tInfo.eClass = ptMsg->eValidClass;
                 SigmaMemoryCopy(tData.tInfo.arnPowerKeyParam, ptMsg->arnPowerKeyParam, sizeof(tData.tInfo.arnPowerKeyParam));
-                for (uint32 i = 0; i < 6; i++)
+                for (uint32 i = 0; i < NUM_HIRELING_SLOTS; i++)
                 {
                     tData.tItems.idACDItems[i] = ACDFromANN(ptMsg->annItems[i]);
                 }
@@ -7625,7 +7625,7 @@ BOOL ClientMessageReceiveGameMessage(void * pMessage)
             PlayerLoadoutDataMessage * ptMessage = (PlayerLoadoutDataMessage *)pMessage;
 
             int32 nLoadoutIndex = ptMessage->nLoadoutIndex;
-            if (nLoadoutIndex >= 0 && nLoadoutIndex < 5)
+            if (nLoadoutIndex >= 0 && nLoadoutIndex < 10)
             {
                 Player * ptPlayer = PlayerGetByControllerIndexAlways(ptHeader->nControllerIndex);
 
@@ -7654,7 +7654,7 @@ BOOL ClientMessageReceiveGameMessage(void * pMessage)
             PlayerLoadoutTabIconMessage * ptMessage = (PlayerLoadoutTabIconMessage *)pMessage;
 
             int32 nLoadoutIndex = ptMessage->nLoadoutIndex;
-            if (nLoadoutIndex >= 0 && nLoadoutIndex < 5)
+            if (nLoadoutIndex >= 0 && nLoadoutIndex < 10)
             {
                 Player * ptPlayer = PlayerGetByControllerIndexAlways(ptHeader->nControllerIndex);
 
@@ -7672,7 +7672,7 @@ BOOL ClientMessageReceiveGameMessage(void * pMessage)
 
             int32 nLoadoutIndex = ptMessage->nLoadoutIndex;
             int32 nEquipmentIndex = ptMessage->nEquipmentIndex;
-            if (nLoadoutIndex >= 0 && nLoadoutIndex < 5 && nEquipmentIndex >= 0 && nEquipmentIndex < 13)
+            if (nLoadoutIndex >= 0 && nLoadoutIndex < 10 && nEquipmentIndex >= 0 && nEquipmentIndex < 13)
             {
                 Player * ptPlayer = PlayerGetByControllerIndexAlways(ptHeader->nControllerIndex);
 

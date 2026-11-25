@@ -23,23 +23,23 @@ enum {
 
 typedef int32 HirelingTrainReason;
 
-struct HirelingItemStore {  // size 0x18
-    ACDID idACDItems[6];  // 0x00
+struct HirelingItemStore {  // size 0x38
+    ACDID idACDItems[14];  // 0x00
 };
-static_assert(sizeof(HirelingItemStore) == 0x18, "HirelingItemStore");
+static_assert(sizeof(HirelingItemStore) == 0x38, "HirelingItemStore");
 
-struct HirelingData {  // size 0x38
+struct HirelingData {  // size 0x58
     HirelingInfo tInfo;  // 0x00
     HirelingItemStore tItems;  // 0x20
 };
-static_assert(sizeof(HirelingData) == 0x38, "HirelingData");
+static_assert(sizeof(HirelingData) == 0x58, "HirelingData");
 
-struct HirelingStable {  // size 0xe8
+struct HirelingStable {  // size 0x168
     HirelingData tHireling[4];  // 0x00
-    HirelingClass eActiveHireling;  // 0xe0
-    HirelingClass eTypeToCreate;  // 0xe4
+    HirelingClass eActiveHireling;  // 0x160
+    HirelingClass eTypeToCreate;  // 0x164
 };
-static_assert(sizeof(HirelingStable) == 0xe8, "HirelingStable");
+static_assert(sizeof(HirelingStable) == 0x168, "HirelingStable");
 
 void HirelingDataInit(HirelingData & tData);
 void HirelingDataDispose(HirelingData & tData);
@@ -61,14 +61,14 @@ SNO HirelingGetPower(const ActorCommonData & tACDHireling, const int32 nRow, con
 BOOL HirelingCanRetrain(ActorCommonData & tACDHireling, ActorCommonData & tACDPlayer);
 BOOL HirelingPowerGetRowColumn(const ActorCommonData & tACDHireling, SNO snoPower, int32 & nRow, int32 & nColumn);
 
-struct HirelingInfoUpdateMessage {  // size 0x48
+struct HirelingInfoUpdateMessage {  // size 0x68
     RequiredMessageHeader tHeader;  // 0x00
     int32 eClass;  // 0x08
     BOOL fDead;  // 0x0c
     GBID gbidName;  // 0x10
     int32 eValidClass;  // 0x14
     int32 arnPowerKeyParam[5];  // 0x18
-    ACDNetworkName annItems[6];  // 0x2c
-    int32 nPlayerIndex;  // 0x44
+    ACDNetworkName annItems[14];  // 0x2c
+    int32 nPlayerIndex;  // 0x64
 };
-static_assert(sizeof(HirelingInfoUpdateMessage) == 0x48, "HirelingInfoUpdateMessage");
+static_assert(sizeof(HirelingInfoUpdateMessage) == 0x68, "HirelingInfoUpdateMessage");

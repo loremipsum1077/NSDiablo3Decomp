@@ -802,7 +802,7 @@ struct ActiveSkillSavedData {  // size 0x10
 };
 static_assert(sizeof(ActiveSkillSavedData) == 0x10, "ActiveSkillSavedData");
 
-struct PlayerSavedData {  // size 0x12ac; the ctor sits on this line (HotbarButtonData() is its only effect)
+struct PlayerSavedData {  // size 0x12b0; the ctor sits on this line (HotbarButtonData() is its only effect)
     PlayerSavedData() {}
     void SetDefaults();
 
@@ -834,31 +834,31 @@ struct PlayerSavedData {  // size 0x12ac; the ctor sits on this line (HotbarButt
 
     ActiveSkillSavedData tActiveSkills[6];  // 0x1218
     SNO snoTraits[4];  // 0x1278
-    GBID gbidLegendaryPowers[3];  // 0x1288
+    GBID gbidLegendaryPowers[4];  // 0x1288
 
-    SavePointData tLastSavePoint;  // 0x1294
-    uint32 uEventFlags;  // 0x12a4
-    uint32 uSkillKitVersion;  // 0x12a8
+    SavePointData tLastSavePoint;  // 0x1298
+    uint32 uEventFlags;  // 0x12a8
+    uint32 uSkillKitVersion;  // 0x12ac
 };
-static_assert(sizeof(PlayerSavedData) == 0x12ac, "PlayerSavedData");
+static_assert(sizeof(PlayerSavedData) == 0x12b0, "PlayerSavedData");
 
-struct PlayerSavedDataMessage {  // size 0x12b8; the ctor sits on this line
+struct PlayerSavedDataMessage {  // size 0x12bc; the ctor sits on this line
     PlayerSavedDataMessage() {}
     RequiredMessageHeader tHeader;  // 0x00
     PlayerSavedData tSavedData;  // 0x08
-    int32 nPlayerIndex;  // 0x12b4
+    int32 nPlayerIndex;  // 0x12b8
 };
-static_assert(sizeof(PlayerSavedDataMessage) == 0x12b8, "PlayerSavedDataMessage");
+static_assert(sizeof(PlayerSavedDataMessage) == 0x12bc, "PlayerSavedDataMessage");
 
-struct PlayerSkillsMessage {  // size 0x88
+struct PlayerSkillsMessage {  // size 0x8c
 
     RequiredMessageHeader tHeader;  // 0x00
     ActiveSkillSavedData tActiveSkills[6];  // 0x08
     SNO snoTraits[4];  // 0x68
-    GBID gbidLegendaryPowers[3];  // 0x78
-    int32 nPlayerIndex;  // 0x84
+    GBID gbidLegendaryPowers[4];  // 0x78
+    int32 nPlayerIndex;  // 0x88
 };
-static_assert(sizeof(PlayerSkillsMessage) == 0x88, "PlayerSkillsMessage");
+static_assert(sizeof(PlayerSkillsMessage) == 0x8c, "PlayerSkillsMessage");
 
 struct LastWaypointLevelAreaDataMessage {  // size 0x10
 

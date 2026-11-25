@@ -115,7 +115,7 @@ extern const XTypeDescriptor * DT_HERO_STATE_DATA;  // line 242 below
 extern const XTypeDescriptor * DT_PLAYER_SAVED_DATA;  // X/Common/Definitions/HeroDefinition.cpp
 extern const XTypeDescriptor * DT_QUEST_REWARD_HISTORY_ENTRY;
 CursorMgr & PlayerGetCursorMgr();
-struct PlayerLoadoutEquipmentUpdateMessage { RequiredMessageHeader tHeader; int32 nLoadoutIndex; int32 nEquipmentIndex; LoadoutItemData tNewItem; };  static_assert(sizeof(PlayerLoadoutEquipmentUpdateMessage) == 0x30, "PlayerLoadoutEquipmentUpdateMessage");
+struct PlayerLoadoutEquipmentUpdateMessage { RequiredMessageHeader tHeader; int32 nLoadoutIndex; int32 nEquipmentIndex; LoadoutItemData tNewItem; };  static_assert(sizeof(PlayerLoadoutEquipmentUpdateMessage) == 0x40, "PlayerLoadoutEquipmentUpdateMessage");
 struct PlayerLoadoutSaveMessage { RequiredMessageHeader tHeader; int32 nLoadoutIndex; CHAR usName[49]; };  static_assert(sizeof(PlayerLoadoutSaveMessage) == 0x40, "PlayerLoadoutSaveMessage");
 struct PlayerLoadoutSetSlotMessage { RequiredMessageHeader tHeader; int32 nLoadoutIndex; InventorySlotType eSlot; ACDNetworkName annItem; };  static_assert(sizeof(PlayerLoadoutSetSlotMessage) == 0x14, "PlayerLoadoutSetSlotMessage");
 // Declaration placement inferred; signature from DWARF Tutorials.cpp:181.
@@ -202,16 +202,17 @@ static const TypeDescriptorField PlayerKickTimerMessage_Fields[4] = {
 };
 ComplexTypeDescriptor TypeDescriptor_PlayerKickTimerMessage("PlayerKickTimerMessage", 0, PlayerKickTimerMessage_Fields, 4, NULL, 0x80, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_PLAYER_KICK_TIMER_MESSAGE = &TypeDescriptor_PlayerKickTimerMessage;
 
-static const TypeDescriptorField HeroStateData_Fields[7] = {
+static const TypeDescriptorField HeroStateData_Fields[8] = {
     TypeDescriptorField("", DT_INT, offsetof(HeroStateData, eLastPlayedAct), NULL, 1),
     TypeDescriptorField("", DT_INT, offsetof(HeroStateData, eHighestUnlockedAct), NULL, 1),
     TypeDescriptorField("", DT_INT, offsetof(HeroStateData, uPlayerFlags), NULL, 1),
+    TypeDescriptorField("", DT_INT, offsetof(HeroStateData, uPlayerFlags2), NULL, 1),
     TypeDescriptorField("", DT_PLAYER_SAVED_DATA, offsetof(HeroStateData, tSavedData), NULL, 1),
     FixedArrayTypeDescriptorField("tQuestRewardHistory", DT_QUEST_REWARD_HISTORY_ENTRY, offsetof(HeroStateData, tQuestRewardHistory), NULL, 8, 100, -4),
     FixedArrayTypeDescriptorField("", DT_INT, offsetof(HeroStateData, uBossKillFlags), NULL, 1, 6, 0),
     TypeDescriptorField(NULL, DT_NULL, sizeof(HeroStateData), NULL, 0),
 };
-ComplexTypeDescriptor TypeDescriptor_HeroStateData("HeroStateData", 0, HeroStateData_Fields, 7, NULL, 0x80, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_HERO_STATE_DATA = &TypeDescriptor_HeroStateData;
+ComplexTypeDescriptor TypeDescriptor_HeroStateData("HeroStateData", 0, HeroStateData_Fields, 8, NULL, 0x80, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_HERO_STATE_DATA = &TypeDescriptor_HeroStateData;
 
 static const TypeDescriptorField HeroStateMessage_Fields[4] = {
     TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(HeroStateMessage, tHeader), NULL, 1),
@@ -249,13 +250,15 @@ static const TypeDescriptorField LoadoutSkillData_Fields[3] = {
 };
 ComplexTypeDescriptor TypeDescriptor_LoadoutSkillData("LoadoutSkillData", 0, LoadoutSkillData_Fields, 3, NULL, 0x80, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_LOADOUT_SKILL_DATA = &TypeDescriptor_LoadoutSkillData;
 
-static const TypeDescriptorField LoadoutItemData_Fields[4] = {
+static const TypeDescriptorField LoadoutItemData_Fields[6] = {
     TypeDescriptorField("", DT_INT, offsetof(LoadoutItemData, annItem), NULL, 1),
     TypeDescriptorField("", DT_INT64, offsetof(LoadoutItemData, uOriginalItemIdLow), NULL, 1),
     FixedArrayTypeDescriptorField("gbidSockets", DT_INT, offsetof(LoadoutItemData, gbidSockets), NULL, 8, 3, 0xc),
+    TypeDescriptorField("", DT_INT, offsetof(LoadoutItemData, unk_20), NULL, 1),
+    TypeDescriptorField("", DT_INT64, offsetof(LoadoutItemData, uSoulShardIdLow), NULL, 1),
     TypeDescriptorField(NULL, DT_NULL, sizeof(LoadoutItemData), NULL, 0),
 };
-ComplexTypeDescriptor TypeDescriptor_LoadoutItemData("LoadoutItemData", 0, LoadoutItemData_Fields, 4, NULL, 0x80, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_LOADOUT_ITEM_DATA = &TypeDescriptor_LoadoutItemData;
+ComplexTypeDescriptor TypeDescriptor_LoadoutItemData("LoadoutItemData", 0, LoadoutItemData_Fields, 6, NULL, 0x80, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_LOADOUT_ITEM_DATA = &TypeDescriptor_LoadoutItemData;
 
 static const TypeDescriptorField LoadoutPotionData_Fields[4] = {
     TypeDescriptorField("", DT_INT, offsetof(LoadoutPotionData, annPotion), NULL, 1),
@@ -272,8 +275,8 @@ static const TypeDescriptorField PlayerLoadoutDataMessage_Fields[10] = {
     TypeDescriptorField("", DT_LOADOUT_POTION_DATA, offsetof(PlayerLoadoutDataMessage, tEquippedPotion), NULL, 1),
     FixedArrayTypeDescriptorField("", DT_LOADOUT_SKILL_DATA, offsetof(PlayerLoadoutDataMessage, tActiveSkills), NULL, 1, 6, 0),
     FilteredFixedArrayTypeDescriptorField("", DT_SNO, offsetof(PlayerLoadoutDataMessage, snoTraits), NULL, 0, 4, POWER_SNO, 0),
-    FilteredFixedArrayTypeDescriptorField("", DT_GBID, offsetof(PlayerLoadoutDataMessage, gbidLegendaryPowers), "", 0, 3, 2, 0),
-    CharArrayTypeDescriptorField("", offsetof(PlayerLoadoutDataMessage, usName), "", 1, 0x31, -1),
+    FilteredFixedArrayTypeDescriptorField("", DT_GBID, offsetof(PlayerLoadoutDataMessage, gbidLegendaryPowers), "", 0, 4, 2, 0),
+    CharArrayTypeDescriptorField("", offsetof(PlayerLoadoutDataMessage, usName), "", 1, 0x35, -1),
     TypeDescriptorField("", DT_INT, offsetof(PlayerLoadoutDataMessage, nTabIcon), NULL, 1),
     TypeDescriptorField(NULL, DT_NULL, sizeof(PlayerLoadoutDataMessage), NULL, 0),
 };
@@ -497,8 +500,10 @@ void LoadoutSavedData::Export(
         {
             tSavedLoadoutItem.add_gbid_sockets(tEquipment[i].gbidSockets[j]);
         }
+        if (tEquipment[i].uSoulShardIdLow != 0)
+            tSavedLoadoutItem.set_soul_shard_id_low(tEquipment[i].uSoulShardIdLow);
     }
-    // Inference: six skills, four traits and three legendary powers follow DWARF extents and unrolled original calls.
+    // Inference: six skills, four traits and four legendary powers follow DWARF extents and unrolled original calls.
     for (int32 i = 0; i < 6; ++i)
     {
         D3::Hero::SkillWithRune & tSavedActiveSkill = *tSavedLoadout.add_active_skills();
@@ -515,7 +520,7 @@ void LoadoutSavedData::Export(
         tSavedLoadout.add_sno_traits(snoTraits[i]);
     }
 
-    for (int32 i = 0; i < 3; ++i)
+    for (int32 i = 0; i < 4; ++i)
     {
         tSavedLoadout.add_gbid_legendary_powers(gbidLegendaryPowers[i]);
     }
@@ -554,7 +559,7 @@ void LoadoutSavedData::Import(
 
     if (tSavedLoadout.has_name())
     {
-        Blizzard::String::Copy(usName, tSavedLoadout.name().c_str(), 49);
+        Blizzard::String::Copy(usName, tSavedLoadout.name().c_str(), sizeof(usName));
     }
     // Inferred array-size bound: original +0xd4/+0xd8 compares the incremented index unsigned against 13; tEquipment has 13 entries.
     for (int32 i = 0; i < sizeof(tEquipment) / sizeof(tEquipment[0]) && i < tSavedLoadout.equipped_items_size(); ++i)
@@ -569,6 +574,10 @@ void LoadoutSavedData::Import(
         {
             tLoadoutItem.gbidSockets[nSocket] = tSavedLoadoutItem.gbid_sockets(nSocket);
         }
+        tLoadoutItem.unk_20 = -1;
+        tLoadoutItem.uSoulShardIdLow = 0;
+        if (tSavedLoadoutItem.has_soul_shard_id_low())
+            tLoadoutItem.uSoulShardIdLow = tSavedLoadoutItem.soul_shard_id_low();
     }
 
     for (int32 i = 0; i < 6 && i < tSavedLoadout.active_skills_size(); ++i)
@@ -585,7 +594,7 @@ void LoadoutSavedData::Import(
         snoTraits[i] = tSavedLoadout.sno_traits(i);
     }
 
-    for (int32 i = 0; i < 3 && i < tSavedLoadout.gbid_legendary_powers_size(); ++i)
+    for (int32 i = 0; i < 4 && i < tSavedLoadout.gbid_legendary_powers_size(); ++i)
     {
 
         GBID gbidItem = tSavedLoadout.gbid_legendary_powers(i);
@@ -909,7 +918,7 @@ void PlayerSetDefaults(
     tPlayer.eRequestedHirelingClass = HC_NONE;
     tPlayer.dwRequestedHirelingTimeStamp = 0;
 
-    for (int32 i = 0; i < 5; i++)
+    for (int32 i = 0; i < 10; i++)
     {
         tPlayer.tLoadouts[i].Initialize();
         tPlayer.tLoadouts[i].nTabIcon = i;
@@ -3817,6 +3826,7 @@ void HeroStateData::SetDefaults()
     eLastPlayedAct = 0;
     eHighestUnlockedAct = 0;
     uPlayerFlags = 0;
+    uPlayerFlags2 = 0;
 
 
 

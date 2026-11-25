@@ -466,7 +466,7 @@ void SHirelingSendUpdate(ACDID idACDPlayer, HirelingClass eClass)
         SigmaMemoryCopy(tMessage.arnPowerKeyParam, ptData->tInfo.arnPowerKeyParam, sizeof(tMessage.arnPowerKeyParam));
 
 
-        for (uint32 i = 0; i < 6; i++)
+        for (uint32 i = 0; i < NUM_HIRELING_SLOTS; i++)
             tMessage.annItems[i] = ANNFromACD(ptData->tItems.idACDItems[i]);
 
 

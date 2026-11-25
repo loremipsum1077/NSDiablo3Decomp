@@ -50,7 +50,7 @@ static const TypeDescriptorField HirelingInfoUpdateMessage_Fields[13] = {
     TypeDescriptorField("", DT_INT, offsetof(HirelingInfoUpdateMessage, arnPowerKeyParam[2]), (const void *)-1, 1),
     TypeDescriptorField("", DT_INT, offsetof(HirelingInfoUpdateMessage, arnPowerKeyParam[3]), (const void *)-1, 1),
     TypeDescriptorField("", DT_INT, offsetof(HirelingInfoUpdateMessage, arnPowerKeyParam[4]), (const void *)-1, 1),
-    FixedArrayTypeDescriptorField("", DT_INT, offsetof(HirelingInfoUpdateMessage, annItems), NULL, 1, 6, 0),
+    FixedArrayTypeDescriptorField("", DT_INT, offsetof(HirelingInfoUpdateMessage, annItems), NULL, 1, NUM_HIRELING_SLOTS, 0),
     TypeDescriptorField("", DT_INT, offsetof(HirelingInfoUpdateMessage, nPlayerIndex), NULL, 1), TypeDescriptorField(NULL, DT_NULL, sizeof(HirelingInfoUpdateMessage), NULL, 0),
 };
 ComplexTypeDescriptor TypeDescriptor_HirelingInfoUpdateMessage("HirelingInfoUpdateMessage", 0, HirelingInfoUpdateMessage_Fields, 13, NULL, 0x80, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_HIRELING_INFO_UPDATE_MESSAGE = &TypeDescriptor_HirelingInfoUpdateMessage;
@@ -86,7 +86,7 @@ static void sClearHirelingInfo(HirelingInfo & tInfo)
 void HirelingDataInit(HirelingData & tData)
 {
     sClearHirelingInfo(tData.tInfo);
-    for (int32 i = 0; i < 6; i++)
+    for (int32 i = 0; i < NUM_HIRELING_SLOTS; i++)
         tData.tItems.idACDItems[i] = ACDID_INVALID;
 }
 
@@ -122,7 +122,7 @@ void HirelingDataDispose(
     if (GameActiveGameCommonDataIsServer())
     {
 
-        for (int32 i = 0; i < 6; i++)
+        for (int32 i = 0; i < NUM_HIRELING_SLOTS; i++)
         {
             if (tData.tItems.idACDItems[i] != ACDID_INVALID)
             {
@@ -316,7 +316,7 @@ static void sHirelingCheatItemsForHireling(
     HirelingItemStore * ptItems = &tPlayer.tHirelingStable.tHireling[eClass].tItems;
 
 
-    for (int32 i = 0; i < 6; i++)
+    for (int32 i = 0; i < NUM_HIRELING_SLOTS; i++)
     {
 
         InventorySlotType eSlot = SLOT_HIRELING_START + i;
@@ -339,7 +339,7 @@ static void sHirelingUnCheatItemsForHireling(
 
 
 
-    for (int32 i = 0; i < 6; i++)
+    for (int32 i = 0; i < NUM_HIRELING_SLOTS; i++)
     {
         ptItems->idACDItems[i] = ACDID_INVALID;
     }

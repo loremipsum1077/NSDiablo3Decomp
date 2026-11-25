@@ -417,7 +417,7 @@ static void sSendVisualInventoryForHirelingClass(const ActorCommonData & tACD, H
     tMessage.tEquipment.Init();
 
 
-    for (int32 i = 0; i < 6; i++)
+    for (int32 i = 0; i < NUM_HIRELING_SLOTS; i++)
     {
         InventorySlotType eSlot = (InventorySlotType)(SLOT_HIRELING_START + i);
         VisualInventorySlot eVisualSlot = VisualInventorySlotFromInventorySlot(eSlot);

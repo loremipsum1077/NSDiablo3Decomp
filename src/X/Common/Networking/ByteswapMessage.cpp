@@ -249,7 +249,7 @@ struct PlayerLoadoutEquipmentUpdateMessage {  // size 0x30
     int32 nEquipmentIndex;  // 0x0c
     LoadoutItemData tNewItem;  // 0x10
 };
-static_assert(sizeof(PlayerLoadoutEquipmentUpdateMessage) == 0x30, "PlayerLoadoutEquipmentUpdateMessage");
+static_assert(sizeof(PlayerLoadoutEquipmentUpdateMessage) == 0x40, "PlayerLoadoutEquipmentUpdateMessage");
 
 
 

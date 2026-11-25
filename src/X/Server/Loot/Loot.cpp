@@ -2905,7 +2905,7 @@ static BOOL sPlayerHasUpgradeableJewel(const Player * ptPlayer,
 
     for (int32 i = 0; i < 4; i++)
     {
-        for (int32 s = 0; s < 6; s++)
+        for (int32 s = 0; s < NUM_HIRELING_SLOTS; s++)
         {
             ACDID idACDItem = ptPlayer->tHirelingStable.tHireling[i].tItems.idACDItems[s];
             ActorCommonData * ptACDItem = ACDTryToGet(idACDItem);

@@ -271,6 +271,7 @@ static void sComposeHeroDefinition(
     tDigest.set_level(tACDPlayer.AttributesGetInt(FastAttribKey(ATTRIBUTE_LEVEL)));
     tDigest.set_pvp_rank(tACDPlayer.AttributesGetInt(FastAttribKey(ATTRIBUTE_PVP_RANK)));
     tDigest.set_player_flags(tPlayer.tHeroStateData.uPlayerFlags);
+    tDigest.set_player_flags2(tPlayer.tHeroStateData.uPlayerFlags2);
     tDigest.set_highest_unlocked_act(tPlayer.tHeroStateData.eHighestUnlockedAct);
     tDigest.set_last_played_quest(SNO_NONE);
     tDigest.set_last_played_quest_step(-1);
@@ -1674,6 +1675,7 @@ void Load(
         tPlayer.tHeroStateData.eLastPlayedAct = tHeroDigest.last_played_act();
         tPlayer.tHeroStateData.eHighestUnlockedAct = tHeroDigest.highest_unlocked_act();
         tPlayer.tHeroStateData.uPlayerFlags = tHeroDigest.player_flags();
+        tPlayer.tHeroStateData.uPlayerFlags2 = tHeroDigest.player_flags2();
         tPlayer.tHeroStateData.tSavedData.Import(tHeroDefinition.saved_data());
 
 

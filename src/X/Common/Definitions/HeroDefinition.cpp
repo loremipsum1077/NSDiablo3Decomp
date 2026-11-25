@@ -186,7 +186,7 @@ static const TypeDescriptorField PlayerSavedData_Fields[14] = {
     TypeDescriptorField("", DT_LEARNED_LORE, offsetof(PlayerSavedData, tLearnedLore), NULL, 1),
     FixedArrayTypeDescriptorField("", DT_ACTIVE_SKILL_SAVED_DATA, offsetof(PlayerSavedData, tActiveSkills), NULL, 1, 6, 0),
     FilteredFixedArrayTypeDescriptorField("", DT_SNO, offsetof(PlayerSavedData, snoTraits), NULL, 0, 4, 0x1d, 0),
-    FilteredFixedArrayTypeDescriptorField("", DT_GBID, offsetof(PlayerSavedData, gbidLegendaryPowers), "", 0, 3, 2, 0),
+    FilteredFixedArrayTypeDescriptorField("", DT_GBID, offsetof(PlayerSavedData, gbidLegendaryPowers), "", 0, 4, 2, 0),
     TypeDescriptorField("", DT_SAVE_POINT_DATA, offsetof(PlayerSavedData, tLastSavePoint), NULL, 1),
     TypeDescriptorField("", DT_INT, offsetof(PlayerSavedData, uEventFlags), NULL, 1),
     TypeDescriptorField(NULL, DT_NULL, sizeof(PlayerSavedData), NULL, 0),
@@ -207,7 +207,7 @@ static const TypeDescriptorField PlayerSkillsMessage_Fields[6] = {
     TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(PlayerSkillsMessage, tHeader), NULL, 1),
     FixedArrayTypeDescriptorField("", DT_ACTIVE_SKILL_SAVED_DATA, offsetof(PlayerSkillsMessage, tActiveSkills), NULL, 1, 6, 0),
     FilteredFixedArrayTypeDescriptorField("", DT_SNO, offsetof(PlayerSkillsMessage, snoTraits), NULL, 0, 4, 0x1d, 0),
-    FilteredFixedArrayTypeDescriptorField("", DT_GBID, offsetof(PlayerSkillsMessage, gbidLegendaryPowers), "", 0, 3, 2, 0),
+    FilteredFixedArrayTypeDescriptorField("", DT_GBID, offsetof(PlayerSkillsMessage, gbidLegendaryPowers), "", 0, 4, 2, 0),
     TypeDescriptorField("", DT_INT, offsetof(PlayerSkillsMessage, nPlayerIndex), NULL, 1),
     TypeDescriptorField(NULL, DT_NULL, sizeof(PlayerSkillsMessage), NULL, 0),
 };
@@ -432,11 +432,12 @@ void PlayerSavedData::SetDefaults()
         snoTraits[i] = SNO_NONE;
     }
 
-    // The DWARF records one loop variable here; how the three legendary-power slots were reset is not
+    // The DWARF records one loop variable here; how the legendary-power slots were reset is not
     // recoverable (their stores are merged with the trait stores), so they are plain assignments.
     gbidLegendaryPowers[0] = -1;
     gbidLegendaryPowers[1] = -1;
     gbidLegendaryPowers[2] = -1;
+    gbidLegendaryPowers[3] = -1;
 }
 
 // line 681
@@ -570,7 +571,7 @@ void PlayerSavedData::Export(const Player & tPlayer, const GBID gbidHero, D3::He
     }
 
     tSavedData.clear_gbid_legendary_powers();
-    for (int32 i = 0; i < 3; i++)
+    for (int32 i = 0; i < 4; i++)
     {
         tSavedData.add_gbid_legendary_powers(gbidLegendaryPowers[i]);
     }
@@ -612,7 +613,7 @@ void PlayerSavedData::Import(const D3::Hero::SavedData & tSavedData)
         snoTraits[i] = tSavedData.sno_traits(i);
     }
 
-    for (int32 i = 0; i < 3 && i < tSavedData.gbid_legendary_powers_size(); i++)
+    for (int32 i = 0; i < 4 && i < tSavedData.gbid_legendary_powers_size(); i++)
     {
         gbidLegendaryPowers[i] = tSavedData.gbid_legendary_powers(i);
     }

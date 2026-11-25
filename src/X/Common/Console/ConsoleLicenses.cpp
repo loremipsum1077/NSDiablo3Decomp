@@ -151,7 +151,7 @@ static void sDeleteUnlicensedItems(
 
     for (int32 i = 0; i < 4; ++i)
     {
-        for (int32 s = 0; s < 6; ++s)
+        for (int32 s = 0; s < NUM_HIRELING_SLOTS; ++s)
         {
             ACDID& idACDItem = tPlayer.tHirelingStable.tHireling[i].tItems.idACDItems[s];
             ActorCommonData* ptACDItem = ACDTryToGet(idACDItem);
@@ -196,7 +196,7 @@ static void sDeleteUnlicensedItems(
 
             for (int32 j = 0; j < 4; ++j)
             {
-                for (int32 s = 0; s < 6; ++s)
+                for (int32 s = 0; s < NUM_HIRELING_SLOTS; ++s)
                 {
                     ACDID idACDItem = tPlayer.tHirelingStable.tHireling[j].tItems.idACDItems[s];
                     sRemoveUnlicensedTransmogCB(idACDItem, -1, reinterpret_cast<void*>(static_cast<intptr_t>(gbidUnlicensedTransmog)));

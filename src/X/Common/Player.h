@@ -44,13 +44,15 @@ struct LoadoutSkillData {  // size 0x8
 };
 static_assert(sizeof(LoadoutSkillData) == 0x8, "LoadoutSkillData");
 
-struct LoadoutItemData {  // size 0x20
+struct LoadoutItemData {  // size 0x30
     ACDNetworkName annItem;  // 0x00
     uint64 uOriginalItemIdLow;  // 0x08
     GBID gbidSockets[3];  // 0x10
     int32 nSocketsCount;  // 0x1c
+    int32 unk_20;  // 0x20
+    uint64 uSoulShardIdLow;  // 0x28
 };
-static_assert(sizeof(LoadoutItemData) == 0x20, "LoadoutItemData");
+static_assert(sizeof(LoadoutItemData) == 0x30, "LoadoutItemData");
 
 struct LoadoutPotionData {  // size 0x18
     ACDNetworkName annPotion;  // 0x00
@@ -59,7 +61,7 @@ struct LoadoutPotionData {  // size 0x18
 };
 static_assert(sizeof(LoadoutPotionData) == 0x18, "LoadoutPotionData");
 
-struct LoadoutSavedData {  // size 0x240
+struct LoadoutSavedData {  // size 0x318
     void Import(const D3::Hero::Loadout & tSavedLoadout); // DWARF Player.h:827; Header inline Initialize below:
     void Export(D3::Hero::Loadout & tSavedLoadout, ACDID idACDPlayer) const; // DWARF Player.h:824; Initialize body from ClientMessageReceive.cpp:8588.
 // Initialize: DWARF Player.h:788; loop counters i declared at :791, :798, :804, :809 (cu_04439fcf abstract
@@ -73,6 +75,8 @@ struct LoadoutSavedData {  // size 0x240
             tEquipment[i].annItem = ANN_INVALID;
             tEquipment[i].uOriginalItemIdLow = 0;
             tEquipment[i].nSocketsCount = 0;
+            tEquipment[i].unk_20 = -1;
+            tEquipment[i].uSoulShardIdLow = 0;
         }
 
         for (int32 i = 0; i < NUM_SKILL_SLOTS; i++)
@@ -86,7 +90,7 @@ struct LoadoutSavedData {  // size 0x240
             snoTraits[i] = SNO_NONE;
         }
 
-        for (int32 i = 0; i < 3; i++)
+        for (int32 i = 0; i < 4; i++)
         {
             gbidLegendaryPowers[i] = GBID_NONE;
         }
@@ -101,15 +105,15 @@ struct LoadoutSavedData {  // size 0x240
     }
 #line 88
     LoadoutItemData tEquipment[13];  // 0x00
-    LoadoutPotionData tEquippedPotion;  // 0x1a0
-    LoadoutSkillData tActiveSkills[6];  // 0x1b8
-    SNO snoTraits[4];  // 0x1e8
-    GBID gbidLegendaryPowers[3];  // 0x1f8
-    CHAR usName[49];  // 0x204
-    int32 nTabIcon;  // 0x238
-    BOOL bEmpty;  // 0x23c
+    LoadoutPotionData tEquippedPotion;  // 0x270
+    LoadoutSkillData tActiveSkills[6];  // 0x288
+    SNO snoTraits[4];  // 0x2b8
+    GBID gbidLegendaryPowers[4];  // 0x2c8
+    CHAR usName[53];  // 0x2d8
+    int32 nTabIcon;  // 0x310
+    BOOL bEmpty;  // 0x314
 };
-static_assert(sizeof(LoadoutSavedData) == 0x240, "LoadoutSavedData");
+static_assert(sizeof(LoadoutSavedData) == 0x318, "LoadoutSavedData");
 
 struct PlayerTalkData {  // size 0x4
     ACDID idACDTalkingTo;  // 0x00
@@ -160,26 +164,27 @@ struct BannerRenderData {  // size 0x30
 };
 static_assert(sizeof(BannerRenderData) == 0x30, "BannerRenderData");
 
-struct HeroStateData {  // size 0x47c4; X/Common/Player.h:508
+struct HeroStateData {  // size 0x47cc; X/Common/Player.h:508
     void SetDefaults();
     Act eLastPlayedAct;  // 0x00
     Act eHighestUnlockedAct;  // 0x04
     uint32 uPlayerFlags;  // 0x08
-    PlayerSavedData tSavedData;  // 0x0c
-    int32 nNumQuestRewardEntries;  // 0x12b8
-    PlayerQuestRewardHistoryEntry tQuestRewardHistory[100];  // 0x12bc
-    PlayerQuestHistoryEntry tQuestHistory[200];  // 0x176c
-    PlayerSavedQuest tSavedQuest[64];  // 0x1dac
-    uint32 uBossKillFlags[6];  // 0x47ac
+    uint32 uPlayerFlags2;  // 0x0c
+    PlayerSavedData tSavedData;  // 0x10
+    int32 nNumQuestRewardEntries;  // 0x12c0
+    PlayerQuestRewardHistoryEntry tQuestRewardHistory[100];  // 0x12c4
+    PlayerQuestHistoryEntry tQuestHistory[200];  // 0x1774
+    PlayerSavedQuest tSavedQuest[64];  // 0x1db4
+    uint32 uBossKillFlags[6];  // 0x47b4
 };
-static_assert(sizeof(HeroStateData) == 0x47c4, "HeroStateData");
+static_assert(sizeof(HeroStateData) == 0x47cc, "HeroStateData");
 static_assert(offsetof(HeroStateData, uPlayerFlags) == 0x08, "HeroStateData");
-static_assert(offsetof(HeroStateData, tSavedData) == 0x0c, "HeroStateData");
-static_assert(offsetof(HeroStateData, nNumQuestRewardEntries) == 0x12b8, "HeroStateData");
-static_assert(offsetof(HeroStateData, tQuestRewardHistory) == 0x12bc, "HeroStateData");
-static_assert(offsetof(HeroStateData, tQuestHistory) == 0x176c, "HeroStateData");
-static_assert(offsetof(HeroStateData, tSavedQuest) == 0x1dac, "HeroStateData");
-static_assert(offsetof(HeroStateData, uBossKillFlags) == 0x47ac, "HeroStateData");
+static_assert(offsetof(HeroStateData, tSavedData) == 0x10, "HeroStateData");
+static_assert(offsetof(HeroStateData, nNumQuestRewardEntries) == 0x12c0, "HeroStateData");
+static_assert(offsetof(HeroStateData, tQuestRewardHistory) == 0x12c4, "HeroStateData");
+static_assert(offsetof(HeroStateData, tQuestHistory) == 0x1774, "HeroStateData");
+static_assert(offsetof(HeroStateData, tSavedQuest) == 0x1db4, "HeroStateData");
+static_assert(offsetof(HeroStateData, uBossKillFlags) == 0x47b4, "HeroStateData");
 
 struct CurrencyData {  // size 0x18; X/Common/Player.h
     CurrencyType eType;  // 0x00
@@ -190,7 +195,7 @@ static_assert(sizeof(CurrencyData) == 0x18, "CurrencyData");
 static_assert(offsetof(CurrencyData, nCount) == 0x08, "CurrencyData");
 static_assert(offsetof(CurrencyData, uFlags) == 0x10, "CurrencyData");
 
-struct CurrencySavedData {  // size 0x1e0; X/Common/Player.h:678
+struct CurrencySavedData {  // size 0x210; X/Common/Player.h:678
     enum ExportPartitionScope {
         EXPORT_PARTITION_ACCOUNT_WIDE = 0,
         EXPORT_PARTITION_INDIVIDUAL = 1,
@@ -206,9 +211,9 @@ struct CurrencySavedData {  // size 0x1e0; X/Common/Player.h:678
     void Export(D3::Items::CurrencySavedData & tCurrencySavedData, CurrencySavedData::ExportPartitionScope ePartitionScope, CurrencySavedData::ExportDirtyScope eDirtyScope, BOOL bExportFlags, uint32 uFlagsToClear);
     void Import(const D3::Items::CurrencySavedData & tCurrencySavedData, BOOL bResetCurrency);
     void Import(const D3::Items::CurrencyData & tCurrencyData);
-    CurrencyData arCurrency[20];  // 0x00
+    CurrencyData arCurrency[NUM_CURRENCY_TYPES];  // 0x00
 };
-static_assert(sizeof(CurrencySavedData) == 0x1e0, "CurrencySavedData");
+static_assert(sizeof(CurrencySavedData) == 0x210, "CurrencySavedData");
 
 namespace UIInventory { namespace Console { template <typename T> class NewItemIndicatorManager; } }
 
@@ -485,22 +490,22 @@ struct LogoutTimerData {  // size 0xc; X/Common/Player.h
 #line 419
 };
 
-class PlayerStats {  // size 0x268; X/Common/Player.h
+class PlayerStats {  // size 0x288; X/Common/Player.h
 public:
     void SetDefaults();
     uint32 m_uStartTickForPlaySession;  // 0x00
-    uint64 m_uTotalCurrencyPickedUp[20];  // 0x08
-    uint64 m_uMaxLumpOfCurrencyPickedUp[20];  // 0xa8
-    uint64 m_uGoldSpent;  // 0x148
-    uint64 m_uGoldObtainedThroughSelling;  // 0x150
-    float m_flTotalHealthPickedUp;  // 0x158
-    float m_flMaxLumpOfHealthPickedUp;  // 0x15c
-    uint32 m_uTownPortalsUsed;  // 0x160
-    KillCounter m_arKillCounter[4];  // 0x168
-    CurrencyCounter m_tGoldCounter;  // 0x248
-    CurrencyCounter m_tPlatinumCounter;  // 0x258
+    uint64 m_uTotalCurrencyPickedUp[NUM_CURRENCY_TYPES];  // 0x8
+    uint64 m_uMaxLumpOfCurrencyPickedUp[NUM_CURRENCY_TYPES];  // 0xb8
+    uint64 m_uGoldSpent;  // 0x168
+    uint64 m_uGoldObtainedThroughSelling;  // 0x170
+    float m_flTotalHealthPickedUp;  // 0x178
+    float m_flMaxLumpOfHealthPickedUp;  // 0x17c
+    uint32 m_uTownPortalsUsed;  // 0x180
+    KillCounter m_arKillCounter[4];  // 0x188
+    CurrencyCounter m_tGoldCounter;  // 0x268
+    CurrencyCounter m_tPlatinumCounter;  // 0x278
 };
-static_assert(sizeof(PlayerStats) == 0x268, "PlayerStats");
+static_assert(sizeof(PlayerStats) == 0x288, "PlayerStats");
 #include "../Sigma/DataStructures/XMap.h"
 typedef XMap<int, int, unsigned int, unsigned int, 8> SnoStoredStates;  /* X/Common/Player.h:643 */  typedef XMap<int, int, unsigned int, unsigned int, 32> SkillsUsedStorage;  // X/Common/Player.h:645
 typedef int32 UIAction;  /* X/Common/Player.h:647 */  typedef int32 EInputModes;  // X/Common/Player.h:649
@@ -559,7 +564,7 @@ struct PlayerClientInfo {  // size 0xbe8
 };
 static_assert(sizeof(PlayerClientInfo) == 0xbe8, "PlayerClientInfo");  static_assert(offsetof(PlayerClientInfo, GameTickOfLastHeldPower) == 0x658, "PlayerClientInfo");  static_assert(offsetof(PlayerClientInfo, nUIAction) == 0x9b0, "PlayerClientInfo");  static_assert(offsetof(PlayerClientInfo, tCachedSnoStates) == 0x9c8, "PlayerClientInfo");  static_assert(offsetof(PlayerClientInfo, snoCurrentPower) == 0xae0, "PlayerClientInfo");
 
-struct Player {  // size 0xd770
+struct Player {  // size 0xebf8
     int32 nPlayerIndex;  // 0x00
     ACDID idPlayerACD;  // 0x04
     RActorID idPlayerRActor;  // 0x08
@@ -585,161 +590,161 @@ struct Player {  // size 0xd770
     BOOL bCompletedSoloRift;  // 0x118
     RNG rngSyncedAnim;  // 0x11c
     HeroStateData tHeroStateData;  // 0x124
-    CrafterSavedData tCrafterSavedData;  // 0x48e8
-    CurrencySavedData tCurrencySavedData;  // 0x9d20
-    CosmeticItemSavedData tCosmeticItemSavedData;  // 0x9f00
-    PlayerAccount tAccount;  // 0xb110
-    OnlineService::HeroId uHeroId;  // 0xb1d0
-    CHAR usHeroName[49];  // 0xb1d8
-    CHAR szHeroFilename[32];  // 0xb209
-    uint32 dwJoinTime;  // 0xb22c
-    uint32 dwNextStatTime;  // 0xb230
-    uint32 dwNextAttributeUpdateTime;  // 0xb234
-    uint32 dwLastInputTime;  // 0xb238
-    ACDID idACDActiveVendor;  // 0xb23c
-    CrafterType eActiveCrafterType;  // 0xb240
-    SNO snoLastResidualFootstep;  // 0xb244
-    uint32 dwLastResidualFootstepTime;  // 0xb248
-    WorldPlace placeCheckedForActivatingScenes;  // 0xb24c
-    XPooledDataIDList listVisibleACDs;  // 0xb260
-    XPooledDataIDList listPrefetchableACDs;  // 0xb288
-    XPooledDataIDList listDestinationsToPrefetch;  // 0xb2b0
-    BOOL fRefreshWaypointDestination;  // 0xb2d8
-    PlayerTradeData tTradeData;  // 0xb2e0
-    PlayerQuestData tQuestData;  // 0xb310
-    PlayerTalkData tTalkData;  // 0xb314
-    ACDID idACDPlayerToInspect;  // 0xb318
-    CheckpointData tLastCheckpoint;  // 0xb31c
-    HearthPortalData tHearthPortalInfo;  // 0xb33c
-    uint8 arGameFlags[128];  // 0xb354
-    PlayerPet tPets[64];  // 0xb3d4
-    int32 nMaxUsedPetIndex;  // 0xb5d4
-    BOOL bCosmeticPetMissing;  // 0xb5d8
-    HirelingStable tHirelingStable;  // 0xb5dc
-    ACDID idRequestedHirelingLocation;  // 0xb6c4
-    HirelingClass eRequestedHirelingClass;  // 0xb6c8
-    uint32 dwRequestedHirelingTimeStamp;  // 0xb6cc
-    LoadoutSavedData tLoadouts[5];  // 0xb6d0
-    SNO snoActorPortrait;  // 0xc210
-    float flHealthPercent;  // 0xc214
-    SNO snoAreaLocation;  // 0xc218
-    SNO snoLastWaypointLevelArea;  // 0xc21c
-    PlayerClass ePlayerClassPortrait;  // 0xc220
-    int32 nCurrentLevel;  // 0xc224
-    int32 nCurrentAltLevel;  // 0xc228
-    int32 nCurrentHighestHeroSoloRiftLevel;  // 0xc22c
-    int32 nPortraitAction;  // 0xc230
-    int32 nSkillQuickSelectId;  // 0xc234
-    PooledSNONameList listConversations;  // 0xc238
-    PlayerStats tStats;  // 0xc260
-    int32 eLocale; /* 0xc4c8 XLocale */ int32 eWarpReason; /* 0xc4cc PlayerWarpReason */ float flWarpFadeInSecs; /* 0xc4d0 */ int32 eOpenWorldStatus;  // 0xc4d4 OpenWorldStatus
-    BOOL bSetDungeonActive;  // 0xc4d8
-    blz::vector<ACDID, blz::allocator<ACDID> > listNecroCorpses;  // 0xc4e0 (ACDIDArray)
-    uint32 uServerFlags;  // 0xc4f8
-    PRTransform tAVCameraTransform;  // 0xc4fc
-    struct { Act eLastPlayedAct; SNO snoLastPlayedQuest; int32 nLastPlayedQuestStep; uint32 uActivatedWaypoints; SavePointData tLastSavePoint; int32 nHandicapLevelSnapshot; } tPlayerResumeStateUponJoining;  // 0xc518 (size 0x24)
-    XPooledDataIDList tLoresUsed;  // 0xc540
-    uint32 dwBossEncounterFlags;  // 0xc568
-    uint32 dwPrevPortalHash;  // 0xc56c
-    uint32 dwBossesKilledFlags;  // 0xc570
-    uint32 dwNephalemRiftFlags;  // 0xc574
-    uint32 dwSetDungeonFlags;  // 0xc578
-    ACDID idACDActiveChallengePortal;  // 0xc57c
-    BOOL bChallengeAccepted;  // 0xc580
-    BOOL bOptedInToOpenWorldModeChange;  // 0xc584
-    BOOL bPlayOpenWorldTutorial;  // 0xc588
-    float flPVPPlayerDamageTaken[4];  // 0xc58c
-    ACDID idACDStashLastOperated;  // 0xc59c
-    uint32 dwTickLastVerification;  // 0xc5a0
-    WorldPlace tPlaceLastVerification;  // 0xc5a4
-    float flMaxSpeedThisVerificationInterval;  // 0xc5b4
-    uint32 dwTickLastSpamCheck;  /* 0xc5b8 */  uint32 nMessageCostLast300;  /* 0xc5bc */  uint32 nMessageCostLast600;  /* 0xc5c0 */  uint32 nMessageCostLast3600;  /* 0xc5c4 */  uint32 nMessageCostLastUpdateTick;  /* 0xc5c8 */  uint32 nMessageCostMax300;  /* 0xc5cc */  uint32 nMessageCostMax600;  /* 0xc5d0 */  uint32 nMessageCostMax3600;  // 0xc5d4
-    PlayerQueuedPower tQueuedPower;  // 0xc5d8
-    uint64 nKicksInitiated;  // 0xc620
-    uint64 nKicksParticipatedIn;  // 0xc628
-    uint64 nGamesWithoutKicks;  // 0xc630
-    uint64 nTimesVoteKicked;  // 0xc638
-    uint32 uEntitledRewardBits;  // 0xc640
-    uint32 uOutstandingRewardBits;  // 0xc644
-    uint32 dwTimeStampJoined;  // 0xc648
-    GBHandle hGBKiller;  // 0xc64c
-    SNO snoKiller;  // 0xc654
-    MonsterRarity eKillerRarity;  // 0xc658
-    GBID killerRareNameGBIDs[2];  // 0xc65c
-    SNO snoKilledIn;  // 0xc664
-    TimerID idTimerForcedResurrect;  /* 0xc668 */  TimerID idTimerCorpseResurrect;  /* 0xc66c */  TimerID idTimerCorpseResurrectGrantCharge;  /* 0xc670 */  uint32 dwTickLastResurrection;  /* 0xc674 */  uint32 uSeasonCreated;  // 0xc678
-    PlayerVendorData tVendorData;  // 0xc67c
-    XPooledList<int, int> listOnGroundCraftingPlans;  // 0xc6b8
-    int32 nBusyMessagesSinceNPCInteract;  // 0xc6e0
-    TimerID idTimerLoadoutEquipApplyPassives;  // 0xc6e4
-    uint32 dwServerSidePrefFlags;  // 0xc6e8
-    int32 nControllerIndex;  // 0xc6ec
-    BOOL bIsPrimaryPlayerServerOnly;  // 0xc6f0
-    BOOL bIsGuestPlayerServerOnly;  // 0xc6f4
-    BOOL bIsLocalToServerServerOnly;  // 0xc6f8
-    SNO snoControllerBinding;  // 0xc6fc
-    ConsoleTargetComponent tTargetComponent;  // 0xc700
-    PlayerAvengerData tSoloAvenger;  // 0xc740
-    PlayerAvengerData tHardcoreAvenger;  // 0xc7a8
-    PlayerAvengerData tFriendAvenger;  // 0xc810
-    AvengerSource eAvengerSource;  // 0xc878
-    uint32 uConsoleSyncFlags;  // 0xc87c
-    uint32 uLastPlayedTimeUpdate;  // 0xc880
+    CrafterSavedData tCrafterSavedData;  // 0x48f0
+    CurrencySavedData tCurrencySavedData;  // 0x9d28
+    CosmeticItemSavedData tCosmeticItemSavedData;  // 0x9f38
+    PlayerAccount tAccount;  // 0xb148
+    OnlineService::HeroId uHeroId;  // 0xb208
+    CHAR usHeroName[49];  // 0xb210
+    CHAR szHeroFilename[32];  // 0xb241
+    uint32 dwJoinTime;  // 0xb264
+    uint32 dwNextStatTime;  // 0xb268
+    uint32 dwNextAttributeUpdateTime;  // 0xb26c
+    uint32 dwLastInputTime;  // 0xb270
+    ACDID idACDActiveVendor;  // 0xb274
+    CrafterType eActiveCrafterType;  // 0xb278
+    SNO snoLastResidualFootstep;  // 0xb27c
+    uint32 dwLastResidualFootstepTime;  // 0xb280
+    WorldPlace placeCheckedForActivatingScenes;  // 0xb284
+    XPooledDataIDList listVisibleACDs;  // 0xb298
+    XPooledDataIDList listPrefetchableACDs;  // 0xb2c0
+    XPooledDataIDList listDestinationsToPrefetch;  // 0xb2e8
+    BOOL fRefreshWaypointDestination;  // 0xb310
+    PlayerTradeData tTradeData;  // 0xb318
+    PlayerQuestData tQuestData;  // 0xb348
+    PlayerTalkData tTalkData;  // 0xb34c
+    ACDID idACDPlayerToInspect;  // 0xb350
+    CheckpointData tLastCheckpoint;  // 0xb354
+    HearthPortalData tHearthPortalInfo;  // 0xb374
+    uint8 arGameFlags[128];  // 0xb38c
+    PlayerPet tPets[64];  // 0xb40c
+    int32 nMaxUsedPetIndex;  // 0xb60c
+    BOOL bCosmeticPetMissing;  // 0xb610
+    HirelingStable tHirelingStable;  // 0xb614
+    ACDID idRequestedHirelingLocation;  // 0xb77c
+    HirelingClass eRequestedHirelingClass;  // 0xb780
+    uint32 dwRequestedHirelingTimeStamp;  // 0xb784
+    LoadoutSavedData tLoadouts[10];  // 0xb788
+    SNO snoActorPortrait;  // 0xd678
+    float flHealthPercent;  // 0xd67c
+    SNO snoAreaLocation;  // 0xd680
+    SNO snoLastWaypointLevelArea;  // 0xd684
+    PlayerClass ePlayerClassPortrait;  // 0xd688
+    int32 nCurrentLevel;  // 0xd68c
+    int32 nCurrentAltLevel;  // 0xd690
+    int32 nCurrentHighestHeroSoloRiftLevel;  // 0xd694
+    int32 nPortraitAction;  // 0xd698
+    int32 nSkillQuickSelectId;  // 0xd69c
+    PooledSNONameList listConversations;  // 0xd6a0
+    PlayerStats tStats;  // 0xd6c8
+    int32 eLocale; /* 0xd950 XLocale */ int32 eWarpReason; /* 0xd954 PlayerWarpReason */ float flWarpFadeInSecs; /* 0xd958 */ int32 eOpenWorldStatus;  // 0xd95c OpenWorldStatus
+    BOOL bSetDungeonActive;  // 0xd960
+    blz::vector<ACDID, blz::allocator<ACDID> > listNecroCorpses;  // 0xd968 (ACDIDArray)
+    uint32 uServerFlags;  // 0xd980
+    PRTransform tAVCameraTransform;  // 0xd984
+    struct { Act eLastPlayedAct; SNO snoLastPlayedQuest; int32 nLastPlayedQuestStep; uint32 uActivatedWaypoints; SavePointData tLastSavePoint; int32 nHandicapLevelSnapshot; } tPlayerResumeStateUponJoining;  // 0xd9a0 (size 0x24)
+    XPooledDataIDList tLoresUsed;  // 0xd9c8
+    uint32 dwBossEncounterFlags;  // 0xd9f0
+    uint32 dwPrevPortalHash;  // 0xd9f4
+    uint32 dwBossesKilledFlags;  // 0xd9f8
+    uint32 dwNephalemRiftFlags;  // 0xd9fc
+    uint32 dwSetDungeonFlags;  // 0xda00
+    ACDID idACDActiveChallengePortal;  // 0xda04
+    BOOL bChallengeAccepted;  // 0xda08
+    BOOL bOptedInToOpenWorldModeChange;  // 0xda0c
+    BOOL bPlayOpenWorldTutorial;  // 0xda10
+    float flPVPPlayerDamageTaken[4];  // 0xda14
+    ACDID idACDStashLastOperated;  // 0xda24
+    uint32 dwTickLastVerification;  // 0xda28
+    WorldPlace tPlaceLastVerification;  // 0xda2c
+    float flMaxSpeedThisVerificationInterval;  // 0xda3c
+    uint32 dwTickLastSpamCheck;  /* 0xda40 */  uint32 nMessageCostLast300;  /* 0xda44 */  uint32 nMessageCostLast600;  /* 0xda48 */  uint32 nMessageCostLast3600;  /* 0xda4c */  uint32 nMessageCostLastUpdateTick;  /* 0xda50 */  uint32 nMessageCostMax300;  /* 0xda54 */  uint32 nMessageCostMax600;  /* 0xda58 */  uint32 nMessageCostMax3600;  // 0xda5c
+    PlayerQueuedPower tQueuedPower;  // 0xda60
+    uint64 nKicksInitiated;  // 0xdaa8
+    uint64 nKicksParticipatedIn;  // 0xdab0
+    uint64 nGamesWithoutKicks;  // 0xdab8
+    uint64 nTimesVoteKicked;  // 0xdac0
+    uint32 uEntitledRewardBits;  // 0xdac8
+    uint32 uOutstandingRewardBits;  // 0xdacc
+    uint32 dwTimeStampJoined;  // 0xdad0
+    GBHandle hGBKiller;  // 0xdad4
+    SNO snoKiller;  // 0xdadc
+    MonsterRarity eKillerRarity;  // 0xdae0
+    GBID killerRareNameGBIDs[2];  // 0xdae4
+    SNO snoKilledIn;  // 0xdaec
+    TimerID idTimerForcedResurrect;  /* 0xdaf0 */  TimerID idTimerCorpseResurrect;  /* 0xdaf4 */  TimerID idTimerCorpseResurrectGrantCharge;  /* 0xdaf8 */  uint32 dwTickLastResurrection;  /* 0xdafc */  uint32 uSeasonCreated;  // 0xdb00
+    PlayerVendorData tVendorData;  // 0xdb04
+    XPooledList<int, int> listOnGroundCraftingPlans;  // 0xdb40
+    int32 nBusyMessagesSinceNPCInteract;  // 0xdb68
+    TimerID idTimerLoadoutEquipApplyPassives;  // 0xdb6c
+    uint32 dwServerSidePrefFlags;  // 0xdb70
+    int32 nControllerIndex;  // 0xdb74
+    BOOL bIsPrimaryPlayerServerOnly;  // 0xdb78
+    BOOL bIsGuestPlayerServerOnly;  // 0xdb7c
+    BOOL bIsLocalToServerServerOnly;  // 0xdb80
+    SNO snoControllerBinding;  // 0xdb84
+    ConsoleTargetComponent tTargetComponent;  // 0xdb88
+    PlayerAvengerData tSoloAvenger;  // 0xdbc8
+    PlayerAvengerData tHardcoreAvenger;  // 0xdc30
+    PlayerAvengerData tFriendAvenger;  // 0xdc98
+    AvengerSource eAvengerSource;  // 0xdd00
+    uint32 uConsoleSyncFlags;  // 0xdd04
+    uint32 uLastPlayedTimeUpdate;  // 0xdd08
     struct {  // size 0x10
         uint32 uMonstersKilled;  // 0x00
         uint32 uElitesKilled;  // 0x04
         uint32 uGoldPickedUp;  // 0x08
         uint32 uLootRunsCompleted;  // 0x0c
-    } tConsoleCounters;  // 0xc884
-    BOOL bHasPerformedFinalSaveForQuit;  // 0xc894
-    UIInventory::Console::NewItemIndicatorManager<ACDID> * ptNewItemManager;  // 0xc898
-    UIInventory::Console::NewItemIndicatorManager<ACDID> * ptNewEliteItemManager;  // 0xc8a0
-    UIInventory::Console::NewItemIndicatorManager<GBID> * ptNewRecipeManager;  // 0xc8a8
-    UIInventory::Console::NewItemIndicatorManager<GBID> * ptNewCosmeticManager;  // 0xc8b0
-    blz::unordered_map<int32, blz::pair<uint32, uint32> > tMapVendorSeeds;  /* 0xc8b8 */  blz::unordered_map<int32, blz::pair<uint32, uint32> > tMapPartitionWideCubeSeeds;  /* 0xc8d8 */  uint32 uCubeBaseSeed;  // 0xc8f8
-    blz::list<D3::Account::ConsoleChallengeRiftReward, blz::allocator<D3::Account::ConsoleChallengeRiftReward> > tChallengeRiftRewards;  // 0xc900
-    Blizzard::Time::Timestamp tNFPDefaultScanTime;  /* 0xc918 */  Blizzard::Time::Timestamp tNFPGoblinScanTime;  // 0xc920
-    PlayerClientInfo tClientInfo;  // 0xc928
-    MoveValidationLog arMoveValidationLog[16];  /* 0xd510 */  uint32 uMoveLogIdx;  // 0xd710
-    Blizzard::Util::BitField tSeenTutorials;  // 0xd718
-    uint8 bStashIcons[12];  // 0xd738
-    uint32 dwLastKickAttempt;  // 0xd744
-    uint32 dwLastSuccessfulKick;  // 0xd748
-    uint64 uAcceptedLicenseBitsAccount;  /* 0xd750 */  uint64 uAcceptedLicenseBitsHero;  /* 0xd758 */  uint64 uGuildId;  // 0xd760
-    uint8 bDidFirstTimeSetup : 1;  // 0xd768
-    uint8 bIsBeingDeleted : 1;  // 0xd768
-    uint8 bParticipatingInVoteKick : 1;  // 0xd768
-    uint8 fOptedIntoActTransition : 1;  // 0xd768
-    uint8 bForceKnownListUpdate : 1;  // 0xd768
-    uint8 bParticipatedInVoteKick : 1;  // 0xd768
-    uint8 bForceHirelingItemSave : 1;  // 0xd768
-    uint8 bNewX1Player : 1;  // 0xd768
+    } tConsoleCounters;  // 0xdd0c
+    BOOL bHasPerformedFinalSaveForQuit;  // 0xdd1c
+    UIInventory::Console::NewItemIndicatorManager<ACDID> * ptNewItemManager;  // 0xdd20
+    UIInventory::Console::NewItemIndicatorManager<ACDID> * ptNewEliteItemManager;  // 0xdd28
+    UIInventory::Console::NewItemIndicatorManager<GBID> * ptNewRecipeManager;  // 0xdd30
+    UIInventory::Console::NewItemIndicatorManager<GBID> * ptNewCosmeticManager;  // 0xdd38
+    blz::unordered_map<int32, blz::pair<uint32, uint32> > tMapVendorSeeds;  /* 0xdd40 */  blz::unordered_map<int32, blz::pair<uint32, uint32> > tMapPartitionWideCubeSeeds;  /* 0xdd60 */  uint32 uCubeBaseSeed;  // 0xdd80
+    blz::list<D3::Account::ConsoleChallengeRiftReward, blz::allocator<D3::Account::ConsoleChallengeRiftReward> > tChallengeRiftRewards;  // 0xdd88
+    Blizzard::Time::Timestamp tNFPDefaultScanTime;  /* 0xdda0 */  Blizzard::Time::Timestamp tNFPGoblinScanTime;  // 0xdda8
+    PlayerClientInfo tClientInfo;  // 0xddb0
+    MoveValidationLog arMoveValidationLog[16];  /* 0xe998 */  uint32 uMoveLogIdx;  // 0xeb98
+    Blizzard::Util::BitField tSeenTutorials;  // 0xeba0
+    uint8 bStashIcons[12];  // 0xebc0
+    uint32 dwLastKickAttempt;  // 0xebcc
+    uint32 dwLastSuccessfulKick;  // 0xebd0
+    uint64 uAcceptedLicenseBitsAccount;  /* 0xebd8 */  uint64 uAcceptedLicenseBitsHero;  /* 0xebe0 */  uint64 uGuildId;  // 0xebe8
+    uint8 bDidFirstTimeSetup : 1;  // 0xebf0
+    uint8 bIsBeingDeleted : 1;  // 0xebf0
+    uint8 bParticipatingInVoteKick : 1;  // 0xebf0
+    uint8 fOptedIntoActTransition : 1;  // 0xebf0
+    uint8 bForceKnownListUpdate : 1;  // 0xebf0
+    uint8 bParticipatedInVoteKick : 1;  // 0xebf0
+    uint8 bForceHirelingItemSave : 1;  // 0xebf0
+    uint8 bNewX1Player : 1;  // 0xebf0
     // Player::Player is declared at Player.h:1373 (DWARF); the original calls BitField(0x180) for tSeenTutorials there.
 #line 1373
     Player() : tSeenTutorials(MAX_TUTORIAL_BITS) {}
 #line 650
 };
-static_assert(sizeof(Player) == 0xd770, "Player");  static_assert(offsetof(Player, nValidationErrors) == 0x70, "Player");  static_assert(offsetof(Player, idActorTownPortalInUse) == 0x7c, "Player");  static_assert(offsetof(Player, rngSyncedAnim) == 0x11c, "Player");  static_assert(offsetof(Player, listNecroCorpses) == 0xc4e0, "Player");  static_assert(offsetof(Player, tClientInfo) == 0xc928, "Player");  static_assert(offsetof(Player, arMoveValidationLog) == 0xd510, "Player");  static_assert(offsetof(Player, uMoveLogIdx) == 0xd710, "Player");  static_assert(offsetof(Player, tSeenTutorials) == 0xd718, "Player");  static_assert(offsetof(Player, dwLastSuccessfulKick) == 0xd748, "Player");  static_assert(offsetof(Player, uAcceptedLicenseBitsAccount) == 0xd750, "Player");  static_assert(offsetof(Player, uAcceptedLicenseBitsHero) == 0xd758, "Player");  static_assert(offsetof(Player, uGuildId) == 0xd760, "Player");
+static_assert(sizeof(Player) == 0xebf8, "Player");  static_assert(offsetof(Player, nValidationErrors) == 0x70, "Player");  static_assert(offsetof(Player, idActorTownPortalInUse) == 0x7c, "Player");  static_assert(offsetof(Player, rngSyncedAnim) == 0x11c, "Player");  static_assert(offsetof(Player, listNecroCorpses) == 0xd968, "Player");  static_assert(offsetof(Player, tClientInfo) == 0xddb0, "Player");  static_assert(offsetof(Player, arMoveValidationLog) == 0xe998, "Player");  static_assert(offsetof(Player, uMoveLogIdx) == 0xeb98, "Player");  static_assert(offsetof(Player, tSeenTutorials) == 0xeba0, "Player");  static_assert(offsetof(Player, dwLastSuccessfulKick) == 0xebd0, "Player");  static_assert(offsetof(Player, uAcceptedLicenseBitsAccount) == 0xebd8, "Player");  static_assert(offsetof(Player, uAcceptedLicenseBitsHero) == 0xebe0, "Player");  static_assert(offsetof(Player, uGuildId) == 0xebe8, "Player");
 static_assert(offsetof(Player, nLastRewardChallengeNumber) == 0x98, "Player");
-static_assert(offsetof(Player, tCosmeticItemSavedData) == 0x9f00, "Player");
-static_assert(offsetof(Player, tAccount) == 0xb110, "Player");
+static_assert(offsetof(Player, tCosmeticItemSavedData) == 0x9f38, "Player");
+static_assert(offsetof(Player, tAccount) == 0xb148, "Player");
 static_assert(offsetof(Player, tChallengeMail) == 0xa0, "Player");
 static_assert(offsetof(Player, nChallengeBestTimesMilliseconds) == 0x108, "Player");
-static_assert(offsetof(Player, dwNephalemRiftFlags) == 0xc574, "Player");
-static_assert(offsetof(Player, tChallengeRiftRewards) == 0xc900, "Player");
-static_assert(offsetof(Player, tCrafterSavedData) == 0x48e8, "Player");
+static_assert(offsetof(Player, dwNephalemRiftFlags) == 0xd9fc, "Player");
+static_assert(offsetof(Player, tChallengeRiftRewards) == 0xdd88, "Player");
+static_assert(offsetof(Player, tCrafterSavedData) == 0x48f0, "Player");
 static_assert(offsetof(Player, tHeroStateData) == 0x124, "Player");
-static_assert(offsetof(Player, tCurrencySavedData) == 0x9d20, "Player");
-static_assert(offsetof(Player, tPets) == 0xb3d4, "Player");
-static_assert(offsetof(Player, listOnGroundCraftingPlans) == 0xc6b8, "Player");
-static_assert(offsetof(Player, usHeroName) == 0xb1d8, "Player");
-static_assert(offsetof(Player, dwLastInputTime) == 0xb238, "Player");
-static_assert(offsetof(Player, tQueuedPower) == 0xc5d8, "Player");
-static_assert(offsetof(Player, tVendorData) == 0xc67c, "Player");
-static_assert(offsetof(Player, tTargetComponent) == 0xc700, "Player");
-static_assert(offsetof(Player, tSoloAvenger) == 0xc740, "Player");
-static_assert(offsetof(Player, tFriendAvenger) == 0xc810, "Player");
-static_assert(offsetof(Player, uConsoleSyncFlags) == 0xc87c, "Player");
+static_assert(offsetof(Player, tCurrencySavedData) == 0x9d28, "Player");
+static_assert(offsetof(Player, tPets) == 0xb40c, "Player");
+static_assert(offsetof(Player, listOnGroundCraftingPlans) == 0xdb40, "Player");
+static_assert(offsetof(Player, usHeroName) == 0xb210, "Player");
+static_assert(offsetof(Player, dwLastInputTime) == 0xb270, "Player");
+static_assert(offsetof(Player, tQueuedPower) == 0xda60, "Player");
+static_assert(offsetof(Player, tVendorData) == 0xdb04, "Player");
+static_assert(offsetof(Player, tTargetComponent) == 0xdb88, "Player");
+static_assert(offsetof(Player, tSoloAvenger) == 0xdbc8, "Player");
+static_assert(offsetof(Player, tFriendAvenger) == 0xdc98, "Player");
+static_assert(offsetof(Player, uConsoleSyncFlags) == 0xdd04, "Player");
 
 // line 360
 enum {
@@ -779,12 +784,12 @@ typedef int32 PlayerSaveReason;  // line 391
 // holds the two per-game pools followed by the fixed pool of players the game keeps.
 typedef XMapMemoryPool<int, unsigned int> TimeMapPool;
 
-struct PlayerGlobals {  // size 0x35e20
+struct PlayerGlobals {  // size 0x3b040
     TimeMapPool poolTimeMap;  // 0x00
     TSnoNameListPool poolSNOName;  // 0x30
     Player tPlayerArray[4];  // 0x60
 };
-static_assert(sizeof(PlayerGlobals) == 0x35e20, "PlayerGlobals");
+static_assert(sizeof(PlayerGlobals) == 0x3b040, "PlayerGlobals");
 
 // Declared here from their definitions in Player.cpp.
 Player * PlayerGetByACD(const ACDID idACD);  // Player.cpp:1467
@@ -1075,12 +1080,12 @@ static_assert(sizeof(PlayerKickTimerMessage) == 0x10, "PlayerKickTimerMessage");
 
 SNO PlayerGetLastWaypointLevelArea(const Player * ptPlayer);  // Player.cpp:1876
 
-struct HeroStateMessage {  // size 0x47d0
+struct HeroStateMessage {  // size 0x47d8
     RequiredMessageHeader tHeader;  // 0x00
     HeroStateData tStateData;  // 0x08
-    int32 nPlayerIndex;  // 0x47cc
+    int32 nPlayerIndex;  // 0x47d4
 };
-static_assert(sizeof(HeroStateMessage) == 0x47d0, "HeroStateMessage");
+static_assert(sizeof(HeroStateMessage) == 0x47d8, "HeroStateMessage");
 
 enum {
     SSPREF_AUTOEQUIP_ITEMS = 0,
@@ -1092,7 +1097,7 @@ enum {
 };
 
 // X/Common/Player.h:1385
-struct NewPlayerMessage {  // size 0x48e8
+struct NewPlayerMessage {  // size 0x48f0
     RequiredMessageHeader tHeader;  // 0x00
     int32 nPlayerIndex;  // 0x08
     OnlineService::HeroId uHeroId;  // 0x10
@@ -1105,22 +1110,22 @@ struct NewPlayerMessage {  // size 0x48e8
     int32 nCurrentAltLevel;  // 0x68
     int32 nCurrentHighestHeroSoloRiftLevel;  // 0x6c
     HeroStateData tHeroStateData;  // 0x70
-    BOOL bJustJoined;  // 0x4834
-    GameConnectionID idGameConnection;  // 0x4838
-    ACDNetworkName ann;  // 0x483c
-    CHAR usGamerTag[128];  // 0x4840
-    uint64 uAcceptedLicenseBitsHero;  // 0x48c0
-    BOOL bUpscaled;  // 0x48c8
-    uint32 uPartitionFlags;  // 0x48cc
-    uint32 uSeasonCreated;  // 0x48d0
-    int64 nNFPDefaultScanTime;  // 0x48d8
-    int64 nNFPGoblinScanTime;  // 0x48e0
+    BOOL bJustJoined;  // 0x483c
+    GameConnectionID idGameConnection;  // 0x4840
+    ACDNetworkName ann;  // 0x4844
+    CHAR usGamerTag[128];  // 0x4848
+    uint64 uAcceptedLicenseBitsHero;  // 0x48c8
+    BOOL bUpscaled;  // 0x48d0
+    uint32 uPartitionFlags;  // 0x48d4
+    uint32 uSeasonCreated;  // 0x48d8
+    int64 nNFPDefaultScanTime;  // 0x48e0
+    int64 nNFPGoblinScanTime;  // 0x48e8
 };
-static_assert(sizeof(NewPlayerMessage) == 0x48e8, "NewPlayerMessage");
+static_assert(sizeof(NewPlayerMessage) == 0x48f0, "NewPlayerMessage");
 static_assert(offsetof(NewPlayerMessage, tHeroStateData) == 0x70, "NewPlayerMessage");
-static_assert(offsetof(NewPlayerMessage, ann) == 0x483c, "NewPlayerMessage");
-static_assert(offsetof(Player, uAcceptedLicenseBitsHero) == 0xd758, "Player");
-static_assert(offsetof(Player, tNFPGoblinScanTime) == 0xc920, "Player");
+static_assert(offsetof(NewPlayerMessage, ann) == 0x4844, "NewPlayerMessage");
+static_assert(offsetof(Player, uAcceptedLicenseBitsHero) == 0xebe0, "Player");
+static_assert(offsetof(Player, tNFPGoblinScanTime) == 0xdda8, "Player");
 // X/Common/Player.h:1045
 struct PlayerQuestRewardHistoryUpdateMessage {  // size 0x4bc
     RequiredMessageHeader tHeader;  // 0x00
@@ -1130,21 +1135,21 @@ struct PlayerQuestRewardHistoryUpdateMessage {  // size 0x4bc
 static_assert(sizeof(PlayerQuestRewardHistoryUpdateMessage) == 0x4bc, "PlayerQuestRewardHistoryUpdateMessage");
 static_assert(offsetof(PlayerQuestRewardHistoryUpdateMessage, tQuestRewardHistory) == 0xc, "PlayerQuestRewardHistoryUpdateMessage");
 // X/Common/Player.h:1064
-struct PlayerLoadoutDataMessage {  // size 0x250
+struct PlayerLoadoutDataMessage {  // size 0x328
     RequiredMessageHeader tHeader;  // 0x00
     int32 nLoadoutIndex;  // 0x08
     LoadoutItemData tEquipment[13];  // 0x10
-    LoadoutPotionData tEquippedPotion;  // 0x1b0
-    LoadoutSkillData tActiveSkills[6];  // 0x1c8
-    SNO snoTraits[4];  // 0x1f8
-    GBID gbidLegendaryPowers[3];  // 0x208
-    CHAR usName[49];  // 0x214
-    int32 nTabIcon;  // 0x248
+    LoadoutPotionData tEquippedPotion;  // 0x280
+    LoadoutSkillData tActiveSkills[6];  // 0x298
+    SNO snoTraits[4];  // 0x2c8
+    GBID gbidLegendaryPowers[4];  // 0x2d8
+    CHAR usName[53];  // 0x2e8
+    int32 nTabIcon;  // 0x320
 };
-static_assert(sizeof(PlayerLoadoutDataMessage) == 0x250, "PlayerLoadoutDataMessage");
-static_assert(offsetof(PlayerLoadoutDataMessage, tEquippedPotion) == 0x1b0, "PlayerLoadoutDataMessage");
-static_assert(offsetof(PlayerLoadoutDataMessage, usName) == 0x214, "PlayerLoadoutDataMessage");
-static_assert(offsetof(PlayerLoadoutDataMessage, nTabIcon) == 0x248, "PlayerLoadoutDataMessage");
+static_assert(sizeof(PlayerLoadoutDataMessage) == 0x328, "PlayerLoadoutDataMessage");
+static_assert(offsetof(PlayerLoadoutDataMessage, tEquippedPotion) == 0x280, "PlayerLoadoutDataMessage");
+static_assert(offsetof(PlayerLoadoutDataMessage, usName) == 0x2e8, "PlayerLoadoutDataMessage");
+static_assert(offsetof(PlayerLoadoutDataMessage, nTabIcon) == 0x320, "PlayerLoadoutDataMessage");
 // X/Common/Player.h:1100
 struct PlayerLoadoutTabIconMessage {  // size 0x10
     RequiredMessageHeader tHeader;  // 0x00
@@ -1172,3 +1177,9 @@ enum { FLOATING_NUMBER_TYPE_BROKE_FREEZE = 21, FLOATING_NUMBER_TYPE_BROKE_BLIND 
 
 #line 352 "X/Common/Player.h"
 enum { FLOATING_NUMBER_TYPE_ABSORB = 11 };
+
+static_assert(offsetof(LoadoutItemData, unk_20) == 0x20, "LoadoutItemData");
+static_assert(offsetof(LoadoutItemData, uSoulShardIdLow) == 0x28, "LoadoutItemData");
+static_assert(offsetof(HeroStateData, uPlayerFlags2) == 0xc, "HeroStateData");
+static_assert(offsetof(Player, nControllerIndex) == 0xdb74, "Player controller");
+static_assert(offsetof(Player, uHeroId) == 0xb208, "Player hero ID");
