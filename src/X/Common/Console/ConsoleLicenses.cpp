@@ -132,7 +132,7 @@ static void sDeleteUnlicensedItems(
     GBID gbidUnlicensedItem)
 {
 
-    for (int32 s = 0; s < 17; ++s)
+    for (int32 s = SLOT_PLAYER_START; s < SLOT_PLAYER_END; ++s)
     {
         ACDInventoryIterateItems(tACDPlayer, s, 0, sDeleteUnlicensedItemsCB, reinterpret_cast<void*>(static_cast<intptr_t>(gbidUnlicensedItem)));
     }
@@ -142,7 +142,7 @@ static void sDeleteUnlicensedItems(
     ActorCommonData* ptACDHireling = ACDTryToGet(idACDHireling);
     if (ptACDHireling)
     {
-        for (int32 s = 20; s < 26; ++s)
+        for (int32 s = SLOT_HIRELING_START; s < SLOT_HIRELING_END; ++s)
         {
             ACDInventoryIterateItems(*ptACDHireling, s, 0, sDeleteUnlicensedItemsCB, reinterpret_cast<void*>(static_cast<intptr_t>(gbidUnlicensedItem)));
         }
@@ -177,7 +177,7 @@ static void sDeleteUnlicensedItems(
             }
 
 
-            for (int32 s = 0; s < 17; ++s)
+            for (int32 s = SLOT_PLAYER_START; s < SLOT_PLAYER_END; ++s)
             {
                 ACDInventoryIterateItems(tACDPlayer, s, 0, sRemoveUnlicensedTransmogCB, reinterpret_cast<void*>(static_cast<intptr_t>(gbidUnlicensedTransmog)));
             }
@@ -187,7 +187,7 @@ static void sDeleteUnlicensedItems(
             ActorCommonData* ptACDHireling2 = ACDTryToGet(idACDHireling2);
             if (ptACDHireling2)
             {
-                for (int32 s = 20; s < 26; ++s)
+                for (int32 s = SLOT_HIRELING_START; s < SLOT_HIRELING_END; ++s)
                 {
                     ACDInventoryIterateItems(*ptACDHireling2, s, 0, sRemoveUnlicensedTransmogCB, reinterpret_cast<void*>(static_cast<intptr_t>(gbidUnlicensedTransmog)));
                 }
