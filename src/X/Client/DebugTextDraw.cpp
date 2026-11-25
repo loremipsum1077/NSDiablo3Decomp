@@ -74,7 +74,7 @@ static_assert(sizeof(DebugTextDrawGlobals) == 0x18, "DebugTextDrawGlobals");
 
 static const float TEXT_HOR_PAD = 10.0f;  // line 49
 static const float TEXT_VERT_PAD = 2.0f;  // line 50
-static const GlobalSNO scgeFont = 637;  // line 51
+static const GlobalSNO scgeFont = 645;  // line 51
 static const int32 scgnFontSize = 9;  // line 52
 
 // line 62

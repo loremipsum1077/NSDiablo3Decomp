@@ -2239,7 +2239,7 @@ BOOL SaveTask::SaveFile(
     {
         SigmaMemoryFree(pauBuffer, NULL);
 
-        DisplayInternalError(NULL, "", __LINE__, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 2385, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 
 

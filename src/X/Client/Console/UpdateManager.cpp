@@ -258,7 +258,7 @@ void WriteUpdatesToDisk()
     UpdateFileData & tUpdate = s_tUpdateCache.m_atUpdates[UPDATE_GLOBAL];
     UpdateFileData & tUpdateLocale = s_tUpdateCache.m_atUpdates[UPDATE_LOCALE];
 
-    tConfig.set_title_version(265);
+    tConfig.set_title_version(277);
     tConfig.set_version(s_tUpdateCache.m_nVersion);
     tConfig.set_toc(tUpdate.m_szTOC);
     if (!tUpdateLocale.m_szData.empty())

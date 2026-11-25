@@ -258,11 +258,13 @@ SNO ShaderMapGetDefaultShader(const SNO snoShaderMap, const BOOL fComplainIfFall
     if (snoShaderMap == SNO_NONE)
         return SNO_NONE;
 
-    if (!pdefShaderMap) {
+    CTagMap * hTagMap;
+    if (pdefShaderMap) {
+        hTagMap = pdefShaderMap->hTagMap;
+    } else {
         ScopedShaderMapDefinitionLockR pdefShaderMapScoped(snoShaderMap);
-        pdefShaderMap = pdefShaderMapScoped;
+        hTagMap = pdefShaderMapScoped->hTagMap;
     }
-    CTagMap * hTagMap = pdefShaderMap->hTagMap;
 
     HardwareClass eHWClass = GfxGetHWClass();
 
@@ -446,9 +448,7 @@ SNO ShaderMapGetHighlightShader(const ShaderMapDefinition * pdefShaderMap, const
     if (sno != SNO_NONE)
         return sno;
 
-    if (fSkinned)
-        return GlobalSNOGet(GLOBALSNO_RACTORGFX_SHADER_HIGHLIGHT_SKIN_ZTEST);
-    return GlobalSNOGet(GLOBALSNO_RACTORGFX_SHADER_HIGHLIGHT_ZTEST);
+    return GlobalSNOGet(fSkinned ? GLOBALSNO_RACTORGFX_SHADER_HIGHLIGHT_SKIN_ZTEST : GLOBALSNO_RACTORGFX_SHADER_HIGHLIGHT_ZTEST);
 }
 
 // line 516

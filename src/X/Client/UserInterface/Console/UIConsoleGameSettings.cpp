@@ -605,7 +605,7 @@ int32 GetSelectedQuestStep()
 int32 GetSelectedDifficulty()
 {
     int32 nSelectedValue = UI_GetRadioButtonGroupFromID(UIRADIOBUTTONGROUP_CONSOLE_GAME_SETTINGS_DIFFICULTY_SELECT).GetSelectedValue();
-    return Math::Pin(nSelectedValue, 0, 16);
+    return Math::Pin(nSelectedValue, 0, 19);
 }
 
 // Original line 3539.
@@ -2242,8 +2242,8 @@ extern UIID UIWND_CONSOLE_GAME_SETTINGS_DIFFICULTY_SELECT_LOCK_4;
 extern UIID UIWND_CONSOLE_GAME_SETTINGS_DIFFICULTY_SELECT_LOCK_5;
 namespace UIGameSettings { namespace Console { namespace {
 #line 2738 "X/Client/UserInterface/Console/UIConsoleGameSettings.cpp"
+// NON_MATCHING: two page comparisons use signed lt instead of target unsigned lo.
 void RefreshDifficultyDisplay()
-
 {
     const int32 NUM_DIFFICULTIES_PER_PAGE = 5;
 
@@ -2326,7 +2326,7 @@ void RefreshDifficultyDisplay()
 
     int nCurrentPage = nSelectedDifficulty / NUM_DIFFICULTIES_PER_PAGE;
 #line 2814
-// Inference: last page derives from seventeen handicap levels and five per page; original folds it to three.
+// 2.7.7 allows indices 0..19; the last page remains three with five entries per page.
     int nLastPage = (HC_NUM_HANDICAP_LEVELS - 1) / NUM_DIFFICULTIES_PER_PAGE;
 
 #line 2816

@@ -1852,7 +1852,7 @@ BOOL UIMailListView::AddItem(
 
         const D3::Items::Generator & tGenerator = tItemDetails.item_generator();
 
-        ACDID idACDItem = CItemGenerate(static_cast<ACDNetworkName>(9588), tGenerator, NULL);
+        ACDID idACDItem = CItemGenerate(static_cast<ACDNetworkName>(13172), tGenerator, NULL);
 
         if (idACDItem == ACDID_INVALID)
             return FALSE;
@@ -2141,7 +2141,7 @@ ACDID PlayerMailScreen::GenerateFakeItem(
 {
     DeleteFakeItem();
 
-    m_idACDCurrentItem = CItemGenerate(static_cast<ACDNetworkName>(9588), tGenerator, NULL);
+    m_idACDCurrentItem = CItemGenerate(static_cast<ACDNetworkName>(13172), tGenerator, NULL);
 
     if (m_idACDCurrentItem != ACDID_INVALID)
     {
@@ -2152,7 +2152,7 @@ ACDID PlayerMailScreen::GenerateFakeItem(
         {
             const D3::Items::EmbeddedGenerator & tEmbedded = tGenerator.contents(i);
 
-            m_idACDSocketed[i] = CItemGenerate(static_cast<ACDNetworkName>(9589 + i), tEmbedded.generator(), NULL);
+            m_idACDSocketed[i] = CItemGenerate(static_cast<ACDNetworkName>(13173 + i), tEmbedded.generator(), NULL);
             ActorCommonData * ptACDGem = ACDTryToGet(m_idACDSocketed[i]);
             if (ptACDGem)
             {
@@ -2944,7 +2944,7 @@ void sGiveCraftingMaterials(
 
             tItem.set_stack_size(uAmount);
 
-            ACDNetworkName ann = static_cast<ACDNetworkName>(10632 + eCurrency);
+            ACDNetworkName ann = static_cast<ACDNetworkName>(14218 + eCurrency);
             ACDID idACDItem = CItemGenerate(ann, tItem, NULL);
 
             sgptMailGlobals->m_tMailItemProvider.AddItem(idACDItem);
@@ -3144,7 +3144,7 @@ void UnmailedCraftingMatItemsProvider::Refresh()
         {
             m_arrVirtualItems.clear();
             // DWARF gives the initial ann as 0x2974; the loop emits 0x2975 first and advances each iteration.
-            ACDNetworkName ann = (ACDNetworkName)10612;
+            ACDNetworkName ann = (ACDNetworkName)14196;
 
 
             GBHandleList listGBHandles(GBGetHandlePool());

@@ -1629,7 +1629,7 @@ ACDID GenerateLeaderboardEquippedItem(
             VisualInventorySlot eVisualInventorySlot = tItem.visual_inventory_slot();
             if (eSlotType == VisualInventorySlotToInventorySlot(eVisualInventorySlot))
             {
-                ACDID idACDItem = CItemGenerate(static_cast<ACDNetworkName>(10628 + eFilterType), tItem.generator(), NULL);
+                ACDID idACDItem = CItemGenerate(static_cast<ACDNetworkName>(14212 + eFilterType), tItem.generator(), NULL);
 
                 if (idACDItem != ACDID_INVALID)
                 {
@@ -1640,7 +1640,7 @@ ACDID GenerateLeaderboardEquippedItem(
                     {
                         const D3::Items::EmbeddedGenerator & tEmbedded = tItem.generator().contents(i);
 
-                        ACDID idACDSocketed = CItemGenerate(static_cast<ACDNetworkName>(9588 + vecSocketACDs.size()), tEmbedded.generator(), NULL);
+                        ACDID idACDSocketed = CItemGenerate(static_cast<ACDNetworkName>(13172 + vecSocketACDs.size()), tEmbedded.generator(), NULL);
                         vecSocketACDs.push_back(idACDSocketed);
 
                         ActorCommonData * ptACDGem = ACDTryToGet(idACDSocketed);
@@ -1680,7 +1680,7 @@ ACDID GenerateLeaderboardEquippedItem(
 
                         if (eSlotType == SLOT_PLAYER_LEFT_FINGER || (eSlotType == SLOT_PLAYER_RIGHT_FINGER && bFoundARing))
                         {
-                            ACDID idACDItem = CItemGenerate(static_cast<ACDNetworkName>(10628 + eFilterType), tItem.generator(), NULL);
+                            ACDID idACDItem = CItemGenerate(static_cast<ACDNetworkName>(14212 + eFilterType), tItem.generator(), NULL);
 
                             if (idACDItem != ACDID_INVALID)
                             {
@@ -1691,7 +1691,7 @@ ACDID GenerateLeaderboardEquippedItem(
                                 {
                                     const D3::Items::EmbeddedGenerator & tEmbedded = tItem.generator().contents(i);
 
-                                    ACDID idACDSocketed = CItemGenerate(static_cast<ACDNetworkName>(9588 + vecSocketACDs.size()), tEmbedded.generator(), NULL);
+                                    ACDID idACDSocketed = CItemGenerate(static_cast<ACDNetworkName>(13172 + vecSocketACDs.size()), tEmbedded.generator(), NULL);
                                     vecSocketACDs.push_back(idACDSocketed);
 
                                     ActorCommonData * ptACDGem = ACDTryToGet(idACDSocketed);
@@ -1733,7 +1733,7 @@ ACDID GenerateLeaderboardEquippedItem(
 
                     if (ItemIsAllowedInSlot(eSlotType, pItemTypeDef))
                     {
-                        ACDID idACDItem = CItemGenerate(static_cast<ACDNetworkName>(10628 + eFilterType), tItem.generator(), NULL);
+                        ACDID idACDItem = CItemGenerate(static_cast<ACDNetworkName>(14212 + eFilterType), tItem.generator(), NULL);
 
                         if (idACDItem != ACDID_INVALID)
                         {
@@ -1744,7 +1744,7 @@ ACDID GenerateLeaderboardEquippedItem(
                             {
                                 const D3::Items::EmbeddedGenerator & tEmbedded = tItem.generator().contents(i);
 
-                                ACDID idACDSocketed = CItemGenerate(static_cast<ACDNetworkName>(9588 + vecSocketACDs.size()), tEmbedded.generator(), NULL);
+                                ACDID idACDSocketed = CItemGenerate(static_cast<ACDNetworkName>(13172 + vecSocketACDs.size()), tEmbedded.generator(), NULL);
                                 vecSocketACDs.push_back(idACDSocketed);
 
                                 ActorCommonData * ptACDGem = ACDTryToGet(idACDSocketed);

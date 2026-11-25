@@ -70,9 +70,9 @@ static const ActEntry gptActs[] = {
 
 
 
-    // bound 0..15 from the static initializer: (1 << GAME_SYNCED_FLAGS_COUNT) - 1 is the name guess
+    // 2.7.7 static initializer passes an upper bound of 31; GAME_SYNCED_FLAGS_COUNT is stale.
 static const TypeDescriptorField GameSyncedData_Fields[32] = {
-    BoundedTypeDescriptorField("", DT_INT, offsetof(GameSyncedData, dwGameSyncedFlags), NULL, (const void *)0, (const void *)((1 << GAME_SYNCED_FLAGS_COUNT) - 1)),
+    BoundedTypeDescriptorField("", DT_INT, offsetof(GameSyncedData, dwGameSyncedFlags), NULL, (const void *)0, (const void *)31),
     TypeDescriptorField("", DT_INT, offsetof(GameSyncedData, eAct), NULL, 1),
     TypeDescriptorField("", DT_INT, offsetof(GameSyncedData, nMonsterLevel), NULL, 1),
     TypeDescriptorField("", DT_INT, offsetof(GameSyncedData, nRandomWeatherSeed), NULL, 1),
@@ -115,7 +115,7 @@ static const TypeDescriptorField GameSyncedDataMessage_Fields[3] = {
 
 
 
-
+// NON_MATCHING: 2.7.7 flags and initialization values reproduced; zero-store scheduling differs.
 void GameCommonData::Initialize( const GameParams & tParams )
 {
 
@@ -160,8 +160,8 @@ void GameCommonData::Initialize( const GameParams & tParams )
         tGameSyncedData.dwGameSyncedFlags |= ( 1 << GAME_SYNCED_FLAGS_SEASONAL );
     }
 
+    if ( tParams.dwCreationFlags & 0x100000 ) { tGameSyncedData.dwGameSyncedFlags |= 0x10; } // 2.7.7 creation bit 20 maps to synced bit 4.
     tGameSyncedData.eAct = tParams.eAct;
-    tGameSyncedData.unk_4c = 0;
     tGameSyncedData.nMonsterLevel = tParams.nMonsterLevel;
     tGameSyncedData.eOpenWorldMode = 0;
     tGameSyncedData.eOpenWorldModeAct = ACT_INVALID;
@@ -174,11 +174,12 @@ void GameCommonData::Initialize( const GameParams & tParams )
     tGameSyncedData.nOpenLootRunLevel = -1;
     tGameSyncedData.bLootRunBossDead = FALSE;
     tGameSyncedData.nHunterPlayerIdx = -1;
+    tGameSyncedData.unk_4c = 0;
     tGameSyncedData.bLootRunBossActive = FALSE;
     tGameSyncedData.bTieredLootRunFailed = FALSE;
+    tGameSyncedData.nRandomWeatherSeed = 0;
     tGameSyncedData.bLootRunChallengeCompleted = FALSE;
     tGameSyncedData.bSetDungeonActive = FALSE;
-    tGameSyncedData.nRandomWeatherSeed = 0;
     if ( GameActiveGameCommonDataIsServer() )
     {
         tGameSyncedData.nRandomWeatherSeed = RandRange_Internal( SGameGetRNG(), 0, 0x7fffffff );
@@ -199,9 +200,12 @@ void GameCommonData::Initialize( const GameParams & tParams )
     }
     for ( int32 i = 0; i < 2; i++ )
     {
-        tGameSyncedData.nTeamScore[i] = 0;
-        tGameSyncedData.ePVPGameResult[i] = -1;
         tGameSyncedData.nTeamWins[i] = 0;
+        tGameSyncedData.nTeamScore[i] = 0;
+    }
+    for ( int32 i = 0; i < 2; i++ )
+    {
+        tGameSyncedData.ePVPGameResult[i] = -1;
     }
     arItemWeights = NULL;
     tGameSyncedData.bPVPGameOver = FALSE;
@@ -404,7 +408,7 @@ int32 ActIndexFromActEnum( const Act eAct )
     }
 
 
-    XASSERT( FALSE );
+    DisplayInternalError(NULL, "", 411, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     return 0;
 }
 

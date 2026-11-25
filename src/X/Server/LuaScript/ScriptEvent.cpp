@@ -532,16 +532,22 @@ static ScriptEventDescription sgScriptEventDescriptions[NUM_SCRIPT_EVENTS] = {
      {"", "", "", ""}},
 };
 
-// ScriptEvent.cpp:1654. All callers pass valid event types.
+// ScriptEvent.cpp:1654. 2.7.7 bounds the description search to NUM_SCRIPT_EVENTS.
 
 static void sActivateListenerForScriptInstance(ScriptEventListenerDefinition *, ScriptInstanceID);
 
-// ScriptEvent.cpp:1654.
+// NON_MATCHING: bounded 2.7.7 lookup is unrolled in callers instead of the target scalar loop.
 ScriptEventDescription *ScriptEventGetDescription(ScriptEventType eEventType)
 {
-    for (int32 i = 0;; ++i)
+    ScriptEventDescription *ptDescription = NULL;
+    int32 i = 0;
+    do
+    {
         if (sgScriptEventDescriptions[i].eEventType == eEventType)
-            return &sgScriptEventDescriptions[i];
+            ptDescription = &sgScriptEventDescriptions[i];
+        ++i;
+    } while (i < NUM_SCRIPT_EVENTS && !ptDescription);
+    return ptDescription;
 }
 
 // ScriptEvent.cpp:1676.
@@ -1389,7 +1395,7 @@ static void sScriptAddEventHandler(ScriptID idScript, LPCSTR szFuncName, ScriptE
     ++nNumEventHandlers;
 }
 
-// ScriptEvent.cpp:2734.
+// NON_MATCHING: bounded description lookup is unrolled; stack slots and register allocation differ.
 int32 ScriptEventInitializeForConductorPhase(ConductorInstance &tConductor, int32 nPhase)
 {
     int nNumEventHandlers = 0;
@@ -1427,7 +1433,7 @@ int32 ScriptEventInitializeForConductorPhase(ConductorInstance &tConductor, int3
     return nNumEventHandlers;
 }
 
-// ScriptEvent.cpp:2818.
+// NON_MATCHING: bounded description lookup is unrolled; stack slots and register allocation differ.
 int32 ScriptEventInitializeForState(SNO snoScript, ScriptID idScript, lua_State *ptLuaState,
                                     ScriptEventListenerDefinitionID *arEventHandlers, int32 nMaxEventHandlers)
 {

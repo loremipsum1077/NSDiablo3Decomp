@@ -223,7 +223,7 @@ class UITutorial;
 #include "Particle.h"
 #include "Camera/CameraManager.h"
 extern UITutorialManager gtTutorialMgr;
-enum { CMSG_PLAYER_GIFT = 522 };  // X/Common/Networking/GameMessage.h (invented name; id from the call)
+enum { CMSG_PLAYER_GIFT = 523 };  // X/Common/Networking/GameMessage.h (invented name; id from the call)
 // Inference: local declaration placement; UIGlobals.cpp:4220 supplies this DWARF-owned UIID.
 extern UIID UIDLG_ITEMTAGS;
 // Inference: declaration placement/header ownership; signature from GfxPrimitives.cpp:966.

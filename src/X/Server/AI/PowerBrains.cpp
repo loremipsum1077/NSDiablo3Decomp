@@ -183,7 +183,7 @@ void WizardTornadoBrainUpdate(
         pBrainData->flYawLimit = QUARTER_CIRCLE;
 
 
-        SNO snoPower = GlobalSNOGet(0x521);
+        SNO snoPower = GlobalSNOGet(0x554);
         BuffID idBuff = PowerAPI_BuffFindOnACD(snoPower, &tACD, ACDID_INVALID);
         PowerAPIBuffInstance* ptBuff = PowerAPI_BuffTryToGet(idBuff);
         if (ptBuff)
@@ -191,13 +191,13 @@ void WizardTornadoBrainUpdate(
             Power* ptPower = PowerGet(ptBuff->idPower);
             if (ptPower)
             {
-                if (FastAttribGetValueInt(ptPower->idFastAttrib, MakeAttribKey(0x2b6, snoPower)) > 0)
+                if (FastAttribGetValueInt(ptPower->idFastAttrib, MakeAttribKey(0x2bb, snoPower)) > 0)
                 {
                     pBrainData->bTrackTarget = TRUE;
                     pBrainData->idACDTarget = ptPower->tTarget.GetACD();
                 }
 
-                if (FastAttribGetValueInt(ptPower->idFastAttrib, (FastAttribKey)0xfffff563))
+                if (FastAttribGetValueInt(ptPower->idFastAttrib, (FastAttribKey)0xfffff568))
                 {
                     pBrainData->flYawLimit = 0.0f;
                 }
@@ -279,7 +279,7 @@ void SentryBrainUpdate(ActorID idActor)
     Actor* ptActor = ActorGet(idActor);
     ACDID idACD = ptActor->idACD;
     ActorCommonData& tACD = ACDGet(idACD);
-    SNO snoPowerProxySeeker = GlobalSNOGet(0x60f);
+    SNO snoPowerProxySeeker = GlobalSNOGet(0x66c);
     SentryBrainData* pBrainData = sSentryGetBrainData(idActor);
     if (pBrainData->idACDSeeker != ACDID_INVALID && !ACDTryToGet(pBrainData->idACDSeeker))
         pBrainData->idACDSeeker = ACDID_INVALID;
@@ -291,7 +291,7 @@ void SentryBrainUpdate(ActorID idActor)
                 if (tACDTarget.IsAlive()) {
                     Target tTarget;
                     tTarget.InitializeFromACD(idACDTarget, 0, 0);
-                    PowerStart(idACD, GlobalSNOGet(0x5ae), tTarget);
+                    PowerStart(idACD, GlobalSNOGet(0x5e1), tTarget);
                     BrainAPIDoDeath(ActorID(ACDGetOwner(pBrainData->idACDSeeker)), ACTORID_INVALID, TRUE, TRUE, TRUE, 0, 0);
                     pBrainData->idACDSeeker = ACDID_INVALID;
                     return;
@@ -321,7 +321,7 @@ void SentryBrainUpdate(ActorID idActor)
             ActorID idSeeker = GBAdd(tActorAdd);
             if (idSeeker != ACTORID_INVALID) {
                 pBrainData->idACDSeeker = ACDFindByActor(idSeeker);
-                SNO snoRope = GlobalSNOGet(0x232);
+                SNO snoRope = GlobalSNOGet(0x23a);
                 ACDPlayEffectRopeACDToACD(snoRope, idACD, 1, pBrainData->idACDSeeker, 1, FALSE);
             }
         }

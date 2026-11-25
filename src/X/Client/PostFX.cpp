@@ -2456,21 +2456,21 @@ void sPostFXTonemap(RWindow & tRWindow, const IRect2D & rectViewport, SNO snoDes
                 ptParamsPrev->snoTexCorrectionA == ptParamsPrev2->snoTexCorrectionA &&
                 ptParamsPrev->snoTexCorrectionB == ptParamsPrev2->snoTexCorrectionB)
             {
-                SNO snoShader;
-                if (flActualGhosted == 0.0f)
-                    snoShader = GlobalSNOGet(fCombinedWithBloom ? GLOBALSNO_POSTFX_SOFTFOCUS_TONEMAP_CONSOLE_SHADER : GLOBALSNO_POSTFX_TONEMAP_SHADER);
-                else
-                    snoShader = GlobalSNOGet(fCombinedWithBloom ? GLOBALSNO_POSTFX_SOFTFOCUS_TONEMAP_GRAY_CONSOLE_SHADER : GLOBALSNO_POSTFX_TONEMAP_GRAY_SHADER);
+                SNO snoShader = GlobalSNOGet(flActualGhosted == 0.0f
+                    ? (fCombinedWithBloom ? GLOBALSNO_POSTFX_SOFTFOCUS_TONEMAP_CONSOLE_SHADER : GLOBALSNO_POSTFX_TONEMAP_SHADER)
+                    : (fCombinedWithBloom ? GLOBALSNO_POSTFX_SOFTFOCUS_TONEMAP_GRAY_CONSOLE_SHADER : GLOBALSNO_POSTFX_TONEMAP_GRAY_SHADER));
+
+
                 sPostFXBlendColorCorrection(0.0f, flActualGhosted, snoShader, snoBloomBuffer, snoSource, ptParamsPrev->snoTexSaturationVignette, ptParamsPrev->snoTexCorrectionA, ptParamsPrev->snoTexCorrectionB, SNO_NONE, SNO_NONE, SNO_NONE);
                 flCounter = flCounterMax;
             }
             else
             {
-                SNO snoShader;
-                if (flActualGhosted == 0.0f)
-                    snoShader = GlobalSNOGet(fCombinedWithBloom ? GLOBALSNO_POSTFX_SOFTFOCUS_TONEMAP_BLEND_CONSOLE_SHADER : GLOBALSNO_POSTFX_TONEMAP_BLEND_SHADER);
-                else
-                    snoShader = GlobalSNOGet(fCombinedWithBloom ? GLOBALSNO_POSTFX_SOFTFOCUS_TONEMAP_BLEND_GRAY_CONSOLE_SHADER : GLOBALSNO_POSTFX_TONEMAP_BLEND_GRAY_SHADER);
+                SNO snoShader = GlobalSNOGet(flActualGhosted == 0.0f
+                    ? (fCombinedWithBloom ? GLOBALSNO_POSTFX_SOFTFOCUS_TONEMAP_BLEND_CONSOLE_SHADER : GLOBALSNO_POSTFX_TONEMAP_BLEND_SHADER)
+                    : (fCombinedWithBloom ? GLOBALSNO_POSTFX_SOFTFOCUS_TONEMAP_BLEND_GRAY_CONSOLE_SHADER : GLOBALSNO_POSTFX_TONEMAP_BLEND_GRAY_SHADER));
+
+
                 sPostFXBlendColorCorrection(flCounter / flCounterMax, flActualGhosted, snoShader, snoBloomBuffer, snoSource, ptParamsPrev2->snoTexSaturationVignette, ptParamsPrev2->snoTexCorrectionA, ptParamsPrev2->snoTexCorrectionB, ptParamsPrev->snoTexSaturationVignette, ptParamsPrev->snoTexCorrectionA, ptParamsPrev->snoTexCorrectionB);
             }
         }

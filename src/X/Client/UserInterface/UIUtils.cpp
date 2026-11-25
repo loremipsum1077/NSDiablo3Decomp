@@ -844,7 +844,7 @@ CRefString sFormatTruncatedNumber_generic( const float flValue, const BOOL bUseL
 
 CRefString FormatTruncatedNumber( const float flValue, const BOOL bUseMillions, const BOOL bIncludeSpecialChar )
 {
-    return FormatTruncatedNumber( UnicodeText::GetCurrentLocale(), flValue, bUseMillions, bIncludeSpecialChar );
+    return FormatTruncatedNumber( UnicodeText::GetStringDisplayLocale(), flValue, bUseMillions, bIncludeSpecialChar );
 }
 
 

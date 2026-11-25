@@ -861,6 +861,7 @@ AttachmentID AttachmentAdd(const RMessage & msg, const DataID idAttachedObject)
     }
 
     XPooledDataIDList * ptAttachmentList = sGetAttachmentList(tAttachment);
+    if (!ptAttachmentList) { ptAttachmentGlobals->ptAttachments->ElementDeleteByID(idAttachment); return ATTACHMENTID_INVALID; }
 
 
 
@@ -1363,7 +1364,7 @@ static XPooledDataIDList * sGetAttachmentList(const Attachment & tAttachment)
 
     default:
 
-        DisplayInternalError(NULL, "", 1366, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 1372, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 
 
@@ -1827,7 +1828,7 @@ void AttachmentDelete(Attachment & tAttachment)
     case SCENE_SNO: CSceneDelete(idAttachedObject); break;
     case TRAIL_SNO: TrailDelete(idAttachedObject); break;
     default:
-        DisplayInternalError(NULL, "", 1147, ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 1153, ERROR_INTERNAL_FATAL);
         ExitProgram(ERROR_INTERNAL_FATAL);
     }
 }
@@ -1915,7 +1916,7 @@ BOOL AttachmentIsLost(Attachment & tAttachment)
     case TRAIL_SNO: fDelete = TrailTryToGet(tAttachment.idAttachedObject) == NULL; break;
     case ROPE_SNO: fDelete = RopeTryToGet(tAttachment.idAttachedObject) == NULL; break;
     default:
-        DisplayInternalError(NULL, "", 1497, ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 1503, ERROR_INTERNAL_FATAL);
         ExitProgram(ERROR_INTERNAL_FATAL);
     }
     return fDelete;
@@ -2153,7 +2154,7 @@ static DataID sAttachmentCreate(const RMessage & msg, const ParentData & tParent
                         ActorCommonData * ptACDOwner = ACDTryToGet(ptRActorOwner->idACD);
                         if (ptACDOwner)
                         {
-                            ACDNetworkName idANNEffectOwner = (ACDNetworkName)ptACDOwner->AttributesGetInt((FastAttribKey)0xfffff502);
+                            ACDNetworkName idANNEffectOwner = (ACDNetworkName)ptACDOwner->AttributesGetInt((FastAttribKey)0xfffff507);
                             if (idANNEffectOwner != ANN_INVALID)
                             {
                                 idACDPlayer = ACDFromANN(idANNEffectOwner);

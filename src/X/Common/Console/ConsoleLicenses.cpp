@@ -47,7 +47,7 @@ struct ConsoleBonusItemsFromLicense {
     RewardDestination eRewardDestination;
     RewardSeasonal eRewardSeasonal;
 };
-// Original table at0x1047de0, including all seven pointer targets and enumeration values.
+// 2.7.7 table at 0x10ab920; string targets proven by R_AARCH64_RELATIVE addends.
 #line 72 "X/Common/Console/ConsoleLicenses.cpp"
 static ConsoleBonusItemsFromLicense s_arConsoleLicenseItems[] = {
     {LICENSE_LEGACY_PREORDER_BONUS, LicenseRequired, "Console_PS3PreorderItems", RewardToInventory, AllowSeasonal},
@@ -57,6 +57,10 @@ static ConsoleBonusItemsFromLicense s_arConsoleLicenseItems[] = {
     {LICENSE_LINKED_BNET_ACCOUNT_SWITCH, LicenseRequired, "Console_SwitchPromoAmulet", RewardToStash, ExcludeSeasonal},
     {LICENSE_OVERWATCH_CE, LicenseRequired, "Console_OverwatchCEItems", RewardToInventory, AllowSeasonal},
     {LICENSE_NECROMANCER, LicenseRevokable, "Console_NecromancerItems", RewardToInventory, AllowSeasonal},
+    {26, LicenseRevokable, "Console_BlizzConlinePromoItems", RewardToInventory, AllowSeasonal},
+    {27, LicenseRevokable, "Console_PrimeEvilCollection", RewardToInventory, AllowSeasonal},
+    {28, LicenseRevokable, "Console_D2RPreorder", RewardToInventory, AllowSeasonal},
+    {29, LicenseRevokable, "Console_D4Preorder", RewardToInventory, AllowSeasonal},
 };
 #line 108 "X/Common/Console/ConsoleLicenses.cpp"
 static void sRemoveUnlicensedTransmog(
@@ -87,19 +91,19 @@ static BOOL sModifyItemIfUnlicensed(ActorCommonData* ptACDItem, GBID gbidUnlicen
         SACDInventoryDeleteItem(*ptACDItem, ptACDItem->GetStackCount(), FALSE, FALSE);
         return TRUE;
     }
-    GBID gbidTransmog = ptACDItem->AttributesGetInt(static_cast<FastAttribKey>(0xfffff1a6));
+    GBID gbidTransmog = ptACDItem->AttributesGetInt(static_cast<FastAttribKey>(0xfffff1ab));
     if (gbidTransmog != -1 && ItemCrafting_ItemTransmogsMatch(gbidTransmog, gbidUnlicensedItem))
-        ptACDItem->AttributesSetInt(static_cast<FastAttribKey>(0xfffff1a6), -1);
+        ptACDItem->AttributesSetInt(static_cast<FastAttribKey>(0xfffff1ab), -1);
     DyeType eItemDyeType = ptACDItem->GetDyeType();
     if (eItemDyeType != 0 && ItemIsDye(gbidUnlicensedItem) && !ItemIsDye(*ptACDItem)) {
         ScopedItemDefinitionLockR pdefUnlicensedDye(gbidUnlicensedItem);
         if (pdefUnlicensedDye) {
             for (int32 i = 0; i < static_cast<int32>(pdefUnlicensedDye->serAttributes_Console.dwSize / sizeof(AttributeSpecifier)); ++i) {
-                if (pdefUnlicensedDye->ptAttributes[i].eAttribute == 0x193) {
+                if (pdefUnlicensedDye->ptAttributes[i].eAttribute == 0x198) {
                     SavedDyeType eUnlicensedSavedDyeType = static_cast<SavedDyeType>(ItemGetAttributeSpecifierValue(gbidUnlicensedItem, pdefUnlicensedDye->ptAttributes[i], 0, 0, FALSE, FALSE));
                     DyeType eUnlicensedDyeType = DyeTypeTranslateFromSavedDyeType(eUnlicensedSavedDyeType);
                     if (eUnlicensedDyeType == eItemDyeType)
-                        ptACDItem->AttributesSetInt(static_cast<FastAttribKey>(0xfffff193), 0);
+                        ptACDItem->AttributesSetInt(static_cast<FastAttribKey>(0xfffff198), 0);
                     break;
                 }
             }
@@ -119,10 +123,10 @@ static void sRemoveUnlicensedTransmogCB(ACDID idACDSquare, InventorySlotType, vo
 {
     ActorCommonData* ptACDItem = ACDTryToGet(idACDSquare);
     if (ptACDItem) {
-        GBID gbidTransmog = ptACDItem->AttributesGetInt(static_cast<FastAttribKey>(0xfffff1a6));
+        GBID gbidTransmog = ptACDItem->AttributesGetInt(static_cast<FastAttribKey>(0xfffff1ab));
         GBID gbidUnlicensedItem = static_cast<GBID>(reinterpret_cast<intptr_t>(pUserData));
         if (gbidTransmog != -1 && ItemCrafting_ItemTransmogsMatch(gbidTransmog, gbidUnlicensedItem))
-            ptACDItem->AttributesSetInt(static_cast<FastAttribKey>(0xfffff1a6), -1);
+            ptACDItem->AttributesSetInt(static_cast<FastAttribKey>(0xfffff1ab), -1);
     }
 }
 #line 217 "X/Common/Console/ConsoleLicenses.cpp"
@@ -233,7 +237,7 @@ static void sDeleteUnlicensedCosmetic(Player& tPlayer, ActorCommonData& tACDPlay
 void ConsoleUpdateBonusItems(Player& tPlayer, ActorCommonData& tACDPlayer, const uint32 uConsoleLicenses)
 {
     if (CmdLineGetParams()->tBitArray.Get(CMDLINE_BLIZZCON_BIT) || GameIsWeeklyChallenge()) return;
-    for (int32 i = 0; i < 7; ++i) {
+    for (int32 i = 0; i < 11; ++i) {
         ConsoleBonusItemsFromLicense& tLicenseInfo = s_arConsoleLicenseItems[i];
         LooteeInfo tLootee;
         tLootee.InitializeFromACD(tACDPlayer, ACDID_INVALID);

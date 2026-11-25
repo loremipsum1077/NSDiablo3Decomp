@@ -321,7 +321,7 @@ static void sUpdateAppearanceByLocation(
 
 
         if (eVisSlot == VIS_LEFT_HAND &&
-            ptACD->AttributesAttributeExists(0xfffff42a))
+            ptACD->AttributesAttributeExists(0xfffff42f))
         {
             ACDID idACDPrimaryWeapon = ACDInventoryGetPrimaryWeapon(ptACD->id);
             ActorCommonData* ptACDWeapon = ACDTryToGet(idACDPrimaryWeapon);
@@ -337,7 +337,7 @@ static void sUpdateAppearanceByLocation(
             else
             {
                 GBID gbidItemLeftHand = tVisualItemNew.gbidItem;
-                ItemEffectType eOverrideItemEffect = ptACD->AttributesGetInt(0xfffff42a);
+                ItemEffectType eOverrideItemEffect = ptACD->AttributesGetInt(0xfffff42f);
                 if (gbidItemLeftHand != GBID_NONE)
                 {
                     ScopedItemDefinitionLockR pdefItemLeftHand(gbidItemLeftHand);
@@ -494,7 +494,7 @@ static void sUpdateAppearanceByLocation(
 
 
         if (
-            ptACD->AttributesAttributeExists(0xfffff42a))
+            ptACD->AttributesAttributeExists(0xfffff42f))
         {
             tVisualItemNew.eItemEffectType = eOriginalItemEffectType;
             tVisualItemNew.nEffectLevel = nOriginalItemEffectLevel;

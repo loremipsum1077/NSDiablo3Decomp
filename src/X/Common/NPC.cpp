@@ -49,7 +49,7 @@ CrafterType NPCGetCrafterType(const ActorCommonData & tACDVendor);
 
 
 static const TypeDescriptorField NPCInteraction_Fields[5] = {
-    BoundedTypeDescriptorField("", DT_INT, offsetof(NPCInteraction, eType), NULL, (const void *)NIT_INVALID, (const void *)(NIT_NUM_TYPES - 1)),
+    BoundedTypeDescriptorField("", DT_INT, offsetof(NPCInteraction, eType), NULL, (const void *)NIT_INVALID, (const void *)11 /* 2.7.7 NPC interaction upper bound */),
     TypeDescriptorField("", DT_INT, offsetof(NPCInteraction, dwData), NULL, 1), TypeDescriptorField("", DT_INT, offsetof(NPCInteraction, dwData2), NULL, 1),
     BoundedTypeDescriptorField("", DT_INT, offsetof(NPCInteraction, dwFlags), NULL, (const void *)0, (const void *)((1 << NPC_OPTION_COUNT) - 1)), TypeDescriptorField(NULL, DT_NULL, sizeof(NPCInteraction), NULL, 0),
 };

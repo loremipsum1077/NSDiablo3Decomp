@@ -14,7 +14,7 @@
 AttributeCompressor * AttributeCompressor::m_ptCreatedCompressors;
 static const TypeDescriptorField NetAttributeKeyValue_Fields[] = {
     OptionalBoundedTypeDescriptorField("", DT_INT, 0, 0, 0, (const void *)0xfffff),
-    BoundedTypeDescriptorField("", DT_INT, 8, 0, 0, (const void *)0x5bc),
+    BoundedTypeDescriptorField("", DT_INT, 8, 0, 0, (const void *)0x5cd),
     TypeDescriptorField(0, DT_NULL, 16, 0, 0),
 };
 ComplexTypeDescriptor TypeDescriptor_NetAttributeKeyValue("NetAttributeKeyValue", 0, NetAttributeKeyValue_Fields, 3, 0, 0, 0, 0, 0, 0);
@@ -68,7 +68,7 @@ BOOL AttributeCompressor::Encode(XEncoder & tEncoder, NetAttributeKeyValue & tKe
 
 
 XDecoder::Result AttributeCompressor::Decode(XDecoder & tDecoder, NetAttributeKeyValue & tKeyValue) {
-    if (tKeyValue.eKeyAttrib >= 0 && tKeyValue.eKeyAttrib < 1468) {
+    if (tKeyValue.eKeyAttrib >= 0 && tKeyValue.eKeyAttrib < 1485) {
         const AttributeCompressor * ptCompressor = KeyGetCompressor(FastAttribKey(tKeyValue.eKeyAttrib));
         if (ptCompressor) return ptCompressor->_Decode(tDecoder, tKeyValue);
     }

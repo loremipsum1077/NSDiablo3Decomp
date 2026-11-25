@@ -226,14 +226,14 @@ BOOL UIControlGroup::UpdateCachedActiveState()
     return bWasActive;
 }
 
-// NON_MATCHING: the original tests `msg <= 2` unsigned (`cmp #2; b.ls`) and lays the child walk (line 359) out
-// first though the active walk (342) is earlier in source. UIMsg has no fixed underlying type in the DWARF (other
-// enums carry DW_AT_type), so msg promotes to int: the unsigned test comes from the expression. Range forms
-// (`msg >= UI_UPDATE && msg < UI_RESET`, `==` chains, switch) give cmp #2 but A-first layout and put the branch on
-// the &&; the original has branch 338:9, msg load 338:37 (28 chars into the condition), not yet explained.
+
+
+
+
+// NON_MATCHING: unsigned message comparison uses cmp 3/b.lo instead of target cmp 2/b.ls.
 BOOL UIControlGroup::ForwardMessage(const UIMsg & msg, const uintptr dwParam)
 {
-    if (msg >= UI_RESET)
+    if (static_cast<uint32>(msg) > UI_RESET - 1)
     {
         for (int32 i = m_listChildren.size(); i > 0; --i)
         {

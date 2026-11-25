@@ -8193,6 +8193,7 @@ static void sPlayTieredRiftOrbPickUpHUDFX(
     }
 }
 #line 7943 "X/Client/UserInterface/Interface/UIGame.cpp"
+// NON_MATCHING: inlined pickup-FX constants use different select operands and instruction order.
 namespace UIGame { void FlashTieredRiftProgressBar(
     float flProgress)
 {

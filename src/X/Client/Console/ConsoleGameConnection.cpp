@@ -16,7 +16,7 @@ extern PartyRef sptParty;  // ConsoleParty.cpp
 
 enum {
     CONSOLE_MIN_GUARANTEED_RECEIVE_QUEUE_SIZE = 32768,
-    CONSOLE_MAX_COMBINED_RECEIVE_QUEUE_SIZE = 262144,
+    CONSOLE_MAX_COMBINED_RECEIVE_QUEUE_SIZE = 1048576,
 };
 
 typedef bdHashMap<bdReference<bdConnection>, bdReference<GameConnection>, bdHashingClass> ServerGameConnectionMap;

@@ -114,7 +114,7 @@ void TrainingItems::RefreshTrainingRewards(
     GBHandleList listGBHandles(GBGetHandlePool());
     GBEnumerate(GB_RECIPES, listGBHandles);
 
-    ACDNetworkName ann = (ACDNetworkName)9076;  // 0x2374; no enumerator in src has this value
+    ACDNetworkName ann = (ACDNetworkName)12660;  // 0x3174; no enumerator in src has this value
 
     POS pos = listGBHandles.GetHeadPosition();
     while (pos)
@@ -184,7 +184,7 @@ void TrainingItems::RefreshMysticTrainingRewards(
             tUnlockableTransmogsMap.SetAt_Tracked(pdefItem->snoActor, gbidItem);
         }
     }
-    ACDNetworkName ann = (ACDNetworkName)9076;  // 0x2374; no enumerator in src has this value
+    ACDNetworkName ann = (ACDNetworkName)12660;  // 0x3174; no enumerator in src has this value
 
 
     pos = tUnlockableTransmogsMap.GetStartAssoc();

@@ -478,8 +478,8 @@ void CrafterRecipes::Refresh()
 
         GBIDArray arrRecipes;
         UICrafting::BuildRecipeListForCrafter(arrRecipes, ptPlayer, ptPlayer->eActiveCrafterType, NULL);
-        // The original starts the generated items' network names at 0x2174; no named constant found.
-        ACDNetworkName ann = (ACDNetworkName)8564;
+        // The original starts the generated items' network names at 0x2f74; no named constant found.
+        ACDNetworkName ann = (ACDNetworkName)12148;
 
 
         for (uint32 i = 0; i < arrRecipes.size(); ++i)
@@ -993,7 +993,7 @@ void CosmeticItemsProvider::Refresh()
             m_arrFilteredItems[n].clear();
         }
 
-        ACDNetworkName ann = (ACDNetworkName)10100;  // inferred: 0x2774 + 1 is the first name used
+        ACDNetworkName ann = (ACDNetworkName)13684;  // inferred: 0x3574 + 1 is the first name used
 
 
         for (uint32 i = 0; i < 512; ++i)
@@ -1263,7 +1263,7 @@ void CraftingMatItemsProvider::Refresh()
         {
             m_arrVirtualItems.clear();
 
-            ACDNetworkName ann = (ACDNetworkName)10612;  // inferred: 10613 (0x2975) is the first name used
+            ACDNetworkName ann = (ACDNetworkName)14196;  // inferred: 14197 (0x3775) is the first name used
 
 
             GBHandleList listGBHandles(GBGetHandlePool());

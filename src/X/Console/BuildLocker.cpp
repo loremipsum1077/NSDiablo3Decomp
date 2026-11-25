@@ -42,7 +42,7 @@ static BOOL s_bWatermarkEnabled;  // DWARF variable DIE 0x7e39: type BOOL (typed
 
 extern const RGBAColor crgbaTextShadow;  // RGBAColor.cpp (no header declares it)
 
-// NON_MATCHING: 988 vs 980 B. Drop-shadow colour starts from crgbaBlack (original GOT slot +0x120, line 59). With the late-GlobalOpt build the two statics are now separate symbols as in the original (s_bWatermarkEnabled shrunk to one byte, ldrb [x8,#0x470]). What is left: the Vector2D stores of the later draws are str/str in ours where the original pairs them (stp), plus scheduling around the colour strh (tried member-wise assignment, no change).
+// NON_MATCHING: 988 vs 980 bytes; 2.7.7 font ID is 645, but later Vector2D stores are separate instead of paired and colour-store scheduling differs.
 void BuildLockerDrawWatermark()
 {
     if (s_bWatermarkEnabled == TRUE)
@@ -51,7 +51,7 @@ void BuildLockerDrawWatermark()
         sMsg.Format("%s\n%s\n%02d-%02d-%02d", s_tSignature.szName, s_tSignature.szComment, s_tSignature.nMonth, s_tSignature.nDay, s_tSignature.nYear);
         Rect2D rectViewportUIC;
         CGameGetSafeViewportUIC(rectViewportUIC);
-        TextRenderProperties tProps(GlobalSNOGet(637), 21, 1.0f, 1.0f);
+        TextRenderProperties tProps(GlobalSNOGet(645), 21, 1.0f, 1.0f);
         FormattedText tFormattedText(sMsg, 5);
         Vector2D vecSizeUIC;
         FontStringGetRenderedSizeUIC(tProps, tFormattedText, vecSizeUIC);
@@ -82,7 +82,7 @@ void BuildLockerDrawWatermark()
         FontStringDrawUIC(tProps, tFormattedText, vecUIC, tColor, &tDropShadowColor, 0.0f, TRUE, NULL, RENDERLAYER_INVALID, FALSE);
         sMsg = "This build has a unique fingerprint - do not distribute.";
         tFormattedText = FormattedText(sMsg, 5);
-        tProps = TextRenderProperties(GlobalSNOGet(637), 13, 1.0f, 1.0f);
+        tProps = TextRenderProperties(GlobalSNOGet(645), 13, 1.0f, 1.0f);
         FontStringGetRenderedSizeUIC(tProps, tFormattedText, vecSizeUIC);
         vecUIC = Vector2D((rectViewportUIC.right + rectViewportUIC.left) * 0.5f - vecSizeUIC.x * 0.5f, (rectViewportUIC.bottom - vecSizeUIC.y) - 15.0f);
         FontStringDrawUIC(tProps, tFormattedText, vecUIC, crgbaWhite, &crgbaTextShadow, 0.0f, TRUE, NULL, RENDERLAYER_INVALID, FALSE);

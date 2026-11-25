@@ -1741,7 +1741,7 @@ void BrainAPIDoCharge(ActorID idActor, BrainAttackSettings & tAttackSettings)
                 tCharge.tTarget.InitializeFromPlace(ACDGet(tCharge.tTarget.idACDTarget).GetPlace());
                 break;
             default:
-                DisplayInternalError(NULL, "", 4254, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+                DisplayInternalError(NULL, "", 4255, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
         }
         tCharge.dwAttackFlags = tAttackSettings.dwAttackFlags;
     } else {
@@ -4379,7 +4379,7 @@ void BrainAPIDoAIAction(
 
     if (!ptComp) {
 
-        DisplayInternalError(NULL, "", __LINE__, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 4598, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 
 
@@ -4563,7 +4563,7 @@ void BrainAPIDoAIAction(
     default:
 
 
-        DisplayInternalError(NULL, "", __LINE__, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 4782, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 
     ActorPowersDetachPrimary(idActor);
@@ -5639,7 +5639,7 @@ void BrainComponentDoMovement(
     BrainComponentData * ptComp = sGetBrainComponentData(idActor);
     if (!ptComp) {
 
-        DisplayInternalError(NULL, "", __LINE__, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 5119, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
     }
 
     BrainComponentMovement & tMovement = ptComp->tMovement;
