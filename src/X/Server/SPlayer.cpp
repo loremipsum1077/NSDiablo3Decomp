@@ -2515,14 +2515,14 @@ void PlayerSendHeroStatePlayerFlagsToClient(
     const ACDID idACD)
 {
     Player * ptPlayer = PlayerGetByACD(idACD);
-    PlayerDWordDataMessage tMessage;
-    tMessage.dwData = ptPlayer->tHeroStateData.uPlayerFlags;
-    tMessage.nPlayerIndex = ptPlayer->nPlayerIndex;
+    PlayerDWord2DataMessage tMessage;
+    tMessage.unk_08 = ptPlayer->tHeroStateData.uPlayerFlags;
+    tMessage.unk_0c = ptPlayer->tHeroStateData.uPlayerFlags2;
+    tMessage.unk_10 = ptPlayer->nPlayerIndex;
     PlayerList listDestPlayers(PlayerListGetElementPool());
     PlayerListGetSingle(listDestPlayers, *ptPlayer);
     MessageSendToClient(listDestPlayers, SMSG_HERO_STATE_PLAYERFLAGS, &tMessage, sizeof(tMessage));
 }
-
 
 
 
@@ -6835,14 +6835,22 @@ void SPlayerSpendParagonPoints(
 
 
 
+extern "C" void sub_7100527730(const ActorCommonData & tACDPlayer, int32 * pnPoints);
+extern "C" void sub_71007f7030(ActorCommonData & tACDPlayer);
+
 void SPlayerInitializeParagonPoints(
     Player & tPlayer)
 {
-    ActorCommonData & tACDPlayer = ACDGet(tPlayer.idPlayerACD);
+    sub_71007f7030(ACDGet(tPlayer.idPlayerACD));
+}
 
+extern "C" void sub_71007f7030(ActorCommonData & tACDPlayer)
+{
+    int32 arPoints[4] = {};
+    sub_7100527730(tACDPlayer, arPoints);
     for (int32 i = 0; i < 4; i++)
     {
-        int32 nPointsAvailable = PlayerGetParagonPointsTotalForCategory(tACDPlayer, i);
+        int32 nPointsAvailable = arPoints[i];
 
         GBHandleList listBonuses(GBGetHandlePool());
         GBEnumerate(GB_PARAGON_BONUSES, listBonuses);
@@ -6873,12 +6881,20 @@ void SPlayerInitializeParagonPoints(
 
 
 
+extern "C" void sub_71007f72e0(ActorCommonData & tACDPlayer, int32 nCategory);
+
 void SPlayerResetParagonPoints(
     Player & tPlayer,
     int32 nCategory)
 {
     ActorCommonData & tACDPlayer = ACDGet(tPlayer.idPlayerACD);
+    sub_71007f72e0(tACDPlayer, nCategory);
+    sub_71007f7030(tACDPlayer);
+    SPlayerApplyParagonBuff(tACDPlayer);
+}
 
+extern "C" void sub_71007f72e0(ActorCommonData & tACDPlayer, int32 nCategory)
+{
     GBHandleList listBonuses(GBGetHandlePool());
     GBEnumerate(GB_PARAGON_BONUSES, listBonuses);
 
@@ -6892,9 +6908,6 @@ void SPlayerResetParagonPoints(
             tACDPlayer.AttributesSetInt(MakeAttribKey(ATTRIBUTE_PARAGON_BONUS, hGBBonus.gbid), 0);
         }
     }
-
-    SPlayerInitializeParagonPoints(tPlayer);
-    SPlayerApplyParagonBuff(tACDPlayer);
 }
 
 
@@ -12015,9 +12028,40 @@ BOOL SPlayerApplyConsumablePotionBuffs(
 
 
 
+extern "C" BOOL sub_7100527370(const ActorCommonData & tACDPlayer);
+extern "C" int32 sub_71005274a0(const ActorCommonData & tACDPlayer);
+extern "C" const AttributeSpecifier * sub_7100527410(const ActorCommonData & tACDPlayer, GBID gbidBonus, uint32 nIndex);
+
 void SPlayerApplyParagonBuff(
     ActorCommonData & tACDPlayer)
 {
+    {
+        blz::unordered_map<int32, int32> pointsByCategory;
+        GBHandleList listBonuses(GBGetHandlePool());
+        GBEnumerate(GB_PARAGON_BONUSES, listBonuses);
+        POS pos = listBonuses.GetHeadPosition();
+        while (pos)
+        {
+            const GBHandle & hBonus = listBonuses.GetNext(pos);
+            ScopedParagonBonusLockR pdefBonus(hBonus.gbid);
+            int32 nPoints = tACDPlayer.AttributesGetInt(MakeAttribKey(ATTRIBUTE_PARAGON_BONUS, hBonus.gbid));
+            if (nPoints > sub_71005272f0(tACDPlayer, hBonus.gbid))
+                sub_71007f72e0(tACDPlayer, pdefBonus->nCategory);
+            else
+                pointsByCategory[pdefBonus->nCategory] += nPoints;
+        }
+        if (sub_7100527370(tACDPlayer))
+        {
+            int32 nCategoryCap = sub_71005274a0(tACDPlayer);
+            for (const auto & entry : pointsByCategory)
+            {
+                if (entry.second > nCategoryCap)
+                    sub_71007f72e0(tACDPlayer, entry.first);
+            }
+        }
+        sub_71007f7030(tACDPlayer);
+    }
+
     Player * ptPlayer = PlayerGetByACD(tACDPlayer.id);
     if (!ptPlayer)
         return;
@@ -12046,11 +12090,9 @@ void SPlayerApplyParagonBuff(
             int32 nPoints = tACDPlayer.AttributesGetInt(MakeAttribKey(ATTRIBUTE_PARAGON_BONUS, hGBBonus.gbid));
             if (nPoints)
             {
-                ScopedParagonBonusLockR pdefParagonBonus(hGBBonus.gbid);
-
                 for (int32 i = 0; i < 4; i++)
                 {
-                    const AttributeSpecifier & tSpecifier = pdefParagonBonus->ptAttributes[i];
+                    const AttributeSpecifier & tSpecifier = *sub_7100527410(tACDPlayer, hGBBonus.gbid, i);
                     if (tSpecifier.eAttribute > AXEBADDATA && tSpecifier.eAttribute < NUM_ATTRIBUTES)
                     {
 
@@ -12315,17 +12357,18 @@ BOOL SPlayerFindValidWalkableSpotNearPlayer(
 
 
 
-
+// NON_MATCHING: The session scan differs in register allocation and load scheduling.
 void SPlayerRestoreBuffs(
     Player & tPlayer)
 {
     ServerPlayerGlobals * ptServerPlayerGlobals = SGameManager::GameGet().ptServerPlayerGlobals;
 
+    uint32 dwLastPlayedAmount = tPlayer.tHeroStateData.tSavedData.uSecondsPlayed;
     for (size_t i = 0; i < ptServerPlayerGlobals->tPreviousSessions.Count(); i++)
     {
         SessionTrackedData & tData = ptServerPlayerGlobals->tPreviousSessions[i];
         if (tData.uHeroId == tPlayer.uHeroId &&
-            tData.dwLastPlayedAmount == tPlayer.tHeroStateData.tSavedData.uSecondsPlayed)
+            tData.dwLastPlayedAmount == dwLastPlayedAmount)
         {
             SNO snoNephalemBuffPower = GlobalSNOGet(GLOBALSNO_POWERS_KILLELITEPACK);
 

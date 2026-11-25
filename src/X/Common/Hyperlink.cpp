@@ -547,7 +547,7 @@ BOOL HyperlinkGetPrettyName(char * pszPrettyName, const char *& pszString, int32
 
 
 
-// NON_MATCHING: 284 bytes both; only line 580 differs: original loads pszBegin into pszString (x21) then copies to x0, ours loads into x0 then copies (2 instructions). Tried: separate statements, both assignment-chain orders, per-branch Find calls.
+// NON_MATCHING: the target duplicates the Find call on the successful pretty-name path. The rebuild shares it with the malformed-link path.
 void HyperlinkRemoveFormattingFromString(
     char * pszModifiedString,
     const char * pszString,

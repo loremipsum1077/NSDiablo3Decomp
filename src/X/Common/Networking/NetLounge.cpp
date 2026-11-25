@@ -113,7 +113,7 @@ static const TypeDescriptorField NetGameAdvert_Fields[14] = {
     TypeDescriptorField("", DT_INT, offsetof(NetGameAdvert, eAct), NULL, 1),
     TypeDescriptorField("", DT_SNO, offsetof(NetGameAdvert, snoQuest), NULL, 1),
     TypeDescriptorField("", DT_SNO, offsetof(NetGameAdvert, snoInitialWorld), NULL, 1),
-    BoundedTypeDescriptorField("", DT_INT, offsetof(NetGameAdvert, uGameCreationFlags), NULL, NULL, (const void *)0xfffff),
+    BoundedTypeDescriptorField("", DT_INT, offsetof(NetGameAdvert, uGameCreationFlags), NULL, NULL, (const void *)0x1fffff),
     BoundedTypeDescriptorField("", DT_INT, offsetof(NetGameAdvert, bJoinAllowed), NULL, NULL, (const void *)0x1),
     TypeDescriptorField(NULL, DT_NULL, sizeof(NetGameAdvert), NULL, 0),
 };

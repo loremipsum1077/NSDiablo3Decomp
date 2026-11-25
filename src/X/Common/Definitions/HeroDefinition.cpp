@@ -228,7 +228,7 @@ const XTypeDescriptor * DT_ASSIGN_SKILL_MESSAGE = &TypeDescriptor_AssignSkillMes
 static const TypeDescriptorField AssignLegendaryPowerMessage_Fields[5] = {
     TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, offsetof(AssignLegendaryPowerMessage, tHeader), NULL, 1),
     FilterTypeDescriptorField("", DT_GBID, offsetof(AssignLegendaryPowerMessage, gbidLegendaryItem), "", 2, 0, -1),
-    BoundedTypeDescriptorField("", DT_INT, offsetof(AssignLegendaryPowerMessage, nSlot), NULL, NULL, (const void *)0x2),
+    BoundedTypeDescriptorField("", DT_INT, offsetof(AssignLegendaryPowerMessage, nSlot), NULL, NULL, (const void *)0x3),
     TypeDescriptorField("", DT_INT, offsetof(AssignLegendaryPowerMessage, nPlayerIndex), NULL, 1),
     TypeDescriptorField(NULL, DT_NULL, sizeof(AssignLegendaryPowerMessage), NULL, 0),
 };

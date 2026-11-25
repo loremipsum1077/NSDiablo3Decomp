@@ -649,6 +649,9 @@ inline uint64 sGetLeaderboardId()
     return LB_CHALLENGE_RIFT_TEAM_1;
 }
 
+// The 2.7.7 CPlayer predicate compares the mode word at 0x710179a200 with 1.
+extern "C" BOOL sub_71000b4bf0();
+
 void SetupLeaderboardPane()
 {
     if (!UI_TestID(UILIST_CONSOLE_RIFT_END_SCREEN_LEADERBOARD_FRIENDS_LIST))
@@ -667,7 +670,16 @@ void SetupLeaderboardPane()
 
     BOOL bHardcore = sgptConsoleRiftEndScreenGlobals->m_tRiftEndScreenInfo.console_player_info(0).hero_flags() & 1;
     LeaderboardKeyAndPartition tLeaderboardKey;
-    tLeaderboardKey.m_scope = GameIsWeeklyChallenge() ? LP_CHALLENGE : (bHardcore ? LP_SEASONAL_HARDCORE : LP_SEASONAL_SOFTCORE);
+    if (GameIsWeeklyChallenge())
+        tLeaderboardKey.m_scope = LP_CHALLENGE;
+    else
+    {
+        BOOL bAlternateScope = sub_71000b4bf0();
+        if (bHardcore)
+            tLeaderboardKey.m_scope = bAlternateScope ? static_cast<LeaderboardScope>(8) : LP_SEASONAL_HARDCORE;
+        else
+            tLeaderboardKey.m_scope = bAlternateScope ? static_cast<LeaderboardScope>(9) : LP_SEASONAL_SOFTCORE;
+    }
     tLeaderboardKey.m_id = sGetLeaderboardId();
     if (tLeaderboardKey.m_id == LB_NONE)
         return;

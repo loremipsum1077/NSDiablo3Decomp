@@ -1391,6 +1391,7 @@ uint32 UIControlDataExt::GetUint32Value(const UIAttributeType eAttributeType) co
 }
 
 #line 2556
+// NON_MATCHING: the rebuild shares the zero-return block at +0x90 between the empty-label and failed-lookup paths.
 BOOL UIControlDataExt::GetImageAttribute(const UIAttributeType eAttributeType, ImageTextureFrame & tImageTexFrame) const {
     if (m_control.AttributeExists(eAttributeType))
         return m_control.GetImageAttribute(eAttributeType, tImageTexFrame);

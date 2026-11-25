@@ -5863,3 +5863,20 @@ int32 CPlayerGetStashLookIndex(const Player & tPlayer)
     return 1;
 }
 
+// 2.7.7 accesses this BSS word at 0x710179a200 through the following three functions.
+static int32 unk_179a200;
+
+extern "C" int32 sub_71000b4be0()
+{
+    return unk_179a200;
+}
+
+extern "C" BOOL sub_71000b4bf0()
+{
+    return unk_179a200 == 1;
+}
+
+extern "C" void sub_71000b4c10(int32 nMode)
+{
+    unk_179a200 = nMode;
+}

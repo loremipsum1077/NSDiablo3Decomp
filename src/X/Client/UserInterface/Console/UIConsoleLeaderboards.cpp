@@ -76,6 +76,7 @@ enum ButtonActions {
     ACTION_VIEW_GAMERCARD = 8,
     ACTION_TOGGLE_LAST_WEEK = 9,
     ACTION_CONQUEST_DETAILS = 10,
+    ACTION_TOGGLE_SOLO = 11,
 };
 
 enum LeaderboardFilters {
@@ -716,12 +717,21 @@ void OnUpdate(const UIID & id)
     }
 }
 
+// 0x7100192320 tests whether the selected category is above 2 (unsigned).
+extern "C" BOOL sub_7100192320(int32 nCategory);
+
 void SetShoulderButtonVisibility()
 {
-    UIID idFilterBarL = UIIDCreateFromParent(UIWND_CONSOLE_LEADERBOARDS_FILTERS, ".LeftTrigger");
-    UIID idFilterBarR = UIIDCreateFromParent(UIWND_CONSOLE_LEADERBOARDS_FILTERS, ".RightTrigger");
+    UIID idFilterBarL = UIIDCreateFromParent(UIWND_CONSOLE_LEADERBOARDS_FILTERS, ".LeftShoulder");
+    UIID idFilterBarR = UIIDCreateFromParent(UIWND_CONSOLE_LEADERBOARDS_FILTERS, ".RightShoulder");
     UI_GetWindowFromID(idFilterBarL).SetActive(sgtUILeaderboardData.eUINavigationState != UISTATE_RING_NAVIGATION);
     UI_GetWindowFromID(idFilterBarR).SetActive(sgtUILeaderboardData.eUINavigationState != UISTATE_RING_NAVIGATION);
+    UIID idTriggerL = UIIDCreateFromParent(UIWND_CONSOLE_LEADERBOARDS_FILTERS, ".LeftTrigger");
+    UIID idTriggerR = UIIDCreateFromParent(UIWND_CONSOLE_LEADERBOARDS_FILTERS, ".RightTrigger");
+    BOOL bShowTriggers = sgtUILeaderboardData.eUINavigationState == UISTATE_FILTERS_NAVIGATION &&
+        sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS && sub_7100192320(sgtUILeaderboardData.nSelectedCategory);
+    UI_GetWindowFromID(idTriggerL).SetActive(bShowTriggers);
+    UI_GetWindowFromID(idTriggerR).SetActive(bShowTriggers);
     UIID idNavSeasonChallengesL1 = UIIDCreateFromParent(UIWND_CONSOLE_LEADERBOARDS_NAVIGATION, ".SeasonChallenges.KeyBinding1");
     UIID idNavSeasonChallengesR1 = UIIDCreateFromParent(UIWND_CONSOLE_LEADERBOARDS_NAVIGATION, ".SeasonChallenges.KeyBinding2");
     UI_GetWindowFromID(idNavSeasonChallengesL1).SetActive(sgtUILeaderboardData.eUINavigationState == UISTATE_RING_NAVIGATION);
@@ -1271,7 +1281,10 @@ void UpdateControllerActions(BOOL bDelayRefresh)
         tActionManager.SetAction(::Console::CONTROLLER_INPUT_BUTTON_1, ACTION_SELECT, StringListFetch("ConsoleUI:Select").str());
         tActionManager.SetAction(::Console::CONTROLLER_INPUT_BUTTON_2, ACTION_CLOSE, StringListFetch("ConsoleUI:Close").str());
         if (sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_GREATER_RIFTS)
+        {
             tActionManager.SetAction(::Console::CONTROLLER_INPUT_BUTTON_4, ACTION_TOGGLE_HARDCORE, StringListFetch("ConsoleLeaderboards:ToggleHardcore").str());
+            tActionManager.SetDelayedAction(::Console::CONTROLLER_INPUT_BUTTON_3, ACTION_TOGGLE_SOLO, StringListFetch("ConsoleLeaderboards:ToggleSolo").str(), 0);
+        }
         else if (sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_SEASON_CHALLENGE && sgtUILeaderboardData.nSelectedCategory != 0)
             tActionManager.SetAction(::Console::CONTROLLER_INPUT_BUTTON_4, ACTION_TOGGLE_LAST_WEEK, sgtUILeaderboardData.bLastWeeklyChallenge ? StringListFetch("ConsoleLeaderboards:ToggleCurrentWeek").str() : StringListFetch("ConsoleLeaderboards:ToggleLastWeek").str());
         else if (sgtUILeaderboardData.eCurrentTab == CURRENT_TAB_CONQUESTS)
@@ -2650,6 +2663,10 @@ int32 GetIndexFromWeeklyChallengeLeaderboardId(
 }
 #line 3000 "X/Client/UserInterface/Console/UIConsoleLeaderboards.cpp"
 // Inference: DWARF initial values are scope/index -1 and hardcore FALSE; decoded cases reconstruct the assignments and final validity guard.
+// The Greater Rift conversions at 0x710018fc78 and 0x710018fc98 call these out of line.
+extern "C" int32 sub_7100191e50(int64 nLeaderboardId);
+extern "C" int32 sub_7100191ef0(int32 nIndex, int32 nCategory, BOOL bHardcore, BOOL bSolo);
+
 int32 ConvertLeaderboardAndScopeToGameKey(
     int64 nLeaderboardId,
     int32 nScopeId)
@@ -2657,6 +2674,7 @@ int32 ConvertLeaderboardAndScopeToGameKey(
     int32 nScopeKey = -1;
     int32 nLeaderboardKey = -1;
     BOOL bHardcore = FALSE;
+    BOOL bSolo = nScopeId == 8 || nScopeId == 9;
     switch (nScopeId)
     {
     case LP_CHALLENGE:
@@ -2665,13 +2683,15 @@ int32 ConvertLeaderboardAndScopeToGameKey(
         break;
     case LP_SEASONAL:
         nScopeKey = CURRENT_TAB_CONQUESTS;
-        nLeaderboardKey = GetIndexFromConquestLeaderboardId(nLeaderboardId);
+        nLeaderboardKey = GetIndexFromConquestLeaderboardId(static_cast<int32>(nLeaderboardId));
         break;
+    case 8:
     case LP_SEASONAL_HARDCORE:
+        bHardcore = TRUE;
         nScopeKey = CURRENT_TAB_GREATER_RIFTS;
         nLeaderboardKey = GetIndexFromGreaterRiftLeaderboardId(nLeaderboardId);
-        bHardcore = TRUE;
         break;
+    case 9:
     case LP_SEASONAL_SOFTCORE:
         nScopeKey = CURRENT_TAB_GREATER_RIFTS;
         nLeaderboardKey = GetIndexFromGreaterRiftLeaderboardId(nLeaderboardId);
@@ -2683,7 +2703,9 @@ int32 ConvertLeaderboardAndScopeToGameKey(
         return -1;
     }
     // Inference: DWARF local is int32 while the helper accepts CurrentTab; value comes only from the original enumerators above.
-    return MakeGameKey(static_cast<CurrentTab>(nScopeKey), nLeaderboardKey, bHardcore, FALSE);
+    if (nScopeKey == CURRENT_TAB_GREATER_RIFTS)
+        return sub_7100191ef0(nLeaderboardKey, sub_7100191e50(nLeaderboardId), bHardcore, bSolo);
+    return MakeGameKey(static_cast<CurrentTab>(nScopeKey), nLeaderboardKey, bHardcore, bSolo);
 }
 } }
 

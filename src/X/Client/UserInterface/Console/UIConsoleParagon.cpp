@@ -38,6 +38,8 @@
 
 #include <float.h>
 
+BOOL PlayerCanChangeParagon(const ActorCommonData & tACDPlayer);
+
 extern "C" int32 sub_71005272f0(const ActorCommonData & tACDPlayer, GBID gbidParagonBonus);
 
 // Declared here because their headers are not adopted yet; each comment names the defining file.
@@ -653,6 +655,10 @@ void ResetCategoryPoints()
 
 
 
+        ActorCommonData * ptACDPlayer = ACDTryToGet(LocalPlayerACDGet());
+        if (ptACDPlayer && (!PlayerCanChangeParagon(*ptACDPlayer) || ACDIsParticipatingInTieredLootRun(*ptACDPlayer)))
+            return;
+
         IntDataMessage tMessage;
         tMessage.nData = sgptParagonGlobals->m_nCategory;
         MessageSendToServer(CMSG_PARAGON_PURCHASE_RESET_CATEGORY, &tMessage, sizeof(tMessage), sgptParagonGlobals->m_ptPlayer);
@@ -701,7 +707,10 @@ void UpdateParagonPointInformation()
 
 
 
-        tText.SetTextColor(nAvailablePoints != 0 || sgptParagonGlobals->m_nCategory == nCategory ? crgbaWhite : crgbaGray);
+        if (nAvailablePoints == 0 && sgptParagonGlobals->m_nCategory != nCategory)
+            tText.SetTextColor(crgbaGray);
+        else
+            tText.SetTextColor(crgbaWhite);
     }
 
 
@@ -1126,7 +1135,9 @@ void UpdateActionsAndButtonLegend()
         {
             tActionManager.SetAction(::Console::CONTROLLER_INPUT_DPAD_HORIZONTAL, ACTION_ADD_OR_REMOVE_POINTS, StringListFetch("X1_ConsoleParagon:AddOrRemovePoints").str());
         }
-        if (!GameIsWeeklyChallenge() && HasPointsToReset() && (!IsResetCostActive() || CanAffordReset()))
+        ActorCommonData * ptACDPlayer = ACDTryToGet(LocalPlayerACDGet());
+        if (!GameIsWeeklyChallenge() && HasPointsToReset() && (!IsResetCostActive() || CanAffordReset()) &&
+            ptACDPlayer && !ACDIsParticipatingInTieredLootRun(*ptACDPlayer))
         {
             tActionManager.SetAction(::Console::CONTROLLER_INPUT_BUTTON_3, ACTION_RESET_CATEGORY_POINTS, StringListFetch("H2OLayout:Reset").str());
         }

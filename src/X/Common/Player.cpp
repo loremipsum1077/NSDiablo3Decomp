@@ -11,6 +11,7 @@
 #include "HotbarButton.h"
 #include "Items.h"
 #include "Definitions/GameBalanceDefinition.h"
+#include "../Sigma/DataStructures/XVar.h"
 #include "../Server/Timers.h"
 #include "Game.h"
 #include "GameCommonData.h"
@@ -161,7 +162,7 @@ static const InventorySlotType scarLoadoutEquipmentSlots[15] = {
 
 // Lines 189-340: type descriptors (_GLOBAL__sub_I_Player.cpp), generated with build/try/solo/desc.py; field names are "" in the binary.
 static const TypeDescriptorField GameErrorData_Fields[3] = {
-    BoundedTypeDescriptorField("", DT_INT, offsetof(GameErrorData, eError), NULL, NULL, (const void *)0xb7),
+    BoundedTypeDescriptorField("", DT_INT, offsetof(GameErrorData, eError), NULL, NULL, (const void *)0xc3),
     TypeDescriptorField("", DT_INT, offsetof(GameErrorData, dwVal), NULL, 1),
     TypeDescriptorField(NULL, DT_NULL, sizeof(GameErrorData), NULL, 0),
 };
@@ -324,9 +325,8 @@ static const TypeDescriptorField PlayerLoadoutEquipResultsMessage_Fields[4] = {
 };
 ComplexTypeDescriptor TypeDescriptor_PlayerLoadoutEquipResultsMessage("PlayerLoadoutEquipResultsMessage", 0, PlayerLoadoutEquipResultsMessage_Fields, 4, NULL, 0x80, NULL, NULL, NULL, NULL); const XTypeDescriptor * DT_PLAYER_LOADOUT_EQUIP_RESULTS_MESSAGE = &TypeDescriptor_PlayerLoadoutEquipResultsMessage;
 
-
-
-
+static XVarScope unk_1916900("Paragon", NULL);
+XVarUint32 unk_19167f8(unk_1916900, "MaxParagonLevelForDistributedPointAllocation_Capped", 800);
 
 
 
@@ -5356,6 +5356,98 @@ extern "C" int32 sub_71005272f0(const ActorCommonData & tACDPlayer, GBID gbidPar
 {
     ScopedParagonBonusLockR pdefBonus(gbidParagonBonus);
     return tACDPlayer.AttributesGetInt(ATTRIBUTE_PARAGON_CAP_ENABLED) ? pdefBonus->unk_1c : pdefBonus->nPointsMax;
+}
+
+extern "C" BOOL sub_7100527370(const ActorCommonData & tACDPlayer)
+{
+    return tACDPlayer.AttributesGetInt(ATTRIBUTE_PARAGON_CAP_ENABLED);
+}
+
+extern "C" const AttributeSpecifier * sub_7100527380(const ActorCommonData & tACDPlayer, GBID gbidBonus, uint32 nIndex)
+{
+    ScopedParagonBonusLockR pdefBonus(gbidBonus);
+    return sub_7100527370(tACDPlayer) ? &pdefBonus->unk_80[nIndex] : &pdefBonus->ptAttributes[nIndex];
+}
+
+extern "C" const AttributeSpecifier * sub_7100527410(const ActorCommonData & tACDPlayer, GBID gbidBonus, uint32 nIndex)
+{
+    ScopedParagonBonusLockR pdefBonus(gbidBonus);
+    return sub_7100527370(tACDPlayer) ? &pdefBonus->unk_80[nIndex] : &pdefBonus->ptAttributes[nIndex];
+}
+
+extern "C" int32 sub_71005274a0(const ActorCommonData & tACDPlayer)
+{
+    return sub_7100527370(tACDPlayer) ? unk_19167f8.Get() / 4 : 0x1fffffff;
+}
+
+extern "C" void sub_7100527880(const ActorCommonData & tACDPlayer, int32 * pnCaps);
+
+// NON_MATCHING: Overflow guards and category cap loads and stores are scheduled differently.
+extern "C" void sub_7100527730(const ActorCommonData & tACDPlayer, int32 * pnPoints)
+{
+    int32 nLevel = tACDPlayer.AttributesGetInt(ATTRIBUTE_ALT_LEVEL);
+    int32 arCaps[4] = {};
+    sub_7100527880(tACDPlayer, arCaps);
+    int32 nBase = nLevel / 4;
+    int32 nRemainder = nLevel % 4;
+    int32 nPrimary = nBase + (nRemainder > 0);
+    if (nPrimary < arCaps[0])
+    {
+        for (int32 i = 1; i < 4; ++i)
+        {
+            int32 nExtra = nBase + (nRemainder > i) - arCaps[i];
+            if (nExtra > 0 && nExtra < 0x7fffffff - nPrimary)
+                nPrimary = Math::Min(nPrimary + nExtra, arCaps[0]);
+        }
+    }
+    else
+        nPrimary = arCaps[0];
+
+    pnPoints[0] = nPrimary;
+    for (int32 i = 1; i < 4; ++i)
+        pnPoints[i] = Math::Min(nBase + (nRemainder > i), arCaps[i]);
+}
+
+extern "C" void sub_7100527880(const ActorCommonData & tACDPlayer, int32 * pnCaps)
+{
+    int32 nCategoryCap = sub_71005274a0(tACDPlayer);
+    GBHandleList listBonuses(GBGetHandlePool());
+    GBEnumerate(GB_PARAGON_BONUSES, listBonuses);
+    POS pos = listBonuses.GetHeadPosition();
+    while (pos)
+    {
+        const GBHandle & hBonus = listBonuses.GetNext(pos);
+        ScopedParagonBonusLockR pdefBonus(hBonus.gbid);
+        int32 nCategory = pdefBonus->nCategory;
+        int32 nMax = sub_71005272f0(tACDPlayer, hBonus.gbid);
+        int32 nCurrent = pnCaps[nCategory];
+        if (0x7fffffff - nCurrent > nMax)
+            nCurrent += nMax;
+        pnCaps[nCategory] = Math::Min(nCurrent, nCategoryCap);
+    }
+}
+
+extern "C" BOOL sub_71005274e0(const ActorCommonData & tACDPlayer)
+{
+    int32 arPoints[4];
+    sub_7100527730(tACDPlayer, arPoints);
+    int32 arSpent[4] = {};
+    GBHandleList listBonuses(GBGetHandlePool());
+    GBEnumerate(GB_PARAGON_BONUSES, listBonuses);
+    POS pos = listBonuses.GetHeadPosition();
+    while (pos)
+    {
+        const GBHandle & hBonus = listBonuses.GetNext(pos);
+        ScopedParagonBonusLockR pdefBonus(hBonus.gbid);
+        int32 nSpent = tACDPlayer.AttributesGetInt(MakeAttribKey(ATTRIBUTE_PARAGON_BONUS, hBonus.gbid));
+        arSpent[pdefBonus->nCategory] += nSpent;
+    }
+    for (int32 i = 0; i < 4; ++i)
+    {
+        if (arSpent[i] < arPoints[i])
+            return FALSE;
+    }
+    return TRUE;
 }
 
 Player * PlayerGetPrimaryPlayerForGameConnection(GameConnectionID idGameConnection)
