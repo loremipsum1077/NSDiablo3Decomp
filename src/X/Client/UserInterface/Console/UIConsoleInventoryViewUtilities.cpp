@@ -113,7 +113,11 @@ GBID ItemGetCosmeticFromItem(const ActorCommonData & tACDItem); BOOL ItemIsSetIt
 UIBlinker & UI_GetBlinkerFromID(const UIID & id); extern UITutorialManager gtTutorialMgr; extern UIID UIDLG_FOLLOWER_CONSOLE, UIDLG_PARTY_CONSOLE; namespace UISkills { namespace Console { BOOL HasNewSkillBlinker(const Player * ptPlayer); } } namespace UIFollower { namespace Console { BOOL HasNewSkillBlinker(); } } namespace UIParagonBonuses { namespace Console { BOOL HasLeveledSinceLastVisit(const Player * ptPlayer); } }
 namespace UIInventory {
 namespace Console {
-
+extern "C" int32 sub_71004b8900(const ActorCommonData * ptACD, int32 nLevel);
+extern "C" BOOL sub_7100505c00(const ActorCommonData & tACDItem);
+extern "C" BOOL sub_710050e880(const ActorCommonData * ptACD);
+extern "C" BOOL sub_710050e910(GBID gbidItem);
+extern "C" RGBAColor sub_710050e7e0();
 CRefString sGetGemEffectsString(const ActorCommonData & tACDGem, const ACDID idACDItem); void GetSocketedEffects(const ActorCommonData & tACDSocketedItem, SocketEffectInfo * arEffects); ACDID sGetEquippedItemBySlotType(const Player * ptPlayer, const UIFilterType eFilterType, const BOOL fFallbackTo2HMainHand);
 ACDID sGetEquippedWeaponByCraftingType(const Player * ptPlayer, const UIFilterType eFilterType); ACDID sGetEquippedArmorByCraftingType(const Player * ptPlayer, const UIFilterType eFilterType); void UpdateNavBarTabState(const Player * ptPlayer, const UIID & idRoot, LPCSTR szNavigationContainerID, BOOL bUpdatePartyFollowerTab);
 void SetUpItemButton(const UIID & idItemUI, const ACDID idItem, const ACDID idACDPlayer, const ACDID idACDOwner, const BOOL bShowOverlays); void GetRepairCostInfo(const ACDID idItem, const ACDID idPlayer, int32 & nRepairCost, BOOL & bCanAfford); void UpdateRequiredLevel(const UIID & idParent, const ActorCommonData & tACDItem, const ACDID idACDPlayer);
@@ -1219,9 +1223,11 @@ void UpdateRequiredLevel(const UIID & idParent, const ActorCommonData & tACDItem
         {
             CRefString sLabel = "ConsoleArtisan:RequiredLevel";
             const Player * ptPlayer = PlayerGetByACD(idACDPlayer);
-            if (ptPlayer != NULL && ptPlayer->nCurrentLevel < nLevel)
+            if (ptPlayer != NULL)
             {
-                sLabel = "ConsoleArtisan:RequiredLevelTooHigh";
+                nLevel = sub_71004b8900(ACDTryToGet(ptPlayer->idPlayerACD), nLevel);
+                if (ptPlayer->nCurrentLevel < nLevel)
+                    sLabel = "ConsoleArtisan:RequiredLevelTooHigh";
             }
 
             sText = LocalizedSprintf(StringListFetch(sLabel.str()).str(), UnicodeText::FormatNumber(nLevel, TRUE, FNS_NORMAL, FALSE).str(), NULL);
@@ -2361,7 +2367,8 @@ CRefString GetItemDescription(
         if (eIQL < IQL_RARE_AFFIX_START)
         {
             sTextSections[nCurrentSection] += ItemGetDisplayName(*ptACDItem, TRUE, FALSE, FALSE, FALSE);
-            sTextSections[nCurrentSection] += "\n{icon:Console_InventoryBreak1}\n";
+            if (!sub_7100505c00(*ptACDItem))
+                sTextSections[nCurrentSection] += "\n{icon:Console_InventoryBreak1}\n";
         }
     }
     nCurrentSection++;
@@ -2375,7 +2382,8 @@ CRefString GetItemDescription(
 
     if (ItemIsSetItem(ptACDItem->hGB.gbid))
     {
-        sTextSections[nCurrentSection] += "{icon:Console_InventoryBreak2}\n";
+        if (!sub_710050e880(ptACDItem))
+            sTextSections[nCurrentSection] += "{icon:Console_InventoryBreak2}\n";
         sTextSections[nCurrentSection] += GetSetItemTooltip(ptACDOwner, ePlayerClass, *ptACDItem, NULL);
     }
     nCurrentSection++;
@@ -2417,6 +2425,7 @@ CRefString GetItemDescription(
     int32 nRequiredLevel = ItemGetLevelRequirement(ptACDItem->GetGBHandle().gbid, ptACDItem, FALSE);
     if (nRequiredLevel && !ItemIsUpgradeableJewel(ptACDItem->hGB.gbid) && ptACDOwner != NULL)
     {
+        nRequiredLevel = sub_71004b8900(ptACDOwner, nRequiredLevel);
         CRefString sRequiredLevel;
         sRequiredLevel = LocalizedSprintf(
             StringListFetch("ConsoleInventory:ItemRequiredLevel").str(),
@@ -2512,6 +2521,8 @@ CRefString GetItemDescription(
                 }
 
                 RGBAColor rgbaTransmogQuality = ItemGetDisplayNameColor(eIQL);
+                if (sub_710050e910(gbidTransmog))
+                    rgbaTransmogQuality = sub_710050e7e0();
                 if (LanguageRules::ItemNamesShouldBeCapitalized())
                 {
                     sName1 = UnicodeText::Capitalize(sName1);

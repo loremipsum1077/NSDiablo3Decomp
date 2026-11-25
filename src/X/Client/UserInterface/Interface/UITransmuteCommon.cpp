@@ -1313,3 +1313,9 @@ BOOL UITransmute::ForceAddItem(const ActorCommonData * ptACDItem, const IVector2
         UIInventory::PlayItemInventorySound(*ptACDItem);
     return TRUE;
 }
+
+extern "C" int32 sub_710024d7e0()
+{
+    ActorCommonData * ptACD = ACDTryToGet(LocalPlayerGet()->idPlayerACD);
+    return ptACD->AttributesGetInt(ATTRIBUTE_FOURTH_KANAIS_CUBE_SLOT);
+}

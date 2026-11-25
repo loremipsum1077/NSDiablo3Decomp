@@ -35,6 +35,7 @@ extern UIID UIWND_KANAIS_COLLECTION_POWERS;
 extern UIID UILIST_KANAIS_COLLECTION_LIST_SLOTS;
 extern UIID UILIST_KANAIS_COLLECTION_LIST_POWERS;
 extern UIID UIWND_KANAIS_COLLECTION_DETAILS_WEAPON;
+extern UIID unk_7101860f30;  // PowerSlot_Universal
 extern UIID UIWND_KANAIS_COLLECTION_DETAILS_ARMOR;
 extern UIID UIWND_KANAIS_COLLECTION_DETAILS_JEWELRY;
 extern UIID UISCROLL_KANAIS_COLLECTION_DETAILS;
@@ -151,7 +152,7 @@ public:
 };
 static_assert(sizeof(LegendaryPowerSlotDataSource) == 0x8, "LegendaryPowerSlotDataSource");
 
-class LegendaryPowerDataSource : public ConsoleListBoxDataSource {  // size 0x58
+class LegendaryPowerDataSource : public ConsoleListBoxDataSource {  // size 0x70
 public:
     LegendaryPowerDataSource();
     virtual int32 GetNumItems() const;  // vtable slot 2
@@ -164,26 +165,26 @@ public:
     void Refresh();
 private:
     LegendaryPowerSlotType m_eSlot;  // 0x08
-    GBIDArray m_arrPowers[3];  // 0x10
+    GBIDArray m_arrPowers[4];  // 0x10
 };
-static_assert(sizeof(LegendaryPowerDataSource) == 0x58, "LegendaryPowerDataSource");
+static_assert(sizeof(LegendaryPowerDataSource) == 0x70, "LegendaryPowerDataSource");
 
 enum EquipLegendaryPowersState : int {
     SELECTING_SLOT = 0,
     SELECTING_POWER = 1,
 };
 
-struct EquipLegendaryPowersGlobals {  // size 0xc0
+struct EquipLegendaryPowersGlobals {  // size 0xf8
     EquipLegendaryPowersGlobals();
     ~EquipLegendaryPowersGlobals();
     int32 nControllerIndex;  // 0x00
     LegendaryPowerSlotDataSource tSlotDataSource;  // 0x08
     LegendaryPowerDataSource tPowerDataSource;  // 0x10
-    EquipLegendaryPowersState eState;  // 0x68
-    GBID gbidEquippedPower[3];  // 0x6c
-    GBIDArray arNewPowers[3];  // 0x78
+    EquipLegendaryPowersState eState;  // 0x80
+    GBID gbidEquippedPower[4];  // 0x84
+    GBIDArray arNewPowers[4];  // 0x98
 };
-static_assert(sizeof(EquipLegendaryPowersGlobals) == 0xc0, "EquipLegendaryPowersGlobals");
+static_assert(sizeof(EquipLegendaryPowersGlobals) == 0xf8, "EquipLegendaryPowersGlobals");
 
 EquipLegendaryPowersGlobals * sgptEqipLegendaryPowersGlobals;
 
@@ -207,15 +208,18 @@ inline EquipLegendaryPowersGlobals::EquipLegendaryPowersGlobals()
     gbidEquippedPower[0] = GBID_NO_PENDING_POWER;
     gbidEquippedPower[1] = GBID_NO_PENDING_POWER;
     gbidEquippedPower[2] = GBID_NO_PENDING_POWER;
+    gbidEquippedPower[3] = GBID_NO_PENDING_POWER;
 }
 
 EquipLegendaryPowersGlobals::~EquipLegendaryPowersGlobals()
 {
 }
 
+extern "C" int32 sub_710024d7e0();  // UITransmuteCommon.cpp, fourth-slot attribute
+
 int32 LegendaryPowerSlotDataSource::GetNumItems() const
 {
-    return 3;
+    return sub_710024d7e0() ? 4 : 3;
 }
 
 UIControlSourceKey LegendaryPowerSlotDataSource::GetSourceKeyForItem(const int32 nIndex) const
@@ -234,36 +238,40 @@ static void sUpdateSlotBackground(const UIID & idParentUI, LegendaryPowerSlotTyp
     UIID idEmptyWeapon = UIIDCreateFromParent(idParentUI, ".LayoutRoot.Cube_EmptyWeapon");
     UIID idEmptyArmor = UIIDCreateFromParent(idParentUI, ".LayoutRoot.Cube_EmptyArmor");
     UIID idEmptyJewelry = UIIDCreateFromParent(idParentUI, ".LayoutRoot.Cube_EmptyJewelry");
+    UIID idEmptyUniversal = UIIDCreateFromParent(idParentUI, ".LayoutRoot.Cube_EmptyUniversal");
     UIID idEquippedPower = UIIDCreateFromParent(idParentUI, ".LayoutRoot.Cube_EquippedPower");
 
     UI_GetWindowFromID(idEmptyWeapon).SetActive(eSlot == 0 && gbidEquippedPower == GBID_NONE);
     UI_GetWindowFromID(idEmptyArmor).SetActive(eSlot == 1 && gbidEquippedPower == GBID_NONE);
     UI_GetWindowFromID(idEmptyJewelry).SetActive(eSlot == 2 && gbidEquippedPower == GBID_NONE);
+    UI_GetWindowFromID(idEmptyUniversal).SetActive(eSlot == 3 && gbidEquippedPower == GBID_NONE);
     UI_GetWindowFromID(idEquippedPower).SetActive(gbidEquippedPower != GBID_NONE);
 }
 
 static CRefString sGetSlotName(LegendaryPowerSlotType eSlot)
 {
-    if (eSlot < 0 || eSlot >= 3)
+    if (eSlot < 0 || eSlot >= 4)
         return CRefString("");
 
     const LPCSTR SLOT_NAMES[] = {
         "SlotNameWeapon",
         "SlotNameArmor",
         "SlotNameJewelry",
+        "SlotNameUniversal",
     };
     return StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_CONSOLE_KANAIS_CUBE), SLOT_NAMES[eSlot]);
 }
 
 static CRefString sGetSlotDescription(LegendaryPowerSlotType eSlot)
 {
-    if (eSlot < 0 || eSlot >= 3)
+    if (eSlot < 0 || eSlot >= 4)
         return CRefString("");
 
     const LPCSTR SLOT_DESCRIPTIONS[] = {
         "Unslotted_WeaponPower",
         "Unslotted_ArmorPower",
         "Unslotted_JewelryPower",
+        "Unslotted_UniversalPower",
     };
     return StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_CONSOLE_KANAIS_CUBE), SLOT_DESCRIPTIONS[eSlot]);
 }
@@ -366,17 +374,17 @@ static void sFilterPowersBySlot(const GBIDArray & arrSource, GBIDArray & arrDest
     arrDest.insert(arrDest.end(), arrLocked.begin(), arrLocked.end());
 }
 
-inline void LegendaryPowerDataSource::Refresh()
+void LegendaryPowerDataSource::Refresh()
 {
     m_arrPowers[0].clear();
     m_arrPowers[1].clear();
     m_arrPowers[2].clear();
+    m_arrPowers[3].clear();
 
     GBIDArray arrAllPowers;
     UIEquipLegendaryPowers::GetAllPowers(arrAllPowers);
-    sFilterPowersBySlot(arrAllPowers, m_arrPowers[0], 0);
-    sFilterPowersBySlot(arrAllPowers, m_arrPowers[1], 1);
-    sFilterPowersBySlot(arrAllPowers, m_arrPowers[2], 2);
+    for (LegendaryPowerSlotType eSlot = 0; eSlot < 4; ++eSlot)
+        sFilterPowersBySlot(arrAllPowers, m_arrPowers[eSlot], eSlot);
 }
 
 void LegendaryPowerDataSource::InitializeItemUI(const UIConsoleListBox & tListBox, const UIID & idItemUI, const int32 nIndex)
@@ -385,7 +393,7 @@ void LegendaryPowerDataSource::InitializeItemUI(const UIConsoleListBox & tListBo
 
 static BOOL sIsNewPower(LegendaryPowerSlotType eSlot, GBID gbidPower)
 {
-    if (eSlot < 0 || eSlot >= 3)
+    if (eSlot < 0 || eSlot >= 4)
         return FALSE;
 
     GBIDArray & arNewPowers = sgptEqipLegendaryPowersGlobals->arNewPowers[eSlot];
@@ -481,13 +489,10 @@ static void sResetUI()
     sgptEqipLegendaryPowersGlobals->nControllerIndex = -1;
     UI_SetControllerFocus(GetUIIDNone());
 
-    sgptEqipLegendaryPowersGlobals->gbidEquippedPower[0] = GBID_NO_PENDING_POWER;
-    sgptEqipLegendaryPowersGlobals->gbidEquippedPower[1] = GBID_NO_PENDING_POWER;
-    sgptEqipLegendaryPowersGlobals->gbidEquippedPower[2] = GBID_NO_PENDING_POWER;
-
-    sgptEqipLegendaryPowersGlobals->arNewPowers[0].clear();
-    sgptEqipLegendaryPowersGlobals->arNewPowers[1].clear();
-    sgptEqipLegendaryPowersGlobals->arNewPowers[2].clear();
+    for (int32 i = 0; i < 4; ++i) {
+        sgptEqipLegendaryPowersGlobals->gbidEquippedPower[i] = GBID_NO_PENDING_POWER;
+        sgptEqipLegendaryPowersGlobals->arNewPowers[i].clear();
+    }
 }
 
 void UIEquipLegendaryPowers::Close()
@@ -518,6 +523,7 @@ static void sUpdateSlot(const Player & tPlayer, LegendaryPowerSlotType eSlot)
     if (sgptEqipLegendaryPowersGlobals->gbidEquippedPower[eSlot] == tPlayer.tHeroStateData.tSavedData.gbidLegendaryPowers[eSlot]) {
         sgptEqipLegendaryPowersGlobals->gbidEquippedPower[eSlot] = GBID_NO_PENDING_POWER;
         UI_GetConsoleListBoxFromID(UILIST_KANAIS_COLLECTION_LIST_SLOTS).RefreshItem(eSlot);
+        sRebuildPowerLists();
     }
 }
 
@@ -577,6 +583,10 @@ static void sUpdateDetails(const Player & tPlayer)
     UI_GetWindowFromID(UIWND_KANAIS_COLLECTION_DETAILS_WEAPON).SetActive(eSlot == 0);
     UI_GetWindowFromID(UIWND_KANAIS_COLLECTION_DETAILS_ARMOR).SetActive(eSlot == 1);
     UI_GetWindowFromID(UIWND_KANAIS_COLLECTION_DETAILS_JEWELRY).SetActive(eSlot == 2);
+    if (sub_710024d7e0())
+        UI_GetWindowFromID(unk_7101860f30).SetActive(eSlot == 3);
+    else
+        UI_GetWindowFromID(unk_7101860f30).SetActive(FALSE);
 }
 
 void UIEquipLegendaryPowers::OnUpdate(const UIID & id)
@@ -588,9 +598,8 @@ void UIEquipLegendaryPowers::OnUpdate(const UIID & id)
     if (ptPlayer == NULL)
         return;
 
-    sUpdateSlot(*ptPlayer, 0);
-    sUpdateSlot(*ptPlayer, 1);
-    sUpdateSlot(*ptPlayer, 2);
+    for (LegendaryPowerSlotType eSlot = 0; eSlot < 4; ++eSlot)
+        sUpdateSlot(*ptPlayer, eSlot);
 
     sUpdateDetails(*ptPlayer);
 

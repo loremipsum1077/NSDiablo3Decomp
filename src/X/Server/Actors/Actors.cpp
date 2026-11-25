@@ -6869,15 +6869,13 @@ void ActorsAdjustForDifficultyChanged(const int32 nOldDifficulty, const int32 nN
                 float flHPMax = flConversionMult * flOldHPMax;
                 ptACD->SetHitPointsMax(flHPMax);
 
-                if (bFullHealth)
+                if (!bFullHealth)
                 {
-                    ptACD->SetHitPoints(flHPMax, FALSE, FALSE);
+                    ptACD->SetHitPoints(flConversionMult * flOldHP, FALSE, FALSE);
                 }
                 else
                 {
-
-                    float flHP = flConversionMult * flOldHP;
-                    ptACD->SetHitPoints(flHP, FALSE, FALSE);
+                    ptACD->SetHitPoints(flHPMax, FALSE, FALSE);
                 }
             }
         }

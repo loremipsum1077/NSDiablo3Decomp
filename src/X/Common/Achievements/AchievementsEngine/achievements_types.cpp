@@ -24,7 +24,7 @@ uint32 ExtractCriteriaId32(const CriteriaId criteriaId) {
 }
 
 CriteriaId Make64BitCriteriaId(uint32 id) {
-    const CriteriaId achievementId = PRODUCT_AND_TEAM_HEADER | id;
+    const CriteriaId achievementId = PRODUCT_AND_TEAM_HEADER | ExtractCriteriaId32(id);
     return achievementId;
 }
 

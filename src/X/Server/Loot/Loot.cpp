@@ -6568,7 +6568,7 @@ PickupResponse ACDInventoryCanPickup(const ActorCommonData & tACDPickee, const A
 
 
 
-
+// NON_MATCHING: The signed level cutoff uses cmp #11/b.ge where the target uses cmp #10/b.gt.
 void LootGenerateGift(
     const Player & tPlayer,
     ItemQualityLevel eIQL)

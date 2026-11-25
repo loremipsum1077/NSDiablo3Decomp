@@ -401,7 +401,7 @@ inline CRefString GetMassacreLabel(int32 nCount, BOOL bReport)
     }
     return sLabel;
 }
-
+// NON_MATCHING: The first-time flag is zero or one. Its branch at +0xdc uses cbz where the target uses tbz #0.
 void IncreasedCount(CalloutEvent * ptEvent)
 
 {

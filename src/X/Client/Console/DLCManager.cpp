@@ -52,7 +52,7 @@ static_assert(sizeof(DLCPackageToLicense) == 0x18, "DLCPackageToLicense");
 
 
 
-static const DLCPackageToLicense g_DLCPackageToLicense[16] =
+static const DLCPackageToLicense g_DLCPackageToLicense[] =
 {
     { LICENSE_LOC_AUDIO_ENGLISH_EU, "loc.audio.english_eu", 1 },
     { LICENSE_LOC_AUDIO_ENGLISH_SOUTHEAST_ASIA, "loc.audio.english_southeast_asia", 2 },
@@ -66,10 +66,13 @@ static const DLCPackageToLicense g_DLCPackageToLicense[16] =
     { LICENSE_LOC_AUDIO_RUSSIAN, "loc.audio.russian", 10 },
     { LICENSE_LOC_AUDIO_CHINESE_CHINA, "loc.audio.chinese_china", 11 },
     { LICENSE_LOC_AUDIO_CHINESE_TAIWAN, "loc.audio.chinese_taiwan", 12 },
-    { LICENSE_LOC_AUDIO_TURKISH, "loc.audio.turkish", 13 },
     { LICENSE_LOC_AUDIO_POLISH, "loc.audio.polish", 14 },
     { LICENSE_LOC_AUDIO_PORTUGUESE_PORTUGAL, "loc.audio.portuguese_portugal", 15 },
     { LICENSE_LOC_AUDIO_JAPANESE, "loc.audio.japanese", 16 },
+    { static_cast<ConsoleLicense>(20), "loc.audio.english_us", 17 },
+    { static_cast<ConsoleLicense>(26), "dlc.30anniversary", 100 },
+    { static_cast<ConsoleLicense>(27), "dlc.PrimeEvilCollection", 101 },
+    { static_cast<ConsoleLicense>(28), "dlc.D2RPreOrderBonusItems", 102 },
 };
 
 struct LocaleContentInfo {  // size 0x8
@@ -100,12 +103,12 @@ static const LocaleContentInfo s_catLocaleInfoTable[16] =
     { 10, LICENSE_LOC_AUDIO_KOREAN },
     { 11, LICENSE_LOC_AUDIO_PORTUGUESE_BRAZIL },
     { 12, LICENSE_LOC_AUDIO_RUSSIAN },
-    { 13, LICENSE_LOC_AUDIO_CHINESE_CHINA },
+    { 19, LICENSE_LOC_AUDIO_CHINESE_CHINA },
     { 14, LICENSE_LOC_AUDIO_CHINESE_TAIWAN },
-    { 15, LICENSE_LOC_AUDIO_TURKISH },
     { 16, LICENSE_LOC_AUDIO_POLISH },
     { 17, LICENSE_LOC_AUDIO_PORTUGUESE_PORTUGAL },
     { 18, LICENSE_LOC_AUDIO_JAPANESE },
+    { 2, static_cast<ConsoleLicense>(20) },
 };
 
 struct AOCMountInfo {  // size 0x10
@@ -404,7 +407,7 @@ uint32 GetLicenses()
 }
 
 
-
+// NON_MATCHING: The signed add-on count guard uses cmp #1/b.lt. The target uses cmp #0/b.le.
 void RefreshAOC()
 
 {
@@ -438,7 +441,7 @@ void RefreshAOC()
 
 
 
-    if (nListupCount > 0) for (int i = 0; i < nListupCount; i++)
+    for (int i = 0; i < nListupCount; ++i)
     {
 
         nn::aoc::AddOnContentIndex nContentIndex = s_atAocListupBuffer[i];
@@ -526,18 +529,18 @@ CRefString GetAOCMountName(int64_t nContentIndex)
     return CRefString(szPathString, MAX_MOUNT_PATH);
 }
 
-bool GetLocaleAOCMountPath(XLocale nLocale, CRefString & szMountPath)
-
-
+extern "C" bool sub_7100073850(XLocale nLocale)
 {
     char szPotentialDataRootLocation[4096];
-    bool bFound = false;
-
-
     sprintf(szPotentialDataRootLocation, "%s\\%s_Common.%s", SNOFilesGetMPQPath().str(), XLocaleToString(nLocale), SNOFilesGetMPQExtension());
-    BOOL bInstalledToDataRoot = Blizzard::File::Exists(szPotentialDataRootLocation);
+    return Blizzard::File::Exists(szPotentialDataRootLocation) != FALSE;
+}
+
+bool GetLocaleAOCMountPath(XLocale nLocale, CRefString & szMountPath)
+{
+    bool bFound = false;
     int64_t nContentIndex;
-    if (bInstalledToDataRoot)
+    if (sub_7100073850(nLocale))
     {
         bFound = true;
         szMountPath = SNOFilesGetMPQPath();

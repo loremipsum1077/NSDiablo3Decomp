@@ -114,7 +114,7 @@ UIID GetElementUIIDForCategory(int32 nIndex);
 UIID GetBlinkerUIIDForCategory(int32 nIndex);
 void UpdateChapterIcons(int32 nSelectedChapter);
 GBID GetItemRewardForAchievement(OnlineService::AchievementId idAchievement);
-BOOL IsGiftRedeemedByPlayer(int32 nControllerIndex, GBID gbidGift);
+BOOL IsGiftRedeemedByPlayer(int32 nControllerIndex, GBID gbidGift, uint32 nAchievementSet);
 void DisplayRewardsForChapter(int32 nSelectedChapter);
 void IconSelectionChanged(const ::Console::RingWrapper & tRingWrapper, const UIID & idIcon, const BOOL bSelected);
 void PopulateCommonUIElements(const UIID & idWindow, const OnlineService::AchievementDefinition & tAchievementDefinition, const OnlineService::CriteriaDefinition & tCriteriaDefinition, const OnlineService::GameAccountHandle & idPlayer, BOOL bSelected);
@@ -475,7 +475,7 @@ void ToggleRewardsView(BOOL bShow)
     UI_GetWindowFromID(UIWND_CONSOLE_SEASON_JOURNEY_REWARDS_WRAPPER).SetActive(m_bShowingRewards);
     UI_GetWindowFromID(UIWND_CONSOLE_SEASON_JOURNEY_REWARDS_RIGHT_PANEL).SetActive(m_bShowingRewards);
     UI_GetWindowFromID(UIWRAP_CONSOLE_SEASON_JOURNEY_WRAPPER).SetActive(!m_bShowingRewards);
-    UI_GetWindowFromID(UIWND_CONSOLE_SEASON_JOURNEY_DETAILS).SetActive(!m_bShowingRewards && m_bCurrentSelectionActiveOrComplete);
+    UI_GetWindowFromID(UIWND_CONSOLE_SEASON_JOURNEY_DETAILS).SetActive(!m_bShowingRewards);
     UI_GetTextFromID(UITEXT_CONSOLE_SEASON_JOURNEY_OBJECTIVES_MESSAGE).SetActive(!m_bShowingRewards);
 
     ::Console::ControllerActionManager & tActionManager = ::Console::Screens::GetActionManager();
@@ -1192,21 +1192,13 @@ void FocusCategoryRing(BOOL bFocus)
     const UIControlItemArray & arChildren = UI_GetWindowFromID(UIWND_CONSOLE_SEASON_JOURNEY_RING).GetChildList();
     for (uint32 i = 0; i < arChildren.size(); i++)
     {
-        if (arChildren[i].ptControl->IsType(UIT_BUTTON) && sgtUISeasonJourneyData.tRingUI.GetSelectedControlID() != arChildren[i].id)
+        if (arChildren[i].ptControl->IsType(UIT_BUTTON))
         {
             UIButton * ptButton = (UIButton *)arChildren[i].ptControl;
-            if (bFocus)
-            {
-                ptButton->SetButtonState(BS_NORMAL, FALSE, FALSE);
-                ptButton->SetEnabled(TRUE);
-                ptButton->SetShader(SNO_NONE);
-            }
-            else
-            {
-                ptButton->SetButtonState(BS_NORMAL, FALSE, FALSE);
-                ptButton->SetEnabled(FALSE);
-                ptButton->SetShader(GlobalSNOGet(GLOBALSNO_SHADER_SPRITE_TRANSPARENT_INACTIVE));
-            }
+            BOOL bSelected = sgtUISeasonJourneyData.tRingUI.GetSelectedControlID() == arChildren[i].id;
+            ptButton->SetButtonState(bSelected ? BS_MOUSEOVER : BS_NORMAL, FALSE, FALSE);
+            ptButton->SetEnabled(bFocus || bSelected);
+            ptButton->SetShader(bFocus || bSelected ? SNO_NONE : GlobalSNOGet(GLOBALSNO_SHADER_SPRITE_TRANSPARENT_INACTIVE));
         }
     }
 
@@ -1385,30 +1377,31 @@ GBID GetItemRewardForAchievement(OnlineService::AchievementId idAchievement)
 
 
 
-BOOL IsGiftRedeemedByPlayer(int32 nControllerIndex, GBID gbidGift)
+BOOL IsGiftRedeemedByPlayer(int32 nControllerIndex, GBID gbidGift, uint32 nAchievementSet)
 {
     D3::Hero::SavedDefinition tHeroDefinition = ::Console::GamerProfile::GetHero(nControllerIndex);
     if (tHeroDefinition.has_digest())
     {
         const D3::Account::SavedDefinition & tAccountDefinition = ::Console::GamerProfile::GetAccount(nControllerIndex);
-        const D3::Account::AccountPartition & tPartition = tAccountDefinition.partitions(ACCOUNT_PARTITION_SEASON_NORMAL);
-        if (tPartition.has_console_partition_data())
-        {
-            for (int32 n = 0; n < tPartition.console_partition_data().seasonal_gift_gbids_redeemed_size(); n++)
+        auto isRedeemed = [&](D3AccountPartition ePartition) {
+            const D3::Account::AccountPartition & tPartition = tAccountDefinition.partitions(ePartition);
+            if (tPartition.has_console_partition_data())
             {
-                if (tPartition.console_partition_data().seasonal_gift_gbids_redeemed(n) == gbidGift)
-                    return TRUE;
+                for (int32 i = 0; i < tPartition.console_partition_data().seasonal_gift_gbids_redeemed_size(); ++i)
+                {
+                    if (tPartition.console_partition_data().seasonal_gift_gbids_redeemed(i) == gbidGift)
+                    {
+                        uint32 nSet = i < tPartition.console_partition_data().seasonal_gift_gbids_redeemed_set_size()
+                            ? tPartition.console_partition_data().seasonal_gift_gbids_redeemed_set(i) : 0;
+                        return nSet == nAchievementSet;
+                    }
+                }
             }
-        }
-        const D3::Account::AccountPartition & tHardcorePartition = tAccountDefinition.partitions(ACCOUNT_PARTITION_SEASON_HARDCORE);
-        if (tHardcorePartition.has_console_partition_data())
-        {
-            for (int32 n = 0; n < tHardcorePartition.console_partition_data().seasonal_gift_gbids_redeemed_size(); n++)
-            {
-                if (tHardcorePartition.console_partition_data().seasonal_gift_gbids_redeemed(n) == gbidGift)
-                    return TRUE;
-            }
-        }
+            return false;
+        };
+        if (isRedeemed(ACCOUNT_PARTITION_SEASON_NORMAL) || isRedeemed(ACCOUNT_PARTITION_UNK_4)
+            || isRedeemed(ACCOUNT_PARTITION_SEASON_HARDCORE) || isRedeemed(ACCOUNT_PARTITION_UNK_5))
+            return TRUE;
     }
     return FALSE;
 }
@@ -1657,7 +1650,7 @@ void DisplayRewardsForChapter(
 
     BOOL bShowArmorSet = bIsCasualAch && gbidReward != GBID_NONE;
 
-    BOOL bRedeemed = !GameIsStartUp() && IsGiftRedeemedByPlayer(sgtUISeasonJourneyData.m_nControllerIndex, gbidReward);
+    BOOL bRedeemed = !GameIsStartUp() && IsGiftRedeemedByPlayer(sgtUISeasonJourneyData.m_nControllerIndex, gbidReward, sub_71000b4be0());
 
     UI_GetWindowFromID(UIWND_CONSOLE_SEASON_JOURNEY_REWARDS_GIFT_HAEDRIGS).SetActive(bShowArmorSet);
 
@@ -1893,7 +1886,7 @@ void TryToRedeemGift()
     GBID gbidGift = GetItemRewardForAchievement(idAchievement);
     if (gbidGift == GBID_NONE)
         return;
-    if (IsGiftRedeemedByPlayer(nControllerIndex, gbidGift))
+    if (IsGiftRedeemedByPlayer(nControllerIndex, gbidGift, sub_71000b4be0()))
         return;
 
     Player * ptPlayer = PlayerGetByControllerIndex(nControllerIndex);
@@ -1916,6 +1909,21 @@ void TryToRedeemGift()
 
 
 
+extern "C" BOOL sub_7100527d30(const Player * ptPlayer);
+
+extern "C" void sub_7100174e80(int32 nControllerIndex, GBID gbidGift, D3AccountPartition ePartition, uint32 nAchievementSet)
+{
+    D3::Account::AccountPartition * ptPartition =
+        ::Console::GamerProfile::GetAccount(nControllerIndex).mutable_partitions(ePartition);
+    while (ptPartition->mutable_console_partition_data()->seasonal_gift_gbids_redeemed_set_size() <
+           ptPartition->console_partition_data().seasonal_gift_gbids_redeemed_size())
+    {
+        ptPartition->mutable_console_partition_data()->add_seasonal_gift_gbids_redeemed_set(0);
+    }
+    ptPartition->mutable_console_partition_data()->add_seasonal_gift_gbids_redeemed(gbidGift);
+    ptPartition->mutable_console_partition_data()->add_seasonal_gift_gbids_redeemed_set(nAchievementSet);
+}
+
 void GiftRedeemedResult(int32 nControllerIndex, BOOL bResult)
 {
     if (bResult)
@@ -1925,8 +1933,12 @@ void GiftRedeemedResult(int32 nControllerIndex, BOOL bResult)
         tStoryboard.Play(FALSE, 0.0f);
 
         BOOL bHardcore = PlayerIsHardcore(PlayerGetByControllerIndex(nControllerIndex));
-        D3::Account::SavedDefinition & tAccount = ::Console::GamerProfile::GetAccount(nControllerIndex);
-        tAccount.mutable_partitions(bHardcore ? ACCOUNT_PARTITION_SEASON_HARDCORE : ACCOUNT_PARTITION_SEASON_NORMAL)->mutable_console_partition_data()->add_seasonal_gift_gbids_redeemed(sgtUISeasonJourneyData.m_gbidGiftBeingRedeemed);
+        BOOL bAlternatePartition = sub_7100527d30(PlayerGetByControllerIndex(nControllerIndex));
+        GBID gbidGift = sgtUISeasonJourneyData.m_gbidGiftBeingRedeemed;
+        D3AccountPartition ePartition = bAlternatePartition
+            ? (bHardcore ? ACCOUNT_PARTITION_UNK_5 : ACCOUNT_PARTITION_UNK_4)
+            : (bHardcore ? ACCOUNT_PARTITION_SEASON_HARDCORE : ACCOUNT_PARTITION_SEASON_NORMAL);
+        sub_7100174e80(nControllerIndex, gbidGift, ePartition, sub_71000b4be0());
 
         UI_GetWindowFromID(UIWND_CONSOLE_SEASON_JOURNEY_REWARDS_GIFT_HAEDRIGS_REDEEMED).SetActive(TRUE);
         UI_GetWindowFromID(UIWND_CONSOLE_SEASON_JOURNEY_REWARDS_LEFT_PANEL_COMPLETE).SetActive(FALSE);

@@ -2922,6 +2922,7 @@ static void sDrawWhereCanThisGoHighlight(
 }
 
 
+extern "C" BOOL sub_7100505c00(const ActorCommonData & tACDItem);
 RGBAColor sGetHighlightColorFromQualityLevel(const ActorCommonData & tACDItem)
 {
     ItemQualityLevel eIQL = ItemGetDisplayedQualityLevel(tACDItem);
@@ -2940,6 +2941,8 @@ RGBAColor sGetHighlightColorFromQualityLevel(const ActorCommonData & tACDItem)
     }
     else if (UIInventory::IsLegendaryColor(eIQL))
     {
+        if (sub_7100505c00(tACDItem))
+            return unk_7100ed3648;
         return crgbaOrange;
     }
     else if (ItemHasLabel(tACDItem.hGB.gbid, ITL_COLLECTIBLE))
@@ -3119,7 +3122,6 @@ BOOL UIInventory::GetItemBkgrndImage(const ItemQualityLevel eIQL, ImageTextureFr
 
 
 
-extern "C" BOOL sub_7100505c00(const ActorCommonData & tACDItem);
 extern "C" BOOL sub_7100505c90(const ActorCommonData & tACDItem);
 extern "C" BOOL sub_710050ece0(const ActorCommonData & tACDItem);
 
@@ -4982,6 +4984,9 @@ static void sGetAttribsFromSocket(
 
 
 
+extern "C" BOOL sub_710050e910(GBID gbidItem);
+extern "C" RGBAColor sub_710050e7e0();
+
 BOOL UIInventory::GetItemTooltipParametersForSlot(
     ItemTooltipParameterBlock & tParams,
     const ActorCommonData & tACDItem,
@@ -4999,7 +5004,7 @@ BOOL UIInventory::GetItemTooltipParametersForSlot(
     ItemGeneratorPopulateFromACDID(tACDItem, tBaseItem, TRUE);
 
     ItemAffixFastAttribMap arBaseItemAffixSpecificAttributes;
-    ACDID idACDBaseItem = CItemGenerate(static_cast<ACDNetworkName>(0x200e), tBaseItem, &arBaseItemAffixSpecificAttributes);
+    ACDID idACDBaseItem = CItemGenerate(static_cast<ACDNetworkName>(0x2e0e), tBaseItem, &arBaseItemAffixSpecificAttributes);
     if (idACDBaseItem == ACDID_INVALID)
     {
         return FALSE;
@@ -5137,7 +5142,10 @@ BOOL UIInventory::GetItemTooltipParametersForSlot(
         tParams.sInstruction = GetInstructionTooltip(*tTooltipPlayerData.ptACDPlayer, tACDItem, eSlot, FALSE, fShowQuickTip);
     }
     tParams.sSpecialStats += ItemGetPrimaryDescription(tACDItem);
-    tParams.sSetItem = GetSetItemTooltip(tTooltipPlayerData.ptACDPlayer, tTooltipPlayerData.ptAlternateInventory, tTooltipPlayerData.ePlayerClass, tACDBaseItem, NULL);
+    const ActorCommonData * ptSetOwner = tTooltipPlayerData.ptACDPlayer;
+    if (ptACDContainer && ACDIsHireling(*ptACDContainer))
+        ptSetOwner = ptACDContainer;
+    tParams.sSetItem = GetSetItemTooltip(ptSetOwner, tTooltipPlayerData.ptAlternateInventory, tTooltipPlayerData.ePlayerClass, tACDBaseItem, NULL);
     ACDDelete(idACDBaseItem, FALSE);
 
 
@@ -5203,6 +5211,12 @@ BOOL UIInventory::GetItemTooltipParametersForSlot(
             tParams.dwTooltipFlags |= 0x40;
             break;
         }
+        if (sub_7100505c00(tACDItem))
+            tParams.dwTooltipFlags |= 0x80;
+        if (sub_7100505c90(tACDItem))
+            tParams.dwTooltipFlags |= 0x100;
+        if (sub_710050ece0(tACDItem))
+            tParams.dwTooltipFlags |= 0x200;
     }
 
 
@@ -5240,6 +5254,8 @@ BOOL UIInventory::GetItemTooltipParametersForSlot(
                 }
 
                 RGBAColor rgbaTransmogQuality = ItemGetDisplayNameColor(eIQL);
+                if (sub_710050e910(gbidTransmog))
+                    rgbaTransmogQuality = sub_710050e7e0();
                 if (LanguageRules::ItemNamesShouldBeCapitalized())
                 {
                     sName1 = UnicodeText::Capitalize(sName1);

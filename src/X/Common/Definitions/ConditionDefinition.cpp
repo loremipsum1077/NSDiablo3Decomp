@@ -636,7 +636,7 @@ static BOOL sHandlePlayerFlagSubcondition(const Player * ptPlayer, const PlayerF
 
 
 
-
+// NON_MATCHING: The boolean branch at +0x93c uses tbz #0 where the target uses cbz.
 BOOL ConditionEvaluate(
 	const SNO snoCondition,
 	const Player * ptPlayer,

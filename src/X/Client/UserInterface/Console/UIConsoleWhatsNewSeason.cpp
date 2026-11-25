@@ -74,6 +74,7 @@ extern UIID UITEXT_CONSOLE_WHATS_NEW_SEASON_REWARDS_ARMOR_SET_TITLE;
 extern UIID UITEXT_CONSOLE_WHATS_NEW_SEASON_REWARDS_ARMOR_SET_DESC;
 extern UIID UISCROLLBOX_CONSOLE_WHATS_NEW_SEASON_REWARDS_ARMOR_SET_DESC;
 
+extern "C" void sub_71006739b0(OnlineService::RewardIdList & rewards);
 namespace UIWhatsNewSeason {
 namespace Console {
 
@@ -154,6 +155,7 @@ void WhatsNewSeasonData::Init()
     m_idCosmeticsList.clear();
     m_ptAchievements->GetAllRewardsOfTypes(1 << OnlineService::REWARD_TYPE_ITEM, m_idItemsList, m_nSeasonNum, false);
     m_ptAchievements->GetAllRewardsOfTypes(1 << OnlineService::REWARD_TYPE_COSMETIC, m_idCosmeticsList, m_nSeasonNum, true);
+    sub_71006739b0(m_idCosmeticsList);
     m_tVisualEquipment.Init();
 }
 

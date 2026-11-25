@@ -347,6 +347,8 @@ struct Unk19b630 {  // size 0x30
 };
 static_assert(sizeof(Unk19b630) == 0x30, "Unk19b630");
 extern "C" void sub_710019b630(void * pThis, const UIID & idParent);
+extern "C" void sub_710019b9d0(Unk19b630 * pThis);
+extern "C" void sub_710019ba50(Unk19b630 * pThis, float flDelta);
 
 class DetailsSkillsScreen {  // size 0xc8
     enum ButtonActions {
@@ -981,17 +983,13 @@ void DetailsInvScreen::OnClose()
 inline void DetailsSkillsScreen::Close()
 {
     UI_GetWindowFromID(UIWND_CONSOLE_LEADERBOARDS_INSPECT_SKILLS).SetActive(FALSE);
-    UIUtils::Console::ResetScrollBox(UISCROLL_CONSOLE_LEADERBOARDS_SKILLS_KANAIS_POWERS_WEAPON);
-    UIUtils::Console::ResetScrollBox(UISCROLL_CONSOLE_LEADERBOARDS_SKILLS_KANAIS_POWERS_ARMOR);
-    UIUtils::Console::ResetScrollBox(UISCROLL_CONSOLE_LEADERBOARDS_SKILLS_KANAIS_POWERS_JEWELRY);
+    sub_710019b9d0(&unk_98);
 }
 
 // line 313
 inline void DetailsSkillsScreen::ScrollDetails(const float flDelta)
 {
-    UIUtils::Console::ScrollContentInScrollBox(UISCROLL_CONSOLE_LEADERBOARDS_SKILLS_KANAIS_POWERS_WEAPON, flDelta);
-    UIUtils::Console::ScrollContentInScrollBox(UISCROLL_CONSOLE_LEADERBOARDS_SKILLS_KANAIS_POWERS_ARMOR, flDelta);
-    UIUtils::Console::ScrollContentInScrollBox(UISCROLL_CONSOLE_LEADERBOARDS_SKILLS_KANAIS_POWERS_JEWELRY, flDelta);
+    sub_710019ba50(&unk_98, flDelta);
 }
 
 // line 321
@@ -1424,7 +1422,7 @@ void DetailsInvScreen::UpdateVisualInventory(VisualEquipment & tVisualInventory)
         DyeType eDyeType = tACDItem.GetDyeType();
         if (i == 0)
         {
-            if (ItemIsAllowedInSlot(SLOT_HIRELING_LEFT_HAND, ptItemTypeDef))
+            if (ItemIsAllowedInSlot(SLOT_PLAYER_LEFT_HAND, ptItemTypeDef))
             {
                 tVisualInventory.tVisualItem[VIS_LEFT_HAND].gbidItem = gbidTransmog != -1 ? gbidTransmog : gbidItem;
                 tVisualInventory.tVisualItem[VIS_LEFT_HAND].eDyeType = eDyeType;
@@ -1432,7 +1430,7 @@ void DetailsInvScreen::UpdateVisualInventory(VisualEquipment & tVisualInventory)
         }
         else if (i == 1)
         {
-            if (ItemIsAllowedInSlot(SLOT_HIRELING_RIGHT_HAND, ptItemTypeDef))
+            if (ItemIsAllowedInSlot(SLOT_PLAYER_RIGHT_HAND, ptItemTypeDef))
             {
                 tVisualInventory.tVisualItem[VIS_RIGHT_HAND].gbidItem = gbidTransmog != -1 ? gbidTransmog : gbidItem;
                 tVisualInventory.tVisualItem[VIS_RIGHT_HAND].eDyeType = eDyeType;

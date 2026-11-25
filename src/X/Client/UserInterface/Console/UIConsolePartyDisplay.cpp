@@ -1329,6 +1329,8 @@ void RefreshPartyNameplates()
                 if (::Console::Online::PartyGetGameParams(tGameParams) && tGameParams.m_eGameType == GT_CHALLENGE_RIFTS)
                 {
                     UI_GetWindowFromID(*ptNamePlateIds->pidPortrait).SetActive(FALSE);
+                    if (ptNamePlateIds->pidError)
+                        UI_GetWindowFromID(*ptNamePlateIds->pidError).SetActive(FALSE);
                 }
                 else
                 {

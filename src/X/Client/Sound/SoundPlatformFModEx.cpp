@@ -4611,7 +4611,7 @@ void SoundPlatform::StopOVTStream()
 
 
 
-
+// NON_MATCHING: The two wraparound arithmetic instructions at +0xc4 and +0xc8 add the new position before subtracting the last position.
 BOOL SoundPlatform::GetOVTStreamPos(float & flStreamPos)
 {
     PlayingSoundData & tOVTStream = sFModSoundGlobals.tOVTStreamSound;

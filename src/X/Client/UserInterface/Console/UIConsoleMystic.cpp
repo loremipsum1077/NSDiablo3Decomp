@@ -1084,6 +1084,7 @@ inline void PlayerMysticScreen::ToggleStatRangeDisplay()  // line 1577
 {
     m_tPlayerDetailsView.ToggleStatRangeDisplay();
     m_tPlayerTransmogDetailsView.ToggleStatRangeDisplay();
+    m_tPlayerDyeableItemsDetailsView.ToggleStatRangeDisplay();
     SoundManager::PlaySound(GlobalSNOGet(GLOBALSNO_SOUND_CONSOLE_TOGGLE_STATS), cgtPSODefaults);
 }
 
@@ -1911,7 +1912,7 @@ void PlayerMysticScreen::UpdateDyeItemActions(::Console::ControllerActionManager
         tActionManager.SetAction(::Console::CONTROLLER_INPUT_LEFT_TRIGGER, ACTION_SCROLL_LIST, sScrollPrompt);
         tActionManager.SetAction(::Console::CONTROLLER_INPUT_RIGHT_TRIGGER, ACTION_SCROLL_LIST, sScrollPrompt);
     }
-    if (GetBrowsingMode() == BROWSE_DETAILS)
+    if (GetBrowsingMode() == BROWSE_DETAILS && GetFocusedView() != &m_tDyeItemView)
     {
         tActionManager.SetAction(::Console::CONTROLLER_INPUT_DPAD_LEFT, ACTION_TOGGLE_STAT_RANGES, StringListFetch("ConsoleUI:ToggleStatRanges").str());
     }

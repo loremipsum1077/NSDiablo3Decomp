@@ -3815,7 +3815,7 @@ void UI_BeginDrawLoadingScreen()
         break;
     }
     case XLOCALE_CHINESE_CHINA:
-    {
+    case XLOCALE_UNK_19: {
 
         if (eLoadingScreenAct >= ACT_5)
         {

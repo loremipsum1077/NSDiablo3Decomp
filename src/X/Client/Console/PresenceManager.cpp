@@ -678,8 +678,7 @@ public:
     }
 
 protected:
-    PresenceManagerInternal * m_ptPresenceManager;  // 0x28
-    bdRichPresenceData m_tPresenceData;  // 0x30
+    bdRichPresenceData m_tPresenceData;  // 0x28
 };
 
 

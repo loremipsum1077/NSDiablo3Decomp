@@ -1356,11 +1356,11 @@ void DRLGDungeonGenerator::PlaceTiles()
 
         if (!sIsValidTileType(tTile.nTileType) && !(tTile.dwFlags & (1 << DRLG_TILE_FLAG_BORDER_TILE)))
         {
-            tTile.nTileType = sIsValidTileType(tTile.nCurrentExits) ? tTile.nCurrentExits : DRLG_TILE_NSEW;
+            if (sIsValidTileType(tTile.nCurrentExits))
+                tTile.nTileType = tTile.nCurrentExits;
+            else
+                tTile.nTileType = DRLG_TILE_NSEW;
         }
-
-
-
 
 
 
@@ -9361,6 +9361,7 @@ void DRLGDungeonGenerator::RemoveTile(
 
 
 // NON_MATCHING: 844 vs 852 B; the original keeps tTile.nTileType from the pre-loop test for the first direction and reloads it on the back edge (load PRE), ours reloads at the loop top
+// NON_MATCHING: The inlined ConnectTiles OR at +0x1b8 exchanges its two source registers.
 void DRLGDungeonGenerator::PatchTileExits()
 
 {

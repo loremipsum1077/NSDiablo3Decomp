@@ -886,7 +886,7 @@ void XRemoteHeap::AddToFreeList(XRemoteHeapNode* ptFreeNode, XRemoteHeapNode* pt
 
 
         uint32 dwBucketIndex = GetNodeBucket(ptFreeNode->pData);
-        if (m_ptNodeBuckets[dwBucketIndex] == ptFreeNode) {
+        if (m_ptNodeBuckets[dwBucketIndex] == ptFreeNode && dwBucketIndex != 0) {
 
             ptPrevNode = FindPrevNode(ptFreeNode);
         }

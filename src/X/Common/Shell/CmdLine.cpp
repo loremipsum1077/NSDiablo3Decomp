@@ -309,7 +309,7 @@ BOOL CmdLineGetStringParam(const char* szParam, char* szString, uint32 dwLen)
             return TRUE;
         }
     }
-    static const char cszTokens[] = " ";
+    const char cszTokens[] = " ";
     char* szTokStr0 = strtok(szCopy, cszTokens);
     if (!szTokStr0) return FALSE;
     uint32 dwMinLen = Math::Min(dwLen, static_cast<uint32>(sizeof(szCopy)));

@@ -32,7 +32,7 @@
 UITimer & UI_GetTimerFromID(const UIID & id); void UI_DeleteControl(UIID & idControl, const BOOL fAssertIfDeletingRoot); void ACDInventoryGetItemDrawInfoWithGBID(const GBID gbidItem, ImageTextureFrame & tImageTexFrame, const int32 eDrawType);
 namespace UIInventory { void UpdateTimerVisibility(UITimer & tTimer, const ActorCommonData & tACDPlayer, const ActorCommonData & tACDItem); void DrawItemOverlay(const Rect2D & rectItemUIC, int32 eOverlay, float flAlpha, float & flZ, const Rect2D * prectClippingUIC); }
 namespace UISkills { void GetSkillIconImages(SNO snoPower, const BOOL bInactive, ImageTextureFrame & tTexFrameNormal, ImageTextureFrame & tTexFrameMouseover, ImageTextureFrame & tTexFramePushed, ImageTextureFrame & tTexFrameRound); } namespace UIBuffs { int32 GetStackCountForSkillButton(SNO snoPower, const Player * ptPlayer); }
-
+extern "C" int32 sub_71004b8900(const ActorCommonData * ptACD, int32 nLevel);
 
 
 
@@ -664,12 +664,12 @@ void UIHotbarButton::DrawItem(
                     ActorCommonData * ptACDItem = ACDTryToGet(ACDFromANN(m_tData.m_annItem));
                     if (ptACDItem)
                     {
-                        nRequiredLevel = ItemGetLevelRequirement(ptACDItem->hGB.gbid, ptACDItem, FALSE);
+                        nRequiredLevel = sub_71004b8900(ptACDPlayer, ItemGetLevelRequirement(ptACDItem->hGB.gbid, ptACDItem, FALSE));
                     }
                 }
                 else
                 {
-                    nRequiredLevel = ItemGetLevelRequirement(m_tData.m_gbidItem, NULL, FALSE);
+                    nRequiredLevel = sub_71004b8900(ptACDPlayer, ItemGetLevelRequirement(m_tData.m_gbidItem, NULL, FALSE));
                 }
 
                 if (ptACDPlayer->AttributesGetInt(ATTRIBUTE_LEVEL) < nRequiredLevel)

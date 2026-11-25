@@ -1628,7 +1628,7 @@ void UpdateQuestStepDescriptions()
         tScrollBox.SetWindowRect(rectScrollBox);
         tScrollBox.SetScrollPos(0.0f);
         ::Console::ControllerActionManager & tActionManager = ::Console::Screens::GetActionManager();
-        if (tScrollBox.GetScrollLimit() > 1.0f && sgtGameSettingsGlobals.eCurrentMode == SELECT_MODE_QUEST) {
+        if (tScrollBox.GetScrollLimit() > 0.0f && sgtGameSettingsGlobals.eCurrentMode == SELECT_MODE_QUEST) {
             tActionManager.SetAction(::Console::CONTROLLER_INPUT_LEFT_TRIGGER, 2, StringListFetch("ConsoleGameSettings:ScrollQuest"));
             tActionManager.SetAction(::Console::CONTROLLER_INPUT_RIGHT_TRIGGER, 2, StringListFetch("ConsoleGameSettings:ScrollQuest"));
         } else {
@@ -2368,8 +2368,8 @@ void RefreshDifficultyDisplay()
             if (i % NUM_DIFFICULTIES_PER_PAGE == 0)
             {
                 BOOL bLocked = nCurrentPage == nPage - 1 && !bEnabled;
-                UI_GetWindowFromID(UIWND_CONSOLE_GAME_SETTINGS_DIFFICULTY_SELECT_ARROWLOCKED).SetActive(nCurrentPage < nLastPage && bLocked);
-                UI_GetWindowFromID(UIWND_CONSOLE_GAME_SETTINGS_DIFFICULTY_SELECT_ARROWR).SetActive(nCurrentPage < nLastPage && !bLocked);
+                UI_GetWindowFromID(UIWND_CONSOLE_GAME_SETTINGS_DIFFICULTY_SELECT_ARROWLOCKED).SetActive(static_cast<uint32>(nSelectedDifficulty) < nLastPage * NUM_DIFFICULTIES_PER_PAGE && bLocked);
+                UI_GetWindowFromID(UIWND_CONSOLE_GAME_SETTINGS_DIFFICULTY_SELECT_ARROWR).SetActive(static_cast<uint32>(nSelectedDifficulty) < nLastPage * NUM_DIFFICULTIES_PER_PAGE && !bLocked);
             }
             if (ptButton)
             {

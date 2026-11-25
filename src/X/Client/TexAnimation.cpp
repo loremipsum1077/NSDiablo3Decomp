@@ -958,7 +958,7 @@ TexAnimMatrixType TexAnimGetTexMatrixForBillboard(Matrix4x4 & mTex, const TexAni
 
 
 
-
+// NON_MATCHING: The simple-translation scale select and first matrix store are scheduled in a different order at +0x70.
 TexAnimMatrixType TexAnimGetTexMatrixForBillboard(Matrix4x4 & mTex, const CHAR * pTexAnimCompParams, uint32 dwTexAnimCompParamsSize, const TexAnimState * ptTexAnimState, const TextureFramesInfo & tTexFramesInfo) {
     const TexAnimState & tTexAnimState = *ptTexAnimState;
     if (pTexAnimCompParams == NULL) {

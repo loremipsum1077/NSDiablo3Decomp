@@ -1026,8 +1026,8 @@ void ClientReceiveHeartbeat(uint32 dwHeartBeatTime)
 
     PacketBuffer * ptPacketBuffer = PacketBufferAlloc(sgptClientGlobals->ptPacketPool, sizeof(EndOfTickMessage));
     EndOfTickMessage & tEndOfTickMessage = *(EndOfTickMessage *)ptPacketBuffer->byteData;
-    tEndOfTickMessage.tHeader.dwSize = sizeof(EndOfTickMessage);
     tEndOfTickMessage.tHeader.eType = 0xa1;
+    tEndOfTickMessage.tHeader.dwSize = sizeof(EndOfTickMessage);
     tEndOfTickMessage.tHeader.nControllerIndex = -1;
     tEndOfTickMessage.dwTickEnding = dwHeartBeatTime;
     tEndOfTickMessage.dwTickNext = 0xffffffff;

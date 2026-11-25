@@ -59,6 +59,7 @@ BOOL IsPartyMemberMicConnected(int32 nPartyMemberIndex);
 } }
 namespace UILeaderboardInspect { namespace Console { void OpenForChallengeRift(int32 nControllerIndex); } }  // UIConsoleLeaderboardInspect.cpp
 namespace Console { namespace GamerProfile { int32 GetPrimaryProfileUserIndex(); } }  // GamerProfileNX64.cpp
+bool InputIsSingleJoycon(int32 nControllerIndex);
 extern UIID UITXT_CONSOLE_PLAYER_LABEL_RING;
 extern UIID UIDLG_INVENTORY_CONSOLE_CRAFTING_PANEL;
 UIStackPanel & UI_GetStackPanelFromID(const UIID & id);  // X/Client/UserInterface/UI.cpp
@@ -931,7 +932,10 @@ void sUpdateNormalRecipeRequirementsUI(
 void ScrollContentInScrollBox(const UIID & idScrollBox, float fAmount)
 {
     UIConsoleScrollBox & scrollbox = UI_GetConsoleScrollBoxFromID(idScrollBox);
-    scrollbox.Scroll(fAmount);
+    int32 nControllerIndex = UI_GetPrimaryUIController();
+    if (nControllerIndex == -1)
+        nControllerIndex = ::Console::GamerProfile::GetPrimaryProfileUserIndex();
+    scrollbox.Scroll(InputIsSingleJoycon(nControllerIndex) ? -fAmount : fAmount);
 }
 
 

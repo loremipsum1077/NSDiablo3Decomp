@@ -13980,6 +13980,11 @@ extern "C" BOOL sub_710050eb20(GBID gbidItem)
     return (ptItem->unk_24 >> 1) & 1;
 }
 
+extern "C" RGBAColor sub_710050e7e0()
+{
+    return unk_7100ed3648;
+}
+
 extern "C" BOOL sub_710050e880(const ActorCommonData * ptACD)
 {
     if (ptACD == NULL || ptACD->hGB.eType != GB_ITEMS)

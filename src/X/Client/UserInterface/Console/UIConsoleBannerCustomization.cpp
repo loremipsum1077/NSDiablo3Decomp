@@ -71,7 +71,7 @@ const UIID & UI_GetControllerFocus();
 UIConsoleScrollBox & UI_GetConsoleScrollBoxFromID(const UIID & id);
 // X/Client/Console/GamerProfile.cpp
 void LightDelete(LightID idLight); SNO UI_GetDefaultHeroLight(); LightID LightAdd(uint32 dwFlags, SNO snoLight, const PRTransform & tTransform, BOOL bUnused, RenderContext eContext);
-void MessageSendToServer(GameMessageType eType, const google::protobuf::MessageLite & tMessage, const Player * ptPlayer); enum { CMSG_BANNER_CONFIGURATION = 447 }; namespace UIMainMenu { namespace Console { void Refresh3DBanner(); } }
+void MessageSendToServer(GameMessageType eType, const google::protobuf::MessageLite & tMessage, const Player * ptPlayer); enum { CMSG_BANNER_CONFIGURATION = 448 }; namespace UIMainMenu { namespace Console { void Refresh3DBanner(); } }
 namespace Console { namespace GamerProfile { BOOL IsRewardNew(int32 nUserIdx, OnlineService::RewardId idReward); void OnRewardViewed(int32 nUserIdx, OnlineService::RewardId idReward); } }
 
 namespace UIBannerCustomization {

@@ -195,7 +195,7 @@ static void sSetTimer(uint32 dwTicksRemaining)
 
 
 
-
+extern "C" BOOL sub_710017a0b0();
 BOOL sSafeToJoin()
 {
 
@@ -214,7 +214,7 @@ BOOL sSafeToJoin()
         return FALSE;
     }
 
-    if (!UIWaypointMap::CanCloseSafely())
+    if (!UIWaypointMap::CanCloseSafely() || !sub_710017a0b0())
     {
         return FALSE;
     }

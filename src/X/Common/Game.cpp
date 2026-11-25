@@ -268,7 +268,7 @@ namespace GamerProfile { nn::account::UserHandle GetUserHandle(int32 nUserIndex)
 
 
 
-
+extern "C" bool sub_7100073850(XLocale nLocale);
 static const nn::ApplicationId s_applicationId = { 0x01001B300B9BE000ULL };
 
 // D3_REGISTRY_PATH / D3_REGISTRY_SUBKEY_LOCALE (lines 289-290): the linker dropped both pointers
@@ -1839,16 +1839,16 @@ XLocale FileSystemGetLocale()
 
 
 
-
 // line 1702: void OnConfirmMissingSystemLocaleOffer(const int32 nUserIndex, const UIID & tId)  [inlined into 1 functions]
 void OnConfirmMissingSystemLocaleOffer(const int32 nUserIndex, const UIID & tId)
 {
     nn::account::UserHandle tPrimaryUserHandle = Console::GamerProfile::GetUserHandle(nUserIndex);
 
-    nn::ec::ShowShopAddOnContentList(s_applicationId, tPrimaryUserHandle);
+    if (sub_7100073850(XLOCALE_JAPANESE))
+        nn::ec::ShowShopAddOnContentList(nn::ApplicationId{0x010032F00C04A000ULL}, tPrimaryUserHandle);
+    else
+        nn::ec::ShowShopAddOnContentList(s_applicationId, tPrimaryUserHandle);
 }
-
-
 // line 1711: void OnCloseMissingSystemLocaleOffer(const int32 nUserIndex, LocaleOfferCallback pfnOnLocaleOfferComplete, const UIID & tId)  [inlined into 1 functions]
 void OnCloseMissingSystemLocaleOffer(const int32 nUserIndex, LocaleOfferCallback pfnOnLocaleOfferComplete, const UIID & tId)
 {

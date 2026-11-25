@@ -951,7 +951,9 @@ dmFixtureId DominoWorld::CreatePhysMeshFixture(
 
 
 
-        filter.m_categoryBits = 1 | (((pMesh->uFlags >> 2) & 3) << 7);
+        filter.m_categoryBits = (pMesh->uFlags & 4) ? 0x81 : 1;
+        if (pMesh->uFlags & 8)
+            filter.m_categoryBits |= 0x100;
     }
     // Mask 0xFFDE and group 0 are folded into the filter word stored at 0x317908
     // with no line of their own; their position here is an inference.

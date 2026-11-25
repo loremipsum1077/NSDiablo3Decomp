@@ -107,14 +107,14 @@ uint32 MaterialTextureBuildHash(const UberMaterial & tUberMaterial) {
     }
     return dwMatTexSortHash;
 }
-// Array lookup: (nFirst + nLast) >> 1 per 326 columns 30/39; the early return per 315 (cbz + b.lt) and locals 320-322.
+// The array lookup returns early for a null array. The loop bounds handle an empty range.
 #line 310 "X/Client/Gfx/GfxMaterial.cpp"
 const MaterialTextureEntry* MaterialLookup(
     const MaterialTextureEntry* arMaterialTex,
     int32 nCount,
     ShaderTex eShaderTex)
 {
-    if (!arMaterialTex || nCount <= 0)
+    if (!arMaterialTex)
     {
         return 0;
     }

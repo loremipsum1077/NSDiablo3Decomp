@@ -117,7 +117,7 @@ void TraceStat(LPCSTR szStat, ACDID idACD, LPCSTR szFormat, ...);  // X/Server/S
 void SGameAchievementRegister(const OnlineService::GameAccountHandle & tHandle); void SGameAchievementUnregister(const OnlineService::GameAccountHandle & tHandle);  // X/Server/SGame.cpp:1628, 1650
 void ActorTriggerAttributeUpdate(ActorID idActor);  // X/Server/Actors/Actors.cpp:3770
 float SPlayerGetPing(Player & tPlayer); void SPlayerUpdateKillCounters(Player & tPlayer);  // lines 11296, 5138
-
+extern "C" uint32 sub_71007b75d0();  // SGame.cpp
 static void sPollPerkBuffs(Player & tPlayer, ActorCommonData & tACDPlayer); static void sPollLimitedDurationItems(Player & tPlayer, ActorCommonData & tACDPlayer);  // lines 11644, 11699
 #include "../Common/TeamCommon.h"
 #include "Quests/SQuests.h"
@@ -4579,7 +4579,7 @@ void PlayerRecordDamageDone(
         {
             Achievement::EvaluationData tEvaluationData;
             tEvaluationData.SetPlayer(ptPlayer);
-            tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_PVP_PLAYER_DAMAGED_PLAYER, Math::FloatToInt(flDamage), (uint32)sub_71007b5e70());
+            tEvaluationData.EvaluateEvent(ptPlayer, Achievement::ACH_EVENT_PVP_PLAYER_DAMAGED_PLAYER, Math::FloatToInt(flDamage), sub_71007b75d0(), (uint32)sub_71007b5e70());
         }
     }
 
@@ -5222,7 +5222,7 @@ void SPlayerUpdateCombatStatus(
                                 Achievement::EvaluationData tEvaluationData;
                                 tEvaluationData.SetPlayer(&tPlayer);
 
-                                tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_SURVIVED_COMBAT_WITH_LOW_HEALTH, 1, (uint32)sub_71007b5e70());
+                                tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_SURVIVED_COMBAT_WITH_LOW_HEALTH, 1, sub_71007b75d0(), (uint32)sub_71007b5e70());
 
 
 
@@ -9340,7 +9340,7 @@ void SPlayerUpdateCurrencyCounter(
 
         Achievement::EvaluationData tEvaluationData;
         tEvaluationData.SetPlayer(&tPlayer);
-        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_GOLD_COUNTER_EXPIRED, 1, (uint32)sub_71007b5e70());
+        tEvaluationData.EvaluateEvent(&tPlayer, Achievement::ACH_EVENT_GOLD_COUNTER_EXPIRED, 1, sub_71007b75d0(), (uint32)sub_71007b5e70());
         tCounter.Reset();
     }
     else
