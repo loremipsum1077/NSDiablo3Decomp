@@ -296,7 +296,7 @@ const XTypeDescriptor * DT_WORLD_LOCATION_MESSAGE_DATA = &TypeDescriptor_WorldLo
 
 static const TypeDescriptorField InventoryLocationMessageData_Fields[4] = {
     TypeDescriptorField("", DT_INT, offsetof(InventoryLocationMessageData, annContainer), NULL, 1),
-    BoundedTypeDescriptorField("", DT_INT, offsetof(InventoryLocationMessageData, eSlot), NULL, (const void *)-1, (const void *)0x19),
+    BoundedTypeDescriptorField("", DT_INT, offsetof(InventoryLocationMessageData, eSlot), NULL, (const void *)-1, (const void *)0x22),
     TypeDescriptorField("", DT_IVECTOR2D, offsetof(InventoryLocationMessageData, pt), NULL, 1),
     TypeDescriptorField(NULL, DT_NULL, sizeof(InventoryLocationMessageData), NULL, 0),
 };
@@ -582,7 +582,7 @@ const XTypeDescriptor * DT_KILL_COUNT_MESSAGE = &TypeDescriptor_KillCountMessage
 
 static const TypeDescriptorField InvLoc_Fields[5] = {
     TypeDescriptorField("", DT_INT, 0, NULL, 1),
-    BoundedTypeDescriptorField("", DT_INT, 4, NULL, (const void *)-1, (const void *)0x19),
+    BoundedTypeDescriptorField("", DT_INT, 4, NULL, (const void *)-1, (const void *)0x22),
     TypeDescriptorField("", DT_INT, 8, NULL, 1),
     TypeDescriptorField("", DT_INT, 0xc, NULL, 1),
     TypeDescriptorField(NULL, DT_NULL, 0x10, NULL, 0),
@@ -594,7 +594,7 @@ static const TypeDescriptorField InventoryRequestQuickMoveMessage_Fields[7] = {
     TypeDescriptorField("", DT_REQUIRED_MESSAGE_HEADER, 0, NULL, 1),
     TypeDescriptorField("", DT_INT, 8, NULL, 1),
     TypeDescriptorField("", DT_INT, 0xc, NULL, 1),
-    BoundedTypeDescriptorField("", DT_INT, 0x10, NULL, (const void *)-1, (const void *)0x19),
+    BoundedTypeDescriptorField("", DT_INT, 0x10, NULL, (const void *)-1, (const void *)0x22),
     TypeDescriptorField("", DT_INT, 0x14, NULL, 1),
     TypeDescriptorField("", DT_INT, 0x18, NULL, 1),
     TypeDescriptorField(NULL, DT_NULL, 0x1c, NULL, 0),
