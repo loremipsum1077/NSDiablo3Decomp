@@ -30,3 +30,11 @@ CriteriaId Make64BitCriteriaId(uint32 id) {
 
 }  // namespace AchievementsEngine
 }  // namespace OnlineService
+
+// Probably: OnlineService::AchievementsEngine::Make64BitAchievementId (2.7.7; same body as Make64BitCriteriaId,
+// called with achievement ids by sub_7100468fe0 before GetAchievementDefinition).
+extern "C" uint64 sub_710046b080(uint32 id) {
+    using namespace OnlineService::AchievementsEngine;
+    const uint64 achievementId = PRODUCT_AND_TEAM_HEADER | ExtractCriteriaId32(id);
+    return achievementId;
+}

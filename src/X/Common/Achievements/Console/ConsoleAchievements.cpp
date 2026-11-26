@@ -8,6 +8,7 @@
 #include "../../Protobuf/Account.pb.h"
 #include "../../Protobuf/Achievements.pb.h"
 #include "../AchievementsEngine/achievements_types.h"
+#include "../AchievementsEngine/achievements_internal_static_data_structs.h"
 #include "../../../../Contrib/Contrib/blz/include/blz/algo_seq_const.h"
 #include "../../Protobuf/GameMessage.pb.h"
 #include "../../../Client/Console/GamerProfile.h"
@@ -644,61 +645,60 @@ bool ServerAchievementsInterface::PopulateAccountAchievementSnapshot(const Onlin
     it->second->m_snapshot.MergeToProtocol(*tDefinition.mutable_console_data()->mutable_achievement_snapshot(), true, true, true);
     return true;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// NON_MATCHING: one ldp vs two ldr when reloading mapSet0 before its clear() (load pairing only)
+// Probably: sync the account achievement snapshot between achievement sets 0 and 1 (2.7.7). Criteria and
+// achievements whose static definition has partition mask 1 are shared by both sets: an entry present in only
+// one set is copied into the other.
+extern "C" void sub_7100468fe0(const OnlineService::AchievementsEngine::AchievementsStaticData * ptStaticData, D3::Achievements::Snapshot * ptSnapshot) {
+    blz::unordered_map<uint32, int32> mapSet0;
+    blz::unordered_map<uint32, int32> mapSet1;
+    for (int32 i = 0; i < ptSnapshot->criteria_snapshot_size(); i++) {
+        const D3::Achievements::CriteriaUpdateRecord & tRecord = ptSnapshot->criteria_snapshot(i);
+        const OnlineService::AchievementsEngine::AchievementsStaticData & tStaticData = tRecord.achievement_set() == 0 ? ptStaticData[0] : ptStaticData[1];
+        uint32 uId = tRecord.criteria_id_32_and_flags_8();
+        const OnlineService::AchievementsEngine::InternalCriteriaDefinition * ptCriteria = tStaticData.GetCriteriaDefinition(OnlineService::AchievementsEngine::Make64BitCriteriaId(uId));
+        if (ptCriteria && ptCriteria->m_parentAchievement && ptCriteria->m_parentAchievement->m_partitionMask == 1)
+            (tRecord.achievement_set() == 0 ? mapSet0 : mapSet1)[uId] = i;
+    }
+    for (blz::unordered_map<uint32, int32>::iterator it = mapSet1.begin(); it != mapSet1.end(); ++it) {
+        if (mapSet0.find(it->first) == mapSet0.end()) {
+            D3::Achievements::CriteriaUpdateRecord * ptNew = ptSnapshot->add_criteria_snapshot();
+            ptNew->CopyFrom(ptSnapshot->criteria_snapshot(it->second));
+            ptNew->set_achievement_set(0);
+        }
+    }
+    for (blz::unordered_map<uint32, int32>::iterator it = mapSet0.begin(); it != mapSet0.end(); ++it) {
+        if (mapSet1.find(it->first) == mapSet1.end()) {
+            D3::Achievements::CriteriaUpdateRecord * ptNew = ptSnapshot->add_criteria_snapshot();
+            ptNew->CopyFrom(ptSnapshot->criteria_snapshot(it->second));
+            ptNew->set_achievement_set(1);
+        }
+    }
+    mapSet0.clear();
+    mapSet1.clear();
+    for (int32 i = 0; i < ptSnapshot->achievement_snapshot_size(); i++) {
+        const D3::Achievements::AchievementUpdateRecord & tRecord = ptSnapshot->achievement_snapshot(i);
+        const OnlineService::AchievementsEngine::AchievementsStaticData & tStaticData = tRecord.achievement_set() == 0 ? ptStaticData[0] : ptStaticData[1];
+        uint32 uId = (uint32)(tRecord.achievement_id() & 0xffffff);
+        const OnlineService::AchievementsEngine::InternalAchievementDefinition * ptAchievement = tStaticData.GetAchievementDefinition(sub_710046b080(uId));
+        if (ptAchievement && ptAchievement->m_partitionMask == 1)
+            (tRecord.achievement_set() == 0 ? mapSet0 : mapSet1)[uId] = i;
+    }
+    for (blz::unordered_map<uint32, int32>::iterator it = mapSet1.begin(); it != mapSet1.end(); ++it) {
+        if (mapSet0.find(it->first) == mapSet0.end()) {
+            D3::Achievements::AchievementUpdateRecord * ptNew = ptSnapshot->add_achievement_snapshot();
+            ptNew->CopyFrom(ptSnapshot->achievement_snapshot(it->second));
+            ptNew->set_achievement_set(0);
+        }
+    }
+    for (blz::unordered_map<uint32, int32>::iterator it = mapSet0.begin(); it != mapSet0.end(); ++it) {
+        if (mapSet1.find(it->first) == mapSet1.end()) {
+            D3::Achievements::AchievementUpdateRecord * ptNew = ptSnapshot->add_achievement_snapshot();
+            ptNew->CopyFrom(ptSnapshot->achievement_snapshot(it->second));
+            ptNew->set_achievement_set(1);
+        }
+    }
+}
 
 
 

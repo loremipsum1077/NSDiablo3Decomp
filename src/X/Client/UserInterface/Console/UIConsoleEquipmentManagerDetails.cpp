@@ -6,6 +6,7 @@
 #include "UIConsoleInventoryScreen.h"
 #include "UIConsoleInventoryView.h"
 #include "Wrappers/RingWrapper.h"
+#include "sub_710019b630.h"
 #include "../Controls/UIButtonControl.h"
 #include "../Controls/UIConsoleScrollBoxControl.h"
 #include "../Controls/UIHotbarButtonControl.h"
@@ -473,21 +474,7 @@ static_assert(sizeof(DetailsInvScreen) == 0x3d0, "DetailsInvScreen");
 
 // 2.7.7 Kanai's powers panel (unnamed 0x30-byte class; same definition as in UISkillsConsole.cpp).
 // sub_710019b630 (this, parent UIID) builds the four owned 0xd8-byte children (sub_710019aec0);
-// the inline destructor frees them in reverse order.
-struct Unk19aec0 { uint8 unk_00[0xd8]; };
-struct Unk19b630 {  // size 0x30
-    ~Unk19b630()
-    {
-        delete unk_00[3];
-        delete unk_00[2];
-        delete unk_00[1];
-        delete unk_00[0];
-    }
-    Unk19aec0 * unk_00[4];  // 0x00
-    uint64 unk_20;  // 0x20
-    UIID unk_28;  // 0x28
-};
-static_assert(sizeof(Unk19b630) == 0x30, "Unk19b630");
+// the inline destructor frees them in reverse order. Types and functions: sub_710019b630.h.
 
 class DetailsSkillsScreen {  // size 0xc8
     enum ButtonActions {
@@ -790,10 +777,7 @@ void DetailsInvScreen::OnClose()
     SetSecondaryView(NULL);
 }
 
-extern "C" void sub_710019b630(void * pThis, const UIID & idParent);
-extern "C" BOOL sub_710019b960(Unk19b630 * pThis);
-extern "C" void sub_710019b9d0(Unk19b630 * pThis);
-extern "C" void sub_710019ba50(Unk19b630 * pThis, float flDelta);
+// Kanai's powers panel functions: declared in sub_710019b630.h.
 
 inline DetailsSkillsScreen::DetailsSkillsScreen()
     : m_fCurrentlyOpening(FALSE)

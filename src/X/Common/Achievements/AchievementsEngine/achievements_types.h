@@ -20,3 +20,6 @@ CriteriaId Make64BitCriteriaId(uint32 id);
 }  // namespace AchievementsEngine
 
 }  // namespace OnlineService
+
+// 2.7.7, achievements_types.cpp: Make64BitCriteriaId's twin used for achievement ids.
+extern "C" uint64 sub_710046b080(uint32 id);

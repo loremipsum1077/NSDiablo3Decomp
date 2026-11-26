@@ -4,6 +4,7 @@
 #include "ConsoleInputUtilities.h"
 #include "Wrappers/RadioSelectorWrapper.h"
 #include "Wrappers/RingWrapper.h"
+#include "sub_710019b630.h"
 #include "../Controls/UIButtonControl.h"
 #include "../Controls/UIConsoleScrollBoxControl.h"
 #include "../Controls/UIHotbarButtonControl.h"
@@ -740,26 +741,7 @@ PlayerSkillsGlobals * sgptSkillsGlobals;  // line 758
 // 2.7.7: Kanai's powers panel, an unnamed 0x30-byte class shared with the leaderboard-inspect
 // and equipment-manager skill screens. Constructor sub_710019b630 (this, parent UIID) fills the
 // four owned 0xd8-byte children (constructor sub_710019aec0); the inline destructor frees them
-// in reverse order with plain delete.
-struct Unk19aec0 { uint8 unk_00[0xd8]; };
-struct Unk19b630 {  // size 0x30
-    ~Unk19b630()
-    {
-        delete unk_00[3];
-        delete unk_00[2];
-        delete unk_00[1];
-        delete unk_00[0];
-    }
-    Unk19aec0 * unk_00[4];  // 0x00
-    uint64 unk_20;  // 0x20
-    UIID unk_28;  // 0x28
-};
-static_assert(sizeof(Unk19b630) == 0x30, "Unk19b630");
-extern "C" void sub_710019b630(void * pThis, const UIID & idParent);
-extern "C" BOOL sub_710019b960(Unk19b630 * pThis);  // any child scroll box can scroll
-extern "C" void sub_710019b9d0(Unk19b630 * pThis);  // reset child scroll positions
-extern "C" void sub_710019ba50(Unk19b630 * pThis, float flDelta);  // scroll child scroll boxes
-extern "C" void sub_710019bab0(Unk19b630 * pThis, const Player * ptPlayer);  // refresh from player
+// in reverse order with plain delete. Types and functions: sub_710019b630.h.
 static Unk19b630 * s_unk_186dc48;  // 0x710186dc48
 
 const UIID & sGetActiveScrollBox(const PlayerSkillsGlobals::SelectionMode eSelectionMode)  // line 763
