@@ -13,6 +13,44 @@ which made evidence-based recovery of every function body possible.
 > [`LICENSES/`](LICENSES/) covers only the project's own tooling, as listed in
 > [`REUSE.toml`](REUSE.toml); it grants no rights in the game.
 
+## This branch: 2.7.7
+
+This `port-2.7.7` branch moves the decompilation to the later **2.7.7** update
+(`C2.7.7.92380`), the version the
+[NSD3Recomp `support-2.7.7` branch](https://github.com/loremipsum1077/NSD3Recomp/tree/support-2.7.7)
+builds. 32,766 of the game's functions match the 2.7.7 binary byte for byte; the rest
+are written to 2.7.7's behaviour without matching exactly, and every game function the
+recompile needs is present. The 2.6.2 status below is for the `dev` branch. How the port
+was made, and what is still open, is in [docs/port_2_7_7.md](docs/port_2_7_7.md).
+
+2.7.7 ships no debug (`.nss`) file, so the game-data step below needs **two** dumps
+of your own copy: the cartridge version 2.6.2 (laid out as described below), and the
+game's program after updating to 2.7.7.
+
+1. Do the 2.6.2 steps below up to and including `python3 setup.py`, which also fetches
+   the pinned `nx2elf`.
+2. Convert the 2.7.7 update's `exefs/main` and check it (on Linux, use the `linux` folder):
+
+   ```sh
+   toolchain/nx-decomp-tools-binaries/macos/nx2elf /path/to/2.7.7/exefs/main --export-elf data/2.7.7/main.elf
+   shasum -a 256 data/2.7.7/main.elf   # b462b3f68d0afc80eb2331b2b18c96a86046ef5a459bedc2439aa7959cfa13c5
+   ```
+
+3. Generate the game data for 2.7.7. The first command proves the tables against the
+   2.6.2 dump, then replaces the ones 2.7.7 changed from `data/2.7.7/main.elf`; the
+   second writes the 2.7.7 protobuf bindings:
+
+   ```sh
+   python3 tools/bootstrap_game_data.py /path/to/2.6.2 --build-protoc
+   python3 tools/bootstrap_protobuf.py
+   python3 tools/bootstrap_protobuf.py --check   # 0 of 48 differ
+   ```
+
+That is all NSD3Recomp needs: point it at this checkout. To build the Switch binary
+itself and compare it with the original, see
+[Setting up a checkout](docs/port_2_7_7.md#setting-up-a-checkout) (2.7.7 uses clang
+7.1.0).
+
 ## Project status
 
 The decompilation is **complete as far as it will go**: every function in the game

@@ -1,8 +1,8 @@
 # Porting to game version 2.7.7
 
-This fork targets Diablo III for Switch **2.7.7** (`C2.7.7.92380`, NintendoSDK 8.2.0)
-instead of 2.6.2. The repository is named `NSD3Decomp2_7_9` from an early mislabel; the
-binary's own version strings say 2.7.7, and every version label and path uses 2.7.7.
+The `port-2.7.7` branch targets Diablo III for Switch **2.7.7** (`C2.7.7.92380`,
+NintendoSDK 8.2.0) instead of 2.6.2. Early work called it 2.7.9 by mistake; the binary's
+own version strings say 2.7.7, and every version label and path uses 2.7.7.
 Patch-by-patch feature changes are in [the change-tracking guide](changes_2_6_2_to_2_7_7.md).
 `tools/config.toml` selects the version (`default_version`) and compiler (`clang_version`);
 `tools/build.py`, `tools/try_file.py`, `tools/land.py` and `tools/check` follow it. The

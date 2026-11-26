@@ -7,14 +7,14 @@ Prepared 2026-11-24 for this repository's decompilation work. This is a research
 | Item | Observed identity |
 | --- | --- |
 | Baseline | Switch `C2.6.2.52309`; see `src/X/Sigma/buildver.cpp` and the baseline original-input manifest |
-| Repository/build namespace | Repository `NSD3Decomp2_7_9` (name kept for historical reasons); `data/2.7.7/`, `build/2.7.7/`; `tools/config.toml` selects `2.7.7` |
+| Repository/build namespace | Branch `port-2.7.7`; `data/2.7.7/`, `build/2.7.7/`; `tools/config.toml` selects `2.7.7` |
 | Original target input inspected | `data/2.7.7/main.elf`, 18,204,656 bytes |
 | Embedded target version | `2.7.7`, `C2.7.7.92380`, `C2.7.7.92380 (135863-1751824)` |
 | Embedded code branch | `branches/2_7_7`, also present in source-path strings |
 | Target ELF SHA-256 | `b462b3f68d0afc80eb2331b2b18c96a86046ef5a459bedc2439aa7959cfa13c5` |
 | Compiled project output | `build/2.7.7/d3`; do not mistake this for the original target input |
 
-The target binary identifies itself as **2.7.7**. The project's version labels, data and build paths were renamed from an earlier mistaken `2.7.9` to `2.7.7`; only the repository name still says 2_7_9. Do not apply public 2.7.8/2.7.9 behavior to this target. Conversely, a 2.7.7 label alone does not identify which later hotfixes are included; retain the full build number and hash.
+The target binary identifies itself as **2.7.7**. The project's version labels, data and build paths were renamed from an earlier mistaken `2.7.9` to `2.7.7`. Do not apply public 2.7.8/2.7.9 behavior to this target. Conversely, a 2.7.7 label alone does not identify which later hotfixes are included; retain the full build number and hash.
 
 ## Evidence and status rules
 
