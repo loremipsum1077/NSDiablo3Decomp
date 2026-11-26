@@ -8896,15 +8896,15 @@ void SNOFileAddHotfixEntry(const SNOGroup snoGroup, const uint32 uGuid, LPCSTR s
     }
 
 }
+// 0x710074fff0 compares the two CRefString elements in the hotfix list.
+extern "C" int32 sub_710074fff0(const void *, const void *);
+
 static int32 sHotfixSort(const void * ptA, const void * ptB)
 {
-    CRefString * ptStringA = (CRefString *)ptA;
-    CRefString * ptStringB = (CRefString *)ptB;
-
-
-
-    return strcasecmp(*ptStringA, *ptStringB);
+    return sub_710074fff0(ptA, ptB);
 }
+
+
 
 
 

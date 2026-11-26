@@ -60,9 +60,11 @@ LPCSTR UIInventory::ItemGetLabelForSlot(const InventorySlotType eSlot, const BOO
         szLabel = "OffHand";
         break;
     case SLOT_PLAYER_HEAD:
+    case SLOT_HIRELING_HEAD:
         szLabel = "Head";
         break;
     case SLOT_PLAYER_TORSO:
+    case SLOT_HIRELING_TORSO:
         szLabel = "Chest";
         break;
     case SLOT_PLAYER_LEFT_HAND:
@@ -70,21 +72,27 @@ LPCSTR UIInventory::ItemGetLabelForSlot(const InventorySlotType eSlot, const BOO
         szLabel = fIs2Handed ? "2Hand" : "1Hand";
         break;
     case SLOT_PLAYER_HANDS:
+    case SLOT_HIRELING_HANDS:
         szLabel = "Hands";
         break;
     case SLOT_PLAYER_WAIST:
+    case SLOT_HIRELING_WAIST:
         szLabel = "Waist";
         break;
     case SLOT_PLAYER_FEET:
+    case SLOT_HIRELING_FEET:
         szLabel = "Feet";
         break;
     case SLOT_PLAYER_SHOULDERS:
+    case SLOT_HIRELING_SHOULDERS:
         szLabel = "Shoulders";
         break;
     case SLOT_PLAYER_LEGS:
+    case SLOT_HIRELING_LEGS:
         szLabel = "Legs";
         break;
     case SLOT_PLAYER_BRACERS:
+    case SLOT_HIRELING_BRACERS:
         szLabel = "Wrists";
         break;
     case SLOT_PLAYER_RIGHT_FINGER:
@@ -516,6 +524,14 @@ CRefString GetSlotTooltip(GBID gbidItem)
         SLOT_HIRELING_LEFT_FINGER,
         SLOT_HIRELING_RIGHT_FINGER,
         SLOT_HIRELING_NECK,
+        SLOT_HIRELING_HEAD,
+        SLOT_HIRELING_TORSO,
+        SLOT_HIRELING_HANDS,
+        SLOT_HIRELING_WAIST,
+        SLOT_HIRELING_FEET,
+        SLOT_HIRELING_SHOULDERS,
+        SLOT_HIRELING_LEGS,
+        SLOT_HIRELING_BRACERS,
     };
 
     InventorySlotType eSlotToUse = SLOT_NONE;

@@ -2744,20 +2744,22 @@ void UIInventory::DrawSlotHighlights(
 
 BOOL UIInventory::GetItemSlotEmptyImage(const ActorCommonData * ptACD, const ActorCommonData * ptACDItem, const InventorySlotType eSlot, ImageTextureFrame & tImageTexFrame)
 {
-    if (ptACDItem == NULL && eSlot != 0x14 && eSlot != SLOT_PLAYER_RIGHT_HAND)
+    if (ptACDItem == NULL && eSlot != SLOT_HIRELING_RIGHT_HAND && eSlot != SLOT_PLAYER_RIGHT_HAND)
         return FALSE;
 
     CRefString sEmptySlotLabel("");
     switch (eSlot)
     {
     case SLOT_PLAYER_HEAD:
+    case SLOT_HIRELING_HEAD:
         sEmptySlotLabel = "Grid_EmptySocket_Head";
         break;
     case SLOT_PLAYER_TORSO:
+    case SLOT_HIRELING_TORSO:
         sEmptySlotLabel = "Grid_EmptySocket_Chest";
         break;
     case SLOT_PLAYER_RIGHT_HAND:
-    case 0x14:
+    case SLOT_HIRELING_RIGHT_HAND:
         if (ptACDItem)
             sEmptySlotLabel = "Grid_EmptySocket_OffHand";
         else if (ptACD)
@@ -2772,38 +2774,44 @@ BOOL UIInventory::GetItemSlotEmptyImage(const ActorCommonData * ptACD, const Act
         }
         break;
     case SLOT_PLAYER_LEFT_HAND:
-    case 0x15:
+    case SLOT_HIRELING_LEFT_HAND:
         sEmptySlotLabel = "Grid_EmptySocket_MainHand";
         break;
     case SLOT_PLAYER_HANDS:
+    case SLOT_HIRELING_HANDS:
         sEmptySlotLabel = "Grid_EmptySocket_Glove";
         break;
     case SLOT_PLAYER_FEET:
+    case SLOT_HIRELING_FEET:
         sEmptySlotLabel = "Grid_EmptySocket_Feet";
         break;
     case SLOT_PLAYER_SHOULDERS:
+    case SLOT_HIRELING_SHOULDERS:
         sEmptySlotLabel = "Grid_EmptySocket_Shoulder";
         break;
     case SLOT_PLAYER_LEGS:
+    case SLOT_HIRELING_LEGS:
         sEmptySlotLabel = "Grid_EmptySocket_Leg";
         break;
     case SLOT_PLAYER_LEFT_FINGER:
-    case 0x19:
+    case SLOT_HIRELING_LEFT_FINGER:
         sEmptySlotLabel = "Grid_EmptySocket_RingLeft";
         break;
     case SLOT_PLAYER_RIGHT_FINGER:
-    case 0x18:
+    case SLOT_HIRELING_RIGHT_FINGER:
         sEmptySlotLabel = "Grid_EmptySocket_RingRight";
         break;
     case SLOT_PLAYER_NECK:
-    case 0x16:
-    case 0x17:
+    case SLOT_HIRELING_SPECIAL:
+    case SLOT_HIRELING_NECK:
         sEmptySlotLabel = "Grid_EmptySocket_Neck";
         break;
     case SLOT_PLAYER_WAIST:
+    case SLOT_HIRELING_WAIST:
         sEmptySlotLabel = "Grid_EmptySocket_Belt";
         break;
     case SLOT_PLAYER_BRACERS:
+    case SLOT_HIRELING_BRACERS:
         sEmptySlotLabel = "Grid_EmptySocket_Bracer";
         break;
     default:

@@ -238,11 +238,11 @@ void SeasonStashItemProvider::Refresh()
     D3::Account::AccountPartition * ptPartition = tAccountDefinition.mutable_partitions(nPartition);
     if (!ptPartition->console_partition_data().seasonal_rollover_item_size()) return;
     m_ptSeasonRolloverItems = ptPartition->mutable_console_partition_data();
-    // Original line 174 uses network-name base 0x2b84; line 171 caps rollover generation at 512.
+    // Original line 174 uses network-name base 0x3984; line 171 caps rollover generation at 512.
     for (int32 n = 0; n < m_ptSeasonRolloverItems->seasonal_rollover_item_size() && n < 512; ++n) {
         const D3::Account::ConsolePartitionData::SeasonalRolloverItem * ptSeasonalRolloverItemData = &m_ptSeasonRolloverItems->seasonal_rollover_item(n);
         const D3::Items::SavedItem & tSeasonalRolloverItem = ptSeasonalRolloverItemData->item();
-        ACDID idItem = CItemGenerate((ACDNetworkName)(0x2b84 + n), tSeasonalRolloverItem.generator(), NULL);
+        ACDID idItem = CItemGenerate((ACDNetworkName)(0x3984 + n), tSeasonalRolloverItem.generator(), NULL);
         if (idItem != ACDID_INVALID) {
             ActorCommonData * ptACDItem = ACDTryToGet(idItem);
             if (ptACDItem && ItemIsGift(ptACDItem->hGB.gbid)) {

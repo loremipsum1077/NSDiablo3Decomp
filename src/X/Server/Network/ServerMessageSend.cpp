@@ -1355,7 +1355,7 @@ void ServerMessageSendExitMessages(const PlayerList & listDestPlayers, const Kno
 
 
         default:
-            DisplayInternalError(NULL, "", 1186, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+            DisplayInternalError(NULL, "", 1201, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
             break;
         }
     }
@@ -1457,7 +1457,7 @@ static void sSendKnownEntryUpdateMessages(const PlayerList & listDestPlayers, co
 
 
     default:
-        DisplayInternalError(NULL, "", 1292, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
+        DisplayInternalError(NULL, "", 1307, ERROR_INTERNAL_FATAL); ExitProgram(ERROR_INTERNAL_FATAL);
         break;
     }
 }

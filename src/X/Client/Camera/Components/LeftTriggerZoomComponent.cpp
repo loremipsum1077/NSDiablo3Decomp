@@ -40,7 +40,7 @@ void LeftTriggerZoomComponent::Update(const CameraState& csLastFrame, CameraStat
     else sflZoom = flLocalPlayerDistanceZoom;
     if (CGameLoadingScreenIsEnabled()) sflZoom = 0.0f;
     CameraState csStart = csThisFrame;
-    SNO snoObserver = GlobalSNOGet(CWorldIsRetro() ? 0x410 : 0x40f);
+    SNO snoObserver = GlobalSNOGet(CWorldIsRetro() ? GLOBALSNO_OBSERVER_CONSOLE_WIDE_RETRO : GLOBALSNO_OBSERVER_CONSOLE_WIDE);
     CameraStateInterpolate(csThisFrame, csStart, snoObserver, Math::Max(m_flLeftTriggerZoom, sflZoom));
     csThisFrame.flZoomFactor = Math::Max(m_flLeftTriggerZoom, sflZoom);
     csThisFrame.transform = csStart.transform;

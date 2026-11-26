@@ -661,6 +661,7 @@ static void sMonsterAffixesPick(
 
 
 
+// NON_MATCHING: The last two affix-weight stores in the shift loop are scheduled in the opposite order.
 int32 MonsterGetNumberOfRandomAffixes(
     int32 nLevel,
     int32 nFixedAffixes)
@@ -680,7 +681,6 @@ int32 MonsterGetNumberOfRandomAffixes(
         flAffixWeights[2] = flAffixWeights[3];
         flAffixWeights[3] = 0.0f;
     }
-
 
 
 

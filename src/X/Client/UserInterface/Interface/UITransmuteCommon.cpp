@@ -1060,6 +1060,8 @@ bool UITransmute::IsUberRecipe( TransmuteRecipeAction eAction )
     case TRA_OPEN_PORTAL_GREED:
     case TRA_OPEN_PORTAL_COW:
     case TRA_OPEN_PORTAL_WHIMSEYSHIRE:
+    case 16:
+    case 17:
         return true;
     default:
         return false;
@@ -1080,7 +1082,7 @@ namespace UIInventory {
 void PlayItemInventorySound(const ActorCommonData & tACDItem);
 }
 typedef blz::unordered_map<ACDID, ACDID> RealToDummyItemMap;
-// Original generation uses network-name ranges starting at 0x2144 and 0x2174.
+// Item copies and their socketed items share the network-name range starting at 0x2f44.
 // No matching named enumerators occur in DWARF; casts retain ACDNetworkName typing.
 #line 174 "X/Client/UserInterface/Interface/UITransmuteCommon.cpp"
 static ACDID sDuplicateItem(ACDID idACDItem, int32 & nNextItemIndex)
@@ -1093,7 +1095,7 @@ static ACDID sDuplicateItem(ACDID idACDItem, int32 & nNextItemIndex)
     D3::Items::Generator tGenerator;
     ItemGeneratorPopulateFromACDID(*ptACDItem, tGenerator, TRUE);
 #line 187
-    ACDID idACDDuplicate = CItemGenerate(static_cast<ACDNetworkName>(0x2144 + nNextItemIndex), tGenerator, NULL);
+    ACDID idACDDuplicate = CItemGenerate(static_cast<ACDNetworkName>(0x2f44 + nNextItemIndex), tGenerator, NULL);
     if (idACDDuplicate != ACDID_INVALID)
     {
         ++nNextItemIndex;
@@ -1105,7 +1107,7 @@ static ACDID sDuplicateItem(ACDID idACDItem, int32 & nNextItemIndex)
         {
             const D3::Items::EmbeddedGenerator & tEmbedded = tGenerator.contents(i);
 #line 200
-            ACDID idACDSocketed = CItemGenerate(static_cast<ACDNetworkName>(0x2144 + nNextItemIndex), tEmbedded.generator(), NULL);
+            ACDID idACDSocketed = CItemGenerate(static_cast<ACDNetworkName>(0x2f44 + nNextItemIndex), tEmbedded.generator(), NULL);
             ActorCommonData * ptACDSocketed = ACDTryToGet(idACDSocketed);
             if (ptACDSocketed)
             {
@@ -1176,6 +1178,7 @@ void UITransmute::ReplaceItemsWithCopies()
 // Inference: early returns express original common exit branches; the found-slot
 // break preserves the original first available column/row selection.
 #line 352
+// NON_MATCHING: Clang eliminates the initial grid-square type reset before the replacement type is stored.
 BOOL UITransmute::ForceAddItem(const ActorCommonData * ptACDItem, const IVector2D * pvGridSlot, const GBID gbidItem, const int64 nStackCount, const TransmuteRecipeIngredientType eType, const BOOL bPlaySound, const int64 nCurrencyCountNeededForRecipe)
 {
 #line 361
@@ -1284,7 +1287,7 @@ BOOL UITransmute::ForceAddItem(const ActorCommonData * ptACDItem, const IVector2
             ItemGeneratorToDefaults(tItem);
             hGBItem.Export(*tItem.mutable_gb_handle());
             tItem.set_flags(tItem.flags() | 1);
-            idACDFakeItem = CItemGenerate(static_cast<ACDNetworkName>(0x2174 + nGridIndex), tItem, NULL);
+            idACDFakeItem = CItemGenerate(static_cast<ACDNetworkName>(0x2f74 + nGridIndex), tItem, NULL);
         }
         tSquare.Clear();
         tSquare.gbid = gbidItem;

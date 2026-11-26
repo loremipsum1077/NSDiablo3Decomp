@@ -3074,6 +3074,7 @@ static inline void PowerAPI_CapsuleFindCenter(const ChooseTargetGeometryCapsule 
 // Jump table: 0,6,7 sphere; 1,4 target; 2 ray; 8 pie; 9 capsule; 10 box; 5 no-LOS; 3 default.
 
 #line 6102
+// NON_MATCHING: The ray and box case bodies appear in the opposite order. The jump table selects the same geometry fields.
 void sPowerAPIGetTargettingSourcePlace(
     const ChooseTargetGeometry & tGeometry,
     WorldPlace & tPlace)

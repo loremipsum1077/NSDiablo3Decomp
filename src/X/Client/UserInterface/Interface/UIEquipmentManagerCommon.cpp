@@ -44,7 +44,7 @@ struct EquipmentManagerCommonGlobals {  // size 0x10 (2.7.7: sub_7100242020 allo
     ACDID idACDInteractNPC;  // 0x00
     int32 nSelectedLoadout;  // 0x04
     int32 unk_8;  // 0x08 (2.7.7: GetSelectedLoadout returns nSelectedLoadout + unk_8 * 10)
-    int32 unk_c;  // 0x0c (2.7.7: sub_71002420a0 stores the clamped selection at 0xc + unk_8 * 4)
+    int32 unk_c[1];  // 0x0c (2.7.7: sub_71002420a0 stores the clamped selection at 0xc + unk_8 * 4)
 };
 
 EquipmentManagerCommonGlobals * cgptEquipmentManagerGlobals = NULL;
@@ -350,12 +350,19 @@ int32 UIEquipmentManager::GetSelectedLoadout()
 
 
 
+// NON_MATCHING: The compiler folds the zero page index and the upper clamp after signed remainder by ten (88 versus 112 bytes).
 void UIEquipmentManager::SetSelectedLoadout(int32 nSelectedLoadout)
 
 
 
 {
-    cgptEquipmentManagerGlobals->nSelectedLoadout = Math::Pin(nSelectedLoadout, 0, 9);
+    int32 nPrevious = Math::Pin(cgptEquipmentManagerGlobals->unk_c[0], 0, 9);
+    cgptEquipmentManagerGlobals->nSelectedLoadout = nPrevious;
+    cgptEquipmentManagerGlobals->unk_8 = 0;
+    cgptEquipmentManagerGlobals->unk_c[0] = nPrevious;
+    int32 nSelected = Math::Pin(nSelectedLoadout % 10, 0, 9);
+    cgptEquipmentManagerGlobals->unk_c[cgptEquipmentManagerGlobals->unk_8] = nSelected;
+    cgptEquipmentManagerGlobals->nSelectedLoadout = nSelected;
 
 
 

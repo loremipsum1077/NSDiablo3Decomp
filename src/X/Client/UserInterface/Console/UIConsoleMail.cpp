@@ -623,12 +623,12 @@ const ACDIDArray & MailItemProvider::GetItemsWithFilter(const UIFilterType) cons
 {
     return m_arMailItems;
 }
-
+// NON_MATCHING: The FILTER_NONE path calls FilteredInventoryView::GetItems with a frame. The target tail-calls it.
 const ACDIDArray & UnmailedItemProvider::GetItemsWithFilter(const UIFilterType eFilterType) const
 {
-    if (eFilterType != FILTER_NONE)
-        return m_arDisplayItems[eFilterType];
-    return m_tView.GetItems(FILTER_NONE);
+    if (eFilterType == FILTER_NONE)
+        return m_tView.GetItems(eFilterType);
+    return m_arDisplayItems[eFilterType];
 }
 
 

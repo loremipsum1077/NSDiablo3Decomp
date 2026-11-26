@@ -136,6 +136,7 @@ void CameraManagerResetCamera(int nCameraIndex) {
     }
 }
 
+// NON_MATCHING: The target calls CameraManagerResetCamera nine times. Clang inlines individual resets here.
 void CameraManagerInitializeForWorld() {
     CameraManager * ptCameraManager = CGameGet().ptCameraManager;
 

@@ -1114,7 +1114,6 @@ BOOL NavCellPathFinder::FindPath()
     m_tPathNodeAllocator.Reset();
     return bFoundPath;
 }
-// NON_MATCHING: 816 vs 808 after the re-lay on DWARF 390-453 (cost test at 409 per rows 409:10/32/56, null test at 415:9; bNewNode = TRUE at 403 inferred, it leaves no row): only the flHeuristicDistance/flEstimatedDistance copy at 423/424 (original ldp/stp, ours two ldr/str pairs; the second load is not moved above the first store).
 #line 390
 void NavCellPathFinder::ExploreNode(
     NavCellPathNode* ptParentNode,
@@ -1149,8 +1148,10 @@ void NavCellPathFinder::ExploreNode(
     ptActualNode->uFlags &= ~(1 << PNF_ON_CLOSED_LIST_BIT);
 
     ptActualNode->flCost = tNewNode.flCost;
-    ptActualNode->flHeuristicDistance = tNewNode.flHeuristicDistance;
-    ptActualNode->flEstimatedDistance = tNewNode.flEstimatedDistance;
+    const float flHeuristicDistance = tNewNode.flHeuristicDistance;
+    const float flEstimatedDistance = tNewNode.flEstimatedDistance;
+    ptActualNode->flHeuristicDistance = flHeuristicDistance;
+    ptActualNode->flEstimatedDistance = flEstimatedDistance;
     ptActualNode->ptParentNode = tNewNode.ptParentNode;
     ptActualNode->tLocation.wpPos = tNewNode.tLocation.wpPos;
 

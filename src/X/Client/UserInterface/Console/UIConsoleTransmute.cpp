@@ -712,7 +712,8 @@ static void sProcessResults()
         sSetupResultsNewPower(sgptTransmuteGlobalsConsole->tResultsMsg.gbidPower);
     }
     else if (sgptTransmuteGlobalsConsole->tResultsMsg.eType == TRA_OPEN_PORTAL_COW || sgptTransmuteGlobalsConsole->tResultsMsg.eType == TRA_OPEN_PORTAL_GREED ||
-             sgptTransmuteGlobalsConsole->tResultsMsg.eType == TRA_OPEN_PORTAL_WHIMSEYSHIRE)  // column 84 is the `||` after TRA_OPEN_PORTAL_COW: COW first, the rest's order inferred
+             sgptTransmuteGlobalsConsole->tResultsMsg.eType == TRA_OPEN_PORTAL_WHIMSEYSHIRE ||
+             sgptTransmuteGlobalsConsole->tResultsMsg.eType == 16 || sgptTransmuteGlobalsConsole->tResultsMsg.eType == 17)
     {
 
 
@@ -2290,7 +2291,9 @@ static void sTransmute()
 
             case TRA_OPEN_PORTAL_GREED:
             case TRA_OPEN_PORTAL_COW:
-            case TRA_OPEN_PORTAL_WHIMSEYSHIRE: {
+            case TRA_OPEN_PORTAL_WHIMSEYSHIRE:
+            case 16:
+            case 17: {
 
                 NotificationCreationParams tParams;
                 tParams.uszTitle = StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_GENERAL), "WarningTitle");

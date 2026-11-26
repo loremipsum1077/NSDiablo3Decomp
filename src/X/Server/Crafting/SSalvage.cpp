@@ -33,11 +33,13 @@ void MessageSendToClient(const PlayerList & listDestPlayers, int32 nOpcode, void
 
 namespace SSalvage { BOOL TrySalvage(Player & tPlayer, ActorCommonData & tACDItem); void TrySalvageAll(Player & tPlayer, SalvageAllType eSalvageType); }
 
+extern "C" BOOL sub_7100505c00(const ActorCommonData & tACDItem);
+
 struct SalvageAllCallbackData {  // size 0x48
     ActorCommonData * ptACDPlayer;  // 0x00
     SalvageAllType eSalvageType;  // 0x08
     SalvageResultsMessage tResultsMessage;  // 0x0c
-    BOOL bReturnedGems;  // 0x40
+    BOOL bReturnedGems;  // 0x44
 };
 
 
@@ -270,6 +272,7 @@ BOOL SSalvage::TrySalvage(Player & tPlayer, ActorCommonData & tACDItem)
     tResultsMessage.gbidOriginalItem = tACDItem.hGB.gbid;
     tResultsMessage.eIQLOriginalItem = ItemGetDisplayedQualityLevel(tACDItem);
     tResultsMessage.nMaterialsResults = 0;
+    tResultsMessage.unk_34 = sub_7100505c00(tACDItem);
 
 
     sSalvageItemInternal(tACDItem, *ptACDPlayer, tResultsMessage, bReturnedGems);
@@ -312,6 +315,7 @@ void SSalvage::TrySalvageAll(Player & tPlayer, SalvageAllType eSalvageType)
     tCallbackData.eSalvageType = eSalvageType;
     tCallbackData.tResultsMessage.gbidOriginalItem = -1; tCallbackData.tResultsMessage.eIQLOriginalItem = -1;
     tCallbackData.tResultsMessage.nMaterialsResults = 0;
+    tCallbackData.tResultsMessage.unk_34 = FALSE;
     tCallbackData.bReturnedGems = FALSE;
 
     ACDInventoryIterateItems(*ptACDPlayer, 0, 0, sSalvageAllCallback, &tCallbackData);

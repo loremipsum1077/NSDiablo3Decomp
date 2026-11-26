@@ -504,7 +504,8 @@ BOOL CanLowerGameDifficulty()
 {
     Player * ptPlayer = LocalPlayerGetPrimary();
     if (!(ptPlayer->tHeroStateData.uPlayerFlags & (1 << PLAYERFLAG_HARDCORE)) &&
-        (GameIsStartUp() || !GameGetActiveGameCommonData().tGameSyncedData.bSetDungeonActive)) {
+        (GameIsStartUp() || (!GameGetActiveGameCommonData().tGameSyncedData.bSetDungeonActive &&
+                             !GameGetActiveGameCommonData().tGameSyncedData.unk_4c))) {
         int32 nCurrentDifficulty = GameGetHandicapLevel();
         if (nCurrentDifficulty > 0 && !IsDifficultyLocked(nCurrentDifficulty - 1, ptPlayer->nControllerIndex))
             return TRUE;

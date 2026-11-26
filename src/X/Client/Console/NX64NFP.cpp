@@ -1299,7 +1299,8 @@ void UpdateNpad(ApplicationData & tData)
                 tPlayerData.nNpadId = anConnectedNpadIds[i];
 
 
-                tPlayerData.nControllerIndex = InputGetControllerIndexForNpad(tPlayerData.nNpadId);
+                const int32 nControllerIndex = InputGetControllerIndexForNpad(tPlayerData.nNpadId);
+                tPlayerData.nControllerIndex = nControllerIndex < 0 ? 0 : nControllerIndex;
 
 
 

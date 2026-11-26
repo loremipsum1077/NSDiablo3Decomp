@@ -7381,7 +7381,7 @@ void SPlayerAllPlayersLearnLore(
 
 
 
-
+// NON_MATCHING: The target duplicates the PlayerGetNextInGame call on the nonlocal and already-learned skip path.
 void SPlayerLearnLore(
     const ACDID idACDPlayer,
     const SNO snoLore)

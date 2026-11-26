@@ -81,6 +81,8 @@ namespace nn { namespace pctl {
 bool CheckFreeCommunicationPermission(bool bNotify);
 } }
 
+extern nn::account::UserHandle unk_71019079f0;  // Preselected handle opened by FileSystemGetLocale.
+
 // X/Sigma/Files/XFiles.h (XFilesCore.cpp); prototypes from the mangled names.
 void FileReferenceInit(FileReference & tRef, const char * szPath);
 const char * FileReferenceGetPath(const FileReference & tRef);
@@ -752,22 +754,19 @@ nn::account::Uid GetUserId(int32 nUserIndex)
 
 BOOL GetUserNetworkServiceAccountId(int32 nUserIndex, nn::account::NetworkServiceAccountId & idOutUserNSA)
 {
-    if (nUserIndex >= 0 && nUserIndex < 4)
-    {
-        UserRuntime & tRuntime = s_atRuntime[nUserIndex];
-        if (tRuntime.m_idUser != nn::account::InvalidUid)
-        {
-            bool bAvailable = false;
-            nn::account::IsNetworkServiceAccountAvailable(&bAvailable, tRuntime.m_tUserHandle);
-            if (bAvailable)
-            {
-                nn::Result tResult = nn::account::GetNetworkServiceAccountId(&idOutUserNSA, tRuntime.m_tUserHandle);
-                return tResult.IsSuccess();
-            }
-        }
-    }
+    if (nUserIndex < 0 || nUserIndex >= 4)
+        return FALSE;
 
-    return FALSE;
+    UserRuntime & tRuntime = s_atRuntime[nUserIndex];
+    if (tRuntime.m_idUser == nn::account::InvalidUid)
+        return FALSE;
+
+    bool bAvailable = false;
+    nn::account::IsNetworkServiceAccountAvailable(&bAvailable, tRuntime.m_tUserHandle);
+    if (!bAvailable)
+        return FALSE;
+
+    return nn::account::GetNetworkServiceAccountId(&idOutUserNSA, tRuntime.m_tUserHandle).IsSuccess();
 }
 
 
@@ -2590,7 +2589,7 @@ void SignIn(
 
 
 
-        nn::Result PreselectedResult = nn::account::OpenPreselectedUser(&tUserHandle);
+        tUserHandle = unk_71019079f0;
 
 
         nn::Result IdResult = nn::account::GetUserId(&idUser, tUserHandle);

@@ -1911,7 +1911,7 @@ BOOL sTestPrimaryObjectives(const ActorCommonData & tACD, const QuestStep & tSte
                 }
                 break;
             case OBJECTIVE_INTERACT_WITH_GIZMO:
-                if (tObjective.snoname1.snoHandle == tACD.snoActor &&
+                if (tACD.snoActor == tObjective.snoname1.snoHandle &&
                     tACD.IsOperatableGizmo(ACDID_INVALID, FALSE))
                     return TRUE;
                 break;

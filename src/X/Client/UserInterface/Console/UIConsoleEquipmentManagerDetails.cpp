@@ -843,7 +843,7 @@ inline void DetailsSkillsScreen::HandleLeftStickInput(const int32 nControllerInd
     }
 }
 
-inline void DetailsSkillsScreen::HandleButtonInput(const int32 nControllerIndex, const InputButton eInputButton)
+void DetailsSkillsScreen::HandleButtonInput(const int32 nControllerIndex, const InputButton eInputButton)
 {
     switch (eInputButton)
     {
@@ -1029,7 +1029,7 @@ inline void DetailsSkillsScreen::ResetDetailScrollPositions()
     sub_710019b9d0(&unk_98);
 }
 
-void DetailsSkillsScreen::ScrollDetailInfo(const float nDelta)
+inline void DetailsSkillsScreen::ScrollDetailInfo(const float nDelta)
 {
     const UIID & idSelectedIcon = m_tRingUI.GetSelectedControlID();
     if (UISkills::Console::IconIsKanaiPowers(idSelectedIcon))
