@@ -66,9 +66,13 @@ void UIInventoryAddSocketsView::SetAddSocketsRecipient(const ACDID idAddSocketsR
 
 
 
+// 2.7.7 calls separate state setters before the storyboard operations.
+extern "C" void sub_7100374540(UIInventoryAddSocketsView *); // clears the state at +0x68
+extern "C" void sub_7100374590(UIInventoryAddSocketsView *); // sets the state at +0x68 to 1
+
 void UIInventoryAddSocketsView::Reset()
 {
-    m_eState = DEFAULT_STATE;
+    sub_7100374540(this);
 
     const UIID idStoryboard = UIIDCreateFromParent(GetRootUIID(), ".AddSocket1");
     UIStoryboard & tStoryboard = UI_GetStoryboardFromID(idStoryboard);
@@ -83,7 +87,7 @@ void UIInventoryAddSocketsView::Reset()
 
 void UIInventoryAddSocketsView::StartAddingSockets()
 {
-    m_eState = ADDING_SOCKETS_STATE;
+    sub_7100374590(this);
 
     const UIID idStoryboard = UIIDCreateFromParent(GetRootUIID(), ".AddSocket1");
     UIStoryboard & tStoryboard = UI_GetStoryboardFromID(idStoryboard);

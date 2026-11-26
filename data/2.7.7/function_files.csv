@@ -574,7 +574,7 @@ Address,File,Compiler
 0x0000007100048b80,X/Client/Particle.cpp,7.1.0
 0x0000007100048e10,X/Client/AttachmentParent.cpp,7.1.0
 0x0000007100048fd0,X/Client/CDebugDraw.cpp,7.1.0
-0x0000007100048fe0,,
+0x0000007100048fe0,X/Client/CDebugDraw.cpp,7.1.0
 0x0000007100048ff0,,
 0x0000007100049000,X/Client/CBlizzconTimer.cpp,7.1.0
 0x0000007100049060,X/Client/CBlizzconTimer.cpp,7.1.0
@@ -3616,7 +3616,7 @@ Address,File,Compiler
 0x000000710016c380,X/Client/UserInterface/Console/ConsoleScreenManager.cpp,7.1.0
 0x000000710016c630,X/Client/UserInterface/Console/ConsoleScreenManager.cpp,7.1.0
 0x000000710016c640,X/Client/UserInterface/Console/ConsoleScreenManager.cpp,7.1.0
-0x000000710016c6f0,,
+0x000000710016c6f0,X/Client/UserInterface/Console/ConsoleScreenManager.cpp,7.1.0
 0x000000710016c820,X/Client/UserInterface/Console/ConsoleScreenManager.cpp,7.1.0
 0x000000710016c9b0,X/Client/UserInterface/Console/ConsoleScreenManager.cpp,7.1.0
 0x000000710016cae0,X/Client/UserInterface/Console/ConsoleScreenManager.cpp,7.1.0
@@ -5760,7 +5760,7 @@ Address,File,Compiler
 0x000000710021c810,X/Client/UserInterface/Console/UIConsolePartyTab.cpp,7.1.0
 0x000000710021cdb0,X/Client/UserInterface/Console/UIConsolePartyTab.cpp,7.1.0
 0x000000710021cf20,X/Client/UserInterface/Console/UIConsolePartyTab.cpp,7.1.0
-0x000000710021d030,,
+0x000000710021d030,X/Client/UserInterface/Console/UIConsolePartyTab.cpp,7.1.0
 0x000000710021d0f0,X/Client/UserInterface/Console/UIConsolePartyTab.cpp,7.1.0
 0x000000710021d280,X/Client/UserInterface/Console/UIConsolePartyTab.cpp,7.1.0
 0x000000710021d330,X/Client/UserInterface/Console/UIConsolePartyTab.cpp,7.1.0
@@ -5768,7 +5768,7 @@ Address,File,Compiler
 0x000000710021d440,X/Client/UserInterface/Console/UIConsolePartyTab.cpp,7.1.0
 0x000000710021d4b0,X/Client/UserInterface/Console/UIConsolePartyTab.cpp,7.1.0
 0x000000710021d4d0,X/Client/UserInterface/Console/UIConsolePartyTab.cpp,7.1.0
-0x000000710021d510,,
+0x000000710021d510,X/Client/UserInterface/Console/UIConsolePartyTab.cpp,7.1.0
 0x000000710021d570,X/Client/UserInterface/Console/UIConsolePartyTab.cpp,7.1.0
 0x000000710021d5f0,X/Client/UserInterface/Console/UIConsolePartyTab.cpp,7.1.0
 0x000000710021d6a0,X/Client/UserInterface/Console/UIConsolePartyTab.cpp,7.1.0
@@ -5820,8 +5820,8 @@ Address,File,Compiler
 0x0000007100221e80,X/Client/UserInterface/Console/UIConsolePause.cpp,7.1.0
 0x0000007100221e90,X/Client/UserInterface/Console/UIConsolePause.cpp,7.1.0
 0x0000007100222090,X/Client/UserInterface/Console/UIConsolePause.cpp,7.1.0
-0x0000007100222100,,
-0x0000007100222150,,
+0x0000007100222100,X/Client/UserInterface/Console/UIConsolePause.cpp,7.1.0
+0x0000007100222150,X/Client/UserInterface/Console/UIConsolePause.cpp,7.1.0
 0x00000071002221d0,X/Client/UserInterface/Console/UIConsolePause.cpp,7.1.0
 0x0000007100222230,X/Client/UserInterface/Console/UIConsolePause.cpp,7.1.0
 0x0000007100222240,X/Client/UserInterface/Console/UIConsolePause.cpp,7.1.0
@@ -9476,7 +9476,7 @@ Address,File,Compiler
 0x0000007100374590,,
 0x00000071003745a0,X/Client/UserInterface/Console/UIConsoleInventoryAddSocketsView.cpp,7.1.0
 0x00000071003745b0,X/Client/UserInterface/Console/UIConsoleInventoryAddSocketsView.cpp,7.1.0
-0x0000007100374620,,
+0x0000007100374620,X/Client/UserInterface/Console/UIConsoleInventoryAddSocketsView.cpp,7.1.0
 0x0000007100374680,X/Client/UserInterface/Console/UIConsoleInventoryAddSocketsView.cpp,7.1.0
 0x0000007100374980,,
 0x0000007100374990,,
@@ -24189,7 +24189,7 @@ Address,File,Compiler
 0x0000007100807d40,X/Server/SPlayer.cpp,7.1.0
 0x0000007100807d50,X/Server/SPlayer.cpp,7.1.0
 0x0000007100807ea0,X/Server/SPlayer.cpp,7.1.0
-0x0000007100807f70,,
+0x0000007100807f70,X/Server/SPlayer.cpp,7.1.0
 0x0000007100808130,X/Server/SScene.cpp,7.1.0
 0x00000071008085f0,X/Server/SScene.cpp,7.1.0
 0x0000007100808730,X/Server/SScene.cpp,7.1.0
@@ -25159,7 +25159,7 @@ Address,File,Compiler
 0x0000007100881250,X/Server/Crafting/SItemCrafting.cpp,7.1.0
 0x0000007100881580,X/Server/Crafting/SItemCrafting.cpp,7.1.0
 0x00000071008821d0,X/Server/Crafting/SItemCrafting.cpp,7.1.0
-0x0000007100882340,,
+0x0000007100882340,X/Server/Crafting/SItemCrafting.cpp,7.1.0
 0x0000007100884800,X/Server/Crafting/SItemCrafting.cpp,7.1.0
 0x0000007100884a30,X/Server/Crafting/SItemCrafting.cpp,7.1.0
 0x0000007100884b50,X/Server/Crafting/SItemCrafting.cpp,7.1.0
@@ -27714,7 +27714,7 @@ Address,File,Compiler
 0x0000007100962d00,X/Server/Network/ServerMessageReceive.cpp,7.1.0
 0x000000710096b480,X/Server/Network/ServerMessageReceive.cpp,7.1.0
 0x000000710096b4a0,X/Server/Network/ServerMessageReceive.cpp,7.1.0
-0x000000710096b4b0,,
+0x000000710096b4b0,X/Server/ItemMail.cpp,7.1.0
 0x000000710096b4c0,,
 0x000000710096be00,,
 0x000000710096c010,,

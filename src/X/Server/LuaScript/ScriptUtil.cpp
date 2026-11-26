@@ -1266,6 +1266,7 @@ void PlayerUnlockConversation(ACDID idACDPlayer, LPCSTR szConversation)
     ptPlayer->uConsoleSyncFlags |= (1 << PCSF_SAVED_CONVERSATIONS);
 }
 
+// NON_MATCHING: The target forms the played-byte address before computing the bit mask.
 void PlayerSaveConversation(ACDID idACDPlayer, LPCSTR szConversation)
 {
     Player * ptPlayer = PlayerGetByACD(idACDPlayer);

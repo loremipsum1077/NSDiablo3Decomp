@@ -2990,21 +2990,20 @@ static BOOL sCondLastAttackPerformedTime(Actor & tActor, AICondition & tConditio
 
 
 
+// NON_MATCHING: Clang returns the elapsed-time comparison with cset. The target branches to a separate false epilogue.
 static BOOL sCondTimeInCurrentState(Actor & tActor, AICondition & tCondition, CTargetCache & TargetCache, EntryData & tEntryData)
 {
-    ActorAI * ptAI = tActor.ptAI;
-    if (ptAI != NULL)
-    {
-        AIStateInstanceData * ptInstData = sGetInstanceData(tActor);
-        if (ptInstData != NULL)
-        {
-            float flTime = Math::Max(0.0f, tCondition.flConditionParm[0]);
-            uint32 dwNow = GameGetServerTime();
-            uint32 dwTicks = Math::FloatToInt(flTime * 60.0f);
-            if (dwNow - ptInstData->dwStateEntryTime > dwTicks)
-                return TRUE;
-        }
-    }
+    if (tActor.ptAI == NULL)
+        return FALSE;
+    AIStateInstanceData * ptInstData = sGetInstanceData(tActor);
+    if (ptInstData == NULL)
+        return FALSE;
+
+    float flTime = Math::Max(0.0f, tCondition.flConditionParm[0]);
+    uint32 dwNow = GameGetServerTime();
+    uint32 dwTicks = Math::FloatToInt(flTime * 60.0f);
+    if (dwNow - ptInstData->dwStateEntryTime > dwTicks)
+        return TRUE;
     return FALSE;
 }
 

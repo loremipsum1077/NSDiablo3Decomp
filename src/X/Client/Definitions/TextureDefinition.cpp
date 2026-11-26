@@ -507,6 +507,7 @@ static void sAlphaFromInterpAlphaBlock(const InterpAlphaBlock * ptBlock, const i
 }
 
 // line 1445
+// NON_MATCHING: The target separates DXT alpha stores and shares the RGB565 endpoint conversion call.
 void sTextureDefinitionPixelLookup(const TextureDefinition * pdefTexture, const uint8 * ptr, const uint32 dwPitch, int32 u, int32 v,
                                    const int32 nMipLevelWidth, const int32 nMipLevelHeight, RGBAColor & rgbaColor) {
     u = Math::Pin(u, 0, nMipLevelWidth - 1);

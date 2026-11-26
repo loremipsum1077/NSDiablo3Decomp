@@ -549,9 +549,9 @@ AABBCollideFeature SweptPointAndAABB2D(const Vector2D & wpStart, const Vector2D 
 // Original has one shared return (row 792): the RND0 + nCorner store at 784 is at a 12-space column,
 // inside both ifs; eCollFeature is decl-initialised at 727 and the other locals follow it.
 AABBCollideFeature SweptPointAndRoundedAABB2D(const Vector2D & wpStart, const Vector2D & wvDir, const Vector2D & wpMin, const Vector2D & wpMax, uint16 uFlags, float & flT, Vector2D & wpCollision) {
-    AABBCollideFeature eCollFeature = SweptPointAndAABB2D(wpStart, wvDir, wpMin, wpMax, flT, wpCollision);
-    if (eCollFeature == AABB_COLLIDE_NONE)
-        return eCollFeature;
+    AABBCollideFeature eCollFeature = Ray2DAndAABB2D(wpStart, wvDir, wpMin, wpMax, flT, wpCollision);
+    if (eCollFeature == AABB_COLLIDE_NONE || flT > 1.0f)
+        return AABB_COLLIDE_NONE;
 
     // Locals in DWARF order: the diagonals (736), wvZero (737), wvGridCellWidth (738), nCorner (739)
     Vector2D wpDiagonalA, wpDiagonalB;

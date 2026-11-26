@@ -3056,8 +3056,32 @@ void Console::Notifications::ShowAmiiboTutorial( int32 nControllerIndex )
 
 
 
+int32 ActorInventoryCountSNOActorItemsOnPlayer(ACDID, SNO, ACDID *);
+GameError ItemCanBeUsed(ACDID, const ActorCommonData &, const Target *);
+void CACDInventoryRequestUse(ActorCommonData &, ACDID, BOOL, Player *);
+namespace UIGame { void DisplayError(const GameErrorData &, BOOL, const Player *); }
+
 void Console::Notifications::OnAmiiboTutorialContinueButton( const UIID & id, const int32 nControllerIndex )
 {
     GameSoftPause( FALSE );
     HubGet().ScreenManagerGet().CloseModalDialog( UIWND_CONSOLE_AMIIBOTUTORIAL );
+
+    Player * ptPlayer = PlayerGetByControllerIndex(nControllerIndex);
+    if (!ptPlayer)
+        return;
+
+    ACDID idPortalDevice = ACDID_INVALID;
+    ActorInventoryCountSNOActorItemsOnPlayer(ptPlayer->idPlayerACD,
+        SNOFileLookupGUID(ACTOR_SNO, "Amiibo_Portal_Device"), &idPortalDevice);
+    if (idPortalDevice == ACDID_INVALID)
+        return;
+
+    ActorCommonData & tDevice = ACDGet(idPortalDevice);
+    GameError eError = ItemCanBeUsed(ptPlayer->idPlayerACD, tDevice, NULL);
+    if (eError == GAMEERROR_ITEMUSE_UNKNOWN)
+        return;
+    if (eError == GAMEERROR_NONE)
+        CACDInventoryRequestUse(tDevice, ACDID_INVALID, TRUE, ptPlayer);
+    else
+        UIGame::DisplayError(GameErrorData(eError), FALSE, ptPlayer);
 }

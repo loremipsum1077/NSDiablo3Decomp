@@ -385,14 +385,16 @@ Blizzard::Mopaq::FileExistsResult SFileFileExists(HSARCHIVE OpaqueArchive, uint6
 
     Console::IO::CPKArchiveReader * ptArchive = (Console::IO::CPKArchiveReader *)OpaqueArchive;
 
+    Blizzard::Mopaq::FileExistsResult result = Blizzard::Mopaq::SFILEEXIST_FAIL;
     if (ptArchive != NULL)
     {
         Console::IO::FileInfo info;
-        if (!ptArchive->GetFileInfo(dwHash, info))
+        if (ptArchive->GetFileInfo(dwHash, info)) {
+            if (pExistsInArchive)
+                *pExistsInArchive = OpaqueArchive;
+            result = Blizzard::Mopaq::SFILEEXIST_MPQ;
+        } else {
             return Blizzard::Mopaq::SFILEEXIST_FAIL;
-        if (pExistsInArchive != NULL)
-        {
-            *pExistsInArchive = OpaqueArchive;
         }
     }
     else
@@ -401,14 +403,13 @@ Blizzard::Mopaq::FileExistsResult SFileFileExists(HSARCHIVE OpaqueArchive, uint6
 
 
         ptArchive = Console::IO::FindArchiveContaining(dwHash, NULL);
-        if (ptArchive == NULL)
-            return Blizzard::Mopaq::SFILEEXIST_FAIL;
-        if (pExistsInArchive != NULL)
-        {
-            *pExistsInArchive = (HSARCHIVE)ptArchive;
+        if (ptArchive) {
+            if (pExistsInArchive)
+                *pExistsInArchive = (HSARCHIVE)ptArchive;
+            result = Blizzard::Mopaq::SFILEEXIST_MPQ;
         }
     }
-    return Blizzard::Mopaq::SFILEEXIST_MPQ;
+    return result;
 }
 
 
@@ -420,14 +421,16 @@ Blizzard::Mopaq::FileExistsResult SFileFileExists(HSARCHIVE OpaqueArchive, const
 
     Console::IO::CPKArchiveReader * ptArchive = (Console::IO::CPKArchiveReader *)OpaqueArchive;
 
+    Blizzard::Mopaq::FileExistsResult result = Blizzard::Mopaq::SFILEEXIST_FAIL;
     if (ptArchive != NULL)
     {
         Console::IO::FileInfo info;
-        if (!ptArchive->GetFileInfo(szFilename, info))
+        if (ptArchive->GetFileInfo(szFilename, info)) {
+            if (pExistsInArchive)
+                *pExistsInArchive = OpaqueArchive;
+            result = Blizzard::Mopaq::SFILEEXIST_MPQ;
+        } else {
             return Blizzard::Mopaq::SFILEEXIST_FAIL;
-        if (pExistsInArchive != NULL)
-        {
-            *pExistsInArchive = OpaqueArchive;
         }
     }
     else
@@ -436,14 +439,13 @@ Blizzard::Mopaq::FileExistsResult SFileFileExists(HSARCHIVE OpaqueArchive, const
 
 
         ptArchive = Console::IO::FindArchiveContaining(szFilename, NULL);
-        if (ptArchive == NULL)
-            return Blizzard::Mopaq::SFILEEXIST_FAIL;
-        if (pExistsInArchive != NULL)
-        {
-            *pExistsInArchive = (HSARCHIVE)ptArchive;
+        if (ptArchive) {
+            if (pExistsInArchive)
+                *pExistsInArchive = (HSARCHIVE)ptArchive;
+            result = Blizzard::Mopaq::SFILEEXIST_MPQ;
         }
     }
-    return Blizzard::Mopaq::SFILEEXIST_MPQ;
+    return result;
 }
 
 

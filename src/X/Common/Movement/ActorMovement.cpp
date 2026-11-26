@@ -2426,26 +2426,12 @@ void ActorMovement::GetCollSettings(SNO snoPower, PowerPassabilityType ePowerPas
 
 	if (ACDIsPlayer(idACD))
 	{
-		BOOL bAIDisabled;
-
 		if (GameActiveGameCommonDataIsServer())
 		{
-			bAIDisabled = SGameGlobalsGet().dwFlags & 0x200;
+			if (SGameGlobalsGet().dwFlags & 0x200)
+				tCollSettings.uDynamicFlagsNoOverlap &= ~0x213;
 		}
-		else
-		{
-			bAIDisabled = sgtAppGlobals.dwDebugFlags & 0x8;
-		}
-
-
-
-
-
-
-
-
-
-		if (bAIDisabled)
+		else if (sgtAppGlobals.dwDebugFlags & 0x8)
 		{
 			tCollSettings.uDynamicFlagsNoOverlap &= ~0x213;
 		}

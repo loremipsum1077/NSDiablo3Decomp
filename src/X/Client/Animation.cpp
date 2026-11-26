@@ -1135,6 +1135,7 @@ float sGetScaleKeyData(
 
 
 // Lines from the original: both nKeyCount tests are on 1150 with case 0 laid out first (switch), stores 1152-1163, switch on 1177.
+// NON_MATCHING: The target maintains a separate sign-extended index for the final frame loads in each width case.
 static BOOL sGetNextFrameIndex(
     uint32 dwSizeOfFrameCount,
     int32 nCurKey,
@@ -1182,8 +1183,10 @@ static BOOL sGetNextFrameIndex(
         }
 
         int32 nKey2 = nKey1;
-        while (nKey2 + 1 < nTransKeyCount && ptFrameData[nKey2 + 1] < nFrame)
+        for (int64 nNextKey = int64(nKey1) + 1; nNextKey < nTransKeyCount; ++nNextKey)
         {
+            if (ptFrameData[nNextKey] >= nFrame)
+                break;
             ++nKey2;
         }
 
@@ -1201,8 +1204,10 @@ static BOOL sGetNextFrameIndex(
         }
 
         int32 nKey2 = nKey1;
-        while (nKey2 + 1 < nTransKeyCount && ptFrameData16[nKey2 + 1] < nFrame)
+        for (int64 nNextKey = int64(nKey1) + 1; nNextKey < nTransKeyCount; ++nNextKey)
         {
+            if (ptFrameData16[nNextKey] >= nFrame)
+                break;
             ++nKey2;
         }
 
@@ -1220,8 +1225,10 @@ static BOOL sGetNextFrameIndex(
         }
 
         int32 nKey2 = nKey1;
-        while (nKey2 + 1 < nTransKeyCount && ptFrameData32[nKey2 + 1] < nFrame)
+        for (int64 nNextKey = int64(nKey1) + 1; nNextKey < nTransKeyCount; ++nNextKey)
         {
+            if (ptFrameData32[nNextKey] >= nFrame)
+                break;
             ++nKey2;
         }
 
@@ -1238,6 +1245,7 @@ static BOOL sGetNextFrameIndex(
 
 
 
+// NON_MATCHING: The three keyframe searches are out of line. Stack-slot reuse and the scale-key offset calculation differ.
 static void sInterpolateCurve(
     PRSTransform * ptInterpolatedBone,
     BoneState * ptBoneState,

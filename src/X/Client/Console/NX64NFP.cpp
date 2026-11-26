@@ -1403,7 +1403,7 @@ void OnTagActivated(int nPlayerIndex, ApplicationData & tData)
         tAccessor.GetTagInfo(&g_tWork.atPlayerData[nPlayerIndex].tTagInfo, GetDeviceHandle(nPlayerIndex));
         tAccessor.Mount(GetDeviceHandle(nPlayerIndex));
         tAccessor.GetModelInfo(&g_tWork.atPlayerData[nPlayerIndex].tModelInfo, GetDeviceHandle(nPlayerIndex));
-        tAccessor.GetCommonInfo(&g_tWork.atPlayerData[nPlayerIndex].tCommonInfo, GetDeviceHandle(nPlayerIndex));
+
 
 
 
@@ -2027,7 +2027,10 @@ void UpdatePlayerStateTagEnabled(int nPlayerIndex, ApplicationData & tData)
     if (tData.idACDScanResultPlayer != ACDID_INVALID)
     {
         nn::Bit32 nCharacterId = DecodeCharacterId(tData.atPlayerData[nPlayerIndex].tModelInfo.characterId);
-        OnNFPScanSucceeded(tData, IsSameCharacter(nCharacterId, anCharacterIdList[nTreasureGoblinIndex]) ? NFPScanResult_TreasureGoblinFigure : NFPScanResult_GenericFigure);
+        if (IsSameCharacter(nCharacterId, anCharacterIdList[nTreasureGoblinIndex]))
+            OnNFPScanSucceeded(tData, NFPScanResult_TreasureGoblinFigure);
+        else
+            OnNFPScanSucceeded(tData, NFPScanResult_GenericFigure);
     }
     if (!bIsScanDesired)
     {
@@ -2327,7 +2330,9 @@ void UpdatePlayerStateError(
     }
     else
     {
-        if (bIsNFPScanDesired && tData.idACDScanResultPlayer != ACDID_INVALID)
+        bool bHasScanPlayer = tData.idACDScanResultPlayer != ACDID_INVALID;
+        bool bReportError = !nn::result::detail::ErrorRange<115, 96, 104>::Includes(tData.atPlayerData[nPlayerIndex].tLastResult);
+        if (bReportError && bHasScanPlayer && bIsNFPScanDesired)
         {
             GameErrorData tError;
             // Inference: ErrorRange<115, 184, 185> (line 2333) and <115, 176, 184> (line 2334) are in the DWARF; their nfp class names are not.
@@ -2773,10 +2778,18 @@ void OnNFPScanFailed(  // DWARF low_pc 0: standalone body is not checkable; requ
     MessageSendToServer(CMSG_AMIIBO_SCAN_END, &tMessage, sizeof(tMessage), ptPlayer);
 
 
+    for (int i = 0; i < 4; ++i)
+    {
+        if (tData.atPlayerData[i].nControllerIndex == ptPlayer->nControllerIndex)
+        {
+            tData.atPlayerData[i].bIsScanDesired = false;
+            break;
+        }
+    }
+
     tData.idACDScanResultPlayer = ACDID_INVALID;
     tData.annScanningPortal = ANN_INVALID;
 }
-// NON_MATCHING: 1004 bytes both; scheduling only: the original computes the two scan-time field addresses before the cooldown-global selects at line 2807 (and allocates x26/x27 accordingly); arm order and signed/unsigned cooldown multiply tried.
 void OnNFPScanSucceeded(
     ApplicationData & tData,
     NFPScanResult eScanResult)

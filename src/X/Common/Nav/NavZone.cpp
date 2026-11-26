@@ -49,6 +49,7 @@ void NavZoneInstance::Initialize() {
 }
 
 
+// NON_MATCHING: The target loads the next locked node into a separate register before checking it against this.
 void NavZoneInstance::Dispose() {
     if (nLockCount == 1 && sfKeepLocks) {
         const NavZoneInstance * ptLocked = sptFirstLocked;
@@ -333,8 +334,10 @@ void NavZoneInstance::InitBorderDataInst(int nIndex) const {
                     Vector2D wpMin(tSCDChild.transformWorld.wp.x, tSCDChild.transformWorld.wp.y);
                     Vector2D wpMax = wpMin;
                     wpMax += Vector2D(tSCDChild.tSceneSpec.tCachedValues.nNavmeshSizeX * 2.5f, tSCDChild.tSceneSpec.tCachedValues.nNavmeshSizeY * 2.5f);
-                    if (AABB2DAndAABB2D(wpBoxMin, wpBoxMax, wpMin, wpMax))
-                        arSceneIds[uCount++] = idSSceneChild;
+                    if (AABB2DAndAABB2D(wpBoxMin, wpBoxMax, wpMin, wpMax)) {
+                        arSceneIds[uCount] = idSSceneChild;
+                        ++uCount;
+                    }
                 }
 
                 // Never border ourselves.
@@ -429,7 +432,10 @@ void NavZoneInstance::InitBorderDataInst(int nIndex) const {
 
 
 
+// NON_MATCHING: The target accumulates the result in w0 and moves this to x8 before the loop.
 uint32 NavZoneInstance::GetChildInstances(const Vector2D & wpMin, const Vector2D & wpMax, NavZoneInstance ** _arChildInst) const {
+    if (!uChildInstanceCount)
+        return 0;
     uint32 uChildCount = 0;
     for (uint32 i = 0; i < uChildInstanceCount; i++) {
         NavZoneInstance * ptChildInst = arChildInst[i];

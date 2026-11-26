@@ -1584,7 +1584,7 @@ PartyTab::PartyTab()  // line 1786
 {
 }
 
-inline void PartyTab::HandleLeftStickInput(const int32 nControllerIndex)  // line 1802
+void PartyTab::HandleLeftStickInput(const int32 nControllerIndex)  // line 1802
 {
     switch (m_eMode)
     {

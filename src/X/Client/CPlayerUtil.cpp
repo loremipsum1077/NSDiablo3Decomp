@@ -817,9 +817,12 @@ void CPlayerUtilResolveClick(const Player * ptPlayer, const SNO snoPowerOnButton
 
 
 
-            tResolvedClick.snoOriginalPower = snoPowerToTry = GlobalSNOGet(GLOBALSNO_POWERS_WALK);
+            tResolvedClick.snoOriginalPower = tResolvedClick.snoPower = GlobalSNOGet(GLOBALSNO_POWERS_WALK);
         }
-        tResolvedClick.snoPower = snoPowerToTry;
+        else
+        {
+            tResolvedClick.snoPower = snoPowerToTry;
+        }
     }
 }
 

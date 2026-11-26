@@ -1338,7 +1338,7 @@ void Select(const UIID & id, const int32 nControllerIndex)
         {
 
 
-            SwitchSocialWindow(FRIENDS_WINDOW, FALSE, nControllerIndex);
+            SwitchSocialWindow(FRIENDS_WINDOW, FALSE, -1);
         }
         else
             UIPartyDisplay::Console::OnPartyListAcceptPressed(nControllerIndex);
@@ -1629,7 +1629,7 @@ void OnLeftShoulder(const UIID & id, const int32 nControllerIndex)
     if (!CmdLineGetParams()->tBitArray.Get(CMDLINE_BLIZZCON_BIT))
     {
         if (sgptPauseMenuGlobals->eSocialWindowActive == FRIENDS_WINDOW || sgptPauseMenuGlobals->eSocialWindowActive == ADHOC_WINDOW)
-            SwitchSocialWindow(PARTY_WINDOW, FALSE, nControllerIndex);
+            SwitchSocialWindow(PARTY_WINDOW, FALSE, -1);
     }
 }
 
@@ -1652,7 +1652,7 @@ void OnRightShoulder(const UIID &, const int32 nControllerIndex)
             if (::Console::Online::PartyGetOnlineState() == ::Console::Online::PARTY_ADHOC)
                 SwitchSocialWindow(ADHOC_WINDOW, FALSE, nControllerIndex);
             else
-                SwitchSocialWindow(FRIENDS_WINDOW, FALSE, nControllerIndex);
+                SwitchSocialWindow(FRIENDS_WINDOW, FALSE, -1);
         }
     }
 }

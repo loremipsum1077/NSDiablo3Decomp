@@ -532,7 +532,8 @@ struct SavedConversations {  // size 0x90c
             bNewEntry = TRUE;
         }
 
-        const int32 nByte = index >> 3;
+        // The append path uses the signed saved count. A successful search has a nonnegative index.
+        const int64 nByte = bNewEntry ? (index >> 3) : int64(uint32(index) >> 3);
         const int32 nBit = index & 7;
 
         if (bPlayed)
