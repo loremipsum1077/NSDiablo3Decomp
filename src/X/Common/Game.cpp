@@ -2309,8 +2309,9 @@ void GameStringDisposeForApp()
 
 
 
-// 58 entries, one per line (lines 2167-2224). Every sSubSystemName in the binary is the same
-// empty string (0x7100d6a4a3); the two NULL disposers are NULL in the original table.
+extern "C" void sub_71004b6800();
+extern "C" void sub_71004b71a0();
+// 2.7.7 has 59 subsystem rows. The last one initializes Dark Alchemy.
 static SubsystemSetup sgtAppSubsystems[] = {
     { "", WinSockInit, WinSockDispose },
     { "", InitDebugChannel, DisposeDebugChannel },
@@ -2370,9 +2371,8 @@ static SubsystemSetup sgtAppSubsystems[] = {
     { "", CutscenesInitializeForApp, CutscenesDisposeForApp },
     { "", GlobalDefinitionInitializeForApp, GlobalDefinitionDisposeForApp },
     { "", Console::NFP::InitializeForApp, Console::NFP::DisposeForApp },
+    { "", sub_71004b6800, sub_71004b71a0 },
 };
-
-
 
 
 

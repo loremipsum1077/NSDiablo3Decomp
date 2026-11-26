@@ -6,6 +6,7 @@
 
 #include "../../BlizzardCore/Include/Blizzard/Types.h"
 #include "../../Contrib/Contrib/blz/include/blz/vector.h"
+#include "../../Contrib/Contrib/blz/include/blz/string.h"
 #include "CommonTypes.h"
 #include "Definitions/GlobalDefinition.h"
 #include "GameBalance.h"
@@ -495,3 +496,33 @@ CRefString ItemGetPowerBonusAttributeDescriptions(const CRefString & sLinePrefix
 void ItemGetPassivePowerAttributeDescriptions(CRefString & usOutput, CRefString & usClassOutput, const ActorCommonData * ptACDItem, const ToolTipValueColoring eColoringType, const PlayerClass ePlayerClass, BOOL bDisplayItemRanges, AttribGroupID idFastAttribMin, AttribGroupID idFastAttribMax, LPCSTR uszDelimiter, ACDID idACDPlayer); // Items.cpp:13138
 CRefString ItemGetGemDescriptions(const ActorCommonData & tACD, LPCSTR uszDelimiter, const PlayerClass ePlayerClass, BOOL bShowSocketableText); // Items.cpp:12954
 void ItemUpdateMinMaxAttributeStats(AttribGroupID idAttribGroupMin, AttribGroupID idAttribGroupMax, GBID gbidItem, const AttributeSpecifier * const arAttributeSpecifiers, int32 nAttributeSpecifiersCount, BOOL bAggregateAttributes, blz::vector<int> * arAllowedFastAttribKeys, XGrowableMap<int, int, int, int> * arFastAttribKeysInUse, const ActorCommonData * ptACDItem); // Items.cpp:13351
+
+// Dark Alchemy sacrifice display and validation use the same two groups of costs.
+struct Unk4b8080
+{
+    int32 unk_00 = 0;
+    CurrencyType unk_04 = CURRENCY_INVALID;
+    GBID unk_08 = INVALID_GBID;
+    blz::string unk_10;
+    uint64 unk_38 = 0;
+};
+
+struct Unk4b97c0
+{
+    blz::vector<Unk4b8080> unk_00;
+    uint64 unk_18 = 0;  // required
+    uint64 unk_20 = 0;  // available
+    GBID unk_28 = INVALID_GBID;
+    int32 unk_2c = 0;
+};
+
+struct Unk1784d0
+{
+    blz::vector<Unk4b97c0> unk_00;
+    blz::vector<Unk4b97c0> unk_18;  // requires selecting an item
+};
+static_assert(sizeof(Unk4b8080) == 0x40, "sacrifice cost entry");
+static_assert(sizeof(Unk4b97c0) == 0x30, "sacrifice requirement");
+static_assert(sizeof(Unk1784d0) == 0x30, "sacrifice costs");
+
+extern "C" BOOL sub_71004b7340(const ActorCommonData & actor, int32 category, Unk1784d0 & costs);

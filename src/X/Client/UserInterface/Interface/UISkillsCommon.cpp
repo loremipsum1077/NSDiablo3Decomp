@@ -476,3 +476,18 @@ CRefString UISkills::GetSkillCategoryLabel(const SkillCategory eCategory)
 
     return sLabel;
 }
+
+// Probably: stat text for an altar power at an explicit skill-level offset.
+// The 0x71003f4dd0 callee duplicates this unit's sParseTipTags at 0x7100248a50.
+extern "C" CRefString sub_71003f4ca0(ActorCommonData & actor, SNO power, int32 levelOffset)
+{
+    CRefString label = PowerTrace(power) + CRefString("_var_stats");
+    CRefString tip;
+    if (StringListFetch(GlobalSNOGet(GLOBALSNO_STRINGLIST_POWERS), label, tip))
+    {
+        tip = sParseTipTags(actor, power, levelOffset, tip);
+        tip += "\n";
+        return LanguageRules::ApplyLanguageRules(tip.str());
+    }
+    return "";
+}

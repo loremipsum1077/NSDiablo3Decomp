@@ -218,6 +218,7 @@ enum ButtonActions {
     ACTION_SELECT_ITEM_TO_MAIL = 30,
     ACTION_DESTROY = 31,
     ACTION_EQUIP_POTION = 32,
+    ACTION_UNK_33 = 33,
 };
 
 class PlayerInventoryScreen : public UIInventory::Console::UIInventoryScreen {  // size 0x13a8 (InitializeForGame: operator new(0x13a8))
@@ -1214,6 +1215,8 @@ void PlayerInventoryScreen::SocketItem()
 
 inline BOOL PlayerInventoryScreen::ShouldShowSocketingUI()
 {
+    if (unk_1390)
+        return FALSE;
     return m_eInventoryState == BROWSE_ITEMS_TO_SOCKET_STATE || m_eInventoryState == BUSY_SOCKETING_STATE ||
         m_eInventoryState == FINISHED_SOCKETING_STATE || m_eInventoryState == READY_TO_SOCKET_AGAIN_STATE ||
         m_eInventoryState == BROWSE_GEMS_STATE;
@@ -1721,6 +1724,7 @@ BOOL RingIncludeControlPredicate(const UIID & idControl)
 
 // 2.7.7 Console::Screens function that clears the vector at +0x1010 of its global (unnamed).
 extern "C" void sub_710016ab00();
+extern "C" size_t sub_710016aae0();
 
 void Close()
 {
@@ -1746,12 +1750,14 @@ void OpenForController(int32 nControllerOpening)
     sgptInventoryGlobals->UIInventoryScreen::OpenForController(nControllerOpening);
 }
 
+// NON_MATCHING: the trade and altar flags use the reconstructed screen layout.
 void OpenTradeSelectForController(int32 nControllerOpening)
 {
     bExitViaTrade = FALSE;
     PlayerInventoryScreen * ptScreen = sgptInventoryGlobals;
     ptScreen->m_fInTradeSelectMode = TRUE;
     ptScreen->m_fInMailSelectMode = FALSE;
+    ptScreen->unk_1390 = FALSE;
     ptScreen->tItemsProvider.SetProviderMode(InventoryItems::PROVIDERMODE_TRADE_SELECT);
     ptScreen->tCosmeticItemsProvider.SetProviderMode(InventoryItems::PROVIDERMODE_TRADE_SELECT);
     sgptInventoryGlobals->UIInventoryScreen::OpenForController(nControllerOpening);
@@ -2284,6 +2290,20 @@ void sConfirmAddingSockets(
     }
 }
 #line 1632 "X/Client/UserInterface/Console/UIInventoryConsole.cpp"
+extern "C" void sub_710017a100(const ActorCommonData *, const ActorCommonData &);
+
+// Probably: offer the selected inventory item for the pending altar sacrifice.
+extern "C" void sub_710036e080()
+{
+    auto * view = sgptInventoryGlobals->GetPrimaryView();
+    if (!view)
+        return;
+    const ActorCommonData * item = ACDTryToGet(view->GetSelectedItem());
+    if (item)
+        sub_710017a100(item, *ACDTryToGet(sgptInventoryGlobals->GetPlayer()->idPlayerACD));
+}
+
+// NON_MATCHING: the action switch includes sacrifice (33). Its shared case exits still differ in layout.
 void PlayerInventoryScreen::OnButton1(
     int32 nControllerIndex)
 {
@@ -2327,6 +2347,10 @@ void PlayerInventoryScreen::OnButton1(
 
     case ACTION_USE:
         UseItem();
+        break;
+
+    case ACTION_UNK_33:
+        sub_710036e080();
         break;
 
     case ACTION_EQUIP_POTION:
@@ -2400,6 +2424,7 @@ BOOL PlayerInventoryScreen::CanToggleStatRangeDisplay()
     return tDetailsView.IsActive() || tEquippedView.IsActive();
 }
 #line 1304 "D:/BuildServer/2/work/code/branches/2_6_2/X/Client/UserInterface/Console/UIInventoryConsole.cpp"
+// NON_MATCHING: both sacrifice-mode loads use the reconstructed PlayerInventoryScreen field offset.
 void PlayerInventoryScreen::UpdateNormalItemActions(
     ::Console::ControllerActionManager & tActionManager)
 {
@@ -2414,6 +2439,13 @@ void PlayerInventoryScreen::UpdateNormalItemActions(
 
     ACDID idSelectedItem = GetSelectedItem();
     ActorCommonData * ptACDItem = ACDTryToGet(idSelectedItem);
+    if (unk_1390)
+    {
+        if (ptACDItem && !ItemIsUnidentified(*ptACDItem))
+            tActionManager.SetAction(::Console::CONTROLLER_INPUT_BUTTON_1, ACTION_UNK_33,
+                                     StringListFetch("ConsoleInventory:Sacrifice").str());
+        return;
+    }
     if (GetPlayer())
     {
         // Inference: the original passes zero as GetEquippedItem's third argument.
@@ -2710,6 +2742,7 @@ namespace Console {
 // X/Client/UserInterface/Console/UIConsoleInventory.cpp
 void ShowFilterName(const UIID & idText, const UIFilterType eFilter, const BOOL bHighlight);
 #line 884 "D:/BuildServer/2/work/code/branches/2_6_2/X/Client/UserInterface/Console/UIInventoryConsole.cpp"
+// NON_MATCHING: the altar-mode tab and socket guards are restored. The inventory views still use the reconstructed layout.
 void PlayerInventoryScreen::OnUpdate()
 
 {
@@ -2761,8 +2794,8 @@ void PlayerInventoryScreen::OnUpdate()
     {
         EnableTabNavigation(TRUE);
     }
-
-
+    if (unk_1390)
+        EnableTabNavigation(FALSE);
 
     SetSecondaryView(GetSecondaryViewForMode(GetBrowsingMode()));
 
@@ -3156,6 +3189,7 @@ void PlayerInventoryScreen::UpdateCategoryUI(
     UpdateCommonCategoryUI(idItemUI, eCategory, bIsEnabled, bIsNew, bIsNewElite);
 }
 #line 1042 "D:/BuildServer/2/work/code/branches/2_6_2/X/Client/UserInterface/Console/UIInventoryConsole.cpp"
+// NON_MATCHING: the inventory-mode and state fields follow the unresolved PlayerInventoryScreen layout.
 void PlayerInventoryScreen::UpdateControllerActions(
     ::Console::ControllerActionManager & tActionManager)
 {
@@ -3243,9 +3277,15 @@ void PlayerInventoryScreen::UpdateControllerActions(
     }
 }
 #line 1739 "D:/BuildServer/2/work/code/branches/2_6_2/X/Client/UserInterface/Console/UIInventoryConsole.cpp"
+// NON_MATCHING: the altar back paths use the reconstructed screen offset and share a different return block.
 void PlayerInventoryScreen::OnButton2(
     int32 nControllerIndex)
 {
+    if (sub_710016aae0() == 1 && unk_1390)
+    {
+        ::Console::Screens::OpenToScreen(::Console::Screens::UNK_31_SCREEN_SET, 0, nControllerIndex, FALSE);
+        return;
+    }
     ::Console::ControllerActionId idAction = ::Console::Screens::GetActionManager().GetActionForInput(::Console::CONTROLLER_INPUT_BUTTON_2);
     switch (idAction) {
     case ACTION_IDENTIFY_CANCEL:
@@ -3275,6 +3315,10 @@ void PlayerInventoryScreen::OnButton2(
         else if (m_fInMailSelectMode)
         {
             ::Console::Screens::OpenToScreen(::Console::Screens::MAIL_SCREEN_SET, 0, nControllerIndex, FALSE);
+        }
+        else if (unk_1390)
+        {
+            ::Console::Screens::OpenToScreen(::Console::Screens::UNK_31_SCREEN_SET, 0, nControllerIndex, FALSE);
         }
         else
         {

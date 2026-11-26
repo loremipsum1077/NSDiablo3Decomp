@@ -770,12 +770,12 @@ struct UIFunctionTable {  // size 0x18
 
 // 2.7.7 console table entries whose functions are unnamed (UIConsoleFunctionPtr signature).
 extern "C" void sub_71003f6c10(const UIID &);  // "UI_Stash_FilterInput_OnChange"
-extern "C" void sub_7100179550(const UIID &);  // "DarkAlchemyUI_OnUpdate"
+extern "C" void DarkAlchemyUI_OnUpdate(const UIID &);  // "DarkAlchemyUI_OnUpdate"
 extern "C" void sub_710035ae80(const UIID &, const int32);  // "UIHeroSelect_Rebirth"
 extern "C" void sub_710035ae90(const UIID &, const int32);  // "UIHeroSelect_RebirthSolo"
 extern "C" void sub_7100355c90(const UIID &, const int32);  // "UIWhatsNew_Season_Up"
 extern "C" void sub_7100355cc0(const UIID &, const int32);  // "UIWhatsNew_Season_Down"
-extern "C" void sub_710017a270(const UIID &, const int32);  // "DarkAlchemyUI_OnButton1"
+extern "C" void DarkAlchemyUI_OnButton1(const UIID &, const int32);  // "DarkAlchemyUI_OnButton1"
 extern "C" void sub_710017a510(const UIID &, const int32);  // "DarkAlchemyUI_OnButton2"
 
 struct UIConsoleFunctionTable {  // size 0x18
@@ -2551,7 +2551,7 @@ static const UIFunctionTable sgtUIFunctions[] =
     { "UIRiftComplete_OnUpdate", XHashKey<LPCSTR>("UIRiftComplete_OnUpdate"), (void *)UIRiftComplete::OnUpdate },
     //@ 2601
     { "UIEquipmentManager_Console_Update", XHashKey<LPCSTR>("UIEquipmentManager_Console_Update"), (void *)UIEquipmentManager::Console::OnUpdate },
-    { "DarkAlchemyUI_OnUpdate", XHashKey<LPCSTR>("DarkAlchemyUI_OnUpdate"), (void *)sub_7100179550 },
+    { "DarkAlchemyUI_OnUpdate", XHashKey<LPCSTR>("DarkAlchemyUI_OnUpdate"), (void *)DarkAlchemyUI_OnUpdate },
 };
 
 //@ 2625
@@ -2955,7 +2955,7 @@ static const UIConsoleFunctionTable sgtUIConsoleFunctions[] =
     { "UIEquipmentManager_OnLeftStick", XHashKey<LPCSTR>("UIEquipmentManager_OnLeftStick"), UIEquipmentManager::Console::OnLeftStick },
     { "UIEquipmentManager_OnDPadLeft", XHashKey<LPCSTR>("UIEquipmentManager_OnDPadLeft"), UIEquipmentManager::Console::OnDPadLeft },
     { "UIEquipmentManager_OnDPadRight", XHashKey<LPCSTR>("UIEquipmentManager_OnDPadRight"), UIEquipmentManager::Console::OnDPadRight },
-    { "DarkAlchemyUI_OnButton1", XHashKey<LPCSTR>("DarkAlchemyUI_OnButton1"), sub_710017a270 },
+    { "DarkAlchemyUI_OnButton1", XHashKey<LPCSTR>("DarkAlchemyUI_OnButton1"), DarkAlchemyUI_OnButton1 },
     { "DarkAlchemyUI_OnButton2", XHashKey<LPCSTR>("DarkAlchemyUI_OnButton2"), sub_710017a510 },
 };
 

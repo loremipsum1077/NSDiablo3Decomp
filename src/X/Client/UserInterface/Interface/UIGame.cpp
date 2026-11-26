@@ -1,4 +1,6 @@
 #include "UIGame.h"
+
+extern "C" void sub_7100178a00();
 #include "../../CGame.h"
 #include "../../CPlayer.h"
 #include "../UI.h"
@@ -513,8 +515,8 @@ enum NotifyType {
     NT_NEW_CRAFTER = 12,
     NT_NEW_HIRELING = 13,
     NT_EXTRACTED_POWER = 14,
+    NT_UNK_0F = 15,
 };
-
 struct NotificationData {  // size 0x24
     NotifyType eType;  // 0x00
     int32 nLevel;  // 0x04
@@ -733,6 +735,7 @@ void InitializeForGame()
     UIEquipmentManager::Console::InitializeForGame();
     UIEquipmentManagerDetails::InitializeForGame();
     UISeasonStash::Console::InitializeForGame();
+    sub_7100178a00();
 
 
     UIEquipmentManager::InitializeForGame();
@@ -8416,3 +8419,13 @@ void UIFloatingMessage::Update()
     }
 }
 #line 8432 "X/Client/UserInterface/Interface/UIGame.cpp"
+
+// Probably: enqueue the Dark Alchemy power-unlock notification for this player.
+extern "C" void sub_71003d0b70(ACDID idACDPlayer, SNO snoPower)
+{
+    NotificationData tData;
+    tData.eType = NT_UNK_0F;
+    tData.snoPower = snoPower;
+    tData.nPlayerIndex = PlayerGetByACD(idACDPlayer)->nPlayerIndex;
+    sgptUIGameGlobals->listNotifications.AddTail_Tracked(tData);
+}

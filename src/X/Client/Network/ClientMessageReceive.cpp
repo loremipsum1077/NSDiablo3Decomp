@@ -2193,6 +2193,9 @@ void ClientMessageReceiveChat(const CRefString & uSpeakerDisplayName, EChatColor
     }
 }
 
+extern "C" void sub_710017a580(uint32 node);
+extern "C" void sub_710017a5b0(ACDID source, ACDID player);
+
 //@ 326. Inlined into ClientMessageReceiveGameMessage (SMSG_CHAT); body from that copy.
 void ClientMessageReceiveChat(const Player & tPlayerFrom, EChatColor eColor, LPCSTR uzFilteredMessage)
 {
@@ -5244,6 +5247,19 @@ BOOL ClientMessageReceiveGameMessage(void * pMessage)
             SavePointInfoMessage * ptSavePointInfoMessage = (SavePointInfoMessage *)pMessage;
             CGameGlobals & tCGameGlobals = CGameGlobalsGet();
             tCGameGlobals.snoLevelAreaSavePoint = ptSavePointInfoMessage->snoLevelArea;
+        }
+        break;
+
+    case SMSG_DARK_ALCHEMY_NODE_ACTIVATED:
+        sub_710017a580(static_cast<DWordDataMessage *>(pMessage)->dwData);
+        break;
+
+    case SMSG_DARK_ALCHEMY_INTERACT:
+        {
+            const auto & message = *static_cast<GizmoInteractMessage *>(pMessage);
+            ACDID source = ACDFromANN(static_cast<ACDNetworkName>(message.unk_08));
+            ACDID player = ACDFromANN(static_cast<ACDNetworkName>(message.unk_0c));
+            sub_710017a5b0(source, player);
         }
         break;
 
