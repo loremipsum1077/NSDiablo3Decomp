@@ -62,6 +62,7 @@ int32 MarkerGetACDsLinkedByActor(const ActorID idActor, XPooledDataIDList & list
 void SGizmoOperateSwitch(ActorCommonData & tACD, const BOOL bSet);  // X/Server/SGizmo.cpp:696
 void SGizmoOperated(ActorCommonData & tACDGizmo, ActorCommonData * ptACDOperator);  // X/Server/SGizmo.cpp:2489
 void SACDInventoryDeleteItem(ActorCommonData & tACDItem, uint64 uCount, BOOL bMarkAsDirty, BOOL bFlagForDeletion);  // X/Common/ActorInventory.cpp:6800
+extern "C" BOOL sub_710051ac90(Player * ptPlayer);  // X/Common/NephalemRiftCommon.cpp: take one keystone
 int32 WorldGetDungeonFinderLevel(const SNO snoWorld);  // X/Common/World.cpp:828
 ACDID SWorldGetPortalDestinationACD(const SWorldID idSWorld, const uint32 uEntranceGUID);  // X/Server/SWorld.cpp:1375
 uint64 SPlayerGetGearAndSkillsHash(Player & tPlayer);  // X/Server/SPlayer.cpp:14744
@@ -641,9 +642,8 @@ uint32 GetPlayerKeysMap(
     {
         Player * ptPlayer = listEligiblePlayers.GetNext(pos);
 
-        int32 nCount = 0;
-        ACDID idKey = NephalemRift::GetKeyForGreaterRift(ptPlayer, nCount);
-        if (idKey != ACDID_INVALID)
+        // 2.7.7 keeps keystones as a currency, not an item (inlined into TriggerRift).
+        if (NephalemRift::HasKeyForGreaterRift(ptPlayer))
         {
             nPlayerKeys[ptPlayer->nPlayerIndex] = (uint8)ACDGet(ptPlayer->idPlayerACD).AttributesGetInt(ATTRIBUTE_HIGHEST_SOLO_RIFT_LEVEL);
         }
@@ -973,13 +973,11 @@ void StartRift(
         {
 
 
-            int32 nCount = 0;
+            // 2.7.7 takes the keystone from currency 20 (sub_710051ac90) rather than
+            // deleting a keystone item from the bag.
             if (nEntryCost > 0)
             {
-                ACDID idACDKey = NephalemRift::GetKeyForGreaterRift(ptPlayer, nCount);
-                ActorCommonData * ptACDItem = ACDTryToGet(idACDKey);
-
-                SACDInventoryDeleteItem(*ptACDItem, nEntryCost, TRUE, FALSE);
+                sub_710051ac90(ptPlayer);
             }
 
             if (ptPlayer->dwNephalemRiftFlags & (1 << ESF_EMPOWERED))
