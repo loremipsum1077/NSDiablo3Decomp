@@ -16,6 +16,17 @@ int stoi(const string& str, size_t* idx, int base)
     return result;
 }
 
+// 2.7.7 only (0x710003c1b0, named sub_710003c1b0 in functions.csv): stoi's float twin.
+float stof(const string& str, size_t* idx)
+{
+    const char* s = str.c_str();
+    const char* ptr;
+    float result = stof(s, &ptr, 0);
+    if (idx)
+        *idx = ptr - s;
+    return result;
+}
+
 // line 92
 string to_string(int val)
 {

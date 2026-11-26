@@ -68,7 +68,7 @@ void QueueNetworkEventForMainThreadAlways(OnlineService::Callback<void ()> pfnEv
 // Defined in X/Common/Leaderboard.cpp.
 blz::string LeaderboardCompressMessage(const google::protobuf::Message & tMessage, int nLevel);
 bool LeaderboardDecompressMessage(const blz::string & szData, google::protobuf::Message * ptMessage);
-bdLeaderBoardID LeaderboardToDemonwareLeaderboardId(LeaderboardId idLeaderboard, LeaderboardScope eScope, uint32 uPartition, bool bMetadata); bool LeaderboardIsChallengeRift(uint64_t leaderboardId); uint64 LeaderboardMakeAchievementPointScore(uint32 achievementPoints, uint32 unixTime); int64 LeaderboardMakeAchievementDemonwareRating(uint64 score); uint64 LeaderboardMakeConquestScore(Blizzard::Time::Timestamp ts); int64 LeaderboardMakeConquestDemonwareRating(uint64 score); class Player; Player * PlayerGetByControllerIndex(int32 nControllerIndex); namespace SLeaderboard { void FillInMemberMetadata(D3::Leaderboard::Member * ptMember, const Player * ptPlayer, bool bArg); } bool LeaderboardIsRift(uint64 leaderboardId); int64 LeaderboardMakeRiftDemonwareRating(uint64 score); uint32 LeaderboardGetRiftScoreLevel(uint64 score); Blizzard::Time::Timestamp LeaderboardGetRiftScoreTimeToComplete(uint64 score); uint64 LeaderboardMakeRiftScore(uint32 level, int32 millisecondsElapsed, uint32 unixTime); void SPlayerSetPerkBuffs(float, float, float, int, int, int, int, int); extern XVarUint32 s_varSeasonNum; extern XVarUint32 s_varSeasonState; extern XVarString s_varSeasonShutdownDate;
+bdLeaderBoardID LeaderboardToDemonwareLeaderboardId(LeaderboardId idLeaderboard, LeaderboardScope eScope, uint32 uPartition, bool bMetadata); bool LeaderboardIsChallengeRift(uint64_t leaderboardId); uint64 LeaderboardMakeAchievementPointScore(uint32 achievementPoints, uint32 unixTime); int64 LeaderboardMakeAchievementDemonwareRating(uint64 score); uint64 LeaderboardMakeConquestScore(Blizzard::Time::Timestamp ts); int64 LeaderboardMakeConquestDemonwareRating(uint64 score); class Player; Player * PlayerGetByControllerIndex(int32 nControllerIndex); namespace SLeaderboard { void FillInMemberMetadata(D3::Leaderboard::Member * ptMember, const Player * ptPlayer, bool bArg); } bool LeaderboardIsRift(uint64 leaderboardId); int64 LeaderboardMakeRiftDemonwareRating(uint64 score); uint32 LeaderboardGetRiftScoreLevel(uint64 score); Blizzard::Time::Timestamp LeaderboardGetRiftScoreTimeToComplete(uint64 score); uint64 LeaderboardMakeRiftScore(uint32 level, int32 millisecondsElapsed, uint32 unixTime); extern XVarUint32 s_varSeasonNum; extern XVarUint32 s_varSeasonState; extern XVarString s_varSeasonShutdownDate;
 
 #include "../../../BlizzardCore/Include/Blizzard/Util/Hash.h"
 #include "../../../BlizzardCore/Include/Blizzard/String.h"
@@ -103,8 +103,11 @@ namespace Console { namespace HeroPublishing { void SetPublishIntervalInMinutes(
 namespace Console { namespace GamerProfile { class ScopedUsersReadLock { public: ScopedUsersReadLock(); ~ScopedUsersReadLock(); }; nn::account::UserHandle GetUserHandle(int32); nn::account::Nickname GetUserNickName(int32); } }
 // DWARF GamerProfileNX64.cpp:964/951; platform-account availability and subscription status.
 namespace Console { namespace GamerProfile { BOOL IsEnsuringAccountAvailability(int32); void UpdateHasNSOSubscription(int32, BOOL); } }
+namespace Console { namespace DLCManager { uint32 GetLicenses(); } }  // X/Client/Console/DLCManager.cpp
+extern "C" void sub_7100363cb0(); extern "C" void sub_7100363cc0();  // 0x7100363cb0/cc0 (unnamed 2.7.7 functions next to the UIConsoleMainMenu code, both empty: show / hide the Diablo IV advertisement)
 #include "../../Sigma/ErrorManager/ErrorManager.h"
 #include "../../Sigma/Math/MathGeneral.h"
+#include "../../Common/CommunityBuffs.h"
 
 
 
@@ -615,16 +618,13 @@ bool sbTimeCheckInProgress;
 Blizzard::Time::Timestamp GetNetworkTimestamp() { return Blizzard::Time::GetTimestamp() + (stTimeOffset.Exists() ? stTimeOffset.Get() : 0); }
 
 BOOL sbCommunityBuffEnabled;
+BOOL sbCommunityBuffSeasonOnly;  // 2.7.7
 Blizzard::Time::Timestamp stCommunityBuffStartTime;
 Blizzard::Time::Timestamp stCommunityBuffEndTime;
-float sflXPBonus;
-float sflGoldFindBonus;
-float sflLegendaryFindBonus;
-BOOL sbDoubleTreasureGoblins;
-BOOL sbDoubleBloodShards;
-BOOL sbDoubleRiftKeystones;
+// 2.7.7: the buff values parsed from the config file (2.6.2 kept sflXPBonus, sflGoldFindBonus,
+// sflLegendaryFindBonus and four BOOLs here). Destroyed at exit by 0x710005fce0.
+CommunityBuffs stCommunityBuffs;
 BOOL sbEasterEggWorldEnabled;
-BOOL sbDoubleBountyBags;
 BOOL sbSeasonalGlobalLeaderboardsEnabled;
 void sEvaluateSeasonState(bool bAllowCorrectiveAction); SeasonsChangedEvent & GetSeasonsChangedEvent();
 struct SeasonInfo
@@ -928,16 +928,15 @@ void LobbyService::Idle()
     {
         sbCommunityBuffEnabled = bCommunityBuffActive;
         // (929)
-        if (sbCommunityBuffEnabled)
+        // 2.7.7: outside the event window the parsed values are dropped; the Perk cvars get
+        // the table (all off then) and the season-only flag.
+        if (!sbCommunityBuffEnabled)
         {
-            // (932)
-            SPlayerSetPerkBuffs(sflXPBonus, sflLegendaryFindBonus, sflGoldFindBonus, sbDoubleTreasureGoblins,
-                sbDoubleBloodShards, sbDoubleRiftKeystones, sbEasterEggWorldEnabled, sbDoubleBountyBags);
+            stCommunityBuffs.ResetAll();
         }
-        else
-        {
-            SPlayerSetPerkBuffs(0.0f, 0.0f, 0.0f, FALSE, FALSE, FALSE, FALSE, FALSE);
-        }
+        s_varCommunityEventPerkEnabled.Set(stCommunityBuffs.AnyActive() != FALSE, XVarBase::DIRTY_DEFAULT);
+        s_varCommunityEventPerkSeasonOnly.Set(sbCommunityBuffSeasonOnly != FALSE, XVarBase::DIRTY_DEFAULT);
+        stCommunityBuffs.StoreToCvars();
     }
 }
 
@@ -2940,14 +2939,8 @@ void LobbyServiceInternal::OnConfigFileRetrieved(
 
     stCommunityBuffStartTime = 0;
     stCommunityBuffEndTime = 0;
-    sflXPBonus = 0.0f;
-    sflLegendaryFindBonus = 0.0f;
-    sflGoldFindBonus = 0.0f;
-    sbDoubleTreasureGoblins = FALSE;
-    sbDoubleBloodShards = FALSE;
-    sbDoubleRiftKeystones = FALSE;
     sbEasterEggWorldEnabled = FALSE;
-    sbDoubleBountyBags = FALSE;
+    stCommunityBuffs.ResetAll();
     sbSeasonalGlobalLeaderboardsEnabled = TRUE;
 
     if (eResult != STORAGE_SUCCESS)
@@ -2981,42 +2974,17 @@ void LobbyServiceInternal::OnConfigFileRetrieved(
     {
         stCommunityBuffEndTime = Blizzard::Time::FromHTTPDate(sValue);
     }
-    if (mapKeyValues.Lookup("CommunityBuffXP", sValue))
-    {
-        sflXPBonus = atof(sValue);
-    }
-    if (mapKeyValues.Lookup("CommunityBuffLegendaryFind", sValue))
-    {
-        sflLegendaryFindBonus = atof(sValue);
-    }
-    if (mapKeyValues.Lookup("CommunityBuffGoldFind", sValue))
-    {
-        sflGoldFindBonus = atof(sValue);
-    }
-    if (mapKeyValues.Lookup("CommunityBuffDoubleGoblins", sValue))
+    if (mapKeyValues.Lookup("CommunityBuffSeasonOnly", sValue))
     {
         int32 nValue = atoi(sValue);
-        sbDoubleTreasureGoblins = nValue;
+        sbCommunityBuffSeasonOnly = nValue;
     }
-    if (mapKeyValues.Lookup("CommunityBuffDoubleBloodShards", sValue))
-    {
-        int32 nValue = atoi(sValue);
-        sbDoubleBloodShards = nValue;
-    }
-    if (mapKeyValues.Lookup("CommunityBuffDoubleRiftKeystones", sValue))
-    {
-        int32 nValue = atoi(sValue);
-        sbDoubleRiftKeystones = nValue;
-    }
+    // 2.7.7: every buff reads its own "CommunityBuff..." key.
+    stCommunityBuffs.ReadConfig(mapKeyValues);
     if (mapKeyValues.Lookup("CommunityBuffEasterEggWorld", sValue))
     {
         int32 nValue = atoi(sValue);
         sbEasterEggWorldEnabled = nValue;
-    }
-    if (mapKeyValues.Lookup("CommunityBuffDoubleBountyBags", sValue))
-    {
-        int32 nValue = atoi(sValue);
-        sbDoubleBountyBags = nValue;
     }
 
     if (mapKeyValues.Lookup("SeasonalGlobalLeaderboardsEnabled", sValue))
@@ -3035,6 +3003,22 @@ void LobbyServiceInternal::OnConfigFileRetrieved(
     {
         int32 nValueDays = atoi(sValue);
         MailService::SetTimeout(MAIL_TYPE_EVENT, nValueDays);
+    }
+
+    // 2.7.7: shown when the config enables it and licence bit 29 is not set; both hooks are empty
+    // functions in this build.
+    if (mapKeyValues.Lookup("EnableDiablo4Advertisement", sValue))
+    {
+        uint32 uLicenses = DLCManager::GetLicenses();
+        int32 nValue = atoi(sValue);
+        if (!(uLicenses & (1u << 29)) && nValue)
+        {
+            sub_7100363cb0();
+        }
+        else
+        {
+            sub_7100363cc0();
+        }
     }
 
 

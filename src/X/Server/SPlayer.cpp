@@ -113,6 +113,7 @@ struct StashIconStateMessage {  // size 0x18; X/Common/Networking/GameMessage.h
 #include "System/SVoteKick.h"
 #include "Network/ClientValidation.h"
 #include "../Common/Console/Avenger.h"
+#include "../Common/CommunityBuffs.h"
 void TraceStat(LPCSTR szStat, ACDID idACD, LPCSTR szFormat, ...);  // X/Server/SGame.cpp:7255
 void SGameAchievementRegister(const OnlineService::GameAccountHandle & tHandle); void SGameAchievementUnregister(const OnlineService::GameAccountHandle & tHandle);  // X/Server/SGame.cpp:1628, 1650
 void ActorTriggerAttributeUpdate(ActorID idActor);  // X/Server/Actors/Actors.cpp:3770
@@ -377,7 +378,8 @@ static const uint32 PLAYER_SAVE_MAX_DIRTY_ITEMS = 150;  // line 583
 static const uint32 PLAYER_ITEM_DUPE_SCAN_INTERVAL = 36000;  // line 584
 void ServerClientDisconnectGC(GameConnectionID idGameConnection); void ServerPlayerLeftOnConnection(GameConnectionID idGameConnection, const Player & tPlayer); void ServerDisconnectWhenOutgoingQueueEmpty(Player & tPlayer); void SPlayerOffline(Player & tPlayer, BOOL bHonorLogoutTimerRules);  // X/Common/Networking/GameMessage.h:847; X/Server/Network/Server.cpp:772, 796, 661; line 7584
 // Defined further down in this file.
-void sCheckForCommunityBuffReset(ActorCommonData & tACDPlayer, const GlobalSNO eGlobalPowerSNO);
+void sCheckForCommunityBuffReset(ActorCommonData & tACDPlayer, const GlobalSNO eGlobalPowerSNO) __asm__("sub_7100800320");
+static void sUpdateCommunityFeaturePowers(ActorCommonData & tACDPlayer, BOOL bEnable) __asm__("sub_7100800700");
 void SPlayerPurgeSaveList(BOOL bForcedPurge, const OnlineServiceServer::GenericCallback & cb);
 void SPlayerClearSavePoint(Player & tPlayer);
 void sPowerRechargeCallback(TimerID, DataID idOwner, void * ptData);
@@ -417,26 +419,24 @@ static void sSPlayerWarpedInternal(ActorCommonData & tACDPlayer, const PlayerWar
                                    const ACDID idACDWarpGizmo, const WorldPlace * ptPlaceBeforeWarp,
                                    const float flWarpFadeInSecs, const BOOL bSendClientWarped);
 void SPlayerSendBanner(const PlayerList & listDestPlayers, const Player & tPlayer);  // line 2936
-static XVarScope s_scopePerk("Perk", NULL);  // line 184
-static XVarBool s_varIgrPerkEnabled(s_scopePerk, "IgrEnabled", false);
-static XVarBool s_varAnniversaryPerkEnabled(s_scopePerk, "AnniversaryEnabled", false);
-static XVarBool s_varCommunityEventPerkEnabled(s_scopePerk, "CommunityEventEnabled", false);
-XVarFloat s_varIgrPerkXP(s_scopePerk, "IgrXP", 0.0f);
-XVarFloat s_varAnniversaryPerkXP(s_scopePerk, "AnniversaryXP", 0.0f);
-XVarFloat s_varCommunityEventPerkXP(s_scopePerk, "CommunityEventXP", 0.0f);
-XVarFloat s_varCommunityEventPerkLegendaryFind(s_scopePerk, "CommunityEventLegendaryFind", 0.0f);
-XVarFloat s_varCommunityEventPerkGoldFind(s_scopePerk, "CommunityEventGoldFind", 0.0f);
-XVarBool s_varCommunityEventPerkDoubleRiftKeystones(s_scopePerk, "CommunityEventDoubleRiftKeystones", false);
-XVarBool s_varCommunityEventPerkDoubleBloodShards(s_scopePerk, "CommunityEventDoubleBloodShards", false);
-XVarBool s_varCommunityEventPerkDoubleTreasureGoblins(s_scopePerk, "CommunityEventDoubleTreasureGoblins", false);
-XVarBool s_varEasterEggWorldPerkEnabled(s_scopePerk, "EasterEggWorldEnabled", false);
-XVarBool s_varCommunityEventPerkDoubleBountyBags(s_scopePerk, "CommunityEventDoubleBountyBags", false);
+// 2.7.7: the "Perk" cvars (IgrEnabled, AnniversaryEnabled, CommunityEventEnabled, IgrXP and
+// the CommunityEvent* buff values) moved to X/Common/CommunityBuffs.cpp, which declares the ones
+// used here in CommunityBuffs.h. 2.6.2's AnniversaryXP cvar is gone; Anniversary now grants
+// the same community buff table through GLOBALSNO_POWERS_ANNIVERSARY_XPMF.
+//
+// The server's buff table, s_tCommunityBuffs, is defined after s_varParallelEnabled below,
+// where 2.7.7's static initializer constructs it.
+//
+// (These lines keep the assert line numbers of the functions below.)
 bool sub_71007b7080();  // 0x71007b7080 (unnamed, SGame.cpp): tStartParams.dwCreationFlags bit 20
 static XVarScope s_scopeDashingStrikeStuck("DashingStrikeStuck", NULL);  // line 199
 XVarBool s_varDashingStrikeStuckMaxDurSpew(s_scopeDashingStrikeStuck, "EnableMaxDurationSpew", false);
 extern "C" BOOL sub_71007d50c0(SNO snoWorld);  // 0x71007d50c0 (unnamed 2.7.7 function, also declared in SpellEffect.cpp)
 static XVarScope s_scopeSave("SaveMode", NULL);  // line 202
 XVarBool s_varParallelEnabled(s_scopeSave, "ParallelEnabled", false);
+// 2.7.7: the server's copy of the community buff table (0x7101a39de8); only its toggles' cvar
+// state is read here (IsFeatureEnabled / NeedsRefresh), the values stay in the Perk cvars.
+static CommunityBuffs s_tCommunityBuffs;
 
 struct DPSBucket {  // size 0x8
     uint32 dwTick;  // 0x00
@@ -11607,14 +11607,14 @@ static void sSetCommunityFlags(
     Player * ptPlayer = PlayerGetByACD(tACDPlayer.id);
     if (ptPlayer != NULL)
     {
-        BOOL bDoubleRiftKeystones = s_varCommunityEventPerkDoubleRiftKeystones.Get() && bSetValue;
+        BOOL bDoubleRiftKeystones = s_tCommunityBuffs.IsFeatureEnabled(COMMUNITY_BUFF_DOUBLE_RIFT_KEYSTONES) && bSetValue;
         PlayerSetPlayerGameFlag(ptPlayer, "DoubleRiftKeystones", bDoubleRiftKeystones);
     }
 
 
 
 
-    BOOL bActive = s_varCommunityEventPerkDoubleTreasureGoblins.Get() && bSetValue;
+    BOOL bActive = s_tCommunityBuffs.IsFeatureEnabled(COMMUNITY_BUFF_DOUBLE_GOBLINS) && bSetValue;
 
     SGameSetCommunityBuffDoubleGoblins(bActive);
 }
@@ -11634,20 +11634,16 @@ static void sRemovePerkBuff(
 
 
 
-    POS pos = tACDPlayer.listBuffs.GetHeadPosition();
-    while (pos)
-    {
-        BuffID idBuff = tACDPlayer.listBuffs.GetNext(pos);
-        PowerAPIBuffInstance * ptBuff = PowerAPI_BuffTryToGet(idBuff);
-        if (ptBuff && ptBuff->snoPower == snoPower)
-        {
-            PowerAPI_BuffFlagForDeletion(idBuff, FALSE, TRUE, FALSE, TRUE);
+    // 2.7.7 removes the first buff of the power only (2.6.2 walked the whole buff list).
+    BuffID idBuff = PowerAPI_BuffFindOnACD(snoPower, &tACDPlayer, ACDID_INVALID);
+    if (idBuff == BUFFID_INVALID)
+        return;
 
-            if (bSetCommunityFlags)
-            {
-                sSetCommunityFlags(tACDPlayer, FALSE);
-            }
-        }
+    PowerAPI_BuffFlagForDeletion(idBuff, FALSE, TRUE, FALSE, TRUE);
+
+    if (bSetCommunityFlags)
+    {
+        sSetCommunityFlags(tACDPlayer, FALSE);
     }
 }
 
@@ -11720,52 +11716,16 @@ static void sApplyConsumablePotionBuff(
 
 
 
-void SPlayerSetPerkBuffs(
-    float flXP,
-    float flLegendaryFind,
-    float flGoldFind,
-    BOOL bDoubleTreasureGoblins,
-    BOOL bDoubleBloodShards,
-    BOOL bDoubleRiftKeystones,
-    BOOL bEasterEggWorld,
-    BOOL bDoubleBountyBags)
-{
-    s_varCommunityEventPerkEnabled.Set(flXP > EPSILON || flLegendaryFind > EPSILON || flGoldFind > EPSILON || bDoubleTreasureGoblins || bDoubleBloodShards || bDoubleRiftKeystones || bEasterEggWorld || bDoubleBountyBags, XVarBase::DIRTY_DEFAULT);
-    s_varCommunityEventPerkXP.Set(flXP, XVarBase::DIRTY_DEFAULT);
-    s_varCommunityEventPerkLegendaryFind.Set(flLegendaryFind, XVarBase::DIRTY_DEFAULT);
-    s_varCommunityEventPerkGoldFind.Set(flGoldFind, XVarBase::DIRTY_DEFAULT);
-    s_varCommunityEventPerkDoubleTreasureGoblins.Set(bDoubleTreasureGoblins != FALSE, XVarBase::DIRTY_DEFAULT);
-    s_varCommunityEventPerkDoubleBloodShards.Set(bDoubleBloodShards != FALSE, XVarBase::DIRTY_DEFAULT);
-    s_varCommunityEventPerkDoubleRiftKeystones.Set(bDoubleRiftKeystones != FALSE, XVarBase::DIRTY_DEFAULT);
-    s_varEasterEggWorldPerkEnabled.Set(bEasterEggWorld != FALSE, XVarBase::DIRTY_DEFAULT);
-    s_varCommunityEventPerkDoubleBountyBags.Set(bDoubleBountyBags != FALSE, XVarBase::DIRTY_DEFAULT);
-}
-
-void SPlayerGetCommunityBuffInfo(
-    BOOL & bActive,
-    float & flXPBuff,
-    float & flLegendaryBuff,
-    float & flGoldBuff,
-    BOOL & bDoubleTreasureGoblins,
-    BOOL & bDoubleBloodShards,
-    BOOL & bDoubleRiftKeystones,
-    BOOL & bEasterEggWorld,
-    BOOL & bDoubleBountyBags)
-{
-    bActive = s_varCommunityEventPerkEnabled.Get();
-    flXPBuff = s_varCommunityEventPerkXP.Get();
-    flLegendaryBuff = s_varCommunityEventPerkLegendaryFind.Get();
-    flGoldBuff = s_varCommunityEventPerkGoldFind.Get();
-    bDoubleTreasureGoblins = s_varCommunityEventPerkDoubleTreasureGoblins.Get();
-    bDoubleBloodShards = s_varCommunityEventPerkDoubleBloodShards.Get();
-    bDoubleRiftKeystones = s_varCommunityEventPerkDoubleRiftKeystones.Get();
-    bEasterEggWorld = s_varEasterEggWorldPerkEnabled.Get();
-    bDoubleBountyBags = s_varCommunityEventPerkDoubleBountyBags.Get();
-}
+// 2.7.7: SPlayerSetPerkBuffs and SPlayerGetCommunityBuffInfo are gone; LobbyService writes the
+// Perk cvars through CommunityBuffs::StoreToCvars.
 
 
 
-
+// 2.7.7: with CommunityBuffSeasonOnly the community event only counts in seasonal and
+// weekly-challenge games.
+// NON_MATCHING (inlined into SPlayersUpdate, 12 bytes shorter there): the original keeps
+// bCommunityEventEnabled as a full int (it tests "!= 0" before the feature-power call) and lays
+// the removal blocks out in another order; same calls and conditions.
 static void sPollPerkBuffs(
     Player & tPlayer,
     ActorCommonData & tACDPlayer)
@@ -11775,8 +11735,10 @@ static void sPollPerkBuffs(
     {
         BOOL bIgrEnabled = FALSE;
         BOOL bAnniversaryEnabled = s_varAnniversaryPerkEnabled.Get();
-        BOOL bCommunityEventEnabled = s_varCommunityEventPerkEnabled.Get();
+        BOOL bCommunityEventRaw = s_varCommunityEventPerkEnabled.Get();
         BOOL bEasterEggWorldEnabled = s_varEasterEggWorldPerkEnabled.Get();
+        BOOL bCommunityEventEnabled = bCommunityEventRaw &&
+            (!s_varCommunityEventPerkSeasonOnly.Get() || GameIsSeasonal() || GameIsWeeklyChallenge());
 
         ServerPlayerGlobals * ptServerPlayerGlobals = SGameManager::GameGet().ptServerPlayerGlobals;
         if (ptServerPlayerGlobals != NULL)
@@ -11791,6 +11753,11 @@ static void sPollPerkBuffs(
         if (!bIgrEnabled)
         {
             sRemovePerkBuff(tACDPlayer, GLOBALSNO_POWERS_IGR_XP, FALSE);
+        }
+
+        if (!bAnniversaryEnabled && !bCommunityEventEnabled)
+        {
+            sUpdateCommunityFeaturePowers(tACDPlayer, FALSE);
         }
 
         if (!bAnniversaryEnabled)
@@ -11854,29 +11821,70 @@ void sCheckForCommunityBuffReset(
     if (snoPower == SNO_NONE)
         return;
 
-    BOOL bBuffXPActive = PowerAPI_BuffFindOnACD(snoPower, 1, tACDPlayer, ACDID_INVALID, FALSE) != BUFFID_INVALID;
-    BOOL bBuffLegendaryFindActive = PowerAPI_BuffFindOnACD(snoPower, 2, tACDPlayer, ACDID_INVALID, FALSE) != BUFFID_INVALID;
-    BOOL bBuffGoldFindActive = PowerAPI_BuffFindOnACD(snoPower, 3, tACDPlayer, ACDID_INVALID, FALSE) != BUFFID_INVALID;
-    BOOL bBuffDoubleRiftKeystones = PowerAPI_BuffFindOnACD(snoPower, 4, tACDPlayer, ACDID_INVALID, FALSE) != BUFFID_INVALID;
-    BOOL bBuffDoubleBloodShards = PowerAPI_BuffFindOnACD(snoPower, 5, tACDPlayer, ACDID_INVALID, FALSE) != BUFFID_INVALID;
-    BOOL bBuffDoubleTreasureGoblins = PowerAPI_BuffFindOnACD(snoPower, 6, tACDPlayer, ACDID_INVALID, FALSE) != BUFFID_INVALID;
-    BOOL bBuffDoubleBountyBags = PowerAPI_BuffFindOnACD(snoPower, 7, tACDPlayer, ACDID_INVALID, FALSE) != BUFFID_INVALID;
-
-    if (bBuffXPActive != (s_varCommunityEventPerkXP.Get() > EPSILON) ||
-        bBuffLegendaryFindActive != (s_varCommunityEventPerkLegendaryFind.Get() > EPSILON) ||
-        bBuffGoldFindActive != (s_varCommunityEventPerkGoldFind.Get() > EPSILON) ||
-        bBuffDoubleRiftKeystones != s_varCommunityEventPerkDoubleRiftKeystones.Get() ||
-        bBuffDoubleBloodShards != s_varCommunityEventPerkDoubleBloodShards.Get() ||
-        bBuffDoubleTreasureGoblins != s_varCommunityEventPerkDoubleTreasureGoblins.Get() ||
-        bBuffDoubleBountyBags != s_varCommunityEventPerkDoubleBountyBags.Get())
+    if (s_tCommunityBuffs.NeedsRefresh(tACDPlayer, snoPower))
     {
         sRemovePerkBuff(tACDPlayer, eGlobalPowerSNO, TRUE);
-
     }
 }
 
 
 
+// Starts (bEnable) or removes the power behind one feature toggle. always_inline: the original
+// has all nine copies inlined into sub_7100800700; without it clang 7 keeps the helper out of line.
+static inline __attribute__((always_inline)) void sUpdateCommunityFeaturePower(
+    ActorCommonData & tACDPlayer,
+    BOOL bEnable,
+    int32 nType,
+    GlobalSNO eGlobalSNOPower)
+{
+    BOOL bFeatureEnabled = s_tCommunityBuffs.IsFeatureEnabled(nType);
+    SNO snoPower = GlobalSNOGet(eGlobalSNOPower);
+    if (bEnable && bFeatureEnabled)
+    {
+        if (snoPower == SNO_NONE)
+            return;
+        if (PowerAPI_BuffFindOnACD(snoPower, &tACDPlayer, ACDID_INVALID) != BUFFID_INVALID)
+            return;
+
+        PowerStartData tPowerStartData;
+        PowerStartDataInit(tPowerStartData);
+        tPowerStartData.idACD = tACDPlayer.id;
+        tPowerStartData.snoPower = snoPower;
+        PowerStartEx(tPowerStartData, ATTRIBGROUPID_INVALID, FALSE, FALSE);
+    }
+    else
+    {
+        if (snoPower == SNO_NONE)
+            return;
+        BuffID idBuff = PowerAPI_BuffFindOnACD(snoPower, &tACDPlayer, ACDID_INVALID);
+        if (idBuff == BUFFID_INVALID)
+            return;
+        PowerAPI_BuffFlagForDeletion(idBuff, FALSE, TRUE, FALSE, TRUE);
+    }
+}
+
+
+
+// 2.7.7: the toggles that work through a power of their own rather than an attribute.
+static void sUpdateCommunityFeaturePowers(
+    ActorCommonData & tACDPlayer,
+    BOOL bEnable)
+{
+    sUpdateCommunityFeaturePower(tACDPlayer, bEnable, COMMUNITY_BUFF_LEGACY_OF_NIGHTMARES, GLOBALSNO_UNK_1555);
+    sUpdateCommunityFeaturePower(tACDPlayer, bEnable, COMMUNITY_BUFF_TRIUNES_WILL, GLOBALSNO_UNK_1556);
+    sUpdateCommunityFeaturePower(tACDPlayer, bEnable, COMMUNITY_BUFF_PANDEMONIUM, GLOBALSNO_UNK_1557);
+    sUpdateCommunityFeaturePower(tACDPlayer, bEnable, COMMUNITY_BUFF_KANAI_POWERS, GLOBALSNO_UNK_1558);
+    sUpdateCommunityFeaturePower(tACDPlayer, bEnable, COMMUNITY_BUFF_TRIALS_OF_TEMPESTS, GLOBALSNO_UNK_1559);
+    sUpdateCommunityFeaturePower(tACDPlayer, bEnable, COMMUNITY_BUFF_SHADOW_CLONES, GLOBALSNO_UNK_1560);
+    sUpdateCommunityFeaturePower(tACDPlayer, bEnable, COMMUNITY_BUFF_FOURTH_KANAIS_CUBE_SLOT, GLOBALSNO_UNK_1561);
+    sUpdateCommunityFeaturePower(tACDPlayer, bEnable, COMMUNITY_BUFF_DARK_ALCHEMY, GLOBALSNO_UNK_1562);
+    sUpdateCommunityFeaturePower(tACDPlayer, bEnable, COMMUNITY_BUFF_NESTING_PORTALS, GLOBALSNO_UNK_1563);
+}
+
+
+
+// NON_MATCHING: block layout only; clang 7 here tail-duplicates the Easter-egg-world call into
+// the "no community event" path (8 bytes longer), same calls and conditions as 0x7100800430.
 void SPlayerApplyPerkBuffs(
     ActorCommonData & tACDPlayer)
 {
@@ -11893,8 +11901,10 @@ void SPlayerApplyPerkBuffs(
 
 
     BOOL bAnniversaryEnabled = s_varAnniversaryPerkEnabled.Get();
-    BOOL bCommunityEventEnabled = s_varCommunityEventPerkEnabled.Get();
+    BOOL bCommunityEventRaw = s_varCommunityEventPerkEnabled.Get();
     BOOL bEasterEggWorldEnabled = s_varEasterEggWorldPerkEnabled.Get();
+    BOOL bCommunityEventEnabled = bCommunityEventRaw &&
+        (!s_varCommunityEventPerkSeasonOnly.Get() || GameIsSeasonal() || GameIsWeeklyChallenge());
 
     PerPlayerGlobals & tPerPlayer = ptServerPlayerGlobals->tPerPlayer[ptPlayer->nPlayerIndex];
     BOOL bIgrEnabled = (tPerPlayer.uSessionFlags & 1) &&
@@ -11911,12 +11921,14 @@ void SPlayerApplyPerkBuffs(
     {
         sCheckForCommunityBuffReset(tACDPlayer, GLOBALSNO_POWERS_ANNIVERSARY_XPMF);
         sApplyPerkBuff(tACDPlayer, GLOBALSNO_POWERS_ANNIVERSARY_XPMF, TRUE);
+        sUpdateCommunityFeaturePowers(tACDPlayer, TRUE);
     }
 
     if (bCommunityEventEnabled)
     {
         sCheckForCommunityBuffReset(tACDPlayer, GLOBALSNO_POWERS_COMMUNITY_EVENT_XPMF);
         sApplyPerkBuff(tACDPlayer, GLOBALSNO_POWERS_COMMUNITY_EVENT_XPMF, TRUE);
+        sUpdateCommunityFeaturePowers(tACDPlayer, TRUE);
     }
 
     if (bEasterEggWorldEnabled)

@@ -196,4 +196,22 @@ int stoi(const char* s, const char** end, int base, bool* range_error)
     return scan_int<int>(s, end, base, range_error);
 }
 
+// 2.7.7 only: the float parser behind stof, scan_int's float counterpart (0x710003c5b0, 628
+// bytes; its template name is not known).
+// NON_MATCHING: the original parses by hand (whitespace, sign, digits, fraction, exponent,
+// range error out-parameter); this uses strtof, which reads the same decimal values.
+float scan_float_char(const char* s, const char** end, bool* out_range_error) __asm__("sub_710003c5b0");
+__attribute__((noinline)) float scan_float_char(const char* s, const char** end, bool* out_range_error)
+{
+    if (out_range_error)
+        *out_range_error = false;
+    return str_to_float<float, char>(s, end);
+}
+
+// 2.7.7 only (0x710003c5a0).
+float stof(const char* s, const char** end, bool* range_error)
+{
+    return scan_float_char(s, end, range_error);
+}
+
 }  // namespace blz

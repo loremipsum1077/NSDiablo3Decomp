@@ -31,15 +31,8 @@
 int32 PowerContactTagGetInt(PowerID idPower, uint32 dwTag);  // X/Server/Powers/Powers.cpp:4218
 BOOL PortalUse(ACDID idACDPortal, ActorCommonData & tACDOperator, const PlayerWarpReason eWarpReason);  // X/Server/TownPortal.cpp:296
 
-// X/Server/SPlayer.cpp
-extern XVarFloat s_varIgrPerkXP;
-extern XVarFloat s_varCommunityEventPerkXP;
-extern XVarFloat s_varCommunityEventPerkLegendaryFind;
-extern XVarFloat s_varCommunityEventPerkGoldFind;
-extern XVarBool s_varCommunityEventPerkDoubleRiftKeystones;
-extern XVarBool s_varCommunityEventPerkDoubleBloodShards;
-extern XVarBool s_varCommunityEventPerkDoubleTreasureGoblins;
-extern XVarBool s_varCommunityEventPerkDoubleBountyBags;
+// s_varIgrPerkXP (X/Common/CommunityBuffs.cpp in 2.7.7) and the community buff table.
+#include "../../Common/CommunityBuffs.h"
 
 void NPCOperate(ActorCommonData & tACDNPC, ActorCommonData & tACDPlayer, const NPCMenu ePreferredMenu, const BOOL fFromPower, const BOOL fSkipImportantConversations, const BOOL fForceOperateVendor);  // X/Server/SNPC.cpp:650
 void GizmoOperate(ActorCommonData & tACDGizmo, ActorCommonData * ptACDOperator, BOOL bForceOperation, BOOL bAlreadyConfirmed);  // X/Server/SGizmo.cpp:2007
@@ -423,92 +416,16 @@ void Community_Event_Buff(PowerID idPower, void *)
         return;
     }
 
-    float flBonusXP = s_varCommunityEventPerkXP.Get();
-    float flLegendaryFind = s_varCommunityEventPerkLegendaryFind.Get();
-    float flGoldFind = s_varCommunityEventPerkGoldFind.Get();
-    bool bDoubleRiftKeystones = s_varCommunityEventPerkDoubleRiftKeystones.Get();
-    bool bDoubleBloodShards = s_varCommunityEventPerkDoubleBloodShards.Get();
-    bool bDoubleTreasureGoblins = s_varCommunityEventPerkDoubleTreasureGoblins.Get();
-    bool bDoubleBountyBags = s_varCommunityEventPerkDoubleBountyBags.Get();
+    // 2.7.7: a temporary copy of the buff table, loaded from the Perk cvars, adds buff index 0
+    // and one buff index per active community buff (CommunityBuffs::Apply).
+    CommunityBuffs tCommunityBuffs;
+    tCommunityBuffs.LoadFromCvars();
 
     PowerAPIBuffStartData tBuffStartData(idPower);
     tBuffStartData.bInfinite = true;
     tBuffStartData.bPositiveEffect = true;
     tBuffStartData.nMaxStackCount = 1;
-    if (flBonusXP > EPSILON || flLegendaryFind > EPSILON || flGoldFind > EPSILON || bDoubleRiftKeystones || bDoubleBloodShards || bDoubleTreasureGoblins || bDoubleBountyBags)
-    {
-
-
-        {
-            PowerAPIBuffStartData tBuffStartData(idPower);
-            tBuffStartData.bInfinite = true;
-            tBuffStartData.bPositiveEffect = true;
-            tBuffStartData.nBuffIndex = 0;
-            PowerAPI_BuffAddToACD(tBuffStartData, *ptACDOwner);
-        }
-
-        if (flBonusXP > EPSILON)
-        {
-            PowerAPIBuffStartData tBuffStartData(idPower);
-            tBuffStartData.bInfinite = true;
-            tBuffStartData.bPositiveEffect = true;
-            tBuffStartData.nBuffIndex = 1;
-            FastAttribSetValueFloat(tBuffStartData.idFastAttrib, FastAttribKey(ATTRIBUTE_EXPERIENCE_BONUS_PCT_COMMUNITY_BUFF), flBonusXP);
-            PowerAPI_BuffAddToACD(tBuffStartData, *ptACDOwner);
-        }
-        if (flLegendaryFind > EPSILON)
-        {
-            PowerAPIBuffStartData tBuffStartData(idPower);
-            tBuffStartData.bInfinite = true;
-            tBuffStartData.bPositiveEffect = true;
-            tBuffStartData.nBuffIndex = 2;
-            FastAttribSetValueFloat(tBuffStartData.idFastAttrib, FastAttribKey(ATTRIBUTE_LEGENDARY_FIND_COMMUNITY_BUFF), flLegendaryFind);
-            PowerAPI_BuffAddToACD(tBuffStartData, *ptACDOwner);
-        }
-        if (flGoldFind > EPSILON)
-        {
-            PowerAPIBuffStartData tBuffStartData(idPower);
-            tBuffStartData.bInfinite = true;
-            tBuffStartData.bPositiveEffect = true;
-            tBuffStartData.nBuffIndex = 3;
-            FastAttribSetValueFloat(tBuffStartData.idFastAttrib, FastAttribKey(ATTRIBUTE_GOLD_FIND_COMMUNITY_BUFF), flGoldFind);
-            PowerAPI_BuffAddToACD(tBuffStartData, *ptACDOwner);
-        }
-        if (bDoubleRiftKeystones)
-        {
-            PowerAPIBuffStartData tBuffStartData(idPower);
-            tBuffStartData.bInfinite = true;
-            tBuffStartData.bPositiveEffect = true;
-            tBuffStartData.nBuffIndex = 4;
-            PowerAPI_BuffAddToACD(tBuffStartData, *ptACDOwner);
-        }
-        if (bDoubleBloodShards)
-        {
-            PowerAPIBuffStartData tBuffStartData(idPower);
-            tBuffStartData.bInfinite = true;
-            tBuffStartData.bPositiveEffect = true;
-            tBuffStartData.nBuffIndex = 5;
-            FastAttribSetValueInt(tBuffStartData.idFastAttrib, FastAttribKey(ATTRIBUTE_DOUBLE_BLOODSHARDS), 1);
-            PowerAPI_BuffAddToACD(tBuffStartData, *ptACDOwner);
-        }
-        if (bDoubleTreasureGoblins)
-        {
-            PowerAPIBuffStartData tBuffStartData(idPower);
-            tBuffStartData.bInfinite = true;
-            tBuffStartData.bPositiveEffect = true;
-            tBuffStartData.nBuffIndex = 6;
-            PowerAPI_BuffAddToACD(tBuffStartData, *ptACDOwner);
-        }
-        if (bDoubleBountyBags)
-        {
-            PowerAPIBuffStartData tBuffStartData(idPower);
-            tBuffStartData.bInfinite = true;
-            tBuffStartData.bPositiveEffect = true;
-            tBuffStartData.nBuffIndex = 7;
-            FastAttribSetValueInt(tBuffStartData.idFastAttrib, FastAttribKey(ATTRIBUTE_DOUBLE_BOUNTY_BAGS), 1);
-            PowerAPI_BuffAddToACD(tBuffStartData, *ptACDOwner);
-        }
-    }
+    tCommunityBuffs.Apply(idPower);
 }
 
 //@ 528

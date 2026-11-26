@@ -1113,6 +1113,7 @@ inline basic_string<T, Traits, allocator<T> > basic_string_view<T, Traits>::to_s
 
 // Defined in blz/src/string.cpp.
 int stoi(const string& str, size_t* idx = 0, int base = 10);
+float stof(const string& str, size_t* idx = 0) __asm__("sub_710003c1b0");  // 2.7.7 only
 string to_string(int val);
 string to_string(long val);
 string to_string(unsigned int val);
@@ -1122,5 +1123,6 @@ string make_stringf(const char* fmt, ...);
 
 // Defined in blz/src/scan.cpp. Not in the DWARF which header declares it.
 int stoi(const char* s, const char** end, int base, bool* range_error);
+float stof(const char* s, const char** end, bool* range_error) __asm__("sub_710003c5a0");  // 2.7.7 only
 
 }  // namespace blz

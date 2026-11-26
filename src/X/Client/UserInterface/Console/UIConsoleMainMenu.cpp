@@ -61,7 +61,8 @@
 #include "../../../Common/GameCommonData.h"
 #include "ConsoleToastManager.h"
 #include "../UIUtils.h"
-void SPlayerGetCommunityBuffInfo(BOOL & bActive, float & flXPBuff, float & flLegendaryBuff, float & flGoldBuff, BOOL & bDoubleTreasureGoblins, BOOL & bDoubleBloodShards, BOOL & bDoubleRiftKeystones, BOOL & bEasterEggWorld, BOOL & bDoubleBountyBags); void SceneCreatePlacePrefetchFrustum(WorldPlace tPlace, Frustum & tFrustum); namespace Intersect { BOOL FrustumAndAABB(const Frustum & wf, const AABB & aabb); }  // X/Server/SPlayer.cpp:11619, X/Common/SceneCommon.cpp:2178, X/Sigma/Math/Intersect.cpp:589
+#include "../../../Common/CommunityBuffs.h"
+void SceneCreatePlacePrefetchFrustum(WorldPlace tPlace, Frustum & tFrustum); namespace Intersect { BOOL FrustumAndAABB(const Frustum & wf, const AABB & aabb); }  // X/Common/SceneCommon.cpp:2178, X/Sigma/Math/Intersect.cpp:589
 // Declared here because their headers are not adopted yet; each comment names the defining file.
 const CmdLineParams * CmdLineGetParams();  // X/Common/Shell/CmdLine.cpp
 CRefString StringListFetch(LPCSTR szLabel);  // X/Common/Definitions/StringListDefinition.cpp
@@ -486,64 +487,30 @@ BOOL ItemShouldBeVisible(
 void UpdateCommunityEventsDisplay()
 
 {
-    BOOL bCommunityBuffIsActive, bDoubleTreasureGoblins, bDoubleBloodShards, bDoubleRiftKeystones, bEasterEggWorld, bDoubleBountyBags;  // DWARF lists these declarators in reverse order
-    float flXPBuff, flLegendaryBuff, flGoldBuff;
-    SPlayerGetCommunityBuffInfo(bCommunityBuffIsActive, flXPBuff, flLegendaryBuff, flGoldBuff, bDoubleTreasureGoblins, bDoubleBloodShards, bDoubleRiftKeystones, bEasterEggWorld, bDoubleBountyBags);
-    if (bCommunityBuffIsActive)
-    {
-        CRefString sDescriptionText;
-        if (flXPBuff > EPSILON)  // EPSILON (MathGeneral.h): the original CU DWARF carries it; 1e-6f constant
-        {
-            CRefString sBuffText = LocalizedSprintf(StringListFetch("ConsoleUI:CommunityBuff_XP").str(), UnicodeText::FormatNumber(flXPBuff * 100.0f, TRUE, FNS_NORMAL, 0, 0, 0).str(), NULL);
-            sDescriptionText += sBuffText + "\n";
-        }
-        if (flLegendaryBuff > EPSILON)
-        {
-            CRefString sBuffText = LocalizedSprintf(StringListFetch("ConsoleUI:CommunityBuff_Legendary").str(), UnicodeText::FormatNumber(flLegendaryBuff * 100.0f, TRUE, FNS_NORMAL, 0, 0, 0).str(), NULL);
-            sDescriptionText += sBuffText + "\n";
-        }
-        if (flGoldBuff > EPSILON)
-        {
-            CRefString sBuffText = LocalizedSprintf(StringListFetch("ConsoleUI:CommunityBuff_Gold").str(), UnicodeText::FormatNumber(flGoldBuff * 100.0f, TRUE, FNS_NORMAL, 0, 0, 0).str(), NULL);
-            sDescriptionText += sBuffText + "\n";
-        }
-        if (bDoubleTreasureGoblins)
-        {
-            CRefString sBuffText = StringListFetch("ConsoleUI:CommunityBuff_DoubleGoblins").str();
-            sDescriptionText += sBuffText + "\n";
-        }
-        if (bDoubleBloodShards)
-        {
-            CRefString sBuffText = StringListFetch("ConsoleUI:CommunityBuff_DoubleBloodShards").str();
-            sDescriptionText += sBuffText + "\n";
-        }
-        if (bDoubleRiftKeystones)
-        {
-            CRefString sBuffText = StringListFetch("ConsoleUI:CommunityBuff_DoubleRiftKeystones").str();
-            sDescriptionText += sBuffText + "\n";
-        }
-        if (bEasterEggWorld)
-        {
-            CRefString sBuffText = StringListFetch("ConsoleUI:CommunityBuff_EasterEggWorld").str();
-            sDescriptionText += sBuffText + "\n";
-        }
-        if (bDoubleBountyBags)
-        {
-            CRefString sBuffText = StringListFetch("ConsoleUI:CommunityBuff_DoubleBountyCacheBags").str();
-            sDescriptionText += sBuffText + "\n";
-        }
-        UI_GetWindowFromID(UIWND_CONSOLE_MAIN_MENU_COMMUNITY_EVENTS).SetActive(TRUE);
-        UIText& tTitle = UI_GetTextFromID(UITEXT_CONSOLE_MAIN_MENU_COMMUNITY_EVENTS_TITLE);
-        UIText& tDescription = UI_GetTextFromID(UITEXT_CONSOLE_MAIN_MENU_COMMUNITY_EVENTS_DESCRIPTION);
-        tTitle.SetActive(TRUE);
-        tTitle.SetText(StringListFetch("ConsoleUI:CommunityBuff_Header"), FALSE);
-        tDescription.SetActive(TRUE);
-        tDescription.SetText(sDescriptionText, FALSE);
-    }
-    else
+    // 2.7.7: the text comes from the buff table (one line per active buff) instead of
+    // SPlayerGetCommunityBuffInfo; the Easter egg world line is added after the table's.
+    if (!s_varCommunityEventPerkEnabled.Get())
     {
         UI_GetWindowFromID(UIWND_CONSOLE_MAIN_MENU_COMMUNITY_EVENTS).SetActive(FALSE);
+        return;
     }
+
+    static CommunityBuffs s_tCommunityBuffs;
+    s_tCommunityBuffs.LoadFromCvars();
+    blz::string sDescriptionText = s_tCommunityBuffs.GetActiveDescriptions();
+    if (s_varEasterEggWorldPerkEnabled.Get())
+    {
+        CRefString sBuffText(StringListFetch("ConsoleUI:CommunityBuff_EasterEggWorld").str());
+        sDescriptionText += sBuffText + CRefString("\n");
+    }
+
+    UI_GetWindowFromID(UIWND_CONSOLE_MAIN_MENU_COMMUNITY_EVENTS).SetActive(TRUE);
+    UIText& tTitle = UI_GetTextFromID(UITEXT_CONSOLE_MAIN_MENU_COMMUNITY_EVENTS_TITLE);
+    UIText& tDescription = UI_GetTextFromID(UITEXT_CONSOLE_MAIN_MENU_COMMUNITY_EVENTS_DESCRIPTION);
+    tTitle.SetActive(TRUE);
+    tTitle.SetText(s_varCommunityEventPerkSeasonOnly.Get() ? StringListFetch("ConsoleUI:CommunityBuff_Seasonal_Header") : StringListFetch("ConsoleUI:CommunityBuff_Header"), FALSE);
+    tDescription.SetActive(TRUE);
+    tDescription.SetText(sDescriptionText.c_str(), FALSE);
 }
 
 
@@ -3380,3 +3347,10 @@ void OnDPadRight(const UIID & id, const int32 nControllerIndex)
 }
 
 } }
+
+// 2.7.7: the two empty functions after OnDPadRight, called from
+// LobbyServiceInternal::OnConfigFileRetrieved for the "EnableDiablo4Advertisement" config key
+// (show when enabled and licence bit 29 is clear, hide otherwise). Their original names are not
+// known; the advertisement itself is compiled out of this build.
+extern "C" void sub_7100363cb0() {}
+extern "C" void sub_7100363cc0() {}
