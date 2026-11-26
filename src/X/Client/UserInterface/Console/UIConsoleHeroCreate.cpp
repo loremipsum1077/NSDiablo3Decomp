@@ -100,7 +100,7 @@ enum { GB_MONSTER_NAMES = 19 };  // X/Common/GameBalance.h GameBalanceType (head
 
 
 
-
+extern UIID unk_710185f0f8; extern UIID unk_710185f100;  // UIGlobals.cpp (Solo/SoloHardcore SeasonalHeader); global scope, not UIHeroCreate::Console
 namespace UIHeroCreate {
 namespace Console {
 
@@ -396,8 +396,8 @@ inline void EnableInput(BOOL bEnabled)
 
 
 
-extern UIID unk_710185f0f8;  // UIGlobals.cpp: "...LayoutRoot.SoloSeasonalHeader"
-extern UIID unk_710185f100;  // UIGlobals.cpp: "...LayoutRoot.SoloHardcoreSeasonalHeader"
+
+
 
 // 0x710034cdf0 (sub_710034cdf0 in functions.csv): no longer inlined in 2.7.7.
 void UpdateTitle()

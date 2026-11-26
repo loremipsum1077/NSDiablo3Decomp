@@ -71,7 +71,7 @@ CRefString LocalizedSprintf(LPCSTR szFormat, ...);  // X/Common/LocalizedString.
 CRefString StringListFetch(SNO snoStringList, LPCSTR szLabel); CRefString StringListFetch(LPCSTR szLabel);  // StringList.h
 extern UIID UITEXT_CONSOLE_HERO_SELECT_STATUS, UIWND_CONSOLE_HERO_SELECT, UITEXT_CONSOLE_HERO_SLOTS_AVAILABLE, UILIST_CONSOLE_HERO_LIST, UIWND_CONSOLE_HEROSELECT_REBIRTH_WARNING, UIRACTOR_CONSOLE_HERO_SELECT_HERO, UIRACTOR_CONSOLE_HERO_SELECT_FILAGREE;  // UIIDs.h
 
-
+uint32 PlayerGetLocalPlayerCount();  // CPlayer.cpp; global scope, not UIHeroSelect::Console
 namespace UIHeroSelect {
 namespace Console {
 
@@ -245,7 +245,7 @@ inline BOOL IsSeasonalMismatchInGameOnly(const ::Console::GamerProfile::HeroInfo
 
 
 extern "C" BOOL sub_710072e0b0(uint32 uSeasonCreated, uint32 uFlags);  // OnlineService.cpp region (after GetSeasonState)
-uint32 PlayerGetLocalPlayerCount();  // CPlayer.h
+
 BOOL IsHeroSelectable(const ::Console::GamerProfile::HeroInfo & tHeroInfo, const D3::Account::SavedDefinition & tAccountDefinition)
 {
     // a necromancer hero needs the necromancer pack
