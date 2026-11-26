@@ -700,7 +700,7 @@ static const TypeDescriptorField PetMessage_Fields[6] = {
     BoundedTypeDescriptorField("", DT_INT, offsetof(PetMessage, nOwner), NULL, NULL, (const void *)0x3),
     BoundedTypeDescriptorField("", DT_INT, offsetof(PetMessage, nIndex), NULL, NULL, (const void *)0x3f),
     TypeDescriptorField("", DT_INT, offsetof(PetMessage, annPet), NULL, 1),
-    BoundedTypeDescriptorField("", DT_INT, offsetof(PetMessage, nType), NULL, (const void *)-1, (const void *)0x44),
+    BoundedTypeDescriptorField("", DT_INT, offsetof(PetMessage, nType), NULL, (const void *)-1, (const void *)0x4c),  // 2.7.7: 77 pet types
     TypeDescriptorField(NULL, DT_NULL, sizeof(PetMessage), NULL, 0),
 };
 ComplexTypeDescriptor TypeDescriptor_PetMessage("PetMessage", 0, PetMessage_Fields, 6, NULL, 0x80, NULL, NULL, NULL, NULL);

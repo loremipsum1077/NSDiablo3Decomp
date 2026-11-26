@@ -1004,8 +1004,8 @@ enum {
     GAMEERROR_BANNER_PLAYER_IS_IN_SET_DUNGEON = 174,
     GAMEERROR_TRANSMUTE_FAILED_LOW_JEWEL_RANK = 175,
     GAMEERROR_UNK_176 = 176,  // gGameErrors label "TransmuteFailedItemCannotBeReforged"
-    GAMEERROR_UNK_177 = 177,  // gGameErrors label "TransmuteFailedItemCannotBePrimalized"
-    GAMEERROR_UNK_178 = 178,  // gGameErrors label "TransmuteFailedEquippedItemCannotBePrimalized"
+    GAMEERROR_TRANSMUTE_FAILED_ITEM_CANNOT_BE_PRIMALIZED = 177,  // gGameErrors label "TransmuteFailedItemCannotBePrimalized"
+    GAMEERROR_TRANSMUTE_FAILED_EQUIPPED_ITEM_CANNOT_BE_PRIMALIZED = 178,  // gGameErrors label "TransmuteFailedEquippedItemCannotBePrimalized"
     GAMEERROR_SET_DUNGEON_SOMEONE_DECLINED = 179,
     GAMEERROR_SET_DUNGEON_CANNOT_ENTER_NOT_WORTHY = 180,
     GAMEERROR_SET_DUNGEON_CANNOT_ENTER_CLOSING = 181,

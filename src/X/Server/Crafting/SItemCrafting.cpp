@@ -55,6 +55,11 @@ void LootRollForAncientLegendary(LootSpecifier & tSpecifier, const ACDID idACDLo
 void SItemBroadcastToClan(const ActorCommonData & tACDItem, const Player & tPlayer);  // X/Server/SItems.cpp:1233
 int32 ItemGetNumberOfItemsInSameSet(const GBID gbid);  // X/Common/Items.cpp:9404
 GBID ItemGetSet(const GBID gbid);  // X/Common/Items.cpp:9391
+extern "C" SNO sub_71007d4d20();  // X/Server/sub_71007d4d20.cpp: a random Swarm Rift portal
+extern "C" BOOL sub_710050eb80(const ActorCommonData & tACDItem);  // X/Common/Items.cpp: can be primalized
+extern "C" void sub_710050ed00(ActorCommonData & tACDItem, BOOL bPrimalized);  // X/Common/Items.cpp
+extern "C" ACDID sub_71007e0990(ActorCommonData & tACDItem, Player & tPlayer, BOOL bUnk3);  // X/Server/SItems.cpp: reforge as primal
+
 namespace ItemCrafting_BackEnd {
 ACDID CraftItem(GBID gbidRecipe, Player & tPlayer)
 {
@@ -662,20 +667,22 @@ static BOOL sFindKanaiPortalSpawnLocation(
     TransmuteRecipeAction eAction,
     WorldPlace & tWorldPlace)
 {
-    if (eAction != TRA_OPEN_PORTAL_GREED && eAction != TRA_OPEN_PORTAL_COW)  // inferred, no row: inlined, eAction 12 jumps straight to the caller's failure path
-    {
-        return FALSE;
-    }
-
+    // 2.7.7: Ancient Greed opens at the Greed marker; the Swarm Rift has a marker of its own.
     uint32 tPortalMarkerName;
-
-    if (eAction == TRA_OPEN_PORTAL_COW)
+    switch (eAction)
     {
+    case TRA_OPEN_PORTAL_COW:
         tPortalMarkerName = MarkerStringHash("CubeCowPortal");
-    }
-    else
-    {
+        break;
+    case TRA_OPEN_PORTAL_GREED:
+    case TRA_OPEN_PORTAL_ANCIENT_GREED:
         tPortalMarkerName = MarkerStringHash("CubeGreedPortal");
+        break;
+    case TRA_OPEN_PORTAL_SWARM_RIFT:
+        tPortalMarkerName = MarkerStringHash("CubeSwarmPortal");
+        break;
+    default:  // eAction 12 jumps straight to the caller's failure path
+        return FALSE;
     }
 
     ActorCommonData &tACDPlayer = ACDGet(tPlayer.idPlayerACD);
@@ -1519,6 +1526,8 @@ static BOOL sTransmuteExecuteAction(
     case TRA_OPEN_PORTAL_GREED:
     case TRA_OPEN_PORTAL_COW:
     case TRA_OPEN_PORTAL_WHIMSEYSHIRE:
+    case TRA_OPEN_PORTAL_ANCIENT_GREED:
+    case TRA_OPEN_PORTAL_SWARM_RIFT:
     {
 
         ActorCommonData *ptACDPlayer = ACDTryToGet(tPlayer.idPlayerACD);
@@ -1539,6 +1548,12 @@ static BOOL sTransmuteExecuteAction(
             break;
         case TRA_OPEN_PORTAL_WHIMSEYSHIRE:
             snoActor = GlobalSNOGet(GLOBALSNO_ACTOR_PORTAL_WHIMSEYWHIRE);
+            break;
+        case TRA_OPEN_PORTAL_ANCIENT_GREED:
+            snoActor = GlobalSNOGet(GLOBALSNO_UNK_1230);  // p1_Greed_Portal_Ancient
+            break;
+        case TRA_OPEN_PORTAL_SWARM_RIFT:
+            snoActor = sub_71007d4d20();  // one of the five Swarm Rift portals, at random
             break;
         default:
             eFailureError = GAMEERROR_TRANSMUTE_FAILED;  // no row of its own: 155 at the shared +0x1558 tail
@@ -1679,6 +1694,35 @@ static BOOL sTransmuteExecuteAction(
 
 
         return TRUE;
+    }
+
+    case TRA_PRIMALIZE_LEGENDARY:  // 2.7.7: jump table entry 18 -> +0xb18
+    {
+        for (int32 i = 0; i < nItemsCount; i++)
+        {
+            ActorCommonData * ptACDItem = ACDTryToGet(aridACDItems[i]);
+            if (!ptACDItem || !ItemIsLegendary(ptACDItem->hGB.gbid) || !ItemIsEquippableByPlayerOrHireling(ptACDItem->hGB.gbid))
+            {
+                continue;
+            }
+            if (!sub_710050eb80(*ptACDItem))
+            {
+                eFailureError = GAMEERROR_TRANSMUTE_FAILED_ITEM_CANNOT_BE_PRIMALIZED;
+                return FALSE;
+            }
+            if (ItemIsEquipped(*ptACDItem))
+            {
+                eFailureError = GAMEERROR_TRANSMUTE_FAILED_EQUIPPED_ITEM_CANNOT_BE_PRIMALIZED;
+                return FALSE;
+            }
+            ACDID idNewItem = sub_71007e0990(*ptACDItem, tPlayer, FALSE);
+            sub_710050ed00(ACDGet(idNewItem), TRUE);
+            tResultsMessage.annItem = ANNFromACD(idNewItem);
+            sTransmuteConsumeItems(tPlayer, tTransmuteInventoryFinal, idNewItem);
+            return TRUE;
+        }
+        eFailureError = GAMEERROR_TRANSMUTE_FAILED_CANNOT_FIND_ITEM_TO_UPGRADE;
+        return FALSE;
     }
 
     case TRA_CONVERT_PAGES:

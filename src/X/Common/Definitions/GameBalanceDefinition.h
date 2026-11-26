@@ -1184,7 +1184,10 @@ enum {
     TRA_AUGMENT_ARMOR = 13,
     TRA_CONVERT_PAGES = 14,
     TRA_INFUSE_LEGENDARY_POWER = 15,
-    TRA_NUM_TYPES = 16,
+    TRA_OPEN_PORTAL_ANCIENT_GREED = 16,  // 2.7.7; names from gTransmuteRecipeActionTypes
+    TRA_OPEN_PORTAL_SWARM_RIFT = 17,  // 2.7.7
+    TRA_PRIMALIZE_LEGENDARY = 18,  // 2.7.7
+    TRA_NUM_TYPES = 19,
 };
 typedef int32 TransmuteRecipeAction;
 enum MonsterAffixValidFor {
