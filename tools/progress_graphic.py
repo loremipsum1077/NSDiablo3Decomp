@@ -5,10 +5,10 @@ progress block from the committed inventory.
   python3 tools/progress_graphic.py           write docs/progress.svg and update README.md
   python3 tools/progress_graphic.py --check   exit 1 if either is out of date
 
-Read-only apart from the two outputs. Inputs:
-  data/2.6.2/functions.csv        Address,Quality,Size,Name (O = matching)
-  data/2.6.2/function_files.csv   owner file per function, for the per-area bars
-  docs/remaining_functions.csv    MattersForGame per non-matching function
+Read-only apart from the two outputs. Inputs, for the version in tools/config.toml:
+  data/<version>/functions.csv        Address,Quality,Size,Name (O = matching)
+  data/<version>/function_files.csv   owner file per function, for the per-area bars
+  docs/remaining_functions.csv        MattersForGame per non-matching function (2.6.2 only)
 
 L (excluded library) rows are left out of every denominator, as in status_report.py.
 The output is deterministic (no dates), so --check is stable across machines.
@@ -21,7 +21,12 @@ from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parent.parent
-DATA = ROOT / "data/2.6.2"
+sys.path.insert(0, str(ROOT / "tools"))
+from project_version import VERSION  # noqa: E402
+
+DATA = ROOT / "data" / VERSION
+# The per-function "does it matter for the game" review exists for 2.6.2 only.
+REVIEWED = VERSION == "2.6.2"
 SVG_OUT = ROOT / "docs/progress.svg"
 README = ROOT / "README.md"
 START, END = "<!-- progress:start -->", "<!-- progress:end -->"
@@ -48,9 +53,9 @@ FONT = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-se
 def load():
     funcs = list(csv.DictReader(open(DATA / "functions.csv", newline="")))
     owner = {r["Address"]: r["File"] for r in csv.DictReader(open(DATA / "function_files.csv", newline=""))}
-    remaining = list(csv.DictReader(open(ROOT / "docs/remaining_functions.csv", newline="")))
+    remaining = list(csv.DictReader(open(ROOT / "docs/remaining_functions.csv", newline=""))) if REVIEWED else []
 
-    s = {"q": collections.Counter(), "qb": collections.Counter()}
+    s = {"q": collections.Counter(), "qb": collections.Counter(), "u_unowned": 0}
     areas = collections.OrderedDict((label, [0, 0, 0, 0]) for _, label in AREAS)
     areas["Other"] = [0, 0, 0, 0]
     for r in funcs:
@@ -60,6 +65,8 @@ def load():
         if q == "L":
             continue
         path = owner.get(r["Address"], "")
+        if q == "U" and not path:
+            s["u_unowned"] += 1
         label = next((lbl for pre, lbl in AREAS if path.startswith(pre)), "Other")
         a = areas[label]
         a[0] += 1
@@ -80,7 +87,7 @@ def load():
 
     matters = collections.Counter(r["MattersForGame"] for r in remaining if r["Label"] != "L")
     s["matters"] = matters
-    s["remaining"] = sum(matters.values())
+    s["remaining"] = sum(matters.values()) if REVIEWED else s["total"] - s["match"]
     return s
 
 
@@ -127,10 +134,10 @@ def draw(s):
     g.rect(0.5, 0.5, W - 1, H - 1, C["bg"], rx=14, extra=f' stroke="{C["border"]}"')
 
     # Header
-    g.text(P, 44, "DIABLO III 2.6.2 · NINTENDO SWITCH", 12, C["muted"], 600, extra=' letter-spacing="1.5"')
+    g.text(P, 44, f"DIABLO III {VERSION} · NINTENDO SWITCH", 12, C["muted"], 600, extra=' letter-spacing="1.5"')
     g.text(P, 76, "Decompilation progress", 28, weight=700)
-    pill = "✓ Decompilation complete"
-    pw = 236
+    pill = "✓ Decompilation complete" if REVIEWED else "✓ Complete for the recompile"
+    pw = 236 if REVIEWED else 262
     g.rect(W - P - pw, 40, pw, 32, "#12261a", rx=16, extra=f' stroke="{C["ok"]}"')
     g.text(W - P - pw / 2, 61, pill, 14, C["ok"], 600, "middle")
 
@@ -175,13 +182,21 @@ def draw(s):
 
     # Behaviour of the rest
     y = 360
-    g.text(P, y, f'The {s["remaining"]:,} non-matching functions: do they change how the game behaves?', 16, weight=600)
     m = s["matters"]
-    boxes = [
-        (m.get("no", 0), C["ok"], "No known difference", "same behaviour; compiler/codegen gap"),
-        (m.get("possibly", 0), C["warn"], "Possibly", "not yet shown to behave the same"),
-        (m.get("yes", 0), C["bad"] if m.get("yes", 0) else C["ok"], "Missing code", "functions the game needs but lacks"),
-    ]
+    if REVIEWED:
+        g.text(P, y, f'The {s["remaining"]:,} non-matching functions: do they change how the game behaves?', 16, weight=600)
+        boxes = [
+            (m.get("no", 0), C["ok"], "No known difference", "same behaviour; compiler/codegen gap"),
+            (m.get("possibly", 0), C["warn"], "Possibly", "not yet shown to behave the same"),
+            (m.get("yes", 0), C["bad"] if m.get("yes", 0) else C["ok"], "Missing code", "functions the game needs but lacks"),
+        ]
+    else:
+        g.text(P, y, f'The {s["remaining"]:,} non-matching functions', 16, weight=600)
+        boxes = [
+            (s["written"], C["ok"], "Written", f"follow {VERSION}; compiler output differs"),
+            (s["u_unowned"], C["muted"], "No name or owner", f"added in {VERSION}; nothing calls them"),
+            (s["unwritten"] - s["u_unowned"], C["warn"], "Other unwritten", "not needed by the recompile so far"),
+        ]
     bw3 = (W - 2 * P - 32) / 3
     for i, (n, color, label, sub) in enumerate(boxes):
         x = P + i * (bw3 + 16)
@@ -209,7 +224,7 @@ def draw(s):
     excl = s["q"]["L"]
     g.text(P, fy - 16, f"Not counted: {excl:,} excluded library functions (FMOD, SDK runtime). "
            "Some data tables are rebuilt from your own game files at bootstrap.", 11, C["faint"])
-    g.text(P, fy, "Generated by tools/progress_graphic.py from data/2.6.2/functions.csv.", 11, C["faint"])
+    g.text(P, fy, f"Generated by tools/progress_graphic.py from data/{VERSION}/functions.csv.", 11, C["faint"])
     return g.render(f'Decompilation progress: {pct(s["fn_pct"])} of functions, {pct(s["b_pct"])} of code bytes matching')
 
 
@@ -220,12 +235,23 @@ def badge(label, value, color):
 
 def readme_block(s):
     m = s["matters"]
+    if REVIEWED:
+        badges = (f'![Missing code]({badge("missing game code", str(m.get("yes", 0)), "brightgreen" if not m.get("yes") else "red")}) '
+                  f'![Status]({badge("status", "decompilation complete", "blue")})')
+        summary = (f'Of the {s["remaining"]:,} functions that do not match, **{m.get("no", 0):,}** have no known behavioural '
+                   f'difference, **{m.get("possibly", 0):,}** possibly differ, and **{m.get("yes", 0):,}** are missing code the '
+                   "game needs. Each one is listed with its reason in [remaining_functions.md](docs/remaining_functions.md). ")
+    else:
+        badges = (f'![Version]({badge("game version", VERSION, "blue")}) '
+                  f'![Status]({badge("status", "complete for the recompile", "blue")})')
+        summary = (f'Of the {s["remaining"]:,} functions that do not match, {s["written"]:,} are written to {VERSION}\'s '
+                   f'behaviour without matching byte for byte and {s["unwritten"]:,} are not written. '
+                   "[NSD3Recomp](https://github.com/loremipsum1077/NSD3Recomp) builds and plays the game without "
+                   "the unwritten ones; what will not be decompiled, and why, is under [Not planned](#not-planned). ")
     return "\n".join([
         START,
         f'![Functions]({badge("functions", pct(s["fn_pct"]), "brightgreen")}) '
-        f'![Code bytes]({badge("code bytes", pct(s["b_pct"]), "brightgreen")}) '
-        f'![Missing code]({badge("missing game code", str(m.get("yes", 0)), "brightgreen" if not m.get("yes") else "red")}) '
-        f'![Status]({badge("status", "decompilation complete", "blue")})',
+        f'![Code bytes]({badge("code bytes", pct(s["b_pct"]), "brightgreen")}) ' + badges,
         "",
         '<p align="center"><img src="docs/progress.svg" alt="Decompilation progress infographic" width="880"></p>',
         "",
@@ -236,9 +262,7 @@ def readme_block(s):
         f'| Not written as its own symbol | {s["unwritten"]:,} | {s["qb"]["U"]:,} B |',
         f'| **Total counted** | {s["total"]:,} | {s["total_b"]:,} B |',
         "",
-        f'Of the {s["remaining"]:,} functions that do not match, **{m.get("no", 0):,}** have no known behavioural '
-        f'difference, **{m.get("possibly", 0):,}** possibly differ, and **{m.get("yes", 0):,}** are missing code the '
-        "game needs. Each one is listed with its reason in [remaining_functions.md](docs/remaining_functions.md). "
+        summary +
         f'{s["q"]["L"]:,} excluded library functions (FMOD, SDK runtime) are not counted; see '
         "[library_functions.md](docs/library_functions.md).",
         "",

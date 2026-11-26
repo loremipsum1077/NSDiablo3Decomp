@@ -1,7 +1,8 @@
 # Porting to game version 2.7.7
 
-The `port-2.7.7` branch targets Diablo III for Switch **2.7.7** (`C2.7.7.92380`,
-NintendoSDK 8.2.0) instead of 2.6.2. Early work called it 2.7.9 by mistake; the binary's
+The `dev` branch targets Diablo III for Switch **2.7.7** (`C2.7.7.92380`,
+NintendoSDK 8.2.0) instead of 2.6.2. The port was done on a branch named `port-2.7.7`;
+the finished 2.6.2 decompilation is kept on the `2.6.2` branch. Early work called it 2.7.9 by mistake; the binary's
 own version strings say 2.7.7, and every version label and path uses 2.7.7.
 Patch-by-patch feature changes are in [the change-tracking guide](changes_2_6_2_to_2_7_7.md).
 `tools/config.toml` selects the version (`default_version`) and compiler (`clang_version`);
@@ -380,18 +381,12 @@ The port keeps the 2.6.2 policy for code that cannot or should not match:
   `// NON_MATCHING: <what differs>` directly above it (`docs/decomp_workflow.md` step 4).
   It is not reverted to the 2.6.2 body. Such functions stay `M`.
 
-## Known gaps (next work)
+## What is left
 
-- **DemonWare** has 291 functions that are not `O`: 273 were never `O` in 2.6.2 either and
-  2 are `L`. Of the 16 that were `O` in 2.6.2, 7 are in 2.6.2's `proof_debt.csv` (the
-  checker never proved them), 7 fail checker proofs in 2.7.7 (unproven jump tables or
-  ADRP pairs, one unlocated data symbol `bdJSON::BD_JSON_TRUE`), and the two
-  `bdDataChunk::deserialize` overloads really changed size (44→48, 576→588 bytes).
-- `data/2.6.2/{proof_debt,helper_ledger,inline_helpers}.csv` have no 2.7.7 counterparts yet.
-- **Changed game code:** 7,389 functions that matched in 2.6.2 now differ (struct layouts,
-  constants, logic). The diff's `shape_similarity` ranks the easiest first.
-- 3,576 new functions have no names (no `.nss` debug file ships with 2.7.7).
-- 4,760 2.6.2 data symbols are not located yet, so the checker cannot verify references
-  to them.
-- The evidence/receipt/recovery tooling (`tools/recovery*.py`, `receipts.py`,
-  `contributor_check.py`, ...) still assumes 2.6.2 and the 2.6.2 `.nss`.
+What will not be decompiled or matched further, and why, is in the README under
+[Not planned](../README.md#not-planned). The current counts are in the README's progress
+block (`python3 tools/progress_graphic.py`). Still open, if anyone takes it further:
+
+- `data/2.6.2/{proof_debt,helper_ledger,inline_helpers}.csv` have no 2.7.7 counterparts.
+- 2.6.2 data symbols that are not located in 2.7.7 cannot be verified by the checker when
+  a function refers to them.

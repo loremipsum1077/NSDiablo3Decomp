@@ -1,8 +1,11 @@
 # NSDiablo3Decomp
 
-A C/C++ decompilation of **Diablo III 2.6.2 for Nintendo Switch**. This target
-ships matching NSS debug files with DWARF types, symbols and ownership information,
-which made evidence-based recovery of every function body possible.
+A C/C++ decompilation of **Diablo III for Nintendo Switch**, version **2.7.7**
+(`C2.7.7.92380`), the game's last update. It is the source that
+[NSD3Recomp](https://github.com/loremipsum1077/NSD3Recomp) compiles into a native
+desktop game. The work started on the cartridge version 2.6.2, which ships NSS debug
+files with DWARF types, symbols and ownership information; every function was
+recovered from that evidence first and then ported to 2.7.7.
 
 > **Not affiliated with Blizzard Entertainment or Nintendo.** This is an unofficial
 > fan project for research and preservation, not endorsed by either company.
@@ -13,22 +16,23 @@ which made evidence-based recovery of every function body possible.
 > [`LICENSES/`](LICENSES/) covers only the project's own tooling, as listed in
 > [`REUSE.toml`](REUSE.toml); it grants no rights in the game.
 
-## This branch: 2.7.7
+## Branches
 
-This `port-2.7.7` branch moves the decompilation to the later **2.7.7** update
-(`C2.7.7.92380`), the version the
-[NSD3Recomp `support-2.7.7` branch](https://github.com/loremipsum1077/NSD3Recomp/tree/support-2.7.7)
-builds. 32,766 of the game's functions match the 2.7.7 binary byte for byte; the rest
-are written to 2.7.7's behaviour without matching exactly, and every game function the
-recompile needs is present. The 2.6.2 status below is for the `dev` branch. How the port
-was made, and what is still open, is in [docs/port_2_7_7.md](docs/port_2_7_7.md).
+- **`dev`**: 2.7.7. All work happens here.
+- **`2.6.2`**: the finished decompilation of the cartridge version `2.6.2.52309`. It is
+  kept as it is and changes only if 2.6.2 itself needs a fix.
 
-2.7.7 ships no debug (`.nss`) file, so the game-data step below needs **two** dumps
+How the port was made, and its details, are in [docs/port_2_7_7.md](docs/port_2_7_7.md).
+
+## Setting up for 2.7.7
+
+2.7.7 ships no debug (`.nss`) file, so the game-data step needs **two** dumps
 of your own copy: the cartridge version 2.6.2 (laid out as described below), and the
 game's program after updating to 2.7.7.
 
-1. Do the 2.6.2 steps below up to and including `python3 setup.py`, which also fetches
-   the pinned `nx2elf`.
+1. Do the 2.6.2 steps under [Getting the game files](#getting-the-game-files) and
+   [Generate private build inputs](#generate-private-build-inputs), up to and including
+   `python3 setup.py`, which also fetches the pinned `nx2elf`.
 2. Convert the 2.7.7 update's `exefs/main` and check it (on Linux, use the `linux` folder):
 
    ```sh
@@ -53,48 +57,37 @@ itself and compare it with the original, see
 
 ## Project status
 
-The decompilation is **complete as far as it will go**: every function in the game
-is either matching byte for byte, written with a documented reason it does not match,
-or accounted for as code the compiler emits elsewhere. Some game data is not shipped
-here and is rebuilt locally from your own game files (see
-[Generate private build inputs](#generate-private-build-inputs)).
-
 <!-- progress:start -->
-![Functions](https://img.shields.io/badge/functions-98.1%25-brightgreen) ![Code bytes](https://img.shields.io/badge/code_bytes-92.6%25-brightgreen) ![Missing code](https://img.shields.io/badge/missing_game_code-0-brightgreen) ![Status](https://img.shields.io/badge/status-decompilation_complete-blue)
+![Functions](https://img.shields.io/badge/functions-94.2%25-brightgreen) ![Code bytes](https://img.shields.io/badge/code_bytes-80.4%25-brightgreen) ![Version](https://img.shields.io/badge/game_version-2.7.7-blue) ![Status](https://img.shields.io/badge/status-complete_for_the_recompile-blue)
 
 <p align="center"><img src="docs/progress.svg" alt="Decompilation progress infographic" width="880"></p>
 
 | | Functions | Original code |
 |---|---:|---:|
-| **Matching byte for byte** | 33,729 (98.1%) | 10,794,444 B (92.6%) |
-| Written, not byte-identical | 631 | 854,432 B |
-| Not written as its own symbol | 8 | 2,536 B |
-| **Total counted** | 34,368 | 11,651,412 B |
+| **Matching byte for byte** | 32,812 (94.2%) | 9,646,872 B (80.4%) |
+| Written, not byte-identical | 1,568 | 2,117,656 B |
+| Not written as its own symbol | 434 | 231,668 B |
+| **Total counted** | 34,814 | 11,996,196 B |
 
-Of the 639 functions that do not match, **613** have no known behavioural difference, **26** possibly differ, and **0** are missing code the game needs. Each one is listed with its reason in [remaining_functions.md](docs/remaining_functions.md). 2,191 excluded library functions (FMOD, SDK runtime) are not counted; see [library_functions.md](docs/library_functions.md).
+Of the 2,002 functions that do not match, 1,568 are written to 2.7.7's behaviour without matching byte for byte and 434 are not written. [NSD3Recomp](https://github.com/loremipsum1077/NSD3Recomp) builds and plays the game without the unwritten ones; what will not be decompiled, and why, is under [Not planned](#not-planned). 2,191 excluded library functions (FMOD, SDK runtime) are not counted; see [library_functions.md](docs/library_functions.md).
 
 <sub>Regenerate with `python3 tools/progress_graphic.py` after landing functions.</sub>
 <!-- progress:end -->
 
-The remaining non-matching functions are accepted as they are. Most differ only
-because of compiler version, register allocation or instruction ordering and layout,
-and each one's cause is recorded. Matching them further is welcome but not required. See the
-[exact-decompilation operating plan](docs/exact_decompilation.md) for the compiler,
-proof and build-resource background. Native desktop recompilation was out of scope here; it is
-being done in [NSD3Recomp](https://github.com/loremipsum1077/NSD3Recomp), which builds
+See the [exact-decompilation operating plan](docs/exact_decompilation.md) for the
+compiler, proof and build-resource background. Native desktop recompilation is not done
+here but in [NSD3Recomp](https://github.com/loremipsum1077/NSD3Recomp), which builds
 this source for macOS. The [native subsystem harness](desktop/README.md) is preserved
 for anyone who wants to take it further.
 
-The focus is this base target first. Decompilation of later patches is a future
-ambition, not a supported target today. The repository supplies no game originals,
-assets, keys or playable game; contributors supply their own legally obtained
-inputs. Open source-origin questions and third-party notices are listed in the [provenance inventory](docs/source_provenance.md).
+The repository supplies no game originals, assets, keys or playable game;
+contributors supply their own legally obtained inputs. Open source-origin questions and third-party notices are listed in the [provenance inventory](docs/source_provenance.md).
 
 Recovered implementation lives in [`src/`](src/) (game code in [`src/X/`](src/X/),
 middleware in [`src/Contrib/`](src/Contrib/)); declarations primarily live in
 headers alongside source under `src/`. [`include/`](include/) contains compatibility
 headers. Original owner paths and function identities are indexed
-in [`data/2.6.2/`](data/2.6.2/). See the [documentation index](docs/index.md)
+in [`data/2.7.7/`](data/2.7.7/) and, for 2.6.2, [`data/2.6.2/`](data/2.6.2/). See the [documentation index](docs/index.md)
 for tooling and technical references.
 
 A function is **O** when its compiled code equals the original: the checker
@@ -104,7 +97,35 @@ applies that rule ([landing](docs/decomp_workflow.md#landing)). Progress counts
 are O functions and their original code bytes; they do not establish a
 byte-identical rebuilt executable or a runnable game.
 
-### License
+## Not planned
+
+The goal is source that NSD3Recomp can build into a game that plays on other
+platforms. Code that goal does not need will not be decompiled or matched further:
+
+- **Library and SDK runtime** (2,191 functions, label `L`). FMOD Studio 1.10 is closed
+  source with no debug information; NSD3Recomp replaces it with its own audio. Nine
+  Nintendo SDK startup functions belong to the SDK's runtime object; NSD3Recomp's
+  platform layer replaces the SDK. See [library_functions.md](docs/library_functions.md).
+- **Functions 2.7.7 added with no name and no owner** (418, label `U`). With no debug
+  file for 2.7.7 they have neither, and no written function calls them. By their
+  neighbours they are pieces of curl, DemonWare, the Domino physics library, zlib and
+  the console menus.
+- **Byte-for-byte matches for the online libraries.** The DemonWare client (285
+  functions) and curl (140) are written but not matching. The recompile plays offline;
+  mods that need server data (seasons, season themes, Challenge Rifts) supply it
+  locally instead.
+- **Byte-for-byte matches for the rest of the written code.** The other non-matching
+  functions are written to follow 2.7.7, and differ in the code the compiler produces,
+  most often register allocation, scheduling or block layout; each has a
+  `// NON_MATCHING` note saying what differs. Improving them is welcome, but not planned.
+- **2.6.2's evidence tooling** (receipts, recovery, proof-debt ledgers) reads the 2.6.2
+  debug file, which 2.7.7 does not have. It is not ported; use it on the `2.6.2` branch.
+
+A handful of functions the build refers to are still undefined; NSD3Recomp stubs each
+one with a stop that prints its name (`src/replace/unimplemented.c` there). None has
+been reached in play so far.
+
+## License
 
 The project-authored tools listed in [REUSE.toml](REUSE.toml) are available under the
 [MIT License](LICENSES/MIT.txt). Reusers may modify, redistribute and sell them
@@ -112,7 +133,7 @@ with the copyright and permission notice. Third-party components carry their own
 terms. See the [source provenance inventory](docs/source_provenance.md) for
 upstream notices and the status of recovered game and SDK source.
 
-### Getting the game files
+## Getting the game files
 
 Nothing from the game is included here, and nobody can give it to you. You make the
 inputs yourself from a copy of the game you own:
@@ -121,7 +142,8 @@ inputs yourself from a copy of the game you own:
    `01001B300B9BE000`), on cartridge or bought from the eShop.
 2. **Have the right version: 2.6.2.52309.** The title screen shows it in small print
    at the bottom (`C2.6.2.52309`). Any other version, older or newer, will not
-   match: the files are checked byte for byte.
+   match: the files are checked byte for byte. (For 2.7.7 you also need the 2.7.7
+   update's program, a second dump; see [Setting up for 2.7.7](#setting-up-for-277).)
    This is the version on the cartridge, with no updates installed. A copy that has
    been updated to a later version will not match.
 3. **Dump it from your own Switch.** This needs a console that can run homebrew,
@@ -146,7 +168,7 @@ inputs yourself from a copy of the game you own:
 
 Keep the dump private: do not commit it, upload it or share it.
 
-### Generate private build inputs
+## Generate private build inputs
 
 From the repository root, point the bootstrap at your own extracted Switch 2.6.2
 directory containing `exefs/main` and `romfs/DiabloIIINX64r.nss`.

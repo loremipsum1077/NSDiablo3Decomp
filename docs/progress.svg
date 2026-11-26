@@ -1,91 +1,91 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="880" height="798" viewBox="0 0 880 798" role="img" aria-label="Decompilation progress: 98.1% of functions, 92.6% of code bytes matching" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
-<title>Decompilation progress: 98.1% of functions, 92.6% of code bytes matching</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="798" viewBox="0 0 880 798" role="img" aria-label="Decompilation progress: 94.2% of functions, 80.4% of code bytes matching" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+<title>Decompilation progress: 94.2% of functions, 80.4% of code bytes matching</title>
 <rect x="0.5" y="0.5" width="879.0" height="797.0" rx="14" fill="#0d1117" stroke="#30363d"/>
-<text x="32.0" y="44.0" font-size="12" font-weight="600" fill="#8b949e" text-anchor="start" letter-spacing="1.5">DIABLO III 2.6.2 · NINTENDO SWITCH</text>
+<text x="32.0" y="44.0" font-size="12" font-weight="600" fill="#8b949e" text-anchor="start" letter-spacing="1.5">DIABLO III 2.7.7 · NINTENDO SWITCH</text>
 <text x="32.0" y="76.0" font-size="28" font-weight="700" fill="#e6edf3" text-anchor="start">Decompilation progress</text>
-<rect x="612.0" y="40.0" width="236.0" height="32.0" rx="16" fill="#12261a" stroke="#3fb950"/>
-<text x="730.0" y="61.0" font-size="14" font-weight="600" fill="#3fb950" text-anchor="middle">✓ Decompilation complete</text>
+<rect x="586.0" y="40.0" width="262.0" height="32.0" rx="16" fill="#12261a" stroke="#3fb950"/>
+<text x="717.0" y="61.0" font-size="14" font-weight="600" fill="#3fb950" text-anchor="middle">✓ Complete for the recompile</text>
 <rect x="32.0" y="104.0" width="400.0" height="132.0" rx="10" fill="#161b22" stroke="#30363d"/>
 <text x="52.0" y="134.0" font-size="14" font-weight="600" fill="#8b949e" text-anchor="start">Functions matching</text>
-<text x="52.0" y="180.0" font-size="42" font-weight="700" fill="#3fb950" text-anchor="start">98.1%</text>
+<text x="52.0" y="180.0" font-size="42" font-weight="700" fill="#3fb950" text-anchor="start">94.2%</text>
 <rect x="52.0" y="196.0" width="360.0" height="10.0" rx="5.0" fill="#21262d"/>
-<rect x="52.0" y="196.0" width="353.3" height="10.0" rx="5.0" fill="#3fb950"/>
-<text x="52.0" y="224.0" font-size="12" font-weight="400" fill="#8b949e" text-anchor="start">33,729 of 34,368 functions compile to identical code</text>
+<rect x="52.0" y="196.0" width="339.3" height="10.0" rx="5.0" fill="#3fb950"/>
+<text x="52.0" y="224.0" font-size="12" font-weight="400" fill="#8b949e" text-anchor="start">32,812 of 34,814 functions compile to identical code</text>
 <rect x="448.0" y="104.0" width="400.0" height="132.0" rx="10" fill="#161b22" stroke="#30363d"/>
 <text x="468.0" y="134.0" font-size="14" font-weight="600" fill="#8b949e" text-anchor="start">Code bytes matching</text>
-<text x="468.0" y="180.0" font-size="42" font-weight="700" fill="#3fb950" text-anchor="start">92.6%</text>
+<text x="468.0" y="180.0" font-size="42" font-weight="700" fill="#3fb950" text-anchor="start">80.4%</text>
 <rect x="468.0" y="196.0" width="360.0" height="10.0" rx="5.0" fill="#21262d"/>
-<rect x="468.0" y="196.0" width="333.5" height="10.0" rx="5.0" fill="#3fb950"/>
-<text x="468.0" y="224.0" font-size="12" font-weight="400" fill="#8b949e" text-anchor="start">10.79 MB of 11.65 MB of original machine code</text>
+<rect x="468.0" y="196.0" width="289.5" height="10.0" rx="5.0" fill="#3fb950"/>
+<text x="468.0" y="224.0" font-size="12" font-weight="400" fill="#8b949e" text-anchor="start">9.65 MB of 12.00 MB of original machine code</text>
 <text x="32.0" y="268.0" font-size="16" font-weight="600" fill="#e6edf3" text-anchor="start">Every function accounted for</text>
 <rect x="32.0" y="282.0" width="816.0" height="18.0" rx="9" fill="#21262d"/>
 <clipPath id="stack"><rect x="32" y="282" width="816" height="18" rx="9"/></clipPath>
-<rect x="32.0" y="282.0" width="800.8" height="18.0" rx="0" fill="#3fb950" clip-path="url(#stack)"/>
-<rect x="832.8" y="282.0" width="15.0" height="18.0" rx="0" fill="#d29922" clip-path="url(#stack)"/>
-<rect x="847.8" y="282.0" width="3.0" height="18.0" rx="0" fill="#58a6ff" clip-path="url(#stack)"/>
+<rect x="32.0" y="282.0" width="769.1" height="18.0" rx="0" fill="#3fb950" clip-path="url(#stack)"/>
+<rect x="801.1" y="282.0" width="36.8" height="18.0" rx="0" fill="#d29922" clip-path="url(#stack)"/>
+<rect x="837.8" y="282.0" width="10.2" height="18.0" rx="0" fill="#58a6ff" clip-path="url(#stack)"/>
 <rect x="32.0" y="316.0" width="10.0" height="10.0" rx="2" fill="#3fb950"/>
-<text x="48.0" y="325.0" font-size="12" font-weight="400" fill="#8b949e" text-anchor="start">Matching byte for byte  33,729</text>
+<text x="48.0" y="325.0" font-size="12" font-weight="400" fill="#8b949e" text-anchor="start">Matching byte for byte  32,812</text>
 <rect x="274.0" y="316.0" width="10.0" height="10.0" rx="2" fill="#d29922"/>
-<text x="290.0" y="325.0" font-size="12" font-weight="400" fill="#8b949e" text-anchor="start">Written, not byte-identical  631</text>
-<rect x="529.2" y="316.0" width="10.0" height="10.0" rx="2" fill="#58a6ff"/>
-<text x="545.2" y="325.0" font-size="12" font-weight="400" fill="#8b949e" text-anchor="start">Not written as its own symbol  8</text>
-<text x="32.0" y="360.0" font-size="16" font-weight="600" fill="#e6edf3" text-anchor="start">The 639 non-matching functions: do they change how the game behaves?</text>
+<text x="290.0" y="325.0" font-size="12" font-weight="400" fill="#8b949e" text-anchor="start">Written, not byte-identical  1,568</text>
+<rect x="542.4" y="316.0" width="10.0" height="10.0" rx="2" fill="#58a6ff"/>
+<text x="558.4" y="325.0" font-size="12" font-weight="400" fill="#8b949e" text-anchor="start">Not written as its own symbol  434</text>
+<text x="32.0" y="360.0" font-size="16" font-weight="600" fill="#e6edf3" text-anchor="start">The 2,002 non-matching functions</text>
 <rect x="32.0" y="374.0" width="261.3" height="74.0" rx="10" fill="#161b22" stroke="#30363d"/>
 <rect x="32.0" y="374.0" width="4.0" height="74.0" rx="2" fill="#3fb950"/>
-<text x="52.0" y="410.0" font-size="26" font-weight="700" fill="#3fb950" text-anchor="start">613</text>
-<text x="110.0" y="406.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="start">No known difference</text>
-<text x="52.0" y="434.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="start">same behaviour; compiler/codegen gap</text>
+<text x="52.0" y="410.0" font-size="26" font-weight="700" fill="#3fb950" text-anchor="start">1,568</text>
+<text x="142.0" y="406.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="start">Written</text>
+<text x="52.0" y="434.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="start">follow 2.7.7; compiler output differs</text>
 <rect x="309.3" y="374.0" width="261.3" height="74.0" rx="10" fill="#161b22" stroke="#30363d"/>
-<rect x="309.3" y="374.0" width="4.0" height="74.0" rx="2" fill="#d29922"/>
-<text x="329.3" y="410.0" font-size="26" font-weight="700" fill="#d29922" text-anchor="start">26</text>
-<text x="371.3" y="406.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="start">Possibly</text>
-<text x="329.3" y="434.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="start">not yet shown to behave the same</text>
+<rect x="309.3" y="374.0" width="4.0" height="74.0" rx="2" fill="#8b949e"/>
+<text x="329.3" y="410.0" font-size="26" font-weight="700" fill="#8b949e" text-anchor="start">418</text>
+<text x="387.3" y="406.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="start">No name or owner</text>
+<text x="329.3" y="434.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="start">added in 2.7.7; nothing calls them</text>
 <rect x="586.7" y="374.0" width="261.3" height="74.0" rx="10" fill="#161b22" stroke="#30363d"/>
-<rect x="586.7" y="374.0" width="4.0" height="74.0" rx="2" fill="#3fb950"/>
-<text x="606.7" y="410.0" font-size="26" font-weight="700" fill="#3fb950" text-anchor="start">0</text>
-<text x="632.7" y="406.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="start">Missing code</text>
-<text x="606.7" y="434.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="start">functions the game needs but lacks</text>
+<rect x="586.7" y="374.0" width="4.0" height="74.0" rx="2" fill="#d29922"/>
+<text x="606.7" y="410.0" font-size="26" font-weight="700" fill="#d29922" text-anchor="start">16</text>
+<text x="648.7" y="406.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="start">Other unwritten</text>
+<text x="606.7" y="434.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="start">not needed by the recompile so far</text>
 <text x="32.0" y="480.0" font-size="16" font-weight="600" fill="#e6edf3" text-anchor="start">By area (share of code bytes matching)</text>
 <text x="32.0" y="512.0" font-size="13" font-weight="400" fill="#e6edf3" text-anchor="start">Game client</text>
 <rect x="322.0" y="502.0" width="336.0" height="12.0" rx="6.0" fill="#21262d"/>
-<rect x="322.0" y="502.0" width="308.8" height="12.0" rx="6.0" fill="#3fb950"/>
-<text x="720.0" y="513.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="end">91.8%</text>
-<text x="848.0" y="513.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="end">10,696/10,858 fn</text>
+<rect x="322.0" y="502.0" width="280.2" height="12.0" rx="6.0" fill="#3fb950"/>
+<text x="720.0" y="513.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="end">83.4%</text>
+<text x="848.0" y="513.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="end">10,175/10,666 fn</text>
 <text x="32.0" y="542.0" font-size="13" font-weight="400" fill="#e6edf3" text-anchor="start">Shared game logic</text>
 <rect x="322.0" y="532.0" width="336.0" height="12.0" rx="6.0" fill="#21262d"/>
-<rect x="322.0" y="532.0" width="323.3" height="12.0" rx="6.0" fill="#3fb950"/>
-<text x="720.0" y="543.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="end">96.2%</text>
-<text x="848.0" y="543.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="end">10,527/10,607 fn</text>
+<rect x="322.0" y="532.0" width="286.5" height="12.0" rx="6.0" fill="#3fb950"/>
+<text x="720.0" y="543.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="end">85.2%</text>
+<text x="848.0" y="543.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="end">10,483/10,733 fn</text>
 <text x="32.0" y="572.0" font-size="13" font-weight="400" fill="#e6edf3" text-anchor="start">Game server</text>
 <rect x="322.0" y="562.0" width="336.0" height="12.0" rx="6.0" fill="#21262d"/>
-<rect x="322.0" y="562.0" width="317.3" height="12.0" rx="6.0" fill="#3fb950"/>
-<text x="720.0" y="573.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="end">94.4%</text>
-<text x="848.0" y="573.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="end">6,219/6,282 fn</text>
+<rect x="322.0" y="562.0" width="287.4" height="12.0" rx="6.0" fill="#3fb950"/>
+<text x="720.0" y="573.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="end">85.5%</text>
+<text x="848.0" y="573.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="end">6,120/6,317 fn</text>
 <text x="32.0" y="602.0" font-size="13" font-weight="400" fill="#e6edf3" text-anchor="start">Sigma engine</text>
 <rect x="322.0" y="592.0" width="336.0" height="12.0" rx="6.0" fill="#21262d"/>
-<rect x="322.0" y="592.0" width="320.7" height="12.0" rx="6.0" fill="#3fb950"/>
-<text x="720.0" y="603.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="end">95.4%</text>
-<text x="848.0" y="603.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="end">1,213/1,219 fn</text>
+<rect x="322.0" y="592.0" width="295.6" height="12.0" rx="6.0" fill="#3fb950"/>
+<text x="720.0" y="603.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="end">87.9%</text>
+<text x="848.0" y="603.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="end">1,181/1,214 fn</text>
 <text x="32.0" y="632.0" font-size="13" font-weight="400" fill="#e6edf3" text-anchor="start">Middleware (DemonWare, Protobuf, Lua…)</text>
 <rect x="322.0" y="622.0" width="336.0" height="12.0" rx="6.0" fill="#21262d"/>
-<rect x="322.0" y="622.0" width="283.9" height="12.0" rx="6.0" fill="#3fb950"/>
-<text x="720.0" y="633.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="end">84.5%</text>
-<text x="848.0" y="633.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="end">4,431/4,750 fn</text>
+<rect x="322.0" y="622.0" width="236.7" height="12.0" rx="6.0" fill="#3fb950"/>
+<text x="720.0" y="633.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="end">70.4%</text>
+<text x="848.0" y="633.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="end">4,167/4,589 fn</text>
 <text x="32.0" y="662.0" font-size="13" font-weight="400" fill="#e6edf3" text-anchor="start">BlizzardCore</text>
 <rect x="322.0" y="652.0" width="336.0" height="12.0" rx="6.0" fill="#21262d"/>
-<rect x="322.0" y="652.0" width="308.1" height="12.0" rx="6.0" fill="#3fb950"/>
-<text x="720.0" y="663.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="end">91.7%</text>
-<text x="848.0" y="663.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="end">259/265 fn</text>
+<rect x="322.0" y="652.0" width="299.3" height="12.0" rx="6.0" fill="#3fb950"/>
+<text x="720.0" y="663.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="end">89.0%</text>
+<text x="848.0" y="663.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="end">252/263 fn</text>
 <text x="32.0" y="692.0" font-size="13" font-weight="400" fill="#e6edf3" text-anchor="start">Externals (curl)</text>
 <rect x="322.0" y="682.0" width="336.0" height="12.0" rx="6.0" fill="#21262d"/>
-<rect x="322.0" y="682.0" width="335.0" height="12.0" rx="6.0" fill="#3fb950"/>
-<text x="720.0" y="693.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="end">99.7%</text>
-<text x="848.0" y="693.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="end">372/374 fn</text>
+<rect x="322.0" y="682.0" width="33.9" height="12.0" rx="6.0" fill="#3fb950"/>
+<text x="720.0" y="693.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="end">10.0%</text>
+<text x="848.0" y="693.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="end">91/231 fn</text>
 <text x="32.0" y="722.0" font-size="13" font-weight="400" fill="#e6edf3" text-anchor="start">Other</text>
 <rect x="322.0" y="712.0" width="336.0" height="12.0" rx="6.0" fill="#21262d"/>
-<rect x="322.0" y="712.0" width="221.8" height="12.0" rx="6.0" fill="#3fb950"/>
-<text x="720.0" y="723.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="end">66.0%</text>
-<text x="848.0" y="723.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="end">12/13 fn</text>
+<rect x="322.0" y="712.0" width="63.8" height="12.0" rx="6.0" fill="#3fb950"/>
+<text x="720.0" y="723.0" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="end">18.9%</text>
+<text x="848.0" y="723.0" font-size="11" font-weight="400" fill="#8b949e" text-anchor="end">343/801 fn</text>
 <text x="32.0" y="760.0" font-size="11" font-weight="400" fill="#6e7681" text-anchor="start">Not counted: 2,191 excluded library functions (FMOD, SDK runtime). Some data tables are rebuilt from your own game files at bootstrap.</text>
-<text x="32.0" y="776.0" font-size="11" font-weight="400" fill="#6e7681" text-anchor="start">Generated by tools/progress_graphic.py from data/2.6.2/functions.csv.</text>
+<text x="32.0" y="776.0" font-size="11" font-weight="400" fill="#6e7681" text-anchor="start">Generated by tools/progress_graphic.py from data/2.7.7/functions.csv.</text>
 </svg>

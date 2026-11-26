@@ -7,7 +7,7 @@ Prepared 2026-11-24 for this repository's decompilation work. This is a research
 | Item | Observed identity |
 | --- | --- |
 | Baseline | Switch `C2.6.2.52309`; see `src/X/Sigma/buildver.cpp` and the baseline original-input manifest |
-| Repository/build namespace | Branch `port-2.7.7`; `data/2.7.7/`, `build/2.7.7/`; `tools/config.toml` selects `2.7.7` |
+| Repository/build namespace | Branch `dev` (ported on `port-2.7.7`; 2.6.2 kept on `2.6.2`); `data/2.7.7/`, `build/2.7.7/`; `tools/config.toml` selects `2.7.7` |
 | Original target input inspected | `data/2.7.7/main.elf`, 18,204,656 bytes |
 | Embedded target version | `2.7.7`, `C2.7.7.92380`, `C2.7.7.92380 (135863-1751824)` |
 | Embedded code branch | `branches/2_7_7`, also present in source-path strings |
