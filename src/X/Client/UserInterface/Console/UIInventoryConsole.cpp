@@ -1757,6 +1757,21 @@ void OpenTradeSelectForController(int32 nControllerOpening)
     sgptInventoryGlobals->UIInventoryScreen::OpenForController(nControllerOpening);
 }
 
+// Probably: UIInventory::Console::Open<2.7.7 mode>ForController, the open callback of screen set 32
+// (ConsoleScreenManager.cpp): same shape as OpenTradeSelectForController, but sets unk_1390 and the
+// new 2.7.7 provider mode 8 (no enumerator yet) and leaves bExitViaTrade alone.
+// NON_MATCHING: PlayerInventoryScreen fields 0x1388/0x1390 land at 0x13d0/0x13d8 in our layout (same 0x48 gap as OpenForController)
+extern "C" void sub_7100370440(int32 nControllerOpening)
+{
+    PlayerInventoryScreen * ptScreen = sgptInventoryGlobals;
+    ptScreen->unk_1390 = TRUE;
+    ptScreen->m_fInTradeSelectMode = FALSE;
+    ptScreen->m_fInMailSelectMode = FALSE;
+    ptScreen->tItemsProvider.SetProviderMode((InventoryItems::ProviderMode)8);
+    ptScreen->tCosmeticItemsProvider.SetProviderMode((InventoryItems::ProviderMode)8);
+    sgptInventoryGlobals->UIInventoryScreen::OpenForController(nControllerOpening);
+}
+
 inline ACDID GetSelectedItem()
 {
     UIInventoryView * ptView = sgptInventoryGlobals->GetPrimaryView();

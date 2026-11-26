@@ -66,10 +66,8 @@ void UIInventoryAddSocketsView::SetAddSocketsRecipient(const ACDID idAddSocketsR
 
 
 
-// 2.7.7 calls separate state setters before the storyboard operations.
-extern "C" void sub_7100374540(UIInventoryAddSocketsView *); // clears the state at +0x68
-extern "C" void sub_7100374590(UIInventoryAddSocketsView *); // sets the state at +0x68 to 1
-
+// 2.7.7 calls separate state setters before the storyboard operations: sub_7100374540 / sub_7100374590
+// (declared in the header; defined in sub_7100374540.cpp because this file's Reset/StartAddingSockets must not inline them).
 void UIInventoryAddSocketsView::Reset()
 {
     sub_7100374540(this);

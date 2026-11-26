@@ -40,6 +40,7 @@ void OnRemoveBuff(SNO, int32, const Player *);
 ACDNetworkName ANNFromACD(ACDID idACD);
 // X/Common/Powers/PowersCommon.h
 void PowerGetBuffAttributes(int32, Attrib &, Attrib &, Attrib &);
+extern "C" BOOL sub_7100733800(AutoPowerDefinitionR, int32);
 BOOL PowerBuffIsHarmful(AutoPowerDefinitionR, int32);
 BOOL PowerBuffIsDisplayed(AutoPowerDefinitionR, int32);
 BOOL PowerBuffShowsDurationOnSkillButton(AutoPowerDefinitionR, int32);
@@ -57,6 +58,7 @@ const Player * LocalPlayerGet();
 // X/Client/Network/CGameMessage.cpp
 void MessageSendToServer(int32 nMessageID, void * pMessage, uint32 dwSize, const Player * ptPlayer);
 namespace UIBuffs {
+void RemoveBuff(SNO, int32, const Player *, XPooledSortedBuffList *);
 // Defined below (DWARF UIBuffs.cpp:2364); no header declaration in src.
 void EnumBuffsOnSkillButton(SNO snoPower, blz::function<void(SortedBuff &)> fnCallback);
 static UIBuffGlobals * sgptUIBuffGlobals;
@@ -255,7 +257,7 @@ static void sUpdateTimersInList(XPooledSortedBuffList * plistBuffs) {
         uint32 dwNow = CGameGetPredictedServerTime();
         int32 nStackCount = ptACDEffected->AttributesGetInt(MakeAttribKey(eAttribCount, tBuff.snoPower));
         if (nStackCount <= 0 || (bHasEndTick && dwEndTick < dwNow))
-            RemoveBuff(tBuff.snoPower, tBuff.nBuffIdx, tBuff.ptPlayer);
+            RemoveBuff(tBuff.snoPower, tBuff.nBuffIdx, tBuff.ptPlayer, NULL);
     }
 }
 
@@ -413,7 +415,7 @@ static void sDeleteBuff(SortedBuff & tBuff) {
 
 void Update() { sUpdateTimersInList(&sgptUIBuffGlobals->listSkillButtonBuffs); }
 
-static void sRemoveBuff(SNO snoPower, int32 nBuffIndex, XPooledSortedBuffList * plistBuffs, const Player * ptPlayer) {
+static inline void sRemoveBuff(SNO snoPower, int32 nBuffIndex, XPooledSortedBuffList * plistBuffs, const Player * ptPlayer) {
     POS pos = plistBuffs->GetHeadPosition();
     while (pos) {
         POS posOld = pos;
@@ -612,10 +614,15 @@ static XPooledSortedBuffList * sGetListContainingBuff(SNO snoPower, int32 nBuffI
     return NULL;
 }
 
-void RemoveBuff(SNO snoPower, int32 nBuffIndex, const Player * ptPlayer) {
-    // Original notifies once here and again in sDeleteBuff when a record exists.
+// NON_MATCHING: Block layout differs around the default party-list search and inlined removal.
+void RemoveBuff(SNO snoPower, int32 nBuffIndex, const Player * ptPlayer, XPooledSortedBuffList * plistBuffs) {
     UIHUD::Console::OnRemoveBuff(snoPower, nBuffIndex, ptPlayer);
-    XPooledSortedBuffList * plistBuffs = sGetListContainingBuff(snoPower, nBuffIndex, ptPlayer);
+    if (!plistBuffs) {
+        XPooledSortedBuffList & listParty = sgptUIBuffGlobals->listPartyBuffs;
+        if (sGetBuffInList(&listParty, snoPower, nBuffIndex, ptPlayer, FALSE))
+            sRemoveBuff(snoPower, nBuffIndex, &listParty, ptPlayer);
+        plistBuffs = sGetListContainingBuff(snoPower, nBuffIndex, ptPlayer);
+    }
     if (plistBuffs) sRemoveBuff(snoPower, nBuffIndex, plistBuffs, ptPlayer);
 }
 
@@ -636,12 +643,13 @@ void PlayerLeftGame(const Player * ptPlayer) {
 void HandleBuffCountAttributeChange(const FastAttribValue tValue, const SNO snoPower, const int32 nBuffIndex, const ActorCommonData & tACD) {
     const Player * ptPlayer = PlayerGetByACD(tACD.id);
     if (!ptPlayer) return;
-    BOOL bIsDisplayed = PowerBuffIsDisplayed(AutoPowerDefinitionR(snoPower), nBuffIndex) || UIMinimap::CanShowBuff(snoPower, nBuffIndex);
+    BOOL bIsDisplayed = PowerBuffIsDisplayed(AutoPowerDefinitionR(snoPower), nBuffIndex) || UIMinimap::CanShowBuff(snoPower, nBuffIndex) ||
+        sub_7100733800(AutoPowerDefinitionR(snoPower), nBuffIndex);
     BOOL bIsMergedTooltip = PowerBuffMergesTooltip(AutoPowerDefinitionR(snoPower), nBuffIndex);
     BOOL bAppearsOnSkillButton = BuffIsAssociatedWithSkillButton(snoPower, ptPlayer);
     if (bIsDisplayed || bAppearsOnSkillButton || bIsMergedTooltip) {
     int32 nStackCount = tValue.nValue;
-    if (nStackCount <= 0) RemoveBuff(snoPower, nBuffIndex, ptPlayer);
+    if (nStackCount <= 0) RemoveBuff(snoPower, nBuffIndex, ptPlayer, NULL);
     else {
         SortedBuff * ptBuff = sBuffExists(snoPower, nBuffIndex, ptPlayer, FALSE);
         if (!ptBuff) AddBuff(snoPower, nBuffIndex, nStackCount, ptPlayer);
@@ -706,7 +714,8 @@ void OnClickTryToCancelBuff(const UIID & id) {
 void HandleBuffEndTickAttributeChange(const FastAttribValue tValue, const Attrib eAttribCount, const SNO snoPower, const int32 nBuffIndex, const ActorCommonData & tACD) {
     const Player * ptPlayer = PlayerGetByACD(tACD.id);
     if (!ptPlayer) return;
-    BOOL bIsDisplayed = PowerBuffIsDisplayed(AutoPowerDefinitionR(snoPower), nBuffIndex) || UIMinimap::CanShowBuff(snoPower, nBuffIndex);
+    BOOL bIsDisplayed = PowerBuffIsDisplayed(AutoPowerDefinitionR(snoPower), nBuffIndex) || UIMinimap::CanShowBuff(snoPower, nBuffIndex) ||
+        sub_7100733800(AutoPowerDefinitionR(snoPower), nBuffIndex);
     BOOL bAppearsOnSkillButton = BuffIsAssociatedWithSkillButton(snoPower, ptPlayer);
     BOOL bShowsProgressOnSkillButton = PlayerIsLocal(ptPlayer) && PowerBuffShowsDurationOnSkillButton(AutoPowerDefinitionR(snoPower), nBuffIndex);
     if (!bIsDisplayed && !bAppearsOnSkillButton && !bShowsProgressOnSkillButton) return;

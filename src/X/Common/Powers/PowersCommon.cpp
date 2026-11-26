@@ -5777,3 +5777,8 @@ uint32 PowerACDCanStartPowerFailureReasons(
 
     return dwRetval;
 }
+
+extern "C" BOOL sub_7100733800(AutoPowerDefinitionR, int32)
+{
+    return FALSE;
+}

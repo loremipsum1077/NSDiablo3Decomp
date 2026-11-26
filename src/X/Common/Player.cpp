@@ -5737,6 +5737,32 @@ void PlayerRemoveOnGroundCraftingPlan(Player & tPlayer, GBID gbidPlan)
     }
 }
 
+// Probably: loadout socketable helper (2.7.7; caller UIEquipmentManager::AssignLoadoutItemSocketables): when the
+// loadout item's recorded socketable (LoadoutItemData::unk_20, an ACDNetworkName) is in listACDIDSocketables,
+// move that entry to the head of the list so it is assigned first.
+extern "C" void sub_71005285b0(const LoadoutItemData & tLoadoutItem, XPooledDataIDList & listACDIDSocketables)
+{
+    if ((ACDNetworkName)tLoadoutItem.unk_20 == ANN_INVALID)
+        return;
+
+    const ActorCommonData * ptACDSocketable = ACDTryToGet(ACDFromANN((ACDNetworkName)tLoadoutItem.unk_20));
+    if (ptACDSocketable == NULL)
+        return;
+
+    const ACDNetworkName annSocketable = ptACDSocketable->ann;
+    POS pos = listACDIDSocketables.GetHeadPosition();
+    while (pos)
+    {
+        POS posCurrent = pos;
+        const ActorCommonData * ptACD = ACDTryToGet((ACDID)listACDIDSocketables.GetNext(pos));
+        if (ptACD != NULL && ptACD->ann == annSocketable)
+        {
+            listACDIDSocketables.MoveToHead(posCurrent);
+            return;
+        }
+    }
+}
+
 #line 173 "X/Common/Player.cpp"
 const InventorySlotType cgarPlayerLoadoutSocketableSlotsOrder[9] = { SLOT_PLAYER_LEFT_HAND, SLOT_PLAYER_RIGHT_HAND, SLOT_PLAYER_HEAD, SLOT_PLAYER_TORSO, SLOT_PLAYER_LEGS, SLOT_PLAYER_LEFT_FINGER, SLOT_PLAYER_RIGHT_FINGER, SLOT_PLAYER_NECK, SLOT_NONE };
 #line 5590 "X/Common/Player.cpp"
@@ -5746,4 +5772,87 @@ extern "C" BOOL sub_710072e0b0(uint32 uSeasonCreated, uint32 uFlags);
 extern "C" BOOL sub_7100527d30(const Player *ptPlayer)
 {
     return sub_710072e0b0(ptPlayer->uSeasonCreated, ptPlayer->tHeroStateData.uPlayerFlags2);
+}
+
+struct FindMatchingPotionData {
+    GBID gbidPotionToFind;
+    ACDID idACDFoundPotion;
+    InventoryLocation tInvLoc;
+
+    uint64 unk_18;
+
+    FindMatchingPotionData()
+        : idACDFoundPotion(ACDID_INVALID)
+    {
+        tInvLoc.idACDContainer = (ACDID)0;
+        tInvLoc.eSlot = 0;
+    }
+};
+// NON_MATCHING: Clang merges the GBID comparisons and reorders the failed lookups.
+static BOOL sFindMatchingPotionCallback(
+    const InventoryLocation & tInvLoc,
+    void * pCallBackData)
+{
+    FindMatchingPotionData * ptPotionData = (FindMatchingPotionData *)pCallBackData;
+    ActorCommonData & tACDContainer = ACDGet(tInvLoc.idACDContainer);
+    ACDID idACDItem = ACDInventoryGetSquareItem(tACDContainer, tInvLoc.eSlot, tInvLoc.pt);
+    if (idACDItem == ACDID_INVALID)
+        return TRUE;
+
+    ActorCommonData * ptACDItem = ACDTryToGet(idACDItem);
+    if (ptACDItem == NULL)
+        return TRUE;
+
+    const uint64 uItemId = ptPotionData->unk_18;
+    BOOL bMatch;
+    if (uItemId)
+    {
+        if (!ActorTryToGet((ActorID)ptACDItem->idOwner))
+            return TRUE;
+        bMatch = uItemId == ItemGenerateConsoleEquipmentManagerID(*ptACDItem) &&
+            ptACDItem->hGB.gbid == ptPotionData->gbidPotionToFind;
+    }
+    else
+    {
+        bMatch = ptACDItem->hGB.gbid == ptPotionData->gbidPotionToFind;
+    }
+
+    if (bMatch)
+    {
+        ptPotionData->idACDFoundPotion = idACDItem;
+        ptPotionData->tInvLoc = tInvLoc;
+        return FALSE;
+    }
+    return TRUE;
+}
+
+extern "C" BOOL sub_71005265f0(
+    const ActorCommonData & tACDPlayer,
+    GBID gbidPotion,
+    uint64 uItemId,
+    ActorCommonData *& ptACDMatchingPotion,
+    InventoryLocation & tMatchingPotionLoc)
+{
+    FindMatchingPotionData tFindPotionCallbackData;
+    tFindPotionCallbackData.gbidPotionToFind = gbidPotion;
+    tFindPotionCallbackData.unk_18 = uItemId;
+    ACDInventoryIterateSlot(tACDPlayer, SLOT_PLAYER_BACKPACK, NULL, sFindMatchingPotionCallback, &tFindPotionCallbackData, FALSE, FALSE);
+    if (tFindPotionCallbackData.idACDFoundPotion == ACDID_INVALID)
+        ACDInventoryIterateSlot(tACDPlayer, SLOT_PLAYER_SHARED_STASH, NULL, sFindMatchingPotionCallback, &tFindPotionCallbackData, FALSE, FALSE);
+
+    if (tFindPotionCallbackData.idACDFoundPotion == ACDID_INVALID)
+        return FALSE;
+
+    ptACDMatchingPotion = ACDTryToGet(tFindPotionCallbackData.idACDFoundPotion);
+    tMatchingPotionLoc = tFindPotionCallbackData.tInvLoc;
+    return TRUE;
+}
+
+BOOL SPlayerFindMatchingPotion(
+    const ActorCommonData & tACDPlayer,
+    GBID gbidPotion,
+    ActorCommonData *& ptACDMatchingPotion,
+    InventoryLocation & tMatchingPotionLoc)
+{
+    return sub_71005265f0(tACDPlayer, gbidPotion, 0, ptACDMatchingPotion, tMatchingPotionLoc);
 }

@@ -14311,3 +14311,8 @@ extern "C" void sub_710050ed00(ActorCommonData & tACDItem, BOOL bPrimalized)
 {
     sSetItemAttribute(tACDItem, ATTRIBUTE_ITEM_WAS_PRIMALIZED, bPrimalized);
 }
+
+extern "C" BOOL sub_7100501ab0(const D3::Items::Generator & tGenerator)
+{
+    return (tGenerator.flags() >> 19) & 1;
+}

@@ -34,7 +34,7 @@
 #include "../../../NintendoSDK/Include/nn/ldn/ldn_MacAddress.h"
 #include "../../Sigma/TypeDescriptor/TypeDescriptor.h"
 #include "../../Sigma/TypeDescriptor/TypeDescriptorField.h"
-
+#include <sstream>
 
 
 namespace Console { namespace IO { class CPKArchiveReader; struct FileInfo; } }
@@ -8896,7 +8896,7 @@ void SNOFileAddHotfixEntry(const SNOGroup snoGroup, const uint32 uGuid, LPCSTR s
     }
 
 }
-// 0x710074fff0 compares the two CRefString elements in the hotfix list.
+// 0x710074fff0 compares the two CRefString elements in the hotfix list (defined at the end of this file).
 extern "C" int32 sub_710074fff0(const void *, const void *);
 
 static int32 sHotfixSort(const void * ptA, const void * ptB)
@@ -11763,4 +11763,79 @@ BOOL SNOOverflowNames::Contains(const char * szNameBuffer)
         ptCurrent = ptCurrent->ptNextBuffer;
     }
     return FALSE;
+}
+
+// Defined at the end of the file so that the __LINE__ values above keep their original numbers.
+// Probably: alphanum_impl<char> (natural "alphanum" string order: runs of digits compare by value, other characters
+// by difference; out of line at 0x7100743890, only used by the hotfix comparator below).
+// alphanum_isdigit from the same alphanum code.
+static inline bool sAlphanumIsDigit(const char c)
+{
+    return c >= '0' && c <= '9';
+}
+
+extern "C" int32 sub_7100743890(const char * l, const char * r)
+{
+    enum { MODE_STRING, MODE_NUMBER } eMode = MODE_STRING;
+    while (*l && *r)
+    {
+        if (eMode == MODE_STRING)
+        {
+            char cLeft, cRight;
+            while ((cLeft = *l) && (cRight = *r))
+            {
+                const bool bLeftDigit = sAlphanumIsDigit(cLeft);
+                const bool bRightDigit = sAlphanumIsDigit(cRight);
+                if (bLeftDigit && bRightDigit)
+                {
+                    eMode = MODE_NUMBER;
+                    break;
+                }
+                if (bLeftDigit)
+                    return -1;
+                if (bRightDigit)
+                    return +1;
+                const int32 nDiff = cLeft - cRight;
+                if (nDiff != 0)
+                    return nDiff;
+                ++l;
+                ++r;
+            }
+        }
+        else
+        {
+            unsigned long uLeft = 0;
+            while (*l && sAlphanumIsDigit(*l))
+            {
+                uLeft = uLeft * 10 + *l - '0';
+                ++l;
+            }
+            unsigned long uRight = 0;
+            while (*r && sAlphanumIsDigit(*r))
+            {
+                uRight = uRight * 10 + *r - '0';
+                ++r;
+            }
+            const long nDiff = uLeft - uRight;
+            if (nDiff != 0)
+                return nDiff;
+            eMode = MODE_STRING;
+        }
+    }
+    if (*r)
+        return -1;
+    if (*l)
+        return +1;
+    return 0;
+}
+
+// Probably: alphanum_comp<CRefString, CRefString> (0x710074fff0): streams both hotfix file names into
+// std::ostringstreams and compares the results with the alphanum order above.
+extern "C" int32 sub_710074fff0(const void * ptA, const void * ptB)
+{
+    std::ostringstream tLeft;
+    tLeft << (LPCSTR)*(const CRefString *)ptA;
+    std::ostringstream tRight;
+    tRight << (LPCSTR)*(const CRefString *)ptB;
+    return sub_7100743890(tLeft.str().c_str(), tRight.str().c_str());
 }

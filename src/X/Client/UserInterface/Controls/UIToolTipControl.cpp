@@ -864,6 +864,7 @@ static void sSetTextureForItemQuality(
 }
 
 #line 848
+// NON_MATCHING: Flag selection and the layout of the variant-control branches differ.
 void ItemUIElements::PositionSubControls(
     const ItemTooltipData & tData,
     const BOOL fEquipped,
@@ -882,83 +883,125 @@ void ItemUIElements::PositionSubControls(
     UIWindow & tWndFrameEquipped = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".equipped_top_wrapper"));
     UIWindow & tWndFrameEquippedAncient = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".equipped_top_wrapper_ancient"));
     UIWindow & tWndFrameEquippedPrimalAncient = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".equipped_top_wrapper_primal"));
+    UIWindow & tWndFrameEquippedSeasonOnly = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".equipped_top_wrapper_seasononly"));
+    UIWindow & tWndFrameEquippedSanctified = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".equipped_top_wrapper_sanctified"));
+    UIWindow & tWndFrameEquippedPrimalized = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".equipped_top_wrapper_primalized"));
     UIWindow & tWndFrameTop = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.top_wrapper"));
     UIWindow & tWndFrameTopAncientFiligree = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.top_wrapper.ancient_filigree"));
     UIWindow & tWndFrameTopPrimalAncientFiligree = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.top_wrapper.primal_filigree"));
+    UIWindow & tWndFrameTopSeasonOnlyFiligree = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.top_wrapper.seasononly_filigree"));
+    UIWindow & tWndFrameTopSanctifiedFiligree = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.top_wrapper.sanctified_filigree"));
+    UIWindow & tWndFrameTopPrimalizedFiligree = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.top_wrapper.primalized_filigree"));
     UIWindow & tWndFrameBody = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame body"));
     UIWindow & tWndFrameCost = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame_cost"));
     UIWindow & tWndFrameBottom = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame_bottom"));
     UIWindow & tWndFrameBottomAncient = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame_bottom_ancient"));
     UIWindow & tWndFrameBottomPrimalAncient = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame_bottom_primal"));
+    UIWindow & tWndFrameBottomSeasonOnly = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame_bottom_seasononly"));
+    UIWindow & tWndFrameBottomSanctified = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame_bottom_sanctified"));
+    UIWindow & tWndFrameBottomPrimalized = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame_bottom_primalized"));
     UIWindow & tWndFrameBottomAncientFiligree = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame_bottom_ancient.ancient_filigree"));
     UIWindow & tWndFrameBottomPrimalAncientFiligree = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame_bottom_primal.primal_filigree"));
+    UIWindow & tWndFrameBottomSeasonOnlyFiligree = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame_bottom_seasononly.seasononly_filigree"));
+    UIWindow & tWndFrameBottomSanctifiedFiligree = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame_bottom_sanctified.sanctified_filigree"));
+    UIWindow & tWndFrameBottomPrimalizedFiligree = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame_bottom_primalized.primalized_filigree"));
+    UIWindow & tWndFrameInstruction = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame_instruction"));
     UIWindow & tWndFrameInstructionTopAncient = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame_instruction.ancient_top_instruction"));
     UIWindow & tWndFrameInstructionTopPrimalAncient = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame_instruction.primal_top_instruction"));
-    UIWindow & tWndFrameInstruction = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame_instruction"));
+    UIWindow & tWndFrameInstructionTopSeasonOnly = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame_instruction.seasononly_top_instruction"));
+    UIWindow & tWndFrameInstructionTopSanctified = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame_instruction.sanctified_top_instruction"));
+    UIWindow & tWndFrameInstructionTopPrimalized = UI_GetWindowFromID(UIIDCreateFromParent(idWrapper, ".stack.frame_instruction.primalized_top_instruction"));
 
+    const BOOL bSeasonOnly = (tData.dwTooltipFlags >> 7) & 1;
+    const BOOL bSanctified = (tData.dwTooltipFlags >> 8) & 1;
+    const BOOL bPrimalized = (tData.dwTooltipFlags >> 9) & 1;
+    const BOOL bAncientFlag = (tData.dwTooltipFlags >> TOOLTIP_IS_ANCIENT) & 1;
+    const BOOL bPrimalFlag = (tData.dwTooltipFlags >> TOOLTIP_IS_PRIMAL_ANCIENT) & 1;
+    const BOOL bNormal = !bAncientFlag && !bPrimalFlag && !bSeasonOnly && !bSanctified && !bPrimalized;
+    const BOOL bAncient = bAncientFlag && !bSeasonOnly && !bSanctified && !bPrimalized;
+    const BOOL bPrimalAncient = bPrimalFlag && !bSanctified && !bPrimalized;
 
-    if (tData.dwTooltipFlags & (1 << TOOLTIP_IS_ANCIENT))
+    tWndFrameEquipped.SetActive(FALSE);
+    tWndFrameEquippedAncient.SetActive(FALSE);
+    tWndFrameEquippedPrimalAncient.SetActive(FALSE);
+    tWndFrameEquippedSeasonOnly.SetActive(FALSE);
+    tWndFrameEquippedSanctified.SetActive(FALSE);
+    tWndFrameEquippedPrimalized.SetActive(FALSE);
+    tWndFrameTopAncientFiligree.SetActive(bAncient);
+    tWndFrameTopPrimalAncientFiligree.SetActive(bPrimalAncient);
+    tWndFrameTopSeasonOnlyFiligree.SetActive(bSeasonOnly);
+    tWndFrameTopSanctifiedFiligree.SetActive(bSanctified);
+    tWndFrameTopPrimalizedFiligree.SetActive(bPrimalized);
+    tWndFrameBottom.SetActive(bNormal);
+    tWndFrameBottomAncient.SetActive(bAncient);
+    tWndFrameBottomPrimalAncient.SetActive(bPrimalAncient);
+    tWndFrameBottomSeasonOnly.SetActive(bSeasonOnly);
+    tWndFrameBottomSanctified.SetActive(bSanctified);
+    tWndFrameBottomPrimalized.SetActive(bPrimalized);
+    tWndFrameBottomAncientFiligree.SetActive(bAncient);
+    tWndFrameBottomPrimalAncientFiligree.SetActive(bPrimalAncient);
+    tWndFrameBottomSeasonOnlyFiligree.SetActive(bSeasonOnly);
+    tWndFrameBottomSanctifiedFiligree.SetActive(bSanctified);
+    tWndFrameBottomPrimalizedFiligree.SetActive(bPrimalized);
+    tWndFrameInstructionTopAncient.SetActive(bAncient);
+    tWndFrameInstructionTopPrimalAncient.SetActive(bPrimalAncient);
+    tWndFrameInstructionTopSeasonOnly.SetActive(bSeasonOnly);
+    tWndFrameInstructionTopSanctified.SetActive(bSanctified);
+    tWndFrameInstructionTopPrimalized.SetActive(bPrimalized);
+
+    if (bAncient)
     {
-        tWndFrameEquipped.SetActive(FALSE);
         tWndFrameEquippedAncient.SetActive(fEquipped);
-        tWndFrameEquippedPrimalAncient.SetActive(FALSE);
-        tWndFrameTopAncientFiligree.SetActive(TRUE);
-        tWndFrameTopPrimalAncientFiligree.SetActive(FALSE);
         tWndFrameTop.SetTiledStyle(TILEDSTYLE_TOOLTIP_TITLE_ANCIENT);
         tWndFrameBody.SetTiledStyle(TILEDSTYLE_ITEM_TOOLTIP_BODY_ANCIENT);
         tWndFrameCost.SetTiledStyle(TILEDSTYLE_ITEM_TOOLTIP_COST_ANCIENT);
-        tWndFrameBottom.SetActive(FALSE);
-        tWndFrameBottomAncient.SetActive(TRUE);
-        tWndFrameBottomPrimalAncient.SetActive(FALSE);
-        tWndFrameBottomAncientFiligree.SetActive(TRUE);
-        tWndFrameBottomPrimalAncientFiligree.SetActive(FALSE);
-        tWndFrameInstructionTopAncient.SetActive(TRUE);
-        tWndFrameInstructionTopPrimalAncient.SetActive(FALSE);
         tWndFrameInstruction.SetTiledStyle(TILEDSTYLE_ITEM_TOOLTIP_INSTRUCTION_ANCIENT);
     }
-    else if (tData.dwTooltipFlags & (1 << TOOLTIP_IS_PRIMAL_ANCIENT))
+    else if (bPrimalAncient)
     {
-        tWndFrameEquipped.SetActive(FALSE);
-        tWndFrameEquippedAncient.SetActive(FALSE);
         tWndFrameEquippedPrimalAncient.SetActive(fEquipped);
-        tWndFrameTopAncientFiligree.SetActive(FALSE);
-        tWndFrameTopPrimalAncientFiligree.SetActive(TRUE);
         tWndFrameTop.SetTiledStyle(TILEDSTYLE_TOOLTIP_TITLE_PRIMAL_ANCIENT);
         tWndFrameBody.SetTiledStyle(TILEDSTYLE_ITEM_TOOLTIP_BODY_PRIMAL_ANCIENT);
         tWndFrameCost.SetTiledStyle(TILEDSTYLE_ITEM_TOOLTIP_COST_PRIMAL_ANCIENT);
-        tWndFrameBottom.SetActive(FALSE);
-        tWndFrameBottomAncient.SetActive(FALSE);
-        tWndFrameBottomPrimalAncient.SetActive(TRUE);
-        tWndFrameBottomAncientFiligree.SetActive(FALSE);
-        tWndFrameBottomPrimalAncientFiligree.SetActive(TRUE);
-        tWndFrameInstructionTopAncient.SetActive(FALSE);
-        tWndFrameInstructionTopPrimalAncient.SetActive(TRUE);
         tWndFrameInstruction.SetTiledStyle(TILEDSTYLE_ITEM_TOOLTIP_INSTRUCTION_PRIMAL_ANCIENT);
+    }
+    else if (bSeasonOnly)
+    {
+        tWndFrameEquippedSeasonOnly.SetActive(fEquipped);
+        tWndFrameTop.SetTiledStyle(static_cast<TiledStyle>(32));
+        tWndFrameBody.SetTiledStyle(static_cast<TiledStyle>(33));
+        tWndFrameCost.SetTiledStyle(static_cast<TiledStyle>(34));
+        tWndFrameInstruction.SetTiledStyle(static_cast<TiledStyle>(35));
+    }
+    else if (bSanctified)
+    {
+        tWndFrameEquippedSanctified.SetActive(fEquipped);
+        tWndFrameTop.SetTiledStyle(static_cast<TiledStyle>(36));
+        tWndFrameBody.SetTiledStyle(static_cast<TiledStyle>(37));
+        tWndFrameCost.SetTiledStyle(static_cast<TiledStyle>(38));
+        tWndFrameInstruction.SetTiledStyle(static_cast<TiledStyle>(39));
+    }
+    else if (bPrimalized)
+    {
+        tWndFrameEquippedPrimalized.SetActive(fEquipped);
+        tWndFrameTop.SetTiledStyle(static_cast<TiledStyle>(40));
+        tWndFrameBody.SetTiledStyle(static_cast<TiledStyle>(41));
+        tWndFrameCost.SetTiledStyle(static_cast<TiledStyle>(42));
+        tWndFrameInstruction.SetTiledStyle(static_cast<TiledStyle>(43));
     }
     else
     {
         tWndFrameEquipped.SetActive(fEquipped);
-        tWndFrameEquippedAncient.SetActive(FALSE);
-        tWndFrameEquippedPrimalAncient.SetActive(FALSE);
-        tWndFrameTopAncientFiligree.SetActive(FALSE);
-        tWndFrameTopPrimalAncientFiligree.SetActive(FALSE);
         tWndFrameTop.SetTiledStyle(TILEDSTYLE_TOOLTIP_TITLE);
         tWndFrameBody.SetTiledStyle(TILEDSTYLE_ITEM_TOOLTIP_BODY);
         tWndFrameCost.SetTiledStyle(TILEDSTYLE_ITEM_TOOLTIP_COST);
-        tWndFrameBottom.SetActive(TRUE);
-        tWndFrameBottomAncient.SetActive(FALSE);
-        tWndFrameBottomAncientFiligree.SetActive(FALSE);
-        tWndFrameInstructionTopAncient.SetActive(FALSE);
-        tWndFrameBottomPrimalAncient.SetActive(FALSE);
-        tWndFrameBottomPrimalAncientFiligree.SetActive(FALSE);
-        tWndFrameInstructionTopPrimalAncient.SetActive(FALSE);
         tWndFrameInstruction.SetTiledStyle(TILEDSTYLE_ITEM_TOOLTIP_INSTRUCTION);
     }
 
     {
         const UIID idName = UIIDCreateFromParent(idWrapper, ".stack.top_wrapper.stack.name");
         UIText & tNameText = UI_GetTextFromID(idName);
-        sSetTextureForItemQuality(tNameText, tData.eIQL, tData.gbid, (tData.dwTooltipFlags >> 8) & 1);
+        sSetTextureForItemQuality(tNameText, tData.eIQL, tData.gbid, bSanctified);
 #line 951
 
 
@@ -1032,6 +1075,8 @@ void ItemUIElements::PositionSubControls(
         ptButton->SetQualityLevel(tData.gbid == GlobalGBIDGet(GLOBALGBID_ITEM_DEATHS_BREATH) ? IQL_NORMAL : tData.eIQL);
         ptButton->SetAllTextureFrames(tData.tImageTexFrame);
         ptButton->SetOverlay(tData.eOverlay);
+        sub_710039d4d0(ptButton, bSanctified);
+        sub_710039d4e0(ptButton, (tData.dwTooltipFlags >> 9) & 1);
     }
 
     UIText & tTextType = UI_GetTextFromID(UIIDCreateFromParent(idContent, ".stack.main.stack.wrapper.col1.type"));

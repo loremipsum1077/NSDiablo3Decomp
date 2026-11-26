@@ -15356,63 +15356,63 @@ static void sDumpLimbo(
 
 
 
-struct FindMatchingPotionData {
-    GBID gbidPotionToFind;
-    ACDID idACDFoundPotion;
-    InventoryLocation tInvLoc;
+BOOL SPlayerFindMatchingPotion(const ActorCommonData &, GBID, ActorCommonData *&, InventoryLocation &);
 
-    FindMatchingPotionData()
-        : gbidPotionToFind(GBID_NONE)
-        , idACDFoundPotion(ACDID_INVALID)
-    {
-    }
-    FindMatchingPotionData(GBID gbidPotionToFind)
-        : gbidPotionToFind(gbidPotionToFind)
-        , idACDFoundPotion(ACDID_INVALID)
-    {
-    }
-};
-BOOL sFindMatchingPotionCallback(
-    const InventoryLocation & tInvLoc,
-    void * pCallBackData)
-{
-    FindMatchingPotionData * ptPotionData = (FindMatchingPotionData *)pCallBackData;
-    ActorCommonData & tACDContainer = ACDGet(tInvLoc.idACDContainer);
-    ACDID idACDItem = ACDInventoryGetSquareItem(tACDContainer, tInvLoc.eSlot, tInvLoc.pt);
-    if (idACDItem == ACDID_INVALID)
-        return TRUE;
 
-    ActorCommonData * ptACDItem = ACDTryToGet(idACDItem);
-    if (ptACDItem == NULL)
-        return TRUE;
 
-    if (ptACDItem->hGB.gbid == ptPotionData->gbidPotionToFind)
-    {
-        ptPotionData->idACDFoundPotion = idACDItem;
-        ptPotionData->tInvLoc = tInvLoc;
-        return FALSE;
-    }
-    return TRUE;
-}
 
-BOOL SPlayerFindMatchingPotion(
-    const ActorCommonData & tACDPlayer,
-    GBID gbidPotion,
-    ActorCommonData *& ptACDMatchingPotion,
-    InventoryLocation & tMatchingPotionLoc)
-{
-    FindMatchingPotionData tFindPotionCallbackData(gbidPotion);
-    ACDInventoryIterateSlot(tACDPlayer, SLOT_PLAYER_BACKPACK, NULL, sFindMatchingPotionCallback, &tFindPotionCallbackData, FALSE, FALSE);
-    if (tFindPotionCallbackData.idACDFoundPotion == ACDID_INVALID)
-        ACDInventoryIterateSlot(tACDPlayer, SLOT_PLAYER_SHARED_STASH, NULL, sFindMatchingPotionCallback, &tFindPotionCallbackData, FALSE, FALSE);
 
-    if (tFindPotionCallbackData.idACDFoundPotion == ACDID_INVALID)
-        return FALSE;
 
-    ptACDMatchingPotion = ACDTryToGet(tFindPotionCallbackData.idACDFoundPotion);
-    tMatchingPotionLoc = tFindPotionCallbackData.tInvLoc;
-    return TRUE;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

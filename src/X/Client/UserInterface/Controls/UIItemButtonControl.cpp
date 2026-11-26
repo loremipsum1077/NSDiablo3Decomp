@@ -439,3 +439,13 @@ void UIItemButton::SetFromItemGenerator(const D3::Items::Generator & tItem) {  /
         SetAllTextureFrames(tImageTexFrame);
     }
 }
+
+extern "C" void sub_710039d4d0(UIItemButton * button, int32 value)
+{
+    button->unk_4e8 = value;
+}
+
+extern "C" void sub_710039d4e0(UIItemButton * button, int32 value)
+{
+    button->unk_4ec = value;
+}

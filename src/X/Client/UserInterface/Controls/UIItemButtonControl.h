@@ -33,6 +33,10 @@ private:
 };
 static_assert(sizeof(ItemButtonCreationParams) == 0x8a8, "ItemButtonCreationParams");
 
+class UIItemButton;
+extern "C" void sub_710039d4d0(UIItemButton * button, int32 value);
+extern "C" void sub_710039d4e0(UIItemButton * button, int32 value);
+
 class UIItemButton : public UIButton {  // size 0x4f0
 public:
     UIItemButton(const ItemButtonCreationParams &, const Vector2D &, const Vector2D &);
@@ -58,6 +62,8 @@ public:
     void DrawItemSockets(const ActorCommonData * ptACD, const Rect2D & rectItemImage, const BOOL fEquipped, float & flZ);
     static void GetItemRect(const ImageTextureFrame & tImageTexFrame, const Rect2D & rectSlot, Rect2D & rectItem);
 private:
+    friend void sub_710039d4d0(UIItemButton *, int32);
+    friend void sub_710039d4e0(UIItemButton *, int32);
     void sInit(const ItemButtonCreationParams & tParams);
     enum {
         IBF_DRAW_HIGHLIGHT_BIT = 0,

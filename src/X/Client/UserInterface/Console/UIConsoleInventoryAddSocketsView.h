@@ -8,6 +8,11 @@
 
 struct UIID;
 
+namespace UIInventory { namespace Console { class UIInventoryAddSocketsView; } }
+// 2.7.7 out-of-line state setters (UIConsoleInventoryAddSocketsView.cpp), called by Reset and StartAddingSockets.
+extern "C" void sub_7100374540(UIInventory::Console::UIInventoryAddSocketsView *);
+extern "C" void sub_7100374590(UIInventory::Console::UIInventoryAddSocketsView *);
+
 namespace UIInventory {
 namespace Console {
 class UIInventoryAddSocketsView : public UIInventory::Console::UIInventoryView {  // size 0x70
@@ -34,6 +39,8 @@ private:
     ACDID m_idAddSocketsRecipient;  // 0x64
     UIInventory::Console::UIInventoryAddSocketsView::State m_eState;  // 0x68
     void UpdateUI();
+    friend void ::sub_7100374540(UIInventoryAddSocketsView *);
+    friend void ::sub_7100374590(UIInventoryAddSocketsView *);
 };
 static_assert(sizeof(UIInventoryAddSocketsView) == 0x70, "UIInventoryAddSocketsView");
 

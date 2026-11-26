@@ -166,6 +166,7 @@ public:
     blz::unordered_set<unsigned long> setPaidPlayers;
     blz::unordered_map<unsigned long, GreaterRiftRewardState> mapPlayerRewardStates;
     blz::unordered_map<unsigned long, GreaterRiftPlayerState> mapPlayerStates;
+    blz::unordered_map<unsigned long, uint32> unk_88;  // 0x88; 2.7.7: hero id -> leaderboard category (read by sub_7100779460)
     RiftJoinMessage tCachedJoinMessage;
     TimerID idTimerInviteStateUpdate;
 };
@@ -446,8 +447,8 @@ inline void CancelStart()
 
 
 // 2.7.7 calls CancelStart out of line here (0x710077a3d0: SendRiftInviteStateMessage(NULL),
-// SMSG_RIFT_CANCELED, ResetState). Ours still inlines CancelStart until NephalemRiftState
-// gains its 2.7.7 members (0xd0 bytes), so the call goes through the unnamed address.
+// SMSG_RIFT_CANCELED, ResetState). Ours still inlines CancelStart, so the call goes through the
+// unnamed address, defined after PlayerDeclineInvite as a wrapper around CancelStart.
 extern "C" void sub_710077a3d0();
 
 void OnVoteTimeOut(TimerID, DataID, void *)
@@ -1656,6 +1657,18 @@ int32 RiftPlayerCount()
     return -1;
 }
 
+// Probably: NephalemRiftManager getter for the 2.7.7 per-hero value in NephalemRiftState::unk_88 (hero id -> uint32,
+// 0 when there is no state or no entry); ScriptUtil.cpp passes it to SLeaderboard::PostRiftTime as the category.
+extern "C" uint32 sub_7100779460(uint64 uHeroId)
+{
+    NephalemRiftState * ptState = GetGameState();
+    if (ptState == NULL)
+        return 0;
+
+    uint32 * puValue = blzext::unordered_map_find_ptr(ptState->unk_88, uHeroId);
+    return puValue != NULL ? *puValue : 0;
+}
+
 
 
 
@@ -2017,6 +2030,14 @@ void PlayerDeclineInvite(
     pState->nDeclinedInvites += nNumDeclined;
 
     TryStartRift();
+}
+
+
+// Probably: NephalemRiftManager::(anonymous)::CancelStart(), out of line in 2.7.7 (every CancelStart caller in the
+// target branches to 0x710077a3d0). Our CancelStart is still inline, so the out-of-line copy is this wrapper.
+extern "C" void sub_710077a3d0()
+{
+    CancelStart();
 }
 
 

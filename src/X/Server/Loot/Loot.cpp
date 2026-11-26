@@ -5172,10 +5172,13 @@ static BOOL sGetLegendaryAffixesFromFamily(LootSpecifier & tSpecifier,
 }
 
 
+// 2.7.7: out of line at 0x7100892b00 with a fifth argument (ItemDefinition::unk_1d0[i] / 0): when it is non-zero the
+// chosen affix goes to unk_a0 (affix -> unlock rank, see LootCreateItem) instead of the affix list.
 static void sChooseLegendaryAffixFromFamily(LootSpecifier & tSpecifier,
                                             const GBID & gbidAffixFamily,
                                             int32 nLegendaryAffixFamilyLevel,
-                                            BOOL bUseLegendaryAllowedTypes)
+                                            BOOL bUseLegendaryAllowedTypes,
+                                            int32 nUnlockRank)
 {
 
     GBHandleList lstAffixes(GBGetHandlePool());
@@ -5205,6 +5208,11 @@ static void sChooseLegendaryAffixFromFamily(LootSpecifier & tSpecifier,
     }
 
 
+    if (nUnlockRank != 0)
+    {
+        tSpecifier.unk_a0[gbidAffix] = nUnlockRank;
+        return;
+    }
     tSpecifier.AddAffix(gbidAffix);
 }
 
@@ -5425,7 +5433,8 @@ void LootDetermineInherentAffixes(LootSpecifier & tSpecifier)
                 sChooseLegendaryAffixFromFamily(tSpecifier,
                                                 pItemDef->gbidLegendaryAffixFamily[i],
                                                 nAffixFamilyLevel,
-                                                pItemDef->bUseLegendaryAllowedTypes[i]);
+                                                pItemDef->bUseLegendaryAllowedTypes[i],
+                                                pItemDef->unk_1d0[i]);
             }
         }
 
@@ -7592,4 +7601,35 @@ GBID LootPickGem(int32 nGemQuality, GemType eGemType)
     }
 
     return GBID_NONE;
+}
+
+// Probably: Loot helper that rolls the legendary affix of an item's extra (7th) legendary affix family
+// (ItemDefinition::unk_1ec / unk_1f0) for a player class, at the item's legendary level override (else its
+// item level); returns the chosen affix GBID (GBID_NONE when none). Caller: SItems.cpp sub_71007e07f0.
+extern "C" GBID sub_7100894480(const ActorCommonData & tACDItem, PlayerClass eClass)
+{
+    int32 nItemLevel = ItemGetItemLevel(tACDItem.hGB.gbid);
+    int32 nLevelOverride = tACDItem.AttributesGetInt(ATTRIBUTE_ITEM_LEGENDARY_ITEM_LEVEL_OVERRIDE);
+    int32 nLevel = nLevelOverride > 0 ? nLevelOverride : nItemLevel;
+
+    LooteeInfo tLootee;
+    tLootee.InitializeFromACD(tACDItem, ACDID_INVALID);
+
+    LootSpecifier tSpecifier;
+    tSpecifier.tLooteeParams = tLootee.tLooteeParams;
+    tSpecifier.hGBItem = tACDItem.hGB;
+    tSpecifier.eIQL = (ItemQualityLevel)IQL_LEGENDARY;
+    tSpecifier.nAffixLevel = nLevel;
+    tSpecifier.nLegendaryItemLevel = nLevel;
+    tSpecifier.fAutoIdentify = TRUE;
+    tSpecifier.fAccountBound = TRUE;
+    tSpecifier.tLooteeParams.bForceCrafterAncientLegendaryChance = TRUE;
+    tSpecifier.FillInTargetedClass(eClass, NULL, TRUE);
+
+    const GameBalanceDefinition * pdefGB;
+    const ItemDefinition * pItemDef = (const ItemDefinition *)GBLockR(tSpecifier.hGBItem, pdefGB, TRUE);
+    sChooseLegendaryAffixFromFamily(tSpecifier, pItemDef->unk_1ec, tSpecifier.nLegendaryItemLevel, pItemDef->unk_1f0, 0);
+    GBUnlockR(pdefGB);
+
+    return tSpecifier.arAffixGBIDs[0];
 }

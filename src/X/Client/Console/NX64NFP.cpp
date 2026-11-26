@@ -1895,24 +1895,7 @@ void UpdatePlayerStateTagRead(
 
             std::memset(&tData.atPlayerData[nPlayerIndex].tModelInfo, 0, sizeof(tData.atPlayerData[nPlayerIndex].tModelInfo));
         }
-        bExistResult = tAccessor.GetResult(&tCommandResult, PlayerCommand_GetCommonInfo);
-        if (bExistResult && tCommandResult.IsSuccess())
-        {
-            tData.atPlayerData[nPlayerIndex].tCommonInfo = g_tWork.atPlayerData[nPlayerIndex].tCommonInfo;
-        }
-        else
-        {
-            std::memset(&tData.atPlayerData[nPlayerIndex].tCommonInfo, 0, sizeof(tData.atPlayerData[nPlayerIndex].tCommonInfo));
-        }
-
-
-
-
-
-
-
-
-        // Inference: lines 1906-1931 are only partly recovered; the line table keeps the two clears below.
+        std::memset(&tData.atPlayerData[nPlayerIndex].tCommonInfo, 0, sizeof(tData.atPlayerData[nPlayerIndex].tCommonInfo));
         std::memset(&tData.atPlayerData[nPlayerIndex].tRegisterInfo, 0, sizeof(tData.atPlayerData[nPlayerIndex].tRegisterInfo));
 
 
@@ -2098,10 +2081,6 @@ void UpdatePlayerStateTagEnabled(int nPlayerIndex, ApplicationData & tData)
 
 void UpdatePlayerStateNeedCreate(int nPlayerIndex, ApplicationData & tData)
 {
-    if (tData.atPlayerData[nPlayerIndex].bIsScanDesired)
-    {
-        return;
-    }
     tData.atPlayerData[nPlayerIndex].eState = PlayerState_Idle;
 }
 
@@ -2137,10 +2116,8 @@ void UpdatePlayerStateNeedCreate(int nPlayerIndex, ApplicationData & tData)
 
 void UpdatePlayerStateNeedRestore(int nPlayerIndex, ApplicationData & tData)
 {
-    if (tData.atPlayerData[nPlayerIndex].bIsScanDesired)
-    {
-        return;
-    }
+    GameErrorData tError(GAMEERROR_UNK_195);
+    OnNFPScanFailed(tData, tError);
     tData.atPlayerData[nPlayerIndex].eState = PlayerState_Idle;
 }
 
@@ -2183,10 +2160,8 @@ void UpdatePlayerStateNeedRestore(int nPlayerIndex, ApplicationData & tData)
 
 void UpdatePlayerStateNeedFormat(int nPlayerIndex, ApplicationData & tData)
 {
-    if (tData.atPlayerData[nPlayerIndex].bIsScanDesired)
-    {
-        return;
-    }
+    GameErrorData tError(GAMEERROR_UNK_195);
+    OnNFPScanFailed(tData, tError);
     tData.atPlayerData[nPlayerIndex].eState = PlayerState_Idle;
 }
 
@@ -2203,10 +2178,6 @@ void UpdatePlayerStateNeedFormat(int nPlayerIndex, ApplicationData & tData)
 
 void UpdatePlayerStateNeedRegister(int nPlayerIndex, ApplicationData & tData)
 {
-    if (tData.atPlayerData[nPlayerIndex].bIsScanDesired)
-    {
-        return;
-    }
     tData.atPlayerData[nPlayerIndex].eState = PlayerState_Idle;
 }
 
@@ -2237,10 +2208,6 @@ void UpdatePlayerStateNeedRegister(int nPlayerIndex, ApplicationData & tData)
 
 void UpdatePlayerStateNeedDelete(int nPlayerIndex, ApplicationData & tData)
 {
-    if (tData.atPlayerData[nPlayerIndex].bIsScanDesired)
-    {
-        return;
-    }
     tData.atPlayerData[nPlayerIndex].eState = PlayerState_Idle;
 }
 

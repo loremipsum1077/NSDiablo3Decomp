@@ -62,6 +62,7 @@ public:
     inline const TYPE& GetPrev(POS& pos) const;
     inline TYPE& GetPrev(POS& pos);
     inline void MoveToTail(const POS& pos);
+    inline void MoveToHead(const POS& pos);  // 2.7.7 (inlined into 0x71005285b0)
     inline static TYPE& sGetNext(POS& pos);
 
     inline const TYPE& GetHead() const;
@@ -423,6 +424,23 @@ void XBaseList<TYPE, ARG_TYPE, NODE_ALLOCATOR>::MoveToTail(const POS& pos) {
         pNode->m_pPrev = m_pTail;
         pNode->m_pNext = NULL;
         m_pTail = pNode;
+    }
+}
+
+template <typename TYPE, typename ARG_TYPE, typename NODE_ALLOCATOR>
+void XBaseList<TYPE, ARG_TYPE, NODE_ALLOCATOR>::MoveToHead(const POS& pos) {
+    XBaseListNodeType* pNode = (XBaseListNodeType*)pos;
+    if (m_pHead != pNode) {
+        if (pNode->m_pNext != NULL) {
+            pNode->m_pNext->m_pPrev = pNode->m_pPrev;
+        } else {
+            m_pTail = pNode->m_pPrev;
+        }
+        pNode->m_pPrev->m_pNext = pNode->m_pNext;
+        m_pHead->m_pPrev = pNode;
+        pNode->m_pNext = m_pHead;
+        pNode->m_pPrev = NULL;
+        m_pHead = pNode;
     }
 }
 

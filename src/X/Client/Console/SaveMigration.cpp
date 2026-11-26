@@ -72,6 +72,8 @@ struct LegacyItemConversion {  // size 0x28; GameBalanceDefinition.h:1333
 };
 typedef ScopedGBLockR<LegacyItemConversion, 45> ScopedLegacyItemConversionLockR;
 enum { GB_LEGACY_ITEM_CONVERSIONS = 45 };
+extern "C" BOOL sub_7100501ab0(const D3::Items::Generator & tGenerator);
+extern "C" BOOL sub_710050e800(GBID gbidItem);
 BOOL ItemHasLabel(const int32 gbidItem, const int32 eItemLabel);  // Items.h:90
 int32 StringToGBID(const char * szGBID);  // GameBalance.h:75
 namespace OnlineService { namespace AccountMigration { BOOL SeasonCleanSeasonalAchievements(D3::Achievements::Snapshot & tSnapshot);
@@ -1869,7 +1871,8 @@ void MigrateSavedItemsToSeasonRolloverCache(const D3::Items::ItemList & tItemLis
 
     for (const D3::Items::SavedItem & tItem : tItemList.items())
     {
-        if (ItemHasLabel(tItem.generator().gb_handle().gbid(), 46))
+        const GBID gbidItem = tItem.generator().gb_handle().gbid();
+        if (ItemHasLabel(gbidItem, 46) || sub_710050e800(gbidItem) || sub_7100501ab0(tItem.generator()))
             continue;
 
         D3::Account::ConsolePartitionData_SeasonalRolloverItem * tRolloverItem = tDestinationPartition.mutable_console_partition_data()->add_seasonal_rollover_item();

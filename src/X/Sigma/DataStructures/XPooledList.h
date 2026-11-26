@@ -179,6 +179,7 @@ public:
     inline POS AddTail_Tracked(ARG_TYPE t) { return m_list.AddTail_Tracked(t); }
     inline POS InsertBefore_Tracked(POS pos, ARG_TYPE t) { return m_list.InsertBefore_Tracked(pos, t); }
     inline void MoveToTail(POS pos) { m_list.MoveToTail(pos); }  // line 189
+    inline void MoveToHead(POS pos) { m_list.MoveToHead(pos); }  // 2.7.7 (inlined into 0x71005285b0)
     inline void Copy(const XPooledList<TYPE, ARG_TYPE> & source);  // line 192, defined below
 
 

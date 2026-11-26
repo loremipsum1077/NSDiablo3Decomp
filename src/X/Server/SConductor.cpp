@@ -1292,3 +1292,32 @@ void SConductorInstanceRemoveRefACD(ConductorInstance * ptConductorInstance, ACD
         ptConductorInstance->tMapRefACDs.RemoveAt(idACD);
     }
 }
+
+// Probably: SConductorInstanceLogRefACDs (2.7.7, called by the ConductorLogActorRefs script command): walks
+// tMapRefACDs and looks each ACD up; the log output is compiled out, only the ACDTryToGet calls remain.
+extern "C" void sub_71007c2140(ConductorInstance & tConductor)
+{
+    POS posRef = tConductor.tMapRefACDs.GetStartAssoc();
+    while (posRef)
+    {
+        ACDID idACDRef;
+        int32 nRefValue;
+        tConductor.tMapRefACDs.GetNextAssoc(posRef, idACDRef, nRefValue);
+        ACDTryToGet(idACDRef);
+    }
+}
+
+// Probably: SConductorInstanceClearRefACDs (2.7.7, called by the ConductorClearActorRefs script command):
+// removes every entry of tMapRefACDs (without LuaScriptReleaseRefACD).
+// NON_MATCHING: block placement of the RemoveAt loop (target keeps the in-bucket walk inline before the bucket scan)
+extern "C" void sub_71007c2240(ConductorInstance & tConductor)
+{
+    POS posRef = tConductor.tMapRefACDs.GetStartAssoc();
+    while (posRef)
+    {
+        ACDID idACDRef;
+        int32 nRefValue;
+        tConductor.tMapRefACDs.GetNextAssoc(posRef, idACDRef, nRefValue);
+        tConductor.tMapRefACDs.RemoveAt(idACDRef);
+    }
+}
