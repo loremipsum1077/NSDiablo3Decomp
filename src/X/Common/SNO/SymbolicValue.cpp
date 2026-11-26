@@ -1017,8 +1017,8 @@ const SymbolicEntry gAffixGroups[3] = {
 };
 
 // line 2883
-extern const SymbolicEntry gTransmuteRecipeActionTypes[18];
-const SymbolicEntry gTransmuteRecipeActionTypes[18] = {
+extern const SymbolicEntry gTransmuteRecipeActionTypes[21];
+const SymbolicEntry gTransmuteRecipeActionTypes[21] = {
     { TRA_NONE, "- None -" },
     { TRA_EXTRACT_LEGENDARY_POWER, "[EXTRACT LEGENDARY POWER]" },
     { TRA_REFORGE_LEGENDARY, "[REFORGE LEGENDARY]" },
@@ -1036,6 +1036,9 @@ const SymbolicEntry gTransmuteRecipeActionTypes[18] = {
     { TRA_AUGMENT_ARMOR, "[AUGMENT ARMOR]" },
     { TRA_CONVERT_PAGES, "[CONVERT BLACKROCK PAGES]" },
     { TRA_INFUSE_LEGENDARY_POWER, "[INFUSE LEGENDARY POWER]" },
+    { 16, "[OPEN PORTAL TO ANCIENT GREED]" },  // 2.7.7: the next three, read from the binary's table
+    { 17, "[OPEN PORTAL TO SWARM RIFT]" },
+    { 18, "[PRIMALIZE LEGENDARY]" },
     { 0, NULL },
 };
 

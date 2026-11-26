@@ -21,7 +21,7 @@ extern const SymbolicEntry gAffixTypes[10];  // SymbolicValue.cpp:2859
 extern const SymbolicEntry gAffixGroups[3];  // SymbolicValue.cpp:2874
 extern const SymbolicEntry gPrimaryDamageAttributes[5];  // SymbolicValue.cpp:3398
 extern const SymbolicEntry gPlayerClasses[9];  // SymbolicValue.cpp:4732
-extern const SymbolicEntry gTransmuteRecipeActionTypes[18];  // SymbolicValue.cpp:2883
+extern const SymbolicEntry gTransmuteRecipeActionTypes[21];  // SymbolicValue.cpp:2883
 extern const SymbolicEntry gMonsterAffixValidFor[5];  // SymbolicValue.cpp:2930
 extern const SymbolicEntry gCrafterTypes[7];  // SymbolicValue.cpp:4746
 extern const SymbolicEntry gImageCollections[4];  // SymbolicValue.cpp:3253
