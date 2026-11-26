@@ -68,10 +68,14 @@ def lookup_calls(image, nss, objdump):
             registers.pop(dest, None)
 
 
-def generate(root, image, nss, objdump):
+def generate(root, image, nss, objdump, names=None):
+    """names: (GlobalSNO names, GlobalGBID names) by 2.6.2 value, when GlobalSNO.h is numbered
+    for a later version (default: read them from GlobalSNO.h)."""
     common = root / "src/X/Common"
-    global_names = enum_names(common / "GlobalSNO.h", r"GLOBALSNO_(?!FLAG_)\w+")
-    gbid_names = enum_names(common / "GlobalSNO.h", r"GLOBALGBID_\w+")
+    if names is None:
+        names = (enum_names(common / "GlobalSNO.h", r"GLOBALSNO_(?!FLAG_)\w+"),
+                 enum_names(common / "GlobalSNO.h", r"GLOBALGBID_\w+"))
+    global_names, gbid_names = names
     groups = enum_names(common / "SNO/SNOFiles.h", r"(?!SNOENTRY_)[A-Z0-9_]+_SNO")
     with (root / "data/2.6.2/data_symbols.csv").open() as fp:
         symbols = {int(row["Address"], 16) & 0xffffffff: row["Name"] for row in csv.DictReader(fp)}

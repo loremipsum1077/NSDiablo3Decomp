@@ -189,6 +189,32 @@ def full_map(mapping: dict[int, int], old: dict[int, tuple], new: dict[int, tupl
     return out
 
 
+def old_names(old_v: str, new_v: str, header: str) -> tuple[dict[int, str], dict[int, str]]:
+    """({value: GLOBALSNO_ name}, {value: GLOBALGBID_ name}) as old_v numbered them, read from
+    a GlobalSNO.h that --apply renumbered for new_v: the inverse of that renumbering."""
+    def names(pattern):
+        return {int(v): n for n, v in re.findall(rf'^\s*({pattern})\s*=\s*(-?\d+),', header, re.M)}
+
+    def count(name):
+        return int(re.search(rf'{name}\s*=\s*(\d+)', header).group(1))
+
+    result = []
+    for pattern, count_name, (mapping, old, new) in (
+            (r'GLOBALSNO_(?!FLAG_)\w+', 'NUM_GLOBAL_SNOS', sno_map(old_v, new_v)),
+            (r'GLOBALGBID_\w+', 'NUM_GLOBAL_GBIDS', gbid_map(old_v, new_v))):
+        new_count = count(count_name)
+        # As in main(): the old count's partner is the new count.
+        if count_name == 'NUM_GLOBAL_SNOS':
+            old_count = next(o for o, n in mapping.items() if n == new_count)
+        else:
+            old_count = max(old) + 1
+        full = full_map(mapping, old, new, old_count, new_count)
+        current = names(pattern)
+        result.append({o: current[n] for o, n in full.items() if n in current}
+                      | {v: n for v, n in current.items() if v < 0})
+    return result[0], result[1]
+
+
 def renumber(text: str, count_name: str, mapping: dict[int, int], new: dict[int, tuple],
              label) -> tuple[str, int, int]:
     """Rewrite the enum block that defines count_name; returns (text, renumbered, added).

@@ -320,7 +320,13 @@ def bootstrap(args):
             raise ValueError(f"descriptor mismatch: {name}")
         raw_schemas[name] = schema(raw)
 
-    tables = generate(ROOT, image, nss, args.objdump)
+    # A checkout that targets a later version has GlobalSNO.h renumbered for it
+    # (tools/global_sno_map.py --apply); the 2.6.2 calls are named through the inverse mapping.
+    names = None
+    if VERSION != "2.6.2":
+        import global_sno_map as gsm
+        names = gsm.old_names("2.6.2", VERSION, gsm.HEADER.read_text())
+    tables = generate(ROOT, image, nss, args.objdump, names)
     tables["button_maps.inc"] = generate_buttons(image, nss, args.objdump)
     lua_image = LuaTableImage(ROOT, image)
     tables["nvn_entry_points.inc"] = nvn_entry_points(image)
