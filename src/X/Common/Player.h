@@ -719,6 +719,7 @@ struct Player {  // size 0xebf8
     uint8 bParticipatedInVoteKick : 1;  // 0xebf0
     uint8 bForceHirelingItemSave : 1;  // 0xebf0
     uint8 bNewX1Player : 1;  // 0xebf0
+    ACDID idACDDarkAlchemyAltar;  // 0xebf4: the Altar of Rites last used (2.7.7; GizmoOperate sets it)
     // Player::Player is declared at Player.h:1373 (DWARF); the original calls BitField(0x180) for tSeenTutorials there.
 #line 1373
     Player() : tSeenTutorials(MAX_TUTORIAL_BITS) {}
@@ -726,6 +727,7 @@ struct Player {  // size 0xebf8
 };
 static_assert(sizeof(Player) == 0xebf8, "Player");  static_assert(offsetof(Player, nValidationErrors) == 0x70, "Player");  static_assert(offsetof(Player, idActorTownPortalInUse) == 0x7c, "Player");  static_assert(offsetof(Player, rngSyncedAnim) == 0x11c, "Player");  static_assert(offsetof(Player, listNecroCorpses) == 0xd968, "Player");  static_assert(offsetof(Player, tClientInfo) == 0xddb0, "Player");  static_assert(offsetof(Player, arMoveValidationLog) == 0xe998, "Player");  static_assert(offsetof(Player, uMoveLogIdx) == 0xeb98, "Player");  static_assert(offsetof(Player, tSeenTutorials) == 0xeba0, "Player");  static_assert(offsetof(Player, dwLastSuccessfulKick) == 0xebd4, "Player");  static_assert(offsetof(Player, uAcceptedLicenseBitsAccount) == 0xebd8, "Player");  static_assert(offsetof(Player, uAcceptedLicenseBitsHero) == 0xebe0, "Player");  static_assert(offsetof(Player, uGuildId) == 0xebe8, "Player");
 static_assert(offsetof(Player, nLastRewardChallengeNumber) == 0x98, "Player");
+static_assert(offsetof(Player, idACDDarkAlchemyAltar) == 0xebf4, "Player");
 static_assert(offsetof(Player, tCosmeticItemSavedData) == 0x9f38, "Player");
 static_assert(offsetof(Player, tAccount) == 0xb148, "Player");
 static_assert(offsetof(Player, tChallengeMail) == 0xa0, "Player");

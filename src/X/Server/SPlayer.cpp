@@ -1977,6 +1977,7 @@ void SPlayerDelete(
         tPlayer.dwTickLastVerification = 0;
         tPlayer.tPlaceLastVerification = cgplaceNull;
         tPlayer.flMaxSpeedThisVerificationInterval = 0.0f;
+        tPlayer.idACDDarkAlchemyAltar = ACDID_INVALID;
 
         tPlayer.nMessageCostLast300 = tPlayer.nMessageCostLast600 = tPlayer.nMessageCostLast3600 = tPlayer.nMessageCostLastUpdateTick = tPlayer.nMessageCostMax300 = tPlayer.nMessageCostMax600 = tPlayer.nMessageCostMax3600 = 0;
 

@@ -2004,6 +2004,9 @@ void SGizmoOperatePortal(
 
 
 
+// X/Common/sub_71004b72d0.cpp: the operator is within reach of a Dark Alchemy altar.
+extern "C" BOOL sub_71004b8b80(const ActorCommonData & first, const ActorCommonData & second);
+
 void GizmoOperate(
     ActorCommonData & tACDGizmo,
     ActorCommonData * ptACDOperator,
@@ -2471,6 +2474,25 @@ void GizmoOperate(
         case ACTORGIZMO_WEEKLYCHALLENGE_REWARD:
 
             SGizmoOperateWeeklyChallengeReward(tACDGizmo, *ptACDOperator);
+            break;
+
+        case ACTORGIZMO_DARKALCHEMY_ALTER:
+            // 2.7.7's jump-table entry 87: within reach of the altar, remember it on the
+            // player and tell that player's client to open the Dark Alchemy screen.
+            if (ptACDOperator != NULL && sub_71004b8b80(tACDGizmo, *ptACDOperator))
+            {
+                Player * ptPlayer = PlayerGetByACD(ptACDOperator->id);
+                if (ptPlayer != NULL)
+                {
+                    ptPlayer->idACDDarkAlchemyAltar = tACDGizmo.id;
+                    PlayerList listDestPlayers(PlayerListGetElementPool());
+                    PlayerListGetSingle(listDestPlayers, ptACDOperator->id);
+                    GizmoInteractMessage tMessage;
+                    tMessage.unk_08 = ANNFromACD(tACDGizmo.id);
+                    tMessage.unk_0c = ANNFromACD(ptACDOperator->id);
+                    MessageSendToClient(listDestPlayers, SMSG_DARK_ALCHEMY_INTERACT, &tMessage, sizeof(tMessage));
+                }
+            }
             break;
 
         case ACTORGIZMO_SIGN:

@@ -1086,6 +1086,7 @@ void PlayersInitializeGameCommonData(
         tPlayer.idACDActiveChallengePortal = ACDID_INVALID;
         tPlayer.bChallengeAccepted = FALSE;
         tPlayer.idACDStashLastOperated = ACDID_INVALID;
+        tPlayer.idACDDarkAlchemyAltar = ACDID_INVALID;
         tPlayer.dwTickLastVerification = 0;
 
         tPlayer.tPlaceLastVerification = cgplaceNull;

@@ -1336,6 +1336,9 @@ BOOL sMessageIsPlayerInitiated(GameMessageType eType)
 // Early-outs: `break` and `return` compile to the same code here, but they order the exit block's
 // predecessors differently (tail merging looks at 150 at a time). CMSG_PLAYER_CHANGE_POTION_BUTTON and
 // CMSG_TELEPORT_TO_WAYPOINT use `return`, as the original line table shows for their last conditions.
+// Dark Alchemy (the Altar of Rites), added in 2.7.7; defined after ServerMessageReceive.
+extern "C" BOOL sub_710096be00(uint32 nNode, Player & tPlayer, int32 annItem);
+
 void ServerMessageReceive(int32 nPlayerIndex, void * pMessage)
 {
     Player & tPlayerFrom = *PlayerGetByPlayerIndex(nPlayerIndex);
@@ -5474,8 +5477,174 @@ void ServerMessageReceive(int32 nPlayerIndex, void * pMessage)
         }
         break;
 
+    case CMSG_DARK_ALCHEMY_ACTIVATE_NODE:
+        // 2.7.7's jump-table entry for message 591: unlock a node at the Altar of Rites.
+        if (ptACDPlayer != NULL && ptACDPlayer->IsAlive() && PlayerCanChangeSkillorTrait(*ptACDPlayer, FALSE))
+        {
+            ActivateNodeMessage * ptMsg = (ActivateNodeMessage *)pMessage;
+            sub_710096be00(ptMsg->unk_08, tPlayerFrom, ptMsg->unk_0c);
+        }
+        break;
+
     default:
         XServerSocketDisconnect(idServerSocket, SDR_UNKNOWN_MESSAGE);
         break;
     }
+}
+
+
+// ---------------------------------------------------------------------------------------
+// Dark Alchemy (the Altar of Rites, 2.7.7). The client sends CMSG_DARK_ALCHEMY_ACTIVATE_NODE
+// from the altar screen that GizmoOperate opened; these take the node's cost and unlock it.
+
+#include "../../Common/Crafting/ItemCrafting.h"
+#include "../Crafting/SItemCrafting.h"
+
+extern "C" int32 sub_71004b83e0(uint32 index);
+extern "C" BOOL sub_71004b8b80(const ActorCommonData & first, const ActorCommonData & second);
+extern "C" GameError sub_71004b8530(const ActorCommonData & actor, uint32 node, const ActorCommonData * item);
+
+struct DarkAlchemyFindItemData
+{
+    GBID gbid;
+    ActorCommonData * ptACDItem;
+};
+
+// sub_710096c220: the first inventory item with the wanted GBID.
+static void sDarkAlchemyFindItem(ACDID idACDItem, InventorySlotType, void * pUserData)
+{
+    DarkAlchemyFindItemData & tData = *(DarkAlchemyFindItemData *)pUserData;
+    if (idACDItem == ACDID_INVALID || tData.ptACDItem != NULL)
+        return;
+    ActorCommonData * ptACDItem = ACDTryToGet(idACDItem);
+    if (ptACDItem != NULL && ptACDItem->GetGBHandle().gbid == tData.gbid)
+        tData.ptACDItem = ptACDItem;
+}
+
+static ActorCommonData * sDarkAlchemyFindItemInBags(ActorCommonData & tACDPlayer, GBID gbid)
+{
+    DarkAlchemyFindItemData tData = { gbid, NULL };
+    ACDInventoryIterateItems(tACDPlayer, SLOT_PLAYER_BACKPACK, 0, sDarkAlchemyFindItem, &tData);
+    if (tData.ptACDItem == NULL)
+        ACDInventoryIterateItems(tACDPlayer, SLOT_PLAYER_SHARED_STASH, 0, sDarkAlchemyFindItem, &tData);
+    return tData.ptACDItem;
+}
+
+// Gems in a sacrificed item go back to the player first, as when salvaging.
+static void sDarkAlchemyDeleteItem(ActorCommonData & tACDPlayer, ActorCommonData & tACDItem, BOOL & bReturnedGems)
+{
+    if (ItemHasSockets(tACDItem) && ItemGetNumFilledSockets(tACDItem) >= 1)
+    {
+        ItemCrafting_BackEnd::UnsocketCallbackData tCallbackData;
+        tCallbackData.ptACDPlayer = &tACDPlayer;
+        tCallbackData.bTriggerAchievementEvent = FALSE;
+        ACDInventoryIterateSlot(tACDItem, SLOT_ITEM_SOCKETS, NULL, ItemCrafting_BackEnd::UnSocket, &tCallbackData, FALSE, FALSE);
+        bReturnedGems = TRUE;
+    }
+    SACDInventoryDeleteItem(tACDItem, 1, TRUE, FALSE);
+}
+
+// Probably: take a Dark Alchemy node's costs from the player: currencies and items from the
+// bags or the stash, then the item the player chose on the altar screen.
+// NON_MATCHING: written from the 2.7.7 machine code. The original sorts each requirement's
+// alternatives with an introsort helper (sub_710096c2e0) and an insertion pass; this is the
+// insertion pass alone, with the same order (most available first). When one item stack is
+// not enough, the original keeps using the item it already deleted; this looks for the next.
+extern "C" BOOL sub_710096b4c0(ActorCommonData & tACDPlayer, uint32 nNode, ActorCommonData * ptACDItem)
+{
+    Unk1784d0 costs;
+    if (!sub_71004b7340(tACDPlayer, sub_71004b83e0(nNode), costs))
+        return FALSE;
+
+    BOOL bReturnedGems = FALSE;
+    for (const Unk4b97c0 & requirement : costs.unk_00)
+    {
+        blz::vector<Unk4b8080> alternatives(requirement.unk_00);
+        uint64 nRemaining = requirement.unk_18;
+        if (nRemaining == 0 || alternatives.empty())
+            continue;
+
+        for (size_t i = 1; i < alternatives.size(); ++i)
+        {
+            Unk4b8080 tCurrent = alternatives[i];
+            size_t j = i;
+            for (; j > 0 && tCurrent.unk_38 > alternatives[j - 1].unk_38; --j)
+                alternatives[j] = alternatives[j - 1];
+            alternatives[j] = tCurrent;
+        }
+
+        for (const Unk4b8080 & alternative : alternatives)
+        {
+            if (nRemaining == 0)
+                break;
+            if (alternative.unk_38 == 0)
+                continue;
+            if (alternative.unk_00 == 0)
+            {
+                uint64 nTake = nRemaining < alternative.unk_38 ? nRemaining : alternative.unk_38;
+                tACDPlayer.ModifyCurrencyAmount(-(int64)nTake, alternative.unk_04, GMR_PURCHASE, FALSE);
+                nRemaining -= nTake;
+            }
+            else if (alternative.unk_00 == 1)
+            {
+                uint64 nNeeded = nRemaining;
+                ActorCommonData * ptACDFound = sDarkAlchemyFindItemInBags(tACDPlayer, alternative.unk_08);
+                while (ptACDFound != NULL)
+                {
+                    uint64 nStack = ptACDFound->GetStackCount();
+                    if (nStack < 1)
+                        nStack = 1;
+                    if (nNeeded < nStack)
+                    {
+                        ptACDFound->SetStackCount(nStack - nNeeded);
+                        break;
+                    }
+                    sDarkAlchemyDeleteItem(tACDPlayer, *ptACDFound, bReturnedGems);
+                    nNeeded -= nStack;
+                    if (nNeeded == 0)
+                        break;
+                    ptACDFound = sDarkAlchemyFindItemInBags(tACDPlayer, alternative.unk_08);
+                }
+                nRemaining = 0;
+            }
+        }
+    }
+
+    if (ptACDItem != NULL)
+        sDarkAlchemyDeleteItem(tACDPlayer, *ptACDItem, bReturnedGems);
+
+    if (bReturnedGems)
+    {
+        PlayerList listDestPlayers(PlayerListGetElementPool());
+        PlayerListGetSingle(listDestPlayers, tACDPlayer.id);
+        SimpleMessage tMessage;
+        MessageSendToClient(listDestPlayers, SMSG_RETURNED_GEMS_NOTIFICATION, &tMessage, sizeof(tMessage));
+    }
+    return TRUE;
+}
+
+// Probably: unlock Dark Alchemy node nNode for the player at the altar it last used, paying
+// with annItem as the chosen sacrifice.
+// NON_MATCHING: written from the 2.7.7 machine code; the ACD lookups are not inlined the same way.
+extern "C" BOOL sub_710096be00(uint32 nNode, Player & tPlayer, int32 annItem)
+{
+    ActorCommonData * ptACDPlayer = ACDTryToGet(tPlayer.idPlayerACD);
+    if (ptACDPlayer == NULL)
+        return FALSE;
+    ActorCommonData * ptACDAltar = ACDTryToGet(tPlayer.idACDDarkAlchemyAltar);
+    if (ptACDAltar == NULL || !sub_71004b8b80(*ptACDAltar, *ptACDPlayer))
+        return FALSE;
+
+    ACDID idACDItem = ACDFromANN(static_cast<ACDNetworkName>(annItem));
+    ActorCommonData * ptACDItem = idACDItem != ACDID_INVALID ? ACDTryToGet(idACDItem) : NULL;
+    // The original tests the result against 0 (cbz), not against GAMEERROR_NONE.
+    if (sub_71004b8530(*ptACDPlayer, nNode, ptACDItem) == 0)
+        return FALSE;
+    if (!sub_710096b4c0(*ptACDPlayer, nNode, ptACDItem))
+        return FALSE;
+
+    ptACDPlayer->AttributesSetInt(ATTRIBUTE_DARK_ALCHEMY_UNLOCKED_NODES,
+                                  ptACDPlayer->AttributesGetInt(ATTRIBUTE_DARK_ALCHEMY_UNLOCKED_NODES) | (1 << nNode));
+    ptACDPlayer->ApplyAllPassives(FALSE);
+    return TRUE;
 }
